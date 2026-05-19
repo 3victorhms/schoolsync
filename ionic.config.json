@@ -1,0 +1,7 @@
+{
+  "name": "schoolsync",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
