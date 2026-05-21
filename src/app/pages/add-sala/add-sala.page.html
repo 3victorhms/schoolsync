@@ -1,0 +1,25 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/sala"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Criar Sala</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form [formGroup]="formGroup" (ngSubmit)="salvar()">
+
+    <div class="campo-grupo">
+      <label class="campo-label">Nome da sala</label>
+      <ion-item class="campo-item" lines="none">
+        <ion-input type="text" placeholder="Ex: Turma 3ªA" formControlName="nomeSala"></ion-input>
+      </ion-item>
+    </div>
+
+    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="!formGroup.valid">
+      Criar sala
+    </ion-button>
+
+  </form>
+</ion-content>

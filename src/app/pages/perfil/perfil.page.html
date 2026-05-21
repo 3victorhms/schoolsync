@@ -1,0 +1,28 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Perfil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="editar-btn" (click)="editarPerfil()">
+        <ion-icon name="pencil-outline" slot="start"></ion-icon>
+        Editar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-card class="perfil-card">
+    <ion-card-content>
+
+      <div class="avatar">
+        <span>{{ iniciais }}</span>
+      </div>
+
+      <h2 class="perfil-nome">{{ usuario.nome }}</h2>
+      <p class="perfil-app">EscolaSync</p>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

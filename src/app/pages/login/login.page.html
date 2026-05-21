@@ -1,0 +1,56 @@
+<ion-content [fullscreen]="true" class="login-content">
+
+  <div class="login-container">
+
+    <div class="logo-area">
+
+      <div class="logo-icon">
+        <ion-icon name="school-outline"></ion-icon>
+      </div>
+
+      <h1>SchoolSync</h1>
+
+      <p>
+        Organize seus estudos e colabore com sua turma
+      </p>
+
+    </div>
+
+    <div class="form-area">
+
+      <h2>Entrar</h2>
+
+      <form [formGroup]="formGroup" (ngSubmit)="autenticar()">
+
+        <ion-input type="email" formControlName="login" placeholder="Email" class="custom-input">
+        </ion-input>
+
+        <ion-input type="password" formControlName="senha" placeholder="Senha" class="custom-input">
+        </ion-input>
+
+        <ion-button expand="block" type="submit" class="login-button" [disabled]="!formGroup.valid">
+
+          Entrar
+
+          <ion-icon slot="end" name="arrow-forward-outline">
+          </ion-icon>
+
+        </ion-button>
+
+      </form>
+
+      <p class="register-text">
+        Não tem conta?
+
+        <button type="button" class="register-button" (click)="irCadastrar()">
+
+          Cadastrar
+
+        </button>
+      </p>
+
+    </div>
+
+  </div>
+
+</ion-content>

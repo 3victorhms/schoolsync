@@ -1,0 +1,119 @@
+ion-toolbar {
+    --background: #0f1117;
+    --border-color: transparent;
+
+    ion-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #ffffff;
+    }
+}
+
+.entrar-btn {
+    --color: #ffffff;
+    --border-color: #2e3346;
+    --background: #1a1f2e;
+    --border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    height: 36px;
+    margin-right: 6px;
+}
+
+.criar-btn {
+    --background: #3a6ff7;
+    --color: #ffffff;
+    --border-radius: 999px;
+    width: 36px;
+    height: 36px;
+    margin-right: 4px;
+}
+
+ion-content {
+    --background: #0f1117;
+}
+
+.salas-lista {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sala-card {
+    --background: #171c28;
+    border-radius: 16px;
+    border: 1px solid #252b3d;
+    box-shadow: none;
+    margin: 0;
+
+    ion-card-content {
+        padding: 16px;
+    }
+}
+
+.sala-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.sala-icone {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: #1e2540;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    ion-icon {
+        font-size: 26px;
+        color: #3a6ff7;
+    }
+}
+
+.sala-info {
+    flex: 1;
+
+    h2 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0 0 6px;
+    }
+}
+
+.sala-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 13px;
+        color: #8891aa;
+
+        ion-icon {
+            font-size: 14px;
+        }
+    }
+}
+
+.sala-codigo {
+    font-size: 11px !important;
+    font-weight: 600;
+    background: #252b3d;
+    padding: 2px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+}
+
+.sala-seta {
+    font-size: 18px;
+    color: #3d4460;
+    flex-shrink: 0;
+}

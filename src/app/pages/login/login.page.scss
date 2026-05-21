@@ -1,0 +1,188 @@
+// Estilos feitos com auxílio da I.A Lovable
+
+.login-content {
+    --background: rgb(9, 11, 17);
+}
+
+.login-container {
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 24px;
+}
+
+.logo-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-bottom: 40px;
+
+    animation: fadeUp 0.7s ease;
+}
+
+.logo-icon {
+    width: 78px;
+    height: 78px;
+
+    border-radius: 24px;
+
+    background: #0d1625;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 18px;
+}
+
+.logo-icon ion-icon {
+    font-size: 34px;
+    color: #3b82f6;
+}
+
+.logo-area h1 {
+    margin: 0;
+
+    font-size: 28px;
+    font-weight: 700;
+
+    color: white;
+
+    letter-spacing: -0.5px;
+}
+
+.logo-area p {
+    margin-top: 14px;
+
+    color: #7b8494;
+
+    font-size: 15px;
+
+    text-align: center;
+
+    max-width: 280px;
+
+    line-height: 1.5;
+}
+
+.form-area {
+    width: 100%;
+    max-width: 360px;
+
+    animation: fadeUp 0.7s ease 0.1s both;
+}
+
+.form-area h2 {
+    text-align: center;
+
+    color: white;
+
+    font-size: 20px;
+    font-weight: 700;
+
+    margin-bottom: 26px;
+}
+
+.custom-input {
+    --background: #10131a;
+
+    --color: white;
+
+    --placeholder-color: #5e6775;
+
+    --border-color: #101827;
+
+    --border-radius: 18px;
+
+    --padding-top: 18px;
+    --padding-bottom: 18px;
+
+    --padding-start: 18px;
+    --padding-end: 18px;
+
+    --highlight-color-focused: transparent;
+
+    --highlight-height: 0;
+
+    --border-width: 0;
+
+    --box-shadow: none;
+
+    margin-bottom: 18px;
+
+    font-size: 15px;
+
+    transition: 0.2s ease;
+
+    border-radius: 18px;
+
+    border: 1px solid #101827;
+}
+
+.custom-input.ion-focused {
+    transform: scale(1.015);
+}
+
+.login-button {
+    margin-top: 10px;
+
+    --background: linear-gradient(135deg, #4f8dfd, #3b82f6);
+
+    --background-activated: #3b82f6;
+
+    --border-radius: 18px;
+
+    --padding-top: 18px;
+    --padding-bottom: 18px;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    letter-spacing: 0.2px;
+
+    height: 56px;
+
+    text-transform: none;
+}
+
+.register-text {
+    margin-top: 24px;
+
+    text-align: center;
+
+    color: #7b8494;
+
+    font-size: 14px;
+}
+
+.register-button {
+    background: transparent;
+
+    border: none;
+
+    color: #3b82f6;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+@keyframes fadeUp {
+
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}

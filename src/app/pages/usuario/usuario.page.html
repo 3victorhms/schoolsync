@@ -1,0 +1,74 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/perfil"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Editar Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form [formGroup]="formGroup" (ngSubmit)="salvar()">
+
+    <div class="avatar">
+      <span>{{ iniciais }}</span>
+    </div>
+
+    <div class="secao-titulo">Informações</div>
+
+    <div class="campo-grupo">
+      <label class="campo-label">Nome</label>
+      <ion-item class="campo-item" lines="none">
+        <ion-input type="text" placeholder="Seu nome completo" formControlName="nome"></ion-input>
+      </ion-item>
+    </div>
+
+    <div class="campo-grupo">
+      <label class="campo-label">E-mail</label>
+      <ion-item class="campo-item" lines="none">
+        <ion-input type="email" placeholder="seu@email.com" formControlName="email"></ion-input>
+      </ion-item>
+    </div>
+
+    <div class="secao-titulo">Segurança</div>
+
+    <div class="campo-grupo">
+      <label class="campo-label">Senha atual</label>
+      <ion-item class="campo-item" lines="none">
+        <ion-input [type]="mostrarSenhaAtual ? 'text' : 'password'" placeholder="••••••••"
+          formControlName="senhaAtual"></ion-input>
+        <ion-button fill="clear" slot="end" class="olho-btn" (click)="mostrarSenhaAtual = !mostrarSenhaAtual">
+          <ion-icon [name]="mostrarSenhaAtual ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </div>
+
+    <div class="campo-grupo">
+      <label class="campo-label">Nova senha</label>
+      <ion-item class="campo-item" lines="none">
+        <ion-input [type]="mostrarNovaSenha ? 'text' : 'password'" placeholder="••••••••"
+          formControlName="novaSenha"></ion-input>
+        <ion-button fill="clear" slot="end" class="olho-btn" (click)="mostrarNovaSenha = !mostrarNovaSenha">
+          <ion-icon [name]="mostrarNovaSenha ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </div>
+
+    <div class="campo-grupo">
+      <label class="campo-label">Confirmar nova senha</label>
+      <ion-item class="campo-item" lines="none">
+        <ion-input [type]="mostrarConfirmar ? 'text' : 'password'" placeholder="••••••••"
+          formControlName="confirmarSenha"></ion-input>
+        <ion-button fill="clear" slot="end" class="olho-btn" (click)="mostrarConfirmar = !mostrarConfirmar">
+          <ion-icon [name]="mostrarConfirmar ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <p class="campo-erro" *ngIf="senhasDiferentes">As senhas não coincidem</p>
+    </div>
+
+    <ion-button type="submit" expand="block" class="botao-salvar" [disabled]="!formGroup.valid || senhasDiferentes">
+      Salvar alterações
+    </ion-button>
+
+  </form>
+</ion-content>
