@@ -12,7 +12,7 @@ import {
   IonIcon,
   IonButton,
   IonCard,
-  IonCardContent,
+  IonCardContent, IonTabButton, IonTabBar, IonLabel
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -21,7 +21,7 @@ import {
   documentsOutline,
   chevronForwardOutline,
   logInOutline,
-  add,
+  add, homeOutline, trophyOutline, personOutline,
 } from 'ionicons/icons';
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
@@ -42,6 +42,7 @@ import { SalaService } from 'src/app/services/sala.service';
     IonButton,
     IonCard,
     IonCardContent,
+    IonTabButton, IonTabBar, IonLabel,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -59,21 +60,25 @@ export class SalaPage implements OnInit {
       documentsOutline,
       chevronForwardOutline,
       logInOutline,
-      add,
+      add, homeOutline,
+      trophyOutline,
+      personOutline,
     });
 
     this.salas = [];
   }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  ionViewWillEnter() {
+    this.carregarSalas();
+  }
+
+  carregarSalas() {
     this.salas = this.salaService.listarPorUsuario();
   }
 
   entrarSala() {
-
-  }
-
-  abrirCriarSala() {
 
   }
 

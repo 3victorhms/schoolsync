@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import {
   IonContent, IonHeader, IonTitle, IonToolbar,
-  IonButtons, IonButton, IonIcon, IonCard, IonCardContent,
+  IonButtons, IonButton, IonIcon, IonCard, IonLabel, IonCardContent, IonTabButton, IonTabBar
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { pencilOutline } from 'ionicons/icons';
-import { UsuarioService } from 'src/app/services/usuario.service';
+import { homeOutline, businessOutline, trophyOutline, personOutline, pencilOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-perfil',
@@ -16,8 +15,9 @@ import { UsuarioService } from 'src/app/services/usuario.service';
   standalone: true,
   imports: [
     IonContent, IonHeader, IonTitle, IonToolbar,
-    IonButtons, IonButton, IonIcon, IonCard, IonCardContent,
+    IonButtons, IonButton, IonIcon, IonCard, IonLabel, IonTabButton, IonCardContent, IonTabBar,
     CommonModule,
+    RouterModule,
   ],
 })
 export class PerfilPage implements OnInit {
@@ -35,7 +35,12 @@ export class PerfilPage implements OnInit {
   }
 
   constructor(private router: Router) {
-    addIcons({ pencilOutline });
+    addIcons({
+      pencilOutline, homeOutline,
+      businessOutline,
+      trophyOutline,
+      personOutline,
+    });
   }
 
   ngOnInit() {
