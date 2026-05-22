@@ -1,3 +1,18 @@
+ion-content {
+    --background: #0f1117;
+}
+
+ion-toolbar {
+    --background: #0f1117;
+    --border-color: transparent;
+
+    ion-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #ffffff;
+    }
+}
+
 ion-tab-bar {
     --background: #0f1117;
     --border: none;

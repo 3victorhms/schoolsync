@@ -23,8 +23,8 @@ export class AddUsuarioPage implements OnInit {
   constructor(private formBuilder: FormBuilder, private toastController: ToastController, private navController: NavController, private usuarioService: UsuarioService) {
     this.usuario = new UsuarioModel();
     this.formGroup = this.formBuilder.group({
-      'email': [this.usuario.email, Validators.compose([Validators.required])],
-      'senha': [this.usuario.senha, Validators.compose([Validators.required])],
+      'email': [this.usuario.email, Validators.compose([Validators.required, Validators.email])],
+      'senha': [this.usuario.senha, Validators.compose([Validators.required, Validators.minLength(8)])],
       'nome': [this.usuario.nome, Validators.compose([Validators.required])]
     });
   }
@@ -44,12 +44,11 @@ export class AddUsuarioPage implements OnInit {
   verificarLogin() {
     let login = this.formGroup.get('login')?.value;
 
-    // Se o serviço retornar TRUE (o login já existe no banco/lista)
     if (this.usuarioService.verificarLogin(login)) {
-      this.loginExistente = true; // Bloqueia o botão
+      this.loginExistente = true;
       this.exibirMensagem('Login já existe');
     } else {
-      this.loginExistente = false; // Libera o botão
+      this.loginExistente = false;
     }
   }
 

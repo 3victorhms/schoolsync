@@ -7,6 +7,7 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { homeOutline, businessOutline, trophyOutline, personOutline, pencilOutline } from 'ionicons/icons';
+import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
   selector: 'app-perfil',
@@ -23,7 +24,7 @@ import { homeOutline, businessOutline, trophyOutline, personOutline, pencilOutli
 export class PerfilPage implements OnInit {
 
   usuario = {
-    nome: 'Victor Hugo',
+    nome: this.usuarioService.buscarAutenticacao().nome,
   };
 
   get iniciais(): string {
@@ -34,7 +35,7 @@ export class PerfilPage implements OnInit {
       .join('');
   }
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private usuarioService: UsuarioService) {
     addIcons({
       pencilOutline, homeOutline,
       businessOutline,

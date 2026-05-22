@@ -21,8 +21,8 @@ export class LoginPage implements OnInit {
 
   usuario: UsuarioModel;
   formGroup: FormGroup;
-  login: String;
-  senha: String;
+  login: string;
+  senha: string;
 
   constructor(private formBuilder: FormBuilder, private toastController: ToastController, private navController: NavController, private usuarioService: UsuarioService) {
     this.login = "";
@@ -30,8 +30,8 @@ export class LoginPage implements OnInit {
     this.usuario = new UsuarioModel();
 
     this.formGroup = this.formBuilder.group({
-      'login': [this.login, Validators.compose([Validators.required])],
-      'senha': [this.senha, Validators.compose([Validators.required])]
+      'login': [this.login, Validators.compose([Validators.required, Validators.email])],
+      'senha': [this.senha, Validators.compose([Validators.required, Validators.minLength(8)])]
     });
 
     addIcons({
