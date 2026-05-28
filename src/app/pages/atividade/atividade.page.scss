@@ -1,0 +1,261 @@
+// Estilos feitos com auxílio das I.As Lovable e Claude
+
+ion-toolbar {
+    --background: #0f1117;
+    --border-color: transparent;
+
+    ion-back-button {
+        --color: #ffffff;
+    }
+
+    ion-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #ffffff;
+    }
+
+    .status-badge {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 20px;
+        margin-right: 8px;
+
+        ion-icon {
+            font-size: 13px;
+        }
+
+        &.badge-expirada {
+            background: #3d1515;
+            color: #e05c5c;
+        }
+
+        &.badge-andamento {
+            background: #1e2f5e;
+            color: #3a6ff7;
+        }
+
+        &.badge-concluido {
+            background: #0f3d2a;
+            color: #3abf7f;
+        }
+    }
+}
+
+ion-content {
+    --background: #0f1117;
+}
+
+.atividade-card {
+    background: #171c28;
+    border-radius: 20px;
+    margin: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .atividade-descricao-titulo {
+        font-size: 16px;
+        font-weight: 500;
+        color: #c0c8e0;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    .atividade-meta {
+        display: flex;
+        gap: 16px;
+        font-size: 13px;
+        color: #8891aa;
+
+        span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+            ion-icon {
+                font-size: 14px;
+            }
+        }
+    }
+
+    .atividade-tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+
+        .tag-disciplina {
+            background: #252b3d;
+            color: #a0a8c0;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        .tag-valor {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #1e2f5e;
+            color: #3a6ff7;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+
+            ion-icon {
+                font-size: 14px;
+            }
+        }
+    }
+
+    .criado-por {
+        font-size: 13px;
+        color: #4e5670;
+        margin: 0;
+    }
+
+    .aviso-prazo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #3d1515;
+        color: #e05c5c;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 12px 14px;
+        border-radius: 12px;
+
+        ion-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+    }
+}
+
+.status-secao {
+    padding: 0 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .secao-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #8891aa;
+        margin: 0;
+    }
+
+    .status-botoes {
+        display: flex;
+        gap: 10px;
+
+        .status-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: #171c28;
+            border: 2px solid transparent;
+            border-radius: 14px;
+            color: #8891aa;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 12px 8px;
+            cursor: pointer;
+
+            ion-icon {
+                font-size: 16px;
+            }
+
+            .xp-icon {
+                color: #f5a623;
+            }
+
+            &.ativo {
+                border-color: #3a6ff7;
+                color: #3a6ff7;
+                background: #1a2340;
+            }
+
+            &:disabled {
+                opacity: 0.4;
+                cursor: default;
+            }
+        }
+    }
+
+    .remover-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: #2a1515;
+        border: none;
+        border-radius: 14px;
+        color: #e05c5c;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 14px;
+        cursor: pointer;
+        width: 100%;
+
+        ion-icon {
+            font-size: 18px;
+        }
+    }
+
+    .adicionar-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: #1a2340;
+        border: none;
+        border-radius: 14px;
+        color: #3a6ff7;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 14px;
+        cursor: pointer;
+        width: 100%;
+
+        ion-icon {
+            font-size: 18px;
+        }
+    }
+}
+
+.comentarios-secao {
+    padding: 0 16px 32px;
+
+    .secao-titulo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0 0 12px;
+
+        ion-icon {
+            color: #3a6ff7;
+            font-size: 20px;
+        }
+    }
+
+    .comentarios-vazio {
+        background: #171c28;
+        border-radius: 14px;
+        padding: 24px;
+        text-align: center;
+        color: #4e5670;
+        font-size: 14px;
+    }
+}

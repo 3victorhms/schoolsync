@@ -3,22 +3,23 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/salas"></ion-back-button>
     </ion-buttons>
-    <ion-title>Criar Sala</ion-title>
+    <ion-title>Entrar em uma Sala</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <form [formGroup]="formGroup" (ngSubmit)="salvar()">
+  <form [formGroup]="formGroup" (ngSubmit)="entrar()">
 
     <div class="campo-grupo">
-      <label class="campo-label">Nome da sala</label>
+      <label class="campo-label">Código da sala</label>
       <ion-item class="campo-item" lines="none">
-        <ion-input type="text" placeholder="Ex: Turma 3ªA" formControlName="nomeSala"></ion-input>
+        <input type="text" placeholder="Ex: 3A2026" formControlName="codigoConvite" maxlength="20" />
       </ion-item>
     </div>
 
     <ion-button type="submit" expand="block" class="botao-criar" [disabled]="!formGroup.valid">
-      Criar sala
+      <ion-icon name="log-in-outline" slot="start"></ion-icon>
+      Entrar na Sala
     </ion-button>
 
   </form>

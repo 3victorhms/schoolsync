@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { SalaModel } from '../model/sala.model';
 import { UsuarioModel } from '../model/usuario.model';
+import { AtividadeModel } from '../model/atividade.model';
+import { AtividadeService } from './atividade.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +24,76 @@ export class SalaService {
     }
     localStorage.setItem('salas', JSON.stringify(salas));
     return of(sala);
+  }
+
+  entrar(codigoConvite: string, usuarioId: string): Observable<SalaModel> {
+    const salas = JSON.parse(localStorage.getItem('salas') || '[]') as SalaModel[];
+
+    const sala = salas.find((s: SalaModel) => s.codigoConvite === codigoConvite);
+
+    // se sala for nulo então lança um erro
+    if (!sala) {
+      return throwError(() => new Error('Sala não encontrada'));
+    }
+
+    // se não for vetor declara o vetor
+    if (!Array.isArray(sala.membros)) {
+      sala.membros = [];
+    }
+
+    const usuario = JSON.parse(localStorage.getItem('usuarioAutenticado') || '{}') as UsuarioModel;
+    const idUsuarioAdicionar = usuarioId || usuario.id;
+
+    // se o id for inválido lança um erro
+    if (!idUsuarioAdicionar) {
+      return throwError(() => new Error('Usuário não identificado'));
+    }
+
+    const jaMembro = sala.membros.some((m: UsuarioModel) => m && m.id === idUsuarioAdicionar);
+
+    // só adicionao usuário no vetor de membros dentro de sala se o id do usuário não estiver presente no vetor membros
+    if (!jaMembro) {
+      let usuarioAdicionar: UsuarioModel;
+      if (usuario && usuario.id) {
+        usuarioAdicionar = usuario;
+      } else {
+        usuarioAdicionar = { id: idUsuarioAdicionar } as UsuarioModel;
+      }
+      sala.membros.push(usuarioAdicionar);
+    }
+
+    const pos = salas.findIndex((s: SalaModel) => s.id === sala.id);
+    if (pos >= 0) {
+      salas[pos] = sala;
+    } else {
+      salas.push(sala);
+    }
+
+    localStorage.setItem('salas', JSON.stringify(salas));
+
+    return of(sala);
+  }
+
+  adicionarAtividade(atividade: AtividadeModel, atividadeService: AtividadeService): Observable<AtividadeModel> {
+    const salas = JSON.parse(localStorage.getItem('salas') || '[]') as SalaModel[];
+    const pos = salas.findIndex((s: SalaModel) => s.id === atividade.idSala);
+
+    if (pos < 0) {
+      return throwError(() => new Error('Sala não encontrada'));
+    }
+
+    if (!Array.isArray(salas[pos].atividades)) {
+      salas[pos].atividades = [];
+    }
+
+    // salva no localStorage de atividades
+    atividadeService.salvar(atividade).subscribe(a => atividade = a);
+
+    // salva dentro da sala
+    salas[pos].atividades.push(atividade);
+    localStorage.setItem('salas', JSON.stringify(salas));
+
+    return of(atividade);
   }
 
   private gerarId(tamanho: number = 11): string {

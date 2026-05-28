@@ -1,13 +1,85 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>atividade</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/salas"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ atividade.titulo }}</ion-title>
+    <ion-buttons slot="end">
+      <span class="status-badge" [ngClass]="'badge-' + statusPrazo">
+        <ion-icon [name]="iconePrazo"></ion-icon>
+        {{ labelPrazo }}
+      </span>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">atividade</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+  <div class="atividade-card">
+
+    <h2 class="atividade-descricao-titulo">{{ atividade.descricao }}</h2>
+
+    <div class="atividade-meta">
+      <span><ion-icon name="calendar-outline"></ion-icon> {{ formatarData(atividade.dataEntrega) }}</span>
+      <span><ion-icon name="people-outline"></ion-icon> {{ atividade.noCaderno.length }} no caderno</span>
+    </div>
+
+    <div class="atividade-tags">
+      <span class="tag-disciplina">{{ atividade.disciplina }}</span>
+      <span class="tag-valor">
+        <ion-icon name="star-outline"></ion-icon>
+        {{ atividade.valor }} pontos
+      </span>
+    </div>
+
+    <p class="criado-por">Criado por {{ criadorNome }}</p>
+
+    @if (prazoEncerrado) {
+    <div class="aviso-prazo">
+      <ion-icon name="alert-triangle-outline"></ion-icon>
+      Prazo encerrado — atividade somente leitura
+    </div>
+    }
+
+  </div>
+
+  <div class="status-secao">
+    <p class="secao-label">Status da atividade</p>
+    <div class="status-botoes">
+      <button class="status-btn" [class.ativo]="atividade.status === 'em_andamento'" [disabled]="prazoEncerrado"
+        (click)="alterarStatus('em_andamento')">
+        <ion-icon name="time-outline"></ion-icon>
+        Em andamento
+      </button>
+      <button class="status-btn" [class.ativo]="atividade.status === 'concluido'" [disabled]="prazoEncerrado"
+        (click)="alterarStatus('concluido')">
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+        Concluído
+        <ion-icon name="flash-outline" class="xp-icon"></ion-icon>
+      </button>
+    </div>
+
+    @if (estaNoCaderno) {
+    <button class="remover-btn" (click)="removerDoCaderno()">
+      <ion-icon name="trash-outline"></ion-icon>
+      Remover do caderno
+    </button>
+    } @else {
+    <button class="adicionar-btn" (click)="adicionarNoCaderno()">
+      <ion-icon name="add-outline"></ion-icon>
+      Adicionar no caderno
+    </button>
+    }
+  </div>
+
+  <div class="comentarios-secao">
+    <h3 class="secao-titulo">
+      <ion-icon name="chatbox-outline"></ion-icon>
+      Comentários
+    </h3>
+    <div class="comentarios-vazio">
+      <p>Comentários em breve.</p>
+    </div>
+  </div>
+
 </ion-content>

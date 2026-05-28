@@ -1,13 +1,14 @@
+import { UsuarioModel } from "./usuario.model";
+
 export class AtividadeModel {
     id: string;
     titulo: string;
     descricao: string;
-    materia: string;
+    disciplina: string;
     dataEntrega: string;
-    atribuidaA: string[];
+    noCaderno: UsuarioModel[];
     criadaPor: string;
     idSala: string;
-    idGrupo: string;
     valor: string;
     status: string;
 
@@ -15,12 +16,11 @@ export class AtividadeModel {
         this.id = "";
         this.titulo = "";
         this.descricao = "";
-        this.materia = "";
+        this.disciplina = "";
         this.dataEntrega = "";
-        this.atribuidaA = [];
+        this.noCaderno = [];
         this.criadaPor = "";
         this.idSala = "";
-        this.idGrupo = "";
         this.valor = "";
         this.status = "";
 

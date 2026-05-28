@@ -1,82 +1,99 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Salas</ion-title>
-    <ion-buttons slot="end">
-      <ion-button fill="outline" class="entrar-btn" (click)="entrarSala()">
-        <ion-icon name="log-in-outline" slot="start"></ion-icon>
-        Entrar
-      </ion-button>
-      <ion-button fill="solid" class="criar-btn" routerLink="/add-sala">
-        <ion-icon name="add" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/salas"></ion-back-button>
+        </ion-buttons>
+        <ion-title>
+            {{ sala.nome }}
+            <p class="subtitulo">{{ sala.codigoConvite }}</p>
+        </ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
 
-  <div class="salas-lista">
-
-    @for (sala of salas; track sala.id) {
-    <ion-card class="sala-card" [routerLink]="['/sala', sala.id]" button>
-      <ion-card-content>
-        <div class="sala-row">
-
-          <div class="sala-icone">
-            <ion-icon name="business-outline"></ion-icon>
-          </div>
-
-          <div class="sala-info">
-            <h2>{{ sala.nome }}</h2>
-            <div class="sala-meta">
-              <span>
-                <ion-icon name="people-outline"></ion-icon>
-                {{ sala.membros.length }}
-              </span>
-              <span>
-                <ion-icon name="documents-outline"></ion-icon>
-                {{ sala.atividades.length }}
-              </span>
-              <span class="sala-codigoConvite">{{ sala.codigoConvite }}</span>
-            </div>
-          </div>
-
-          <ion-icon name="chevron-forward-outline" class="sala-seta"></ion-icon>
-
-        </div>
-      </ion-card-content>
-    </ion-card>
-    } @empty {
-    <div class="salas-vazio">
-      <p>Você não está em nenhuma sala :(</p>
-      <span>Crie uma sala ou entre com um código</span>
+    <div class="acoes">
+        <button class="acao-btn" [routerLink]="['/add-atividade', sala.id]">
+            <ion-icon name="add-outline"></ion-icon>
+            <span>Nova Atividade</span>
+        </button>
+        <button class="acao-btn">
+            <ion-icon name="people-outline"></ion-icon>
+            <span>Grupos</span>
+        </button>
     </div>
-    }
 
-  </div>
+    <!-- <section class="secao">
+        <h3 class="secao-titulo">
+            <ion-icon name="trophy-outline"></ion-icon>
+            Top 3
+        </h3>
+        <div class="top3-lista">
+            @for (membro of top3; track membro.id; let i = $index) {
+            <div class="top3-item">
+                <span class="top3-pos">{{ i + 1 }}</span>
+                <div class="avatar-small">{{ iniciais(membro.nome) }}</div>
+                <span class="top3-nome">{{ membro.nome }}</span>
+                <span class="top3-xp">{{ membro.xp }} XP</span>
+            </div>
+            }
+        </div>
+    </section> -->
+
+    <section class="secao">
+        <h3 class="secao-titulo">
+            <ion-icon name="book-outline"></ion-icon>
+            Atividades
+        </h3>
+        <div class="atividades-lista">
+            @for (atividade of sala.atividades; track atividade.id) {
+            <div class="atividade-card" [routerLink]="['/atividade', atividade.id]" button>
+                <div class="atividade-header">
+                    <div>
+                        <h4 class="atividade-titulo">{{ atividade.titulo }}</h4>
+                        <p class="atividade-descricao">{{ atividade.descricao }}</p>
+                    </div>
+                    <span class="atividade-materia">{{ atividade.disciplina }}</span>
+                </div>
+                <div class="atividade-meta">
+                    <span><ion-icon name="calendar-outline"></ion-icon> {{ atividade.dataEntrega }}</span>
+                    <span><ion-icon name="star-outline"></ion-icon> {{ atividade.valor }} pontos</span>
+                </div>
+                <div class="atividade-status" [ngClass]="atividade.status">
+                    <ion-icon [name]="iconeStatus(atividade.status)"></ion-icon>
+                    {{ labelStatus(atividade.status) }}
+                </div>
+            </div>
+            } @empty {
+            <div class="vazio">
+                <p>Nenhuma atividade ainda.</p>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="secao">
+        <h3 class="secao-titulo">
+            <ion-icon name="people-outline"></ion-icon>
+            Membros
+        </h3>
+        <div class="membros-lista">
+            @for (membro of sala.membros.slice(0, 3); track membro.id; let i = $index) {
+            <div class="membro-item">
+                <span class="membro-pos">{{ i + 1 }}</span>
+                <div class="avatar-small">{{ iniciais(membro.nome) }}</div>
+                <div class="membro-info">
+                    <span class="membro-nome">
+                        {{ membro.nome }}
+                        @if (membro.id === usuario.id) {
+                        <span class="voce">(você)</span>
+                        }
+                    </span>
+                    <span class="membro-xp">{{ membro.xp }} XP</span>
+                </div>
+            </div>
+            }
+        </div>
+    </section>
 
 </ion-content>
-
-<ion-tab-bar slot="bottom">
-
-  <ion-tab-button tab="inicio" routerLink="/inicio">
-    <ion-icon name="home-outline"></ion-icon>
-    <ion-label>Inicio</ion-label>
-  </ion-tab-button>
-
-  <ion-tab-button class="selecionado" tab="sala" routerLink="/sala">
-    <ion-icon name="business-outline"></ion-icon>
-    <ion-label>Salas</ion-label>
-  </ion-tab-button>
-
-  <ion-tab-button tab="ranking" routerLink="/ranking">
-    <ion-icon name="trophy-outline"></ion-icon>
-    <ion-label>Ranking</ion-label>
-  </ion-tab-button>
-
-  <ion-tab-button tab="perfil" routerLink="/perfil">
-    <ion-icon name="person-outline"></ion-icon>
-    <ion-label>Perfil</ion-label>
-  </ion-tab-button>
-
-</ion-tab-bar>

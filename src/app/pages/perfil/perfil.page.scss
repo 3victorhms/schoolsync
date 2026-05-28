@@ -9,6 +9,12 @@ ion-toolbar {
     }
 }
 
+.logout-btn {
+    --color: #e05c5c;
+    --background: transparent;
+    font-size: 14px;
+}
+
 .editar-btn {
     --color: #3a6ff7;
     --background: transparent;
@@ -17,7 +23,7 @@ ion-toolbar {
     margin-right: 4px;
 
     ion-icon {
-        font-size: 16px;
+        font-size: 17px;
         margin-right: 4px;
     }
 }

@@ -1,5 +1,309 @@
+// Estilos feitos com auxílio das I.As Lovable e Claude
+
+ion-toolbar {
+    --background: #0f1117;
+    --border-color: transparent;
+}
+
 ion-content {
     --background: #0f1117;
+}
+
+.header-titulo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+
+    .ola {
+        font-size: 14px;
+        font-weight: 400;
+        color: #8891aa;
+        margin: 0;
+    }
+
+    .nome {
+        font-size: 24px;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0;
+    }
+
+    .notificacao-btn {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        background: #171c28;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        ion-icon {
+            font-size: 20px;
+            color: #ffffff;
+        }
+
+        .notificacao-badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: #e05c5c;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
+
+.calendario-card {
+    background: #171c28;
+    border-radius: 20px;
+    margin: 8px 16px 16px;
+    padding: 16px;
+
+    .calendario-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+
+        .cal-titulo {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .cal-nav {
+            background: transparent;
+            border: none;
+            color: #8891aa;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            cursor: pointer;
+        }
+    }
+
+    .calendario-dias-semana {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        margin-bottom: 8px;
+
+        span {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4e5670;
+            padding: 4px 0;
+        }
+    }
+
+    .calendario-dias {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+
+        .cal-dia {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+            &.outro-mes {
+                color: #2e3450;
+            }
+
+            &.hoje {
+                color: #3a6ff7;
+                font-weight: 700;
+            }
+
+            &.selecionado {
+                background: #3a6ff7;
+                color: #ffffff;
+                font-weight: 700;
+            }
+        }
+    }
+}
+
+.data-secao {
+    padding: 0 16px 16px;
+
+    .data-titulo {
+        font-size: 16px;
+        font-weight: 600;
+        color: #8891aa;
+        margin: 0 0 12px;
+    }
+
+    .atividades-data {
+        .vazio-data {
+            background: #171c28;
+            border-radius: 14px;
+            padding: 18px;
+            text-align: center;
+            color: #4e5670;
+            font-size: 14px;
+        }
+
+        .atividade-item {
+            background: #171c28;
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 8px;
+
+            .atividade-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 8px;
+
+                .atividade-titulo {
+                    font-size: 15px;
+                    font-weight: 700;
+                    color: #ffffff;
+                    margin: 0 0 4px;
+                }
+
+                .atividade-descricao {
+                    font-size: 13px;
+                    color: #8891aa;
+                    margin: 0;
+                }
+
+                .atividade-disciplina {
+                    background: #2a1f5e;
+                    color: #a78bfa;
+                    font-size: 12px;
+                    font-weight: 600;
+                    padding: 4px 10px;
+                    border-radius: 20px;
+                    white-space: nowrap;
+                }
+            }
+
+            .atividade-meta {
+                display: flex;
+                gap: 16px;
+                font-size: 12px;
+                color: #8891aa;
+
+                span {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+
+                    ion-icon {
+                        font-size: 14px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.ultima-sala-secao {
+    padding: 0 16px 32px;
+
+    .secao-titulo {
+        font-size: 16px;
+        font-weight: 600;
+        color: #8891aa;
+        margin: 0 0 12px;
+    }
+}
+
+.sala-card {
+    --background: #171c28;
+    border-radius: 16px;
+    border: 1px solid #1e2540;
+    box-shadow: none;
+    margin: 0;
+
+    ion-card-content {
+        padding: 16px;
+    }
+
+    .sala-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .sala-icone {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #1e2f5e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            ion-icon {
+                font-size: 20px;
+                color: #3a6ff7;
+            }
+        }
+
+        .sala-info {
+            flex: 1;
+
+            h2 {
+                font-size: 15px;
+                font-weight: 700;
+                color: #ffffff;
+                margin: 0 0 4px;
+            }
+
+            .sala-meta {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 12px;
+                color: #8891aa;
+
+                span {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+
+                    ion-icon {
+                        font-size: 13px;
+                    }
+                }
+
+                .sala-codigo {
+                    color: #3a6ff7;
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .sala-seta {
+            font-size: 18px;
+            color: #4e5670;
+        }
+    }
 }
 
 ion-tab-bar {

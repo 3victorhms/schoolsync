@@ -1,0 +1,78 @@
+ion-toolbar {
+    --background: transparent;
+    --color: #ffffff;
+    --border-width: 0;
+
+    ion-back-button {
+        --color: #ffffff;
+    }
+
+    ion-title {
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+}
+
+ion-content {
+    --background: #0e1117;
+}
+
+form {
+    padding: 24px 16px;
+
+    .campo-grupo {
+        background: #1a1f2e;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 24px;
+
+        .campo-label {
+            display: block;
+            color: #a0a8c0;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        .campo-item {
+            --background: #252b3b;
+            --border-radius: 10px;
+            --padding-start: 14px;
+            --padding-end: 14px;
+
+            input {
+                background: transparent;
+                border: none;
+                outline: none;
+                color: #ffffff;
+                font-size: 1rem;
+                letter-spacing: 0.05em;
+                width: 100%;
+                padding: 10px 0;
+
+                &::placeholder {
+                    color: #555e78;
+                }
+            }
+        }
+    }
+
+    .botao-criar {
+        --background: #3b6fd4;
+        --background-activated: #2d57b0;
+        --border-radius: 14px;
+        --color: #ffffff;
+        font-weight: 600;
+        font-size: 1rem;
+        height: 52px;
+
+        ion-icon {
+            font-size: 1.2rem;
+        }
+
+        &[disabled] {
+            --background: #2a3247;
+            --color: #555e78;
+            opacity: 1;
+        }
+    }
+}

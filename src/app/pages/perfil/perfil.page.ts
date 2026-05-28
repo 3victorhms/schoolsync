@@ -8,6 +8,8 @@ import {
 import { addIcons } from 'ionicons';
 import { homeOutline, businessOutline, trophyOutline, personOutline, pencilOutline } from 'ionicons/icons';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { ToastController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-perfil',
@@ -35,12 +37,13 @@ export class PerfilPage implements OnInit {
       .join('');
   }
 
-  constructor(private router: Router, private usuarioService: UsuarioService) {
+  constructor(private router: Router, private usuarioService: UsuarioService, private navController: NavController) {
     addIcons({
       pencilOutline, homeOutline,
       businessOutline,
       trophyOutline,
-      personOutline,
+      personOutline
+
     });
   }
 
@@ -49,5 +52,10 @@ export class PerfilPage implements OnInit {
 
   editarPerfil() {
     this.router.navigate(['usuario']);
+  }
+
+  logout() {
+    this.usuarioService.encerrarAutenticacao();
+    this.navController.navigateRoot('/login');
   }
 }

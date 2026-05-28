@@ -1,147 +1,273 @@
+// Estilos feitos com as I.As Lovable e Claude
+
 ion-toolbar {
     --background: #0f1117;
     --border-color: transparent;
+
+    ion-back-button {
+        --color: #ffffff;
+    }
 
     ion-title {
         font-size: 22px;
         font-weight: 700;
         color: #ffffff;
+        padding: 0;
+
+        .subtitulo {
+            font-size: 13px;
+            font-weight: 400;
+            color: #8891aa;
+            margin: 2px 0 0;
+        }
     }
-}
-
-.entrar-btn {
-    --color: #ffffff;
-    --border-color: #2e3346;
-    --background: #1a1f2e;
-    --border-radius: 999px;
-    font-size: 14px;
-    font-weight: 600;
-    height: 36px;
-    margin-right: 6px;
-}
-
-.criar-btn {
-    --background: #3a6ff7;
-    --color: #ffffff;
-    --border-radius: 999px;
-    width: 36px;
-    height: 36px;
-    margin-right: 4px;
 }
 
 ion-content {
     --background: #0f1117;
 }
 
-.salas-lista {
-    padding: 16px;
+.acoes {
     display: flex;
-    flex-direction: column;
     gap: 12px;
-}
+    padding: 20px 16px 8px;
 
-.sala-card {
-    --background: #171c28;
-    border-radius: 16px;
-    border: 1px solid #252b3d;
-    box-shadow: none;
-    margin: 0;
-
-    ion-card-content {
-        padding: 16px;
-    }
-}
-
-.sala-row {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.sala-icone {
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
-    background: #1e2540;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-
-    ion-icon {
-        font-size: 26px;
-        color: #3a6ff7;
-    }
-}
-
-.sala-info {
-    flex: 1;
-
-    h2 {
-        font-size: 16px;
-        font-weight: 700;
-        color: #ffffff;
-        margin: 0 0 6px;
-    }
-}
-
-.sala-meta {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    span {
+    .acao-btn {
+        flex: 1;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 4px;
+        gap: 8px;
+        background: #171c28;
+        border: none;
+        border-radius: 16px;
+        padding: 18px 12px;
+        color: #3a6ff7;
         font-size: 13px;
-        color: #8891aa;
+        font-weight: 600;
+        cursor: pointer;
 
         ion-icon {
-            font-size: 14px;
+            font-size: 22px;
         }
     }
 }
 
-.sala-codigo {
-    font-size: 11px !important;
-    font-weight: 600;
+.secao {
+    padding: 16px 16px 0;
+    margin-bottom: 8px;
+
+    .secao-titulo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0 0 12px;
+
+        ion-icon {
+            color: #3a6ff7;
+            font-size: 20px;
+        }
+    }
+}
+
+.top3-lista {
+    background: #171c28;
+    border-radius: 16px;
+    overflow: hidden;
+
+    .top3-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        border-bottom: 1px solid #1e2540;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        .top3-pos {
+            width: 20px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #8891aa;
+            text-align: center;
+        }
+
+        .top3-nome {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .top3-xp {
+            font-size: 14px;
+            font-weight: 700;
+            color: #3a6ff7;
+        }
+    }
+}
+
+.atividades-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .atividade-card {
+        background: #171c28;
+        border-radius: 16px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .atividade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+
+            .atividade-titulo {
+                font-size: 15px;
+                font-weight: 700;
+                color: #ffffff;
+                margin: 0 0 4px;
+            }
+
+            .atividade-descricao {
+                font-size: 13px;
+                color: #8891aa;
+                margin: 0;
+            }
+
+            .atividade-materia {
+                background: #1e2f5e;
+                color: #3a6ff7;
+                font-size: 12px;
+                font-weight: 600;
+                padding: 4px 10px;
+                border-radius: 20px;
+                white-space: nowrap;
+            }
+        }
+
+        .atividade-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: #8891aa;
+
+            span {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+
+                ion-icon {
+                    font-size: 14px;
+                }
+            }
+        }
+
+        .atividade-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+
+            ion-icon {
+                font-size: 15px;
+            }
+
+            &.pendente {
+                color: #3a6ff7;
+            }
+
+            &.concluido {
+                color: #3abf7f;
+            }
+
+            &.no_caderno {
+                color: #8891aa;
+            }
+        }
+    }
+
+    .vazio {
+        text-align: center;
+        padding: 24px;
+        color: #4e5670;
+        font-size: 14px;
+    }
+}
+
+.membros-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 32px;
+
+    .membro-item {
+        background: #171c28;
+        border-radius: 16px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .membro-pos {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #1e2540;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: #8891aa;
+        }
+
+        .membro-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+
+            .membro-nome {
+                font-size: 15px;
+                font-weight: 600;
+                color: #ffffff;
+
+                .voce {
+                    color: #3a6ff7;
+                    font-size: 13px;
+                    margin-left: 4px;
+                }
+            }
+
+            .membro-xp {
+                font-size: 12px;
+                color: #8891aa;
+            }
+        }
+    }
+}
+
+.avatar-small {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
     background: #252b3d;
-    padding: 2px 8px;
-    border-radius: 6px;
-    letter-spacing: 0.5px;
-}
-
-.sala-seta {
-    font-size: 18px;
-    color: #3d4460;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
     flex-shrink: 0;
-}
-
-ion-tab-bar {
-    --background: #0f1117;
-    --border: none;
-    padding-bottom: env(safe-area-inset-bottom);
-    height: 64px;
-    border-top: 1px solid #1e2540;
-}
-
-ion-tab-button {
-    --color: #4e5670;
-    --color-selected: #3a6ff7;
-    --ripple-color: transparent;
-
-    ion-icon {
-        font-size: 22px;
-    }
-
-    ion-label {
-        font-size: 11px;
-        font-weight: 600;
-        margin-top: 4px;
-    }
-}
-
-.selecionado {
-    color: #3a79df;
 }

@@ -1,12 +1,112 @@
 <ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      <div class="header-titulo">
+        <div>
+          <p class="ola">Olá,</p>
+          <h1 class="nome">{{ usuario.nome.split(' ')[0] }} 👋</h1>
+        </div>
+        <div class="notificacao-btn">
+          <ion-icon name="notifications-outline"></ion-icon>
+          <span class="notificacao-badge">2</span>
+        </div>
+      </div>
+    </ion-title>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Inicio</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+  <div class="calendario-card">
+    <div class="calendario-header">
+      <button class="cal-nav" (click)="mesAnterior()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+      <span class="cal-titulo">{{ mesAtual }}</span>
+      <button class="cal-nav" (click)="proximoMes()">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="calendario-dias-semana">
+      <span>dom</span>
+      <span>seg</span>
+      <span>ter</span>
+      <span>qua</span>
+      <span>qui</span>
+      <span>sex</span>
+      <span>sab</span>
+    </div>
+
+    <div class="calendario-dias">
+      @for (dia of diasCalendario; track dia.data) {
+      <button class="cal-dia" [class.outro-mes]="!dia.mesAtual" [class.hoje]="dia.hoje"
+        [class.selecionado]="dia.selecionado" (click)="selecionarDia(dia)">
+        {{ dia.numero }}
+      </button>
+      }
+    </div>
+  </div>
+
+  <div class="data-secao">
+    <h3 class="data-titulo">{{ dataSelecionadaLabel }}</h3>
+    <div class="atividades-data">
+      @if (atividadesDoDia.length === 0) {
+      <div class="vazio-data">
+        <span>Nenhuma atividade nesta data</span>
+      </div>
+      } @else {
+      @for (atividade of atividadesDoDia; track atividade.id) {
+      <div class="atividade-item">
+        <div class="atividade-header">
+          <div>
+            <h4 class="atividade-titulo">{{ atividade.titulo }}</h4>
+            <p class="atividade-descricao">{{ atividade.descricao }}</p>
+          </div>
+          <span class="atividade-disciplina">{{ atividade.disciplina }}</span>
+        </div>
+        <div class="atividade-meta">
+          <span><ion-icon name="calendar-outline"></ion-icon> {{ formatarData(atividade.dataEntrega) }}</span>
+          <span><ion-icon name="people-outline"></ion-icon> {{ atividade.noCaderno.length }} no caderno</span>
+        </div>
+        <div class="atividade-meta">
+          <span><ion-icon name="star-outline"></ion-icon> {{ atividade.valor }} pontos</span>
+        </div>
+      </div>
+      }
+      }
+    </div>
+  </div>
+
+  @if (ultimaSala) {
+  <div class="ultima-sala-secao">
+    <h3 class="secao-titulo">Última sala</h3>
+    <ion-card class="sala-card" [routerLink]="['/sala', ultimaSala.id]" button>
+      <ion-card-content>
+        <div class="sala-row">
+          <div class="sala-icone">
+            <ion-icon name="business-outline"></ion-icon>
+          </div>
+          <div class="sala-info">
+            <h2>{{ ultimaSala.nome }}</h2>
+            <div class="sala-meta">
+              <span>
+                <ion-icon name="people-outline"></ion-icon>
+                {{ ultimaSala.membros.length }}
+              </span>
+              <span>
+                <ion-icon name="documents-outline"></ion-icon>
+                {{ ultimaSala.atividades.length }}
+              </span>
+              <span class="sala-codigo">{{ ultimaSala.codigoConvite }}</span>
+            </div>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="sala-seta"></ion-icon>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  }
 
 </ion-content>
 
@@ -17,7 +117,7 @@
     <ion-label>Inicio</ion-label>
   </ion-tab-button>
 
-  <ion-tab-button tab="sala" routerLink="/sala">
+  <ion-tab-button tab="salas" routerLink="/salas">
     <ion-icon name="business-outline"></ion-icon>
     <ion-label>Salas</ion-label>
   </ion-tab-button>

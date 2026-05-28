@@ -1,0 +1,111 @@
+ion-toolbar {
+    --background: #0f1117;
+    --border-color: transparent;
+
+    ion-back-button {
+        --color: #ffffff;
+    }
+
+    ion-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #ffffff;
+        padding: 0;
+
+        .subtitulo {
+            font-size: 13px;
+            font-weight: 400;
+            color: #8891aa;
+            margin: 2px 0 0;
+        }
+    }
+}
+
+ion-content {
+    --background: #0f1117;
+}
+
+form {
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .campo-grupo {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .campo-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #8891aa;
+            padding-left: 4px;
+        }
+
+        .campo-item {
+            --background: #171c28;
+            --border-radius: 12px;
+            --padding-start: 16px;
+            --padding-end: 16px;
+            --inner-padding-end: 0;
+            border-radius: 12px;
+
+            input {
+                background: transparent;
+                border: none;
+                outline: none;
+                color: #ffffff;
+                font-size: 15px;
+                width: 100%;
+                padding: 14px 0;
+
+                &::placeholder {
+                    color: #4e5670;
+                }
+
+                &[type="date"] {
+                    color-scheme: dark;
+                }
+            }
+        }
+
+        .campo-textarea {
+            align-items: flex-start;
+
+            textarea {
+                background: transparent;
+                border: none;
+                outline: none;
+                color: #ffffff;
+                font-size: 15px;
+                width: 100%;
+                min-height: 100px;
+                padding: 14px 0;
+                resize: none;
+                font-family: inherit;
+
+                &::placeholder {
+                    color: #4e5670;
+                }
+            }
+        }
+    }
+
+    .botao-criar {
+        --background: #3a6ff7;
+        --background-activated: #2d57b0;
+        --border-radius: 14px;
+        --color: #ffffff;
+        font-weight: 600;
+        font-size: 16px;
+        height: 52px;
+        margin-top: 8px;
+
+        &[disabled] {
+            --background: #1e2540;
+            --color: #4e5670;
+            opacity: 1;
+        }
+    }
+}

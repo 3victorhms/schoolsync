@@ -2,6 +2,10 @@
   <ion-toolbar>
     <ion-title>Perfil</ion-title>
     <ion-buttons slot="end">
+      <ion-button fill="clear" class="logout-btn" (click)="logout()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Sair
+      </ion-button>
       <ion-button class="editar-btn" (click)="editarPerfil()">
         <ion-icon name="pencil-outline" slot="start"></ion-icon>
         Editar
@@ -33,7 +37,7 @@
     <ion-label>Inicio</ion-label>
   </ion-tab-button>
 
-  <ion-tab-button tab="sala" routerLink="/sala">
+  <ion-tab-button tab="salas" routerLink="/salas">
     <ion-icon name="business-outline"></ion-icon>
     <ion-label>Salas</ion-label>
   </ion-tab-button>

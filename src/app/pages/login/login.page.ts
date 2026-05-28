@@ -52,7 +52,7 @@ export class LoginPage implements OnInit {
 
     if (this.usuario && this.usuario.id != "") {
       this.usuarioService.registrarAutenticacao(this.usuario);
-      this.navController.navigateBack('/sala');
+      this.navController.navigateBack('/inicio');
     } else {
       this.exibirMensagem('Login ou senha inválidos');
     }

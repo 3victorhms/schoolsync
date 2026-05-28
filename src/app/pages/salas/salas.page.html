@@ -1,0 +1,82 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Salas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="outline" class="entrar-btn" routerLink="/entrar-sala">
+        <ion-icon name="log-in-outline" slot="start"></ion-icon>
+        Entrar
+      </ion-button>
+      <ion-button fill="solid" class="criar-btn" routerLink="/add-sala">
+        <ion-icon name="add" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <div class="salas-lista">
+
+    @for (sala of salas; track sala.id) {
+    <ion-card class="sala-card" [routerLink]="['/sala', sala.id]" button>
+      <ion-card-content>
+        <div class="sala-row">
+
+          <div class="sala-icone">
+            <ion-icon name="business-outline"></ion-icon>
+          </div>
+
+          <div class="sala-info">
+            <h2>{{ sala.nome }}</h2>
+            <div class="sala-meta">
+              <span>
+                <ion-icon name="people-outline"></ion-icon>
+                {{ sala.membros.length }}
+              </span>
+              <span>
+                <ion-icon name="documents-outline"></ion-icon>
+                {{ sala.atividades.length }}
+              </span>
+              <span class="sala-codigoConvite">{{ sala.codigoConvite }}</span>
+            </div>
+          </div>
+
+          <ion-icon name="chevron-forward-outline" class="sala-seta"></ion-icon>
+
+        </div>
+      </ion-card-content>
+    </ion-card>
+    } @empty {
+    <div class="salas-vazio">
+      <p>Você não está em nenhuma sala :(</p>
+      <span>Crie uma sala ou entre com um código</span>
+    </div>
+    }
+
+  </div>
+
+</ion-content>
+
+<ion-tab-bar slot="bottom">
+
+  <ion-tab-button tab="inicio" routerLink="/inicio">
+    <ion-icon name="home-outline"></ion-icon>
+    <ion-label>Inicio</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button class="selecionado" tab="sala" routerLink="/salas">
+    <ion-icon name="business-outline"></ion-icon>
+    <ion-label>Salas</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button tab="ranking" routerLink="/ranking">
+    <ion-icon name="trophy-outline"></ion-icon>
+    <ion-label>Ranking</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button tab="perfil" routerLink="/perfil">
+    <ion-icon name="person-outline"></ion-icon>
+    <ion-label>Perfil</ion-label>
+  </ion-tab-button>
+
+</ion-tab-bar>

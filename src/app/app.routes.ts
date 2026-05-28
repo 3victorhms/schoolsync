@@ -19,10 +19,6 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/add-usuario/add-usuario.page').then(m => m.AddUsuarioPage)
   },
   {
-    path: 'add-usuario/:id',
-    loadComponent: () => import('./pages/add-usuario/add-usuario.page').then(m => m.AddUsuarioPage)
-  },
-  {
     path: 'inicio',
     loadComponent: () => import('./pages/inicio/inicio.page').then(m => m.InicioPage)
   },
@@ -39,7 +35,15 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/sala/sala.page').then(m => m.SalaPage)
   },
   {
+    path: 'sala/:id',
+    loadComponent: () => import('./pages/sala/sala.page').then(m => m.SalaPage)
+  },
+  {
     path: 'atividade',
+    loadComponent: () => import('./pages/atividade/atividade.page').then(m => m.AtividadePage)
+  },
+  {
+    path: 'atividade/:id',
     loadComponent: () => import('./pages/atividade/atividade.page').then(m => m.AtividadePage)
   },
   {
@@ -59,7 +63,19 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/add-atividade/add-atividade.page').then(m => m.AddAtividadePage)
   },
   {
+    path: 'add-atividade/:idSala',
+    loadComponent: () => import('./pages/add-atividade/add-atividade.page').then(m => m.AddAtividadePage)
+  },
+  {
     path: 'add-tarefa',
     loadComponent: () => import('./pages/add-tarefa/add-tarefa.page').then(m => m.AddTarefaPage)
+  },
+  {
+    path: 'salas',
+    loadComponent: () => import('./pages/salas/salas.page').then(m => m.SalasPage)
+  },
+  {
+    path: 'entrar-sala',
+    loadComponent: () => import('./pages/entrar-sala/entrar-sala.page').then(m => m.EntrarSalaPage)
   },
 ];

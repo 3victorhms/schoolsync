@@ -1,13 +1,56 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>add-atividade</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/salas"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Nova Atividade
+      <p class="subtitulo">{{ sala.nome }}</p>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">add-atividade</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <form [formGroup]="formGroup" (ngSubmit)="salvar()">
+
+    <div class="campo-grupo">
+      <label class="campo-label">Título</label>
+      <ion-item class="campo-item" lines="none">
+        <input type="text" placeholder="Ex: Trabalho de Biologia" formControlName="titulo" />
+      </ion-item>
+    </div>
+
+    <div class="campo-grupo">
+      <label class="campo-label">Descrição</label>
+      <ion-item class="campo-item campo-textarea" lines="none">
+        <textarea placeholder="Descreva a atividade..." formControlName="descricao"></textarea>
+      </ion-item>
+    </div>
+
+    <div class="campo-grupo">
+      <label class="campo-label">Disciplina</label>
+      <ion-item class="campo-item" lines="none">
+        <input type="text" placeholder="Ex: Biologia, Matemática..." formControlName="disciplina" />
+      </ion-item>
+    </div>
+
+    <div class="campo-grupo">
+      <label class="campo-label">Valor</label>
+      <ion-item class="campo-item" lines="none">
+        <input type="number" placeholder="Ex: 10 pontos" formControlName="valor" />
+      </ion-item>
+    </div>
+
+    <div class="campo-grupo">
+      <label class="campo-label">Data de entrega</label>
+      <ion-item class="campo-item" lines="none">
+        <input type="date" formControlName="dataEntrega" [min]="hoje" />
+      </ion-item>
+    </div>
+
+    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="!formGroup.valid">
+      Criar atividade
+    </ion-button>
+
+  </form>
 </ion-content>
