@@ -46,13 +46,13 @@
   <div class="status-secao">
     <p class="secao-label">Status da atividade</p>
     <div class="status-botoes">
-      <button class="status-btn" [class.ativo]="atividade.status === 'em_andamento'" [disabled]="prazoEncerrado"
-        (click)="alterarStatus('em_andamento')">
+      <button class="status-btn" [class.ativo]="atividade.status === 'em_andamento'"
+        [disabled]="prazoEncerrado || !estaNoCaderno" (click)="alterarStatus('em_andamento')">
         <ion-icon name="time-outline"></ion-icon>
         Em andamento
       </button>
-      <button class="status-btn" [class.ativo]="atividade.status === 'concluido'" [disabled]="prazoEncerrado"
-        (click)="alterarStatus('concluido')">
+      <button class="status-btn" [class.ativo]="atividade.status === 'concluido'"
+        [disabled]="prazoEncerrado || !estaNoCaderno" (click)="alterarStatus('concluido')">
         <ion-icon name="checkmark-circle-outline"></ion-icon>
         Concluído
         <ion-icon name="flash-outline" class="xp-icon"></ion-icon>

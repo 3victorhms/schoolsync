@@ -28,6 +28,53 @@
 
     </ion-card-content>
   </ion-card>
+
+  <div class="caderno-secao">
+    <h3 class="caderno-titulo">Meu Caderno</h3>
+
+    <div class="filtros">
+      <button class="filtro-btn" [class.ativo]="filtroAtivo === 'todas'" (click)="filtrar('todas')">
+        <ion-icon name="book-outline"></ion-icon>
+        Todas
+      </button>
+      <button class="filtro-btn" [class.ativo]="filtroAtivo === 'em_andamento'" (click)="filtrar('em_andamento')">
+        <ion-icon name="time-outline"></ion-icon>
+        Em andamento
+      </button>
+      <button class="filtro-btn" [class.ativo]="filtroAtivo === 'concluido'" (click)="filtrar('concluido')">
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+        Concluídas
+      </button>
+    </div>
+
+    <div class="atividades-lista">
+      @for (atividade of atividadesFiltradas; track atividade.id) {
+      <div class="atividade-card" [routerLink]="['/atividade', atividade.id]">
+        <div class="atividade-header">
+          <div>
+            <h4 class="atividade-titulo">{{ atividade.titulo }}</h4>
+            <p class="atividade-descricao">{{ atividade.descricao }}</p>
+          </div>
+          <span class="atividade-disciplina">{{ atividade.disciplina }}</span>
+        </div>
+        <div class="atividade-meta">
+          <span><ion-icon name="calendar-outline"></ion-icon> {{ formatarData(atividade.dataEntrega) }}</span>
+          <span><ion-icon name="people-outline"></ion-icon> {{ atividade.noCaderno.length }} no caderno</span>
+          <span><ion-icon name="star-outline"></ion-icon> {{ atividade.valor }} pontos</span>
+        </div>
+        <div class="atividade-status" [ngClass]="atividade.status">
+          <ion-icon [name]="iconeStatus(atividade.status)"></ion-icon>
+          {{ labelStatus(atividade.status) }}
+        </div>
+      </div>
+      } @empty {
+      <div class="caderno-vazio">
+        <p>Nenhuma atividade encontrada.</p>
+      </div>
+      }
+    </div>
+  </div>
+
 </ion-content>
 
 <ion-tab-bar slot="bottom">

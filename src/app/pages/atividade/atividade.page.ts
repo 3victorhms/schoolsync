@@ -86,7 +86,7 @@ export class AtividadePage implements OnInit {
   }
 
   alterarStatus(status: string) {
-    if (this.prazoEncerrado) return;
+    if (this.prazoEncerrado || !this.estaNoCaderno) return;
     this.atividade.status = status;
     this.atividadeService.salvar(this.atividade).subscribe();
   }

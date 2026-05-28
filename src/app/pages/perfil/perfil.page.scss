@@ -1,3 +1,5 @@
+// Estilos feitos com auxílio das I.As Lovable e Claude
+
 ion-toolbar {
     --background: #0f1117;
     --border-color: transparent;
@@ -75,6 +77,139 @@ ion-content {
     font-size: 14px;
     color: #8891aa;
     margin: 0;
+}
+
+.caderno-secao {
+    padding: 0 16px 32px;
+
+    .caderno-titulo {
+        font-size: 20px;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0 0 16px;
+    }
+
+    .filtros {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+        overflow-x: auto;
+
+        .filtro-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #171c28;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            color: #8891aa;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 14px;
+            white-space: nowrap;
+            cursor: pointer;
+
+            ion-icon {
+                font-size: 14px;
+            }
+
+            &.ativo {
+                border-color: #3a6ff7;
+                color: #3a6ff7;
+            }
+        }
+    }
+
+    .atividades-lista {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .atividade-card {
+            background: #171c28;
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            cursor: pointer;
+
+            .atividade-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 8px;
+
+                .atividade-titulo {
+                    font-size: 15px;
+                    font-weight: 700;
+                    color: #ffffff;
+                    margin: 0 0 4px;
+                }
+
+                .atividade-descricao {
+                    font-size: 13px;
+                    color: #8891aa;
+                    margin: 0;
+                }
+
+                .atividade-disciplina {
+                    background: #1e2f5e;
+                    color: #3a6ff7;
+                    font-size: 12px;
+                    font-weight: 600;
+                    padding: 4px 10px;
+                    border-radius: 20px;
+                    white-space: nowrap;
+                }
+            }
+
+            .atividade-meta {
+                display: flex;
+                gap: 12px;
+                font-size: 12px;
+                color: #8891aa;
+                flex-wrap: wrap;
+
+                span {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+
+                    ion-icon {
+                        font-size: 13px;
+                    }
+                }
+            }
+
+            .atividade-status {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 13px;
+                font-weight: 600;
+
+                ion-icon {
+                    font-size: 15px;
+                }
+
+                &.em_andamento {
+                    color: #3a6ff7;
+                }
+
+                &.concluido {
+                    color: #3abf7f;
+                }
+            }
+        }
+
+        .caderno-vazio {
+            text-align: center;
+            padding: 24px;
+            color: #4e5670;
+            font-size: 14px;
+        }
+    }
 }
 
 ion-tab-bar {
