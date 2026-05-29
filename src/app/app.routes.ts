@@ -67,6 +67,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/add-atividade/add-atividade.page').then(m => m.AddAtividadePage)
   },
   {
+    path: 'add-atividade-editar/:id',
+    loadComponent: () => import('./pages/add-atividade/add-atividade.page').then(m => m.AddAtividadePage)
+  },
+  {
     path: 'add-tarefa',
     loadComponent: () => import('./pages/add-tarefa/add-tarefa.page').then(m => m.AddTarefaPage)
   },

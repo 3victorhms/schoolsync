@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonIcon } from '@ionic/angular/standalone';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { UsuarioModel } from 'src/app/model/usuario.model';
@@ -43,7 +43,9 @@ export class SalaPage implements OnInit {
         addIcons({ addOutline, peopleOutline, trophyOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline });
     }
 
-    ngOnInit() {
+    ngOnInit() { }
+
+    ionViewWillEnter() {
         const id = this.activatedRoute.snapshot.params['id'];
 
         if (id) {
@@ -54,14 +56,10 @@ export class SalaPage implements OnInit {
                     return;
                 }
                 this.sala = res;
+                this.atividades = this.atividadeService.listarPorSala(this.sala.id);
                 localStorage.setItem('ultimaSala', this.sala.id);
             });
         }
-
-    }
-
-    ionViewWillEnter() {
-        this.carregarAtividades();
     }
 
     carregarAtividades() {
@@ -77,18 +75,21 @@ export class SalaPage implements OnInit {
         return nome.split(' ').slice(0, 2).map(n => n[0].toUpperCase()).join('');
     }
 
-    iconeStatus(status: string): string {
-        switch (status) {
+    statusDoUsuario(status: Record<string, string>): string {
+        if (!status) return 'em_andamento';
+        return status[this.usuario.id] || 'em_andamento';
+    }
+
+    iconeStatus(status: Record<string, string>): string {
+        switch (this.statusDoUsuario(status)) {
             case 'concluido': return 'checkmark-circle-outline';
-            case 'no_caderno': return 'book-outline';
             default: return 'time-outline';
         }
     }
 
-    labelStatus(status: string): string {
-        switch (status) {
+    labelStatus(status: Record<string, string>): string {
+        switch (this.statusDoUsuario(status)) {
             case 'concluido': return 'Concluído';
-            case 'no_caderno': return 'No caderno';
             default: return 'Em andamento';
         }
     }

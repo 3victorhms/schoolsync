@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="/salas"></ion-back-button>
     </ion-buttons>
     <ion-title>
-      Nova Atividade
+      {{ editando ? 'Editar Atividade' : 'Nova Atividade' }}
       <p class="subtitulo">{{ sala.nome }}</p>
     </ion-title>
   </ion-toolbar>
@@ -49,7 +49,7 @@
     </div>
 
     <ion-button type="submit" expand="block" class="botao-criar" [disabled]="!formGroup.valid">
-      Criar atividade
+      {{ editando ? 'Salvar alterações' : 'Criar atividade' }}
     </ion-button>
 
   </form>

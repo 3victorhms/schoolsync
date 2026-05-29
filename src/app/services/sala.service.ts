@@ -51,7 +51,7 @@ export class SalaService {
 
     const jaMembro = sala.membros.some((m: UsuarioModel) => m && m.id === idUsuarioAdicionar);
 
-    // só adicionao usuário no vetor de membros dentro de sala se o id do usuário não estiver presente no vetor membros
+    // só adiciona o usuário no vetor de membros dentro de sala se o id do usuário não estiver presente no vetor membros
     if (!jaMembro) {
       let usuarioAdicionar: UsuarioModel;
       if (usuario && usuario.id) {
@@ -86,14 +86,53 @@ export class SalaService {
       salas[pos].atividades = [];
     }
 
-    // salva no localStorage de atividades
-    atividadeService.salvar(atividade).subscribe(a => atividade = a);
+    if (!atividade.id) {
+      atividade.id = this.gerarId(11);
+    }
 
-    // salva dentro da sala
+    if (!atividade.status || typeof atividade.status !== 'object') {
+      atividade.status = {};
+    }
+
+    // salva nos dois lugares de forma síncrona
+    let atividades = JSON.parse(localStorage.getItem('atividades') || '[]');
+    const usuario = JSON.parse(localStorage.getItem('usuarioAutenticado') || '{}') as UsuarioModel;
+    if (!Array.isArray(atividade.noCaderno)) atividade.noCaderno = [];
+    atividade.noCaderno[0] = usuario;
+    atividades.push(atividade);
+    localStorage.setItem('atividades', JSON.stringify(atividades));
+
     salas[pos].atividades.push(atividade);
     localStorage.setItem('salas', JSON.stringify(salas));
 
     return of(atividade);
+  }
+
+  excluirAtividade(atividade: AtividadeModel): void {
+    const salas = JSON.parse(localStorage.getItem('salas') || '[]') as SalaModel[];
+    const posSala = salas.findIndex((s: SalaModel) => s.id === atividade.idSala);
+
+    if (posSala < 0) return;
+
+    salas[posSala].atividades = salas[posSala].atividades.filter(
+      (a: AtividadeModel) => a.id !== atividade.id
+    );
+    localStorage.setItem('salas', JSON.stringify(salas));
+  }
+
+  sincronizarAtividade(atividade: AtividadeModel): void {
+    // atualiza a atividade dentro da sala, pois a arividade é salva no localstorage de atividades porém também dentro de um vetor dentro de um objeto sala
+    const salas = JSON.parse(localStorage.getItem('salas') || '[]') as SalaModel[];
+    const posSala = salas.findIndex((s: SalaModel) => s.id === atividade.idSala);
+
+    if (posSala < 0) return;
+
+    const posAtividade = salas[posSala].atividades.findIndex((a: AtividadeModel) => a.id === atividade.id);
+
+    if (posAtividade < 0) return;
+
+    salas[posSala].atividades[posAtividade] = atividade;
+    localStorage.setItem('salas', JSON.stringify(salas));
   }
 
   private gerarId(tamanho: number = 11): string {

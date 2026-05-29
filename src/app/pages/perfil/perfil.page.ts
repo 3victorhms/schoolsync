@@ -71,8 +71,21 @@ export class PerfilPage implements OnInit {
     if (filtro === 'todas') {
       this.atividadesFiltradas = this.atividades;
     } else {
-      this.atividadesFiltradas = this.atividades.filter(a => a.status === filtro);
+      this.atividadesFiltradas = this.atividades.filter(a => {
+        const status = a.status?.[this.usuario.nome] || 'em_andamento';
+        return status === filtro;
+      });
     }
+  }
+
+  iconeStatus(status: Record<string, string>): string {
+    const s = status?.[this.usuario.nome] || 'em_andamento';
+    return s === 'concluido' ? 'checkmark-circle-outline' : 'time-outline';
+  }
+
+  labelStatus(status: Record<string, string>): string {
+    const s = status?.[this.usuario.nome] || 'em_andamento';
+    return s === 'concluido' ? 'Concluído' : 'Em andamento';
   }
 
   formatarData(data: string): string {
@@ -81,14 +94,6 @@ export class PerfilPage implements OnInit {
     const meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun',
       'jul', 'ago', 'set', 'out', 'nov', 'dez'];
     return `${dia} ${meses[parseInt(mes) - 1]}`;
-  }
-
-  iconeStatus(status: string): string {
-    return status === 'concluido' ? 'checkmark-circle-outline' : 'time-outline';
-  }
-
-  labelStatus(status: string): string {
-    return status === 'concluido' ? 'Concluído' : 'Em andamento';
   }
 
   editarPerfil() {

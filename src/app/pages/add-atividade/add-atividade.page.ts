@@ -23,6 +23,7 @@ export class AddAtividadePage implements OnInit {
   usuario: UsuarioModel;
   sala: SalaModel;
   formGroup: FormGroup;
+  editando: boolean = false;
 
   hoje = new Date().toISOString().split('T')[0];
   // O método toISOString() retorna uma cadeia de caracteres (string) simplificada no formato ISO extendido (ISO 8601), 
@@ -49,10 +50,14 @@ export class AddAtividadePage implements OnInit {
     });
   }
 
-  ngOnInit() {
-    let id = this.activatedRoute.snapshot.params['id'];
+
+  ngOnInit() { }
+
+  ionViewWillEnter() {
+    const id = this.activatedRoute.snapshot.params['id'];
 
     if (id) {
+      this.editando = true;
       this.atividadeService.buscarPorId(id).subscribe(res => {
         if (!res) {
           this.exibirMensagem('Atividade não encontrada');
@@ -60,6 +65,11 @@ export class AddAtividadePage implements OnInit {
         }
         this.atividade = res;
         this.formGroup.get('titulo')?.setValue(this.atividade.titulo);
+        this.formGroup.get('descricao')?.setValue(this.atividade.descricao);
+        this.formGroup.get('disciplina')?.setValue(this.atividade.disciplina);
+        this.formGroup.get('valor')?.setValue(this.atividade.valor);
+        this.formGroup.get('dataEntrega')?.setValue(this.atividade.dataEntrega);
+        this.formGroup.get('dataEntrega')?.disable();
       });
     }
 
@@ -77,7 +87,6 @@ export class AddAtividadePage implements OnInit {
       });
     }
   }
-
   dataMinima() {
     return (control: any) => {
       const hoje = new Date().toISOString().split('T')[0]; // "2026-05-28"
@@ -91,19 +100,29 @@ export class AddAtividadePage implements OnInit {
     this.atividade.descricao = this.formGroup.get('descricao')?.value;
     this.atividade.disciplina = this.formGroup.get('disciplina')?.value;
     this.atividade.valor = this.formGroup.get('valor')?.value;
-    this.atividade.dataEntrega = this.formGroup.get('dataEntrega')?.value;
-    this.atividade.criadaPor = this.usuario.id;
-    this.atividade.status = 'nao_iniciada';
+    this.atividade.dataEntrega = this.formGroup.get('dataEntrega')?.value || this.atividade.dataEntrega;
+    this.atividade.criadaPor = this.atividade.criadaPor || this.usuario.id;
 
-    this.salaService.adicionarAtividade(this.atividade, this.atividadeService).subscribe({
-      next: () => {
-        this.exibirMensagem('Atividade criada com sucesso!');
-        this.navController.navigateBack('/sala/' + this.atividade.idSala);
-      },
-      error: () => {
-        this.exibirMensagem('Erro ao criar atividade.');
-      }
-    });
+    if (this.atividade.id) {
+      // edição
+      this.atividadeService.salvar(this.atividade).subscribe({
+        next: () => {
+          this.salaService.sincronizarAtividade(this.atividade);
+          this.exibirMensagem('Atividade atualizada com sucesso!');
+          this.navController.navigateForward('/atividade/' + this.atividade.id);
+        },
+        error: () => this.exibirMensagem('Erro ao atualizar atividade.')
+      });
+    } else {
+      // criação
+      this.salaService.adicionarAtividade(this.atividade, this.atividadeService).subscribe({
+        next: () => {
+          this.exibirMensagem('Atividade criada com sucesso!');
+          this.navController.navigateForward('/sala/' + this.atividade.idSala);
+        },
+        error: () => this.exibirMensagem('Erro ao criar atividade.')
+      });
+    }
   }
 
   async exibirMensagem(texto: string) {
