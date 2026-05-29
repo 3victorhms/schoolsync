@@ -57,7 +57,7 @@
       </div>
       } @else {
       @for (atividade of atividadesDoDia; track atividade.id) {
-      <div class="atividade-item">
+      <div class="atividade-item" [routerLink]="['/atividade', atividade.id]" button>
         <div class="atividade-header">
           <div>
             <h4 class="atividade-titulo">{{ atividade.titulo }}</h4>
