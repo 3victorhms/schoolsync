@@ -122,7 +122,8 @@ export class InicioPage implements OnInit {
 
   carregarAtividadesDoDia() {
     const todas = this.atividadeService.listar();
-    const dataStr = this.dataSelecionada.toISOString().split('T')[0];
+    const d = this.dataSelecionada;
+    const dataStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     this.atividadesDoDia = todas.filter(a => a.dataEntrega === dataStr);
   }
 
