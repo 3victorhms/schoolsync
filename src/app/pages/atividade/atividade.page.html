@@ -4,10 +4,6 @@
       <ion-back-button defaultHref="/salas"></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <span class="status-badge" [ngClass]="'badge-' + statusPrazo">
-        <ion-icon [name]="iconePrazo"></ion-icon>
-        {{ labelPrazo }}
-      </span>
       @if (usuario.id === atividade.criadaPor) {
       <ion-button fill="clear" class="editar-btn" (click)="editar()">
         <ion-icon name="create-outline" slot="icon-only"></ion-icon>
@@ -40,6 +36,11 @@
     </div>
 
     <p class="criado-por">Criado por {{ criadorNome }}</p>
+
+    <span class="status-badge" [ngClass]="'badge-' + statusPrazo">
+      <ion-icon [name]="iconePrazo"></ion-icon>
+      {{ labelPrazo }}
+    </span>
 
     @if (prazoEncerrado) {
     <div class="aviso-prazo">

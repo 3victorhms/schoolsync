@@ -6,7 +6,7 @@ import {
   IonButtons, IonButton, IonIcon, IonCard, IonLabel, IonCardContent, IonTabButton, IonTabBar
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { homeOutline, businessOutline, trophyOutline, personOutline, pencilOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline } from 'ionicons/icons';
+import { homeOutline, businessOutline, trophyOutline, personOutline, pencilOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, book } from 'ionicons/icons';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
@@ -45,7 +45,7 @@ export class PerfilPage implements OnInit {
 
   constructor(private router: Router, private usuarioService: UsuarioService, private navController: NavController, private atividadeService: AtividadeService) {
     addIcons({
-      pencilOutline, homeOutline, businessOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline
+      book, pencilOutline, homeOutline, businessOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline
 
     });
   }
@@ -54,6 +54,9 @@ export class PerfilPage implements OnInit {
   }
 
   ionViewWillEnter() {
+    this.usuario = {
+      nome: this.usuarioService.buscarAutenticacao().nome,
+    };
     this.carregarCaderno();
   }
 

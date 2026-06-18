@@ -2,11 +2,18 @@ import { Injectable } from '@angular/core';
 import { AtividadeModel } from '../model/atividade.model';
 import { Observable, of } from 'rxjs';
 import { UsuarioModel } from '../model/usuario.model';
+import { SalaModel } from '../model/sala.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AtividadeService {
+
+  excluirAtividadesDaSala(sala: SalaModel): void {
+    let atividades = JSON.parse(localStorage.getItem('atividades') || '[]') as AtividadeModel[];
+    atividades = atividades.filter((a: AtividadeModel) => a.idSala !== sala.id);
+    localStorage.setItem('atividades', JSON.stringify(atividades));
+  }
 
   salvar(atividade: AtividadeModel): Observable<AtividadeModel> {
     let atividades = JSON.parse(localStorage.getItem('atividades') || '[]');

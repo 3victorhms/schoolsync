@@ -43,7 +43,7 @@ export class AddAtividadePage implements OnInit {
 
     this.formGroup = this.formBuilder.group({
       'titulo': ['', Validators.required],
-      'descricao': [''],
+      'descricao': ['', Validators.required],
       'disciplina': ['', Validators.required],
       'valor': ['', Validators.required],
       'dataEntrega': ['', [Validators.required, this.dataMinima()]],

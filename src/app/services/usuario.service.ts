@@ -1,4 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { UsuarioModel } from '../model/usuario.model';
 
 @Injectable({
@@ -6,57 +8,38 @@ import { UsuarioModel } from '../model/usuario.model';
 })
 export class UsuarioService {
 
-  salvar(usuario: UsuarioModel): UsuarioModel {
-    let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+  private API_URL_USUARIOS = 'http://localhost:8080/usuarios';
+
+  constructor(private http: HttpClient) { }
+
+  salvar(usuario: UsuarioModel): Observable<UsuarioModel> {
     if (usuario.id === "") {
-      usuario.id = this.gerarId(11); // Gera um ID aleatório 
-      usuarios.push(usuario);
+      return this.http.post<UsuarioModel>(this.API_URL_USUARIOS, usuario);
     } else {
-      let posicao = usuarios.findIndex((temp: UsuarioModel) => temp.id === usuario.id);
-      usuarios[posicao] = usuario;
+      return this.http.put<UsuarioModel>(`${this.API_URL_USUARIOS}/${usuario.id}`, usuario);
     }
-    localStorage.setItem('usuarios', JSON.stringify(usuarios));
-    return usuario;
   }
 
-  private gerarId(tamanho: number = 11): string {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let resultado = '';
-    for (let i = 0; i < tamanho; i++) {
-      resultado += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return resultado;
+  listar(): Observable<UsuarioModel[]> {
+    return this.http.get<UsuarioModel[]>(this.API_URL_USUARIOS);
   }
 
-  listar(): UsuarioModel[] {
-    let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    return usuarios;
+  buscarPorId(id: string): Observable<UsuarioModel> {
+    return this.http.get<UsuarioModel>(`${this.API_URL_USUARIOS}/${id}`);
   }
 
-  buscarPorId(id: string): UsuarioModel {
-    let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    let usuario = new UsuarioModel();
-    usuario = usuarios.find((temp: UsuarioModel) => temp.id === id);
-    return usuario;
+  excluir(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL_USUARIOS}/${id}`);
   }
 
-  excluir(id: string): boolean {
-    let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    usuarios = usuarios.filter((temp: UsuarioModel) => temp.id !== id);
-    localStorage.setItem('usuarios', JSON.stringify(usuarios));
-    return true;
+  autenticar(login: string, senha: string): Observable<UsuarioModel> {
+    const params = { email: login, senha: senha };
+    return this.http.post<UsuarioModel>(`${this.API_URL_USUARIOS}/autenticar`, null, { params });
   }
 
-  autenticar(login: String, senha: String): UsuarioModel {
-    let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    let usuario = new UsuarioModel();
-    usuario = usuarios.find((temp: UsuarioModel) => temp.email === login && temp.senha === senha);
-    return usuario;
-  }
-
-  verificarLogin(login: String): boolean {
-    let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    return !!usuarios.find((temp: UsuarioModel) => temp.email === login);
+  verificarLogin(login: string): Observable<boolean> {
+    const params = { email: login };
+    return this.http.get<boolean>(`${this.API_URL_USUARIOS}/verificar-login`, { params });
   }
 
   buscarAutenticacao(): UsuarioModel {
@@ -71,5 +54,4 @@ export class UsuarioService {
   encerrarAutenticacao() {
     localStorage.removeItem('usuarioAutenticado');
   }
-
 }

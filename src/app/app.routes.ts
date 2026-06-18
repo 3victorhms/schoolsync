@@ -27,10 +27,6 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/perfil/perfil.page').then(m => m.PerfilPage)
   },
   {
-    path: 'ranking',
-    loadComponent: () => import('./pages/ranking/ranking.page').then(m => m.RankingPage)
-  },
-  {
     path: 'sala',
     loadComponent: () => import('./pages/sala/sala.page').then(m => m.SalaPage)
   },
@@ -59,6 +55,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/add-sala/add-sala.page').then(m => m.AddSalaPage)
   },
   {
+    path: 'add-sala-editar/:id',
+    loadComponent: () => import('./pages/add-sala/add-sala.page').then(m => m.AddSalaPage)
+  },
+
+  {
     path: 'add-atividade',
     loadComponent: () => import('./pages/add-atividade/add-atividade.page').then(m => m.AddAtividadePage)
   },
@@ -81,5 +82,9 @@ export const routes: Routes = [
   {
     path: 'entrar-sala',
     loadComponent: () => import('./pages/entrar-sala/entrar-sala.page').then(m => m.EntrarSalaPage)
+  },  {
+    path: 'caderno',
+    loadComponent: () => import('./pages/caderno/caderno.page').then( m => m.CadernoPage)
   },
+
 ];

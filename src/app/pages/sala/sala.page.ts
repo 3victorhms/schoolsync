@@ -1,24 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonIcon } from '@ionic/angular/standalone';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonIcon, IonButton } from '@ionic/angular/standalone';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { ToastController } from '@ionic/angular';
+import { ToastController, AlertController } from '@ionic/angular';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { addIcons } from 'ionicons';
-import { addOutline, peopleOutline, trophyOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline } from 'ionicons/icons';
+import { addOutline, peopleOutline, trophyOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline } from 'ionicons/icons';
 import { AtividadeModel } from 'src/app/model/atividade.model';
-import { AtividadeService } from 'src/app/services/atividade.service';
 
 @Component({
     selector: 'app-sala',
     templateUrl: './sala.page.html',
     styleUrls: ['./sala.page.scss'],
     standalone: true,
-    imports: [IonIcon, IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, RouterLink]
+    imports: [IonIcon, IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, CommonModule, RouterLink]
 })
 export class SalaPage implements OnInit {
 
@@ -30,17 +29,22 @@ export class SalaPage implements OnInit {
     constructor(
         private activatedRoute: ActivatedRoute,
         private navController: NavController,
+        private alertController: AlertController,
         private toastController: ToastController,
         private salaService: SalaService,
-        private usuarioService: UsuarioService,
-        private atividadeService: AtividadeService
+        private usuarioService: UsuarioService
     ) {
         this.sala = new SalaModel();
         this.atividades = [];
         this.membros = [];
         this.usuario = this.usuarioService.buscarAutenticacao();
 
-        addIcons({ addOutline, peopleOutline, trophyOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline });
+        addIcons({
+            addOutline, peopleOutline, trophyOutline, bookOutline,
+            calendarOutline, starOutline, timeOutline,
+            checkmarkCircleOutline, bookmarkOutline,
+            createOutline, trashOutline
+        });
     }
 
     ngOnInit() { }
@@ -55,43 +59,97 @@ export class SalaPage implements OnInit {
                     this.navController.navigateBack('/salas');
                     return;
                 }
+
                 this.sala = res;
-                this.atividades = this.atividadeService.listarPorSala(this.sala.id);
+
                 localStorage.setItem('ultimaSala', this.sala.id);
             });
         }
     }
 
-    carregarAtividades() {
-        this.atividades = this.atividadeService.listarPorSala(this.sala.id);
-    }
-
-    // carregarMembros() {
-    //     this.membros = this.usuarioService.listar(this.sala.id);
-    // }
-
     iniciais(nome: string): string {
         if (!nome) return '?';
-        return nome.split(' ').slice(0, 2).map(n => n[0].toUpperCase()).join('');
+
+        return nome.split(' ')
+            .slice(0, 2)
+            .map(n => n[0].toUpperCase())
+            .join('');
     }
 
     statusDoUsuario(status: Record<string, string>): string {
         if (!status) return 'em_andamento';
+
         return status[this.usuario.id] || 'em_andamento';
     }
 
     iconeStatus(status: Record<string, string>): string {
         switch (this.statusDoUsuario(status)) {
-            case 'concluido': return 'checkmark-circle-outline';
-            default: return 'time-outline';
+            case 'concluido':
+                return 'checkmark-circle-outline';
+            default:
+                return 'time-outline';
         }
     }
 
     labelStatus(status: Record<string, string>): string {
         switch (this.statusDoUsuario(status)) {
-            case 'concluido': return 'Concluído';
-            default: return 'Em andamento';
+            case 'concluido':
+                return 'Concluído';
+            default:
+                return 'Em andamento';
         }
+    }
+
+    statusPrazo(status: Record<string, string>): string {
+        if (!status) return 'em_andamento';
+
+        return status[this.usuario.id] || 'em_andamento';
+    }
+
+    labelPrazo(status: Record<string, string>): string {
+        switch (this.statusPrazo(status)) {
+            case 'concluido':
+                return 'Concluído';
+            default:
+                return 'Em andamento';
+        }
+    }
+
+    iconePrazo(status: Record<string, string>): string {
+        switch (this.statusPrazo(status)) {
+            case 'concluido':
+                return 'checkmark-circle-outline';
+            default:
+                return 'time-outline';
+        }
+    }
+
+    editar() {
+        this.navController.navigateForward('/add-sala-editar/' + this.sala.id);
+    }
+
+    async excluir() {
+        const alert = await this.alertController.create({
+            header: 'Excluir sala',
+            message: 'Tem certeza que deseja excluir esta sala?',
+            buttons: [
+                {
+                    text: 'Cancelar',
+                    role: 'cancel'
+                },
+                {
+                    text: 'Excluir',
+                    role: 'destructive',
+                    handler: () => {
+                        this.salaService.excluir(this.sala.id);
+                        this.exibirMensagem('Sala excluída.');
+                        this.navController.navigateBack('/salas');
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
     }
 
     async exibirMensagem(texto: string) {
@@ -99,6 +157,7 @@ export class SalaPage implements OnInit {
             message: texto,
             duration: 1500
         });
+
         toast.present();
     }
 }

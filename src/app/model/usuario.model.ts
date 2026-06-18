@@ -4,8 +4,6 @@ export class UsuarioModel {
     email: string;
     senha: string;
     foto: string;
-    xp: number;
-    level: number;
 
     constructor() {
         this.id = "";
@@ -13,7 +11,5 @@ export class UsuarioModel {
         this.email = "";
         this.senha = "";
         this.foto = "";
-        this.xp = 0;
-        this.level = 0;
     }
 }

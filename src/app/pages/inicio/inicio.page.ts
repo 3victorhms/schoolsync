@@ -9,7 +9,7 @@ import { SalaService } from 'src/app/services/sala.service';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { addIcons } from 'ionicons';
-import { notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, businessOutline, trophyOutline, personOutline, pencilOutline } from 'ionicons/icons';
+import { notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, businessOutline, book, personOutline, pencilOutline } from 'ionicons/icons';
 
 interface DiaCalendario {
   numero: number;
@@ -45,7 +45,7 @@ export class InicioPage implements OnInit {
     private atividadeService: AtividadeService
   ) {
     this.usuario = this.usuarioService.buscarAutenticacao();
-    addIcons({ notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, businessOutline, trophyOutline, personOutline, pencilOutline });
+    addIcons({ notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, businessOutline, book, personOutline, pencilOutline });
   }
 
   ngOnInit() { }

@@ -88,8 +88,10 @@ export class AtividadePage implements OnInit {
   }
 
   carregarCriador() {
-    const criador = this.usuarioService.buscarPorId(this.atividade.criadaPor);
-    this.criadorNome = criador?.nome || 'Desconhecido';
+    this.usuarioService.buscarPorId(this.atividade.criadaPor)
+      .subscribe(criador => {
+        this.criadorNome = criador.nome || 'Desconhecido';
+      });
   }
 
   get prazoEncerrado(): boolean {

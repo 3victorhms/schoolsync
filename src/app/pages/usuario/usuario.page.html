@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <form [formGroup]="formGroup" (ngSubmit)="salvar()">
+  <form [formGroup]="formGroup" (ngSubmit)="salvar()" autocomplete="off">
 
     <div class="avatar">
       <span>{{ iniciais }}</span>
@@ -19,14 +19,14 @@
     <div class="campo-grupo">
       <label class="campo-label">Nome</label>
       <ion-item class="campo-item" lines="none">
-        <ion-input type="text" placeholder="Seu nome completo" formControlName="nome"></ion-input>
+        <ion-input type="text" placeholder="Seu nome completo" formControlName="nome" autocomplete="off"></ion-input>
       </ion-item>
     </div>
 
     <div class="campo-grupo">
       <label class="campo-label">E-mail</label>
       <ion-item class="campo-item" lines="none">
-        <ion-input type="email" placeholder="seu@email.com" formControlName="email"></ion-input>
+        <ion-input type="email" placeholder="seu@email.com" formControlName="email" autocomplete="off"></ion-input>
       </ion-item>
     </div>
 
@@ -35,8 +35,8 @@
     <div class="campo-grupo">
       <label class="campo-label">Senha atual</label>
       <ion-item class="campo-item" lines="none">
-        <ion-input [type]="mostrarSenhaAtual ? 'text' : 'password'" placeholder="••••••••"
-          formControlName="senhaAtual"></ion-input>
+        <ion-input [type]="mostrarSenhaAtual ? 'text' : 'password'" placeholder="••••••••" formControlName="senhaAtual"
+          autocomplete="new-password"></ion-input>
         <ion-button fill="clear" slot="end" class="olho-btn" (click)="mostrarSenhaAtual = !mostrarSenhaAtual">
           <ion-icon [name]="mostrarSenhaAtual ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
         </ion-button>
@@ -46,8 +46,8 @@
     <div class="campo-grupo">
       <label class="campo-label">Nova senha</label>
       <ion-item class="campo-item" lines="none">
-        <ion-input [type]="mostrarNovaSenha ? 'text' : 'password'" placeholder="••••••••"
-          formControlName="novaSenha"></ion-input>
+        <ion-input [type]="mostrarNovaSenha ? 'text' : 'password'" placeholder="••••••••" formControlName="novaSenha"
+          autocomplete="new-password"></ion-input>
         <ion-button fill="clear" slot="end" class="olho-btn" (click)="mostrarNovaSenha = !mostrarNovaSenha">
           <ion-icon [name]="mostrarNovaSenha ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
         </ion-button>
@@ -58,7 +58,7 @@
       <label class="campo-label">Confirmar nova senha</label>
       <ion-item class="campo-item" lines="none">
         <ion-input [type]="mostrarConfirmar ? 'text' : 'password'" placeholder="••••••••"
-          formControlName="confirmarSenha"></ion-input>
+          formControlName="confirmarSenha" autocomplete="new-password"></ion-input>
         <ion-button fill="clear" slot="end" class="olho-btn" (click)="mostrarConfirmar = !mostrarConfirmar">
           <ion-icon [name]="mostrarConfirmar ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
         </ion-button>

@@ -36,9 +36,17 @@ export class AddUsuarioPage implements OnInit {
     this.usuario.nome = this.formGroup.value.nome;
     this.usuario.email = this.formGroup.value.email;
     this.usuario.senha = this.formGroup.value.senha;
-    this.usuarioService.salvar(this.usuario);
-    this.exibirMensagem('Registro salvo com sucesso!!!');
-    this.navController.navigateBack('/login');
+
+    this.usuarioService.salvar(this.usuario).subscribe({
+      next: (resultado) => {
+        this.exibirMensagem('Registro salvo com sucesso!!!');
+        this.navController.navigateBack('/login');
+      },
+      error: (erro) => {
+        console.error('Erro ao salvar usuário:', erro);
+        this.exibirMensagem('Erro ao salvar registro. Tente novamente.');
+      }
+    });
   }
 
   verificarLogin() {

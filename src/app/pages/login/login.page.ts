@@ -48,14 +48,20 @@ export class LoginPage implements OnInit {
     this.login = this.formGroup.value.login;
     this.senha = this.formGroup.value.senha;
 
-    this.usuario = this.usuarioService.autenticar(this.login, this.senha);
+    this.usuarioService.autenticar(this.login, this.senha)
+      .subscribe({
+        next: (usuario) => {
+          this.usuario = usuario;
 
-    if (this.usuario && this.usuario.id != "") {
-      this.usuarioService.registrarAutenticacao(this.usuario);
-      this.navController.navigateBack('/inicio');
-    } else {
-      this.exibirMensagem('Login ou senha inválidos');
-    }
+          if (this.usuario && this.usuario.id != "") {
+            this.usuarioService.registrarAutenticacao(this.usuario);
+            this.navController.navigateBack('/inicio');
+          }
+        },
+        error: () => {
+          this.exibirMensagem('Login ou senha inválidos');
+        }
+      });
   }
 
   irCadastrar() {

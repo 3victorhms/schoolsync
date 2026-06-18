@@ -10,6 +10,8 @@ import { addIcons } from 'ionicons';
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { ToastController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-usuario',
@@ -49,7 +51,9 @@ export class UsuarioPage implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private toastController: ToastController,
+    private navController: NavController
   ) {
     addIcons({ eyeOutline, eyeOffOutline });
 
@@ -70,24 +74,55 @@ export class UsuarioPage implements OnInit {
     });
   }
 
+  private async exibirToast(mensagem: string, cor: 'success' | 'danger' = 'danger') {
+    const toast = await this.toastController.create({
+      message: mensagem,
+      duration: 3000,
+      color: cor,
+      position: 'top',
+    });
+    await toast.present();
+  }
+
   salvar() {
     if (!this.formGroup.valid || this.senhasDiferentes) return;
 
     const { nome, email, senhaAtual, novaSenha } = this.formGroup.value;
 
-    if (novaSenha) {
-      const autenticado = this.usuarioService.autenticar(this.usuario.email, senhaAtual);
-      if (!autenticado) {
-        alert('Senha atual incorreta.');
-        return;
+    const atualizar = () => {
+      this.usuario.nome = nome;
+      this.usuario.email = email;
+
+      if (novaSenha) {
+        this.usuario.senha = novaSenha;
       }
-      this.usuario.senha = novaSenha;
+
+      this.usuarioService.salvar(this.usuario)
+        .subscribe({
+          next: (usuarioAtualizado) => {
+            this.usuario = usuarioAtualizado;
+            this.usuarioService.registrarAutenticacao(usuarioAtualizado);
+            this.navController.navigateForward('/perfil');
+          },
+          error: (erro) => {
+            const mensagem = erro?.error?.message || 'Erro ao atualizar usuário.';
+            this.exibirToast(mensagem);
+          }
+        });
+    };
+
+    if (novaSenha) {
+      this.usuarioService.autenticar(this.usuario.email, senhaAtual)
+        .subscribe({
+          next: () => {
+            atualizar();
+          },
+          error: () => {
+            this.exibirToast('Senha atual incorreta.');
+          }
+        });
+    } else {
+      atualizar();
     }
-
-    this.usuario.nome = nome;
-    this.usuario.email = email;
-
-    const usuarioAtualizado = this.usuarioService.salvar(this.usuario);
-    this.usuarioService.registrarAutenticacao(usuarioAtualizado);
   }
 }
