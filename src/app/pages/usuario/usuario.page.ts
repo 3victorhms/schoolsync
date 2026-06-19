@@ -29,6 +29,7 @@ export class UsuarioPage implements OnInit {
 
   formGroup: FormGroup;
   usuario: UsuarioModel = new UsuarioModel();
+  usuarioOriginal: { nome: string; email: string } = { nome: '', email: '' };
 
   mostrarSenhaAtual = false;
   mostrarNovaSenha = false;
@@ -44,9 +45,20 @@ export class UsuarioPage implements OnInit {
   }
 
   get senhasDiferentes(): boolean {
-    const nova = this.formGroup.get('novaSenha')?.value;
-    const confirmar = this.formGroup.get('confirmarSenha')?.value;
-    return !!nova && !!confirmar && nova !== confirmar;
+    const nova = this.formGroup.get('novaSenha')?.value || '';
+    const confirmar = this.formGroup.get('confirmarSenha')?.value || '';
+
+    if (!nova && !confirmar) {
+      return false;
+    }
+
+    return nova !== confirmar;
+  }
+
+  get senhaAtualObrigatoria(): boolean {
+    const novaPreenchida = !!this.formGroup.get('novaSenha')?.value;
+    const senhaAtualPreenchida = !!this.formGroup.get('senhaAtual')?.value;
+    return novaPreenchida && !senhaAtualPreenchida;
   }
 
   constructor(
@@ -66,8 +78,24 @@ export class UsuarioPage implements OnInit {
     });
   }
 
+  get semAlteracoes(): boolean {
+    const { nome, email, novaSenha, confirmarSenha } = this.formGroup.value;
+
+    const nomeIgual = nome === this.usuarioOriginal.nome;
+    const emailIgual = email === this.usuarioOriginal.email;
+    const semSenha = !novaSenha && !confirmarSenha;
+
+    return nomeIgual && emailIgual && semSenha;
+  }
+
   ngOnInit() {
     this.usuario = this.usuarioService.buscarAutenticacao();
+
+    this.usuarioOriginal = {
+      nome: this.usuario.nome,
+      email: this.usuario.email,
+    };
+
     this.formGroup.patchValue({
       nome: this.usuario.nome,
       email: this.usuario.email,

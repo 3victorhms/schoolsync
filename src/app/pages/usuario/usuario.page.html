@@ -66,7 +66,8 @@
       <p class="campo-erro" *ngIf="senhasDiferentes">As senhas não coincidem</p>
     </div>
 
-    <ion-button type="submit" expand="block" class="botao-salvar" [disabled]="!formGroup.valid || senhasDiferentes">
+    <ion-button type="submit" expand="block" class="botao-salvar"
+      [disabled]="!formGroup.valid || senhasDiferentes || semAlteracoes || senhaAtualObrigatoria">
       Salvar alterações
     </ion-button>
 

@@ -36,9 +36,11 @@ export class PerfilPage implements OnInit {
   };
 
   get iniciais(): string {
-    return this.usuario.nome
+    const nome = this.usuario?.nome?.trim() || '';
+    return nome
       .split(' ')
-      .map(p => p[0].toUpperCase())
+      .filter((p: string) => p.length > 0)
+      .map((p: string) => p[0]?.toUpperCase() ?? '')
       .slice(0, 2)
       .join('');
   }
