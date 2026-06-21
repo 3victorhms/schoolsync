@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonItem, IonLabel, IonButton, IonInput } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonItem, IonLabel, IonButton, IonInput, IonIcon } from '@ionic/angular/standalone';
 import { ActivatedRoute } from '@angular/router';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -14,13 +14,14 @@ import { SalaService } from 'src/app/services/sala.service';
   templateUrl: './add-sala.page.html',
   styleUrls: ['./add-sala.page.scss'],
   standalone: true,
-  imports: [IonButton, IonLabel, IonItem, IonBackButton, IonButtons, IonInput, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, ReactiveFormsModule]
+  imports: [IonButton, IonLabel, IonItem, IonBackButton, IonButtons, IonInput, IonIcon, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class AddSalaPage implements OnInit {
 
   sala: SalaModel;
   usuario: UsuarioModel;
   formGroup: FormGroup;
+  editando: boolean;
 
   constructor(
     private formBuilder: FormBuilder, private toastController: ToastController,
@@ -29,6 +30,7 @@ export class AddSalaPage implements OnInit {
   ) {
     this.sala = new SalaModel();
     this.usuario = this.usuarioService.buscarAutenticacao();
+    this.editando = false;
 
     this.formGroup = this.formBuilder.group({
       'nomeSala': [this.sala.nome, Validators.compose([Validators.required])],
@@ -39,6 +41,8 @@ export class AddSalaPage implements OnInit {
     let id = this.activatedRoute.snapshot.params['id'];
 
     if (id) {
+      this.editando = true;
+
       this.salaService.buscarPorId(id).subscribe(res => {
         if (!res) {
           this.exibirMensagem('Sala não encontrada');
@@ -56,11 +60,11 @@ export class AddSalaPage implements OnInit {
 
     this.salaService.salvar(this.sala).subscribe({
       next: () => {
-        this.exibirMensagem('Sala criada com sucesso!!!');
-        this.navController.navigateBack('/sala');
+        this.exibirMensagem(this.editando ? 'Sala atualizada com sucesso!' : 'Sala criada com sucesso!!!');
+        this.navController.navigateBack(this.editando ? '/sala/' + this.sala.id : '/sala');
       },
       error: () => {
-        this.exibirMensagem('Erro ao criar sala.');
+        this.exibirMensagem(this.editando ? 'Erro ao atualizar sala.' : 'Erro ao criar sala.');
       }
     });
   }

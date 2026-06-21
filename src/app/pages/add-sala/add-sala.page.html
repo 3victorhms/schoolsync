@@ -1,13 +1,16 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" [class.modo-edicao]="editando">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/salas"></ion-back-button>
     </ion-buttons>
-    <ion-title>Criar Sala</ion-title>
+    <ion-title>
+      <ion-icon [name]="editando ? 'create-outline' : 'add-circle-outline'"></ion-icon>
+      {{ editando ? 'Editar Sala' : 'Criar Sala' }}
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" [class.modo-edicao]="editando">
   <form [formGroup]="formGroup" (ngSubmit)="salvar()">
 
     <div class="campo-grupo">
@@ -18,7 +21,7 @@
     </div>
 
     <ion-button type="submit" expand="block" class="botao-criar" [disabled]="!formGroup.valid">
-      Criar sala
+      {{ editando ? 'Salvar alterações' : 'Criar sala' }}
     </ion-button>
 
   </form>
