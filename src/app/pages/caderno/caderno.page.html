@@ -1,13 +1,83 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>caderno</ion-title>
+    <ion-title>Caderno</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">caderno</ion-title>
+      <ion-title size="large">Caderno</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <div class="caderno-secao">
+    <h3 class="caderno-titulo">Meu Caderno</h3>
+
+    <div class="filtros">
+      <button class="filtro-btn" [class.ativo]="filtroAtivo === 'todas'" (click)="filtrar('todas')">
+        <ion-icon name="book-outline"></ion-icon>
+        Todas
+      </button>
+      <button class="filtro-btn" [class.ativo]="filtroAtivo === 'em_andamento'" (click)="filtrar('em_andamento')">
+        <ion-icon name="time-outline"></ion-icon>
+        Em andamento
+      </button>
+      <button class="filtro-btn" [class.ativo]="filtroAtivo === 'concluido'" (click)="filtrar('concluido')">
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+        Concluídas
+      </button>
+    </div>
+
+    <div class="atividades-lista">
+      @for (atividade of atividadesFiltradas; track atividade.id) {
+      <div class="atividade-card" [routerLink]="['/atividade', atividade.id]">
+        <div class="atividade-header">
+          <div>
+            <h4 class="atividade-titulo">{{ atividade.titulo }}</h4>
+            <p class="atividade-descricao">{{ atividade.descricao }}</p>
+          </div>
+          <span class="atividade-disciplina">{{ atividade.disciplina }}</span>
+        </div>
+        <div class="atividade-meta">
+          <span><ion-icon name="calendar-outline"></ion-icon> {{ formatarData(atividade.dataEntrega) }}</span>
+          <span><ion-icon name="people-outline"></ion-icon> {{ atividade.noCaderno.length }} no caderno</span>
+          <span><ion-icon name="star-outline"></ion-icon> {{ atividade.valor }} pontos</span>
+        </div>
+        <div class="atividade-status" [ngClass]="statusDoUsuario(atividade.status)">
+          <ion-icon [name]="iconeStatus(atividade.status)"></ion-icon>
+          {{ labelStatus(atividade.status) }}
+        </div>
+      </div>
+      } @empty {
+      <div class="caderno-vazio">
+        <p>Nenhuma atividade encontrada.</p>
+      </div>
+      }
+    </div>
+  </div>
 </ion-content>
+
+<ion-tab-bar slot="bottom">
+
+  <ion-tab-button tab="inicio" routerLink="/inicio">
+    <ion-icon name="home-outline"></ion-icon>
+    <ion-label>Inicio</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button tab="salas" routerLink="/salas">
+    <ion-icon name="business-outline"></ion-icon>
+    <ion-label>Salas</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button class="selecionado" tab="caderno" routerLink="/caderno">
+    <ion-icon name="book"></ion-icon>
+    <ion-label>Caderno</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button tab="perfil" routerLink="/perfil">
+    <ion-icon name="person-outline"></ion-icon>
+    <ion-label>Perfil</ion-label>
+  </ion-tab-button>
+
+</ion-tab-bar>

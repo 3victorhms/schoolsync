@@ -8,10 +8,6 @@
             <p class="subtitulo">{{ sala.codigoConvite }}</p>
         </ion-title>
         <ion-buttons slot="end">
-            <span class="status-badge" [ngClass]="'badge-' + statusPrazo">
-                <ion-icon [name]="iconePrazo"></ion-icon>
-                <!-- {{ labelPrazo(sala.status) }} -->
-            </span>
             @if (usuario.id === sala.idLider) {
             <ion-button fill="clear" class="editar-btn" (click)="editar()">
                 <ion-icon name="create-outline" slot="icon-only"></ion-icon>
@@ -23,9 +19,7 @@
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
-
 <ion-content [fullscreen]="true">
-
     <div class="acoes">
         <button class="acao-btn" [routerLink]="['/add-atividade/', sala.id]">
             <ion-icon name="add-outline"></ion-icon>
@@ -36,7 +30,6 @@
             <span>Grupos</span>
         </button>
     </div>
-
     <section class="secao">
         <h3 class="secao-titulo">
             <ion-icon name="book-outline"></ion-icon>
@@ -56,7 +49,7 @@
                     <span><ion-icon name="calendar-outline"></ion-icon> {{ atividade.dataEntrega }}</span>
                     <span><ion-icon name="star-outline"></ion-icon> {{ atividade.valor }} pontos</span>
                 </div>
-                <div class="atividade-status" [ngClass]="atividade.status">
+                <div class="atividade-status" [ngClass]="statusDoUsuario(atividade.status)">
                     <ion-icon [name]="iconeStatus(atividade.status)"></ion-icon>
                     {{ labelStatus(atividade.status) }}
                 </div>
@@ -68,17 +61,21 @@
             }
         </div>
     </section>
-
     <section class="secao">
         <h3 class="secao-titulo">
             <ion-icon name="people-outline"></ion-icon>
             Membros
         </h3>
         <div class="membros-lista">
-            @for (membro of sala.membros.slice(0, 3); track membro.id; let i = $index) {
+            @for (membro of sala.membros?.slice(0, 3); track membro.id; let i = $index) {
             <div class="membro-item">
                 <span class="membro-pos">{{ i + 1 }}</span>
-                <div class="avatar-small">{{ iniciais(membro.nome) }}</div>
+                <div class="avatar-small" [class.lider]="membro.id === sala.idLider">
+                    {{ iniciais(membro.nome) }}
+                    @if (membro.id === sala.idLider) {
+                    <span class="coroa">👑</span>
+                    }
+                </div>
                 <div class="membro-info">
                     <span class="membro-nome">
                         {{ membro.nome }}
@@ -86,10 +83,12 @@
                         <span class="voce">(você)</span>
                         }
                     </span>
+                    @if (membro.id === sala.idLider) {
+                    <span class="membro-tag-lider">Líder</span>
+                    }
                 </div>
             </div>
             }
         </div>
     </section>
-
 </ion-content>

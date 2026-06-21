@@ -31,12 +31,10 @@ export class SalaService {
 
     const sala = salas.find((s: SalaModel) => s.codigoConvite === codigoConvite);
 
-    // se sala for nulo então lança um erro
     if (!sala) {
       return throwError(() => new Error('Sala não encontrada'));
     }
 
-    // se não for vetor declara o vetor
     if (!Array.isArray(sala.membros)) {
       sala.membros = [];
     }
@@ -44,23 +42,24 @@ export class SalaService {
     const usuario = JSON.parse(localStorage.getItem('usuarioAutenticado') || '{}') as UsuarioModel;
     const idUsuarioAdicionar = usuarioId || usuario.id;
 
-    // se o id for inválido lança um erro
     if (!idUsuarioAdicionar) {
       return throwError(() => new Error('Usuário não identificado'));
     }
 
     const jaMembro = sala.membros.some((m: UsuarioModel) => m && m.id === idUsuarioAdicionar);
 
-    // só adiciona o usuário no vetor de membros dentro de sala se o id do usuário não estiver presente no vetor membros
-    if (!jaMembro) {
-      let usuarioAdicionar: UsuarioModel;
-      if (usuario && usuario.id) {
-        usuarioAdicionar = usuario;
-      } else {
-        usuarioAdicionar = { id: idUsuarioAdicionar } as UsuarioModel;
-      }
-      sala.membros.push(usuarioAdicionar);
+    // bloqueia entrada se o usuário já é membro
+    if (jaMembro) {
+      return throwError(() => new Error('Você já está nesta sala'));
     }
+
+    let usuarioAdicionar: UsuarioModel;
+    if (usuario && usuario.id) {
+      usuarioAdicionar = usuario;
+    } else {
+      usuarioAdicionar = { id: idUsuarioAdicionar } as UsuarioModel;
+    }
+    sala.membros.push(usuarioAdicionar);
 
     const pos = salas.findIndex((s: SalaModel) => s.id === sala.id);
     if (pos >= 0) {

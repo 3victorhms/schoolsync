@@ -73,45 +73,6 @@ ion-content {
     }
 }
 
-.top3-lista {
-    background: #171c28;
-    border-radius: 16px;
-    overflow: hidden;
-
-    .top3-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 14px 16px;
-        border-bottom: 1px solid #1e2540;
-
-        &:last-child {
-            border-bottom: none;
-        }
-
-        .top3-pos {
-            width: 20px;
-            font-size: 15px;
-            font-weight: 700;
-            color: #8891aa;
-            text-align: center;
-        }
-
-        .top3-nome {
-            flex: 1;
-            font-size: 15px;
-            font-weight: 600;
-            color: #ffffff;
-        }
-
-        .top3-xp {
-            font-size: 14px;
-            font-weight: 700;
-            color: #3a6ff7;
-        }
-    }
-}
-
 .atividades-lista {
     display: flex;
     flex-direction: column;
@@ -250,9 +211,10 @@ ion-content {
                 }
             }
 
-            .membro-xp {
+            .membro-tag-lider {
+                color: #f5a623;
                 font-size: 12px;
-                color: #8891aa;
+                font-weight: 700;
             }
         }
     }
@@ -270,4 +232,18 @@ ion-content {
     font-weight: 700;
     color: #ffffff;
     flex-shrink: 0;
+    position: relative;
+
+    &.lider {
+        border: 2px solid #f5a623;
+    }
+
+    .coroa {
+        position: absolute;
+        top: -11px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 13px;
+        line-height: 1;
+    }
 }

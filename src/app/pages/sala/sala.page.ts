@@ -100,30 +100,6 @@ export class SalaPage implements OnInit {
         }
     }
 
-    statusPrazo(status: Record<string, string>): string {
-        if (!status) return 'em_andamento';
-
-        return status[this.usuario.id] || 'em_andamento';
-    }
-
-    labelPrazo(status: Record<string, string>): string {
-        switch (this.statusPrazo(status)) {
-            case 'concluido':
-                return 'Concluído';
-            default:
-                return 'Em andamento';
-        }
-    }
-
-    iconePrazo(status: Record<string, string>): string {
-        switch (this.statusPrazo(status)) {
-            case 'concluido':
-                return 'checkmark-circle-outline';
-            default:
-                return 'time-outline';
-        }
-    }
-
     editar() {
         this.navController.navigateForward('/add-sala-editar/' + this.sala.id);
     }

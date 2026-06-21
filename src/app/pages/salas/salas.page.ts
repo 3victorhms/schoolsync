@@ -21,7 +21,7 @@ import {
   documentsOutline,
   chevronForwardOutline,
   logInOutline,
-  add, homeOutline, trophyOutline, personOutline,
+  add, homeOutline, trophyOutline, personOutline, book
 } from 'ionicons/icons';
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
@@ -63,6 +63,7 @@ export class SalasPage implements OnInit {
       add, homeOutline,
       trophyOutline,
       personOutline,
+      book
     });
 
     this.salas = [];

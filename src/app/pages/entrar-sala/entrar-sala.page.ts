@@ -41,8 +41,8 @@ export class EntrarSalaPage implements OnInit {
         this.exibirMensagem('Você entrou na sala com sucesso!');
         this.navController.navigateBack('/salas');
       },
-      error: () => {
-        this.exibirMensagem('Código inválido ou sala não encontrada.');
+      error: (err) => {
+        this.exibirMensagem(err?.message || 'Código inválido ou sala não encontrada.');
       }
     });
   }
