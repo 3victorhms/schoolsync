@@ -155,6 +155,12 @@ ion-content {
             &.no_caderno {
                 color: #8891aa;
             }
+
+            &.fora_caderno {
+                background: transparent;
+                border: 1.5px #4e5670;
+                color: #4e5670;
+            }
         }
     }
 

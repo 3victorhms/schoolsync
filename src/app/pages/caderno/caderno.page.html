@@ -19,6 +19,10 @@
         <ion-icon name="book-outline"></ion-icon>
         Todas
       </button>
+      <button class="filtro-btn" [class.ativo]="filtroAtivo === 'nao_iniciada'" (click)="filtrar('nao_iniciada')">
+        <ion-icon name="ellipse-outline"></ion-icon>
+        Não iniciadas
+      </button>
       <button class="filtro-btn" [class.ativo]="filtroAtivo === 'em_andamento'" (click)="filtrar('em_andamento')">
         <ion-icon name="time-outline"></ion-icon>
         Em andamento

@@ -49,9 +49,11 @@
                     <span><ion-icon name="calendar-outline"></ion-icon> {{ atividade.dataEntrega }}</span>
                     <span><ion-icon name="star-outline"></ion-icon> {{ atividade.valor }} pontos</span>
                 </div>
-                <div class="atividade-status" [ngClass]="statusDoUsuario(atividade.status)">
-                    <ion-icon [name]="iconeStatus(atividade.status)"></ion-icon>
-                    {{ labelStatus(atividade.status) }}
+                <div class="atividade-status"
+                    [ngClass]="estaNoCaderno(atividade) ? statusDoUsuario(atividade.status) : 'fora_caderno'">
+                    <ion-icon
+                        [name]="estaNoCaderno(atividade) ? iconeStatus(atividade.status) : 'bookmark-outline'"></ion-icon>
+                    {{ estaNoCaderno(atividade) ? labelStatus(atividade.status) : 'Não está no caderno' }}
                 </div>
             </div>
             } @empty {

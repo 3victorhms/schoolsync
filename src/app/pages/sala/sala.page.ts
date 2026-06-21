@@ -77,15 +77,16 @@ export class SalaPage implements OnInit {
     }
 
     statusDoUsuario(status: Record<string, string>): string {
-        if (!status) return 'em_andamento';
-
-        return status[this.usuario.id] || 'em_andamento';
+        if (!status) return 'nao_iniciada';
+        return status[this.usuario.id] || 'nao_iniciada';
     }
 
     iconeStatus(status: Record<string, string>): string {
         switch (this.statusDoUsuario(status)) {
             case 'concluido':
                 return 'checkmark-circle-outline';
+            case 'nao_iniciada':
+                return 'ellipse-outline';
             default:
                 return 'time-outline';
         }
@@ -95,9 +96,15 @@ export class SalaPage implements OnInit {
         switch (this.statusDoUsuario(status)) {
             case 'concluido':
                 return 'Concluído';
+            case 'nao_iniciada':
+                return 'Não iniciada';
             default:
                 return 'Em andamento';
         }
+    }
+
+    estaNoCaderno(atividade: AtividadeModel): boolean {
+        return atividade.noCaderno?.some(u => u.id === this.usuario.id) ?? false;
     }
 
     editar() {

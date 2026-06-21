@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonTabBar, IonLabel } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, homeOutline, businessOutline, book, personOutline } from 'ionicons/icons';
+import { bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, homeOutline, businessOutline, book, personOutline, ellipseOutline } from 'ionicons/icons';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
@@ -35,7 +35,7 @@ export class CadernoPage implements OnInit {
 
     addIcons({
       bookOutline, timeOutline, checkmarkCircleOutline,
-      calendarOutline, peopleOutline, starOutline, homeOutline, businessOutline, book, personOutline
+      calendarOutline, peopleOutline, starOutline, homeOutline, businessOutline, book, personOutline, ellipseOutline
     });
   }
 
@@ -44,6 +44,11 @@ export class CadernoPage implements OnInit {
   ionViewWillEnter() {
     this.usuario = this.usuarioService.buscarAutenticacao();
     this.carregarCaderno();
+  }
+
+  statusDoUsuario(status: Record<string, string>): string {
+    if (!status) return 'nao_iniciada';
+    return status[this.usuario.id] || 'nao_iniciada';
   }
 
   carregarCaderno() {
@@ -60,22 +65,18 @@ export class CadernoPage implements OnInit {
     if (filtro === 'todas') {
       this.atividadesFiltradas = this.atividades;
     } else {
-      this.atividadesFiltradas = this.atividades.filter(a => {
-        const status = a.status?.[this.usuario.id] || 'em_andamento';
-        return status === filtro;
-      });
+      this.atividadesFiltradas = this.atividades.filter(a =>
+        this.statusDoUsuario(a.status) === filtro
+      );
     }
-  }
-
-  statusDoUsuario(status: Record<string, string>): string {
-    if (!status) return 'em_andamento';
-    return status[this.usuario.id] || 'em_andamento';
   }
 
   iconeStatus(status: Record<string, string>): string {
     switch (this.statusDoUsuario(status)) {
       case 'concluido':
         return 'checkmark-circle-outline';
+      case 'nao_iniciada':
+        return 'ellipse-outline';
       default:
         return 'time-outline';
     }
@@ -85,6 +86,8 @@ export class CadernoPage implements OnInit {
     switch (this.statusDoUsuario(status)) {
       case 'concluido':
         return 'Concluído';
+      case 'nao_iniciada':
+        return 'Não iniciada';
       default:
         return 'Em andamento';
     }

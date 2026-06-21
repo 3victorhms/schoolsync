@@ -9,7 +9,7 @@ import { AtividadeService } from 'src/app/services/atividade.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { addIcons } from 'ionicons';
-import { createOutline, trashBinOutline, calendarOutline, peopleOutline, starOutline, timeOutline, checkmarkCircleOutline, flashOutline, trashOutline, addOutline, chatboxOutline, lockClosedOutline, alertCircleOutline } from 'ionicons/icons';
+import { createOutline, trashBinOutline, calendarOutline, peopleOutline, starOutline, timeOutline, checkmarkCircleOutline, flashOutline, trashOutline, addOutline, chatboxOutline, lockClosedOutline, alertCircleOutline, ellipseOutline } from 'ionicons/icons';
 import { SalaService } from 'src/app/services/sala.service';
 
 @Component({
@@ -36,7 +36,7 @@ export class AtividadePage implements OnInit {
     this.atividade = new AtividadeModel();
     this.usuario = this.usuarioService.buscarAutenticacao();
 
-    addIcons({ createOutline, trashBinOutline, calendarOutline, peopleOutline, starOutline, timeOutline, checkmarkCircleOutline, flashOutline, trashOutline, addOutline, chatboxOutline, lockClosedOutline, alertCircleOutline });
+    addIcons({ createOutline, trashBinOutline, calendarOutline, peopleOutline, starOutline, timeOutline, checkmarkCircleOutline, flashOutline, trashOutline, addOutline, chatboxOutline, lockClosedOutline, alertCircleOutline, ellipseOutline });
   }
 
   ngOnInit() {
@@ -101,24 +101,30 @@ export class AtividadePage implements OnInit {
   }
 
   get statusAtual(): string {
-    return this.atividade.status?.[this.usuario.id] || 'em_andamento';
+    return this.atividade.status?.[this.usuario.id] || 'nao_iniciada';
   }
 
   get statusPrazo(): string {
     if (this.prazoEncerrado) return 'expirada';
+    if (!this.estaNoCaderno) return 'fora_caderno';
     if (this.statusAtual === 'concluido') return 'concluido';
+    if (this.statusAtual === 'nao_iniciada') return 'naoiniciada';
     return 'andamento';
   }
 
   get labelPrazo(): string {
     if (this.prazoEncerrado) return 'Expirada';
+    if (!this.estaNoCaderno) return 'Não está no caderno';
     if (this.statusAtual === 'concluido') return 'Concluído';
+    if (this.statusAtual === 'nao_iniciada') return 'Não iniciada';
     return 'Em andamento';
   }
 
   get iconePrazo(): string {
     if (this.prazoEncerrado) return 'lock-closed-outline';
+    if (!this.estaNoCaderno) return 'bookmark-outline';
     if (this.statusAtual === 'concluido') return 'checkmark-circle-outline';
+    if (this.statusAtual === 'nao_iniciada') return 'ellipse-outline';
     return 'time-outline';
   }
 
@@ -142,9 +148,14 @@ export class AtividadePage implements OnInit {
   }
 
   removerDoCaderno() {
+    this.atividade.status[this.usuario.id] = 'nao_iniciada';
     this.atividade.noCaderno = this.atividade.noCaderno.filter(u => u.id !== this.usuario.id);
+
     this.atividadeService.salvar(this.atividade).subscribe({
-      next: () => this.exibirMensagem('Atividade removida do caderno.'),
+      next: () => {
+        this.exibirMensagem('Atividade removida do caderno.');
+        this.salaService.sincronizarAtividade(this.atividade);
+      },
       error: () => this.exibirMensagem('Erro ao remover do caderno.')
     });
   }
