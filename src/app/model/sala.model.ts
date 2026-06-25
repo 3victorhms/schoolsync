@@ -10,6 +10,8 @@ export class SalaModel {
     membros: UsuarioModel[];
     atividades: AtividadeModel[];
     grupos: GrupoModel[];
+    quantidadeMembros?: number;
+    quantidadeAtividades?: number;
 
     constructor() {
         this.id = "";
@@ -19,5 +21,7 @@ export class SalaModel {
         this.membros = [];
         this.atividades = [];
         this.grupos = [];
+        this.quantidadeMembros = 0;
+        this.quantidadeAtividades = 0;
     }
 }

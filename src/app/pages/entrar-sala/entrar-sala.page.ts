@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonButtons, IonBackButton, IonItem, IonButton } from '@ionic/angular/standalone';
+import { ToastController, NavController } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { logInOutline } from 'ionicons/icons';
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
-import { ToastController, NavController } from '@ionic/angular';
+import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
   selector: 'app-entrar-sala',
@@ -20,29 +23,50 @@ export class EntrarSalaPage implements OnInit {
   formGroup: FormGroup;
 
   constructor(
-    private formBuilder: FormBuilder, private toastController: ToastController, private navController: NavController, private salaService: SalaService
+    private formBuilder: FormBuilder,
+    private toastController: ToastController,
+    private navController: NavController,
+    private salaService: SalaService,
+    private usuarioService: UsuarioService
   ) {
-
     this.sala = new SalaModel();
-    this.usuario = new UsuarioModel();
+    this.usuario = this.usuarioService.buscarAutenticacao();
 
     this.formGroup = this.formBuilder.group({
-      'codigoConvite': [this.sala.codigoConvite, Validators.compose([Validators.required, Validators.maxLength(6), Validators.minLength(6)])],
+      codigoConvite: [this.sala.codigoConvite, Validators.compose([Validators.required, Validators.maxLength(20)])],
     });
+
+    addIcons({ logInOutline });
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.usuario = this.usuarioService.buscarAutenticacao();
+  }
 
   entrar() {
-    const codigo: string = this.formGroup.get('codigoConvite')?.value;
+    this.usuario = this.usuarioService.buscarAutenticacao();
+
+    if (!this.usuario.id) {
+      this.exibirMensagem('Faca login para entrar em uma sala.');
+      this.navController.navigateRoot('/login');
+      return;
+    }
+
+    const codigo: string = (this.formGroup.get('codigoConvite')?.value || '').trim();
 
     this.salaService.entrar(codigo, this.usuario.id).subscribe({
-      next: () => {
-        this.exibirMensagem('Você entrou na sala com sucesso!');
+      next: (sala) => {
+        this.exibirMensagem('Voce entrou na sala com sucesso!');
+
+        if (sala?.id) {
+          this.navController.navigateForward('/sala/' + sala.id);
+          return;
+        }
+
         this.navController.navigateBack('/salas');
       },
       error: (err) => {
-        this.exibirMensagem(err?.message || 'Código inválido ou sala não encontrada.');
+        this.exibirMensagem(err?.error?.message || 'Codigo invalido ou sala nao encontrada.');
       }
     });
   }
@@ -54,5 +78,4 @@ export class EntrarSalaPage implements OnInit {
     });
     toast.present();
   }
-
 }

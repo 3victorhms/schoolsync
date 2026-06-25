@@ -48,10 +48,17 @@ export class UsuarioService {
   }
 
   registrarAutenticacao(usuario: UsuarioModel) {
+    const usuarioAnterior = this.buscarAutenticacao();
+
+    if (usuarioAnterior?.id && usuarioAnterior.id !== usuario.id) {
+      localStorage.removeItem('ultimaSala');
+    }
+
     localStorage.setItem('usuarioAutenticado', JSON.stringify(usuario));
   }
 
   encerrarAutenticacao() {
     localStorage.removeItem('usuarioAutenticado');
+    localStorage.removeItem('ultimaSala');
   }
 }

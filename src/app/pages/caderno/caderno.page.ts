@@ -2,9 +2,29 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonTabBar, IonLabel } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonIcon,
+  IonTabBar,
+  IonLabel,
+  IonTabButton
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, homeOutline, businessOutline, book, personOutline, ellipseOutline } from 'ionicons/icons';
+import {
+  bookOutline,
+  timeOutline,
+  checkmarkCircleOutline,
+  calendarOutline,
+  starOutline,
+  homeOutline,
+  businessOutline,
+  book,
+  personOutline,
+  ellipseOutline
+} from 'ionicons/icons';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
@@ -15,7 +35,19 @@ import { UsuarioService } from 'src/app/services/usuario.service';
   templateUrl: './caderno.page.html',
   styleUrls: ['./caderno.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonTabBar, IonLabel, CommonModule, FormsModule, RouterLink]
+  imports: [
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonIcon,
+    IonTabBar,
+    IonTabButton,
+    IonLabel,
+    CommonModule,
+    FormsModule,
+    RouterLink
+  ]
 })
 export class CadernoPage implements OnInit {
 
@@ -34,8 +66,16 @@ export class CadernoPage implements OnInit {
     this.filtroAtivo = 'todas';
 
     addIcons({
-      bookOutline, timeOutline, checkmarkCircleOutline,
-      calendarOutline, peopleOutline, starOutline, homeOutline, businessOutline, book, personOutline, ellipseOutline
+      bookOutline,
+      timeOutline,
+      checkmarkCircleOutline,
+      calendarOutline,
+      starOutline,
+      homeOutline,
+      businessOutline,
+      book,
+      personOutline,
+      ellipseOutline
     });
   }
 
@@ -46,17 +86,23 @@ export class CadernoPage implements OnInit {
     this.carregarCaderno();
   }
 
-  statusDoUsuario(status: Record<string, string>): string {
-    if (!status) return 'nao_iniciada';
-    return status[this.usuario.id] || 'nao_iniciada';
-  }
-
   carregarCaderno() {
-    const todas = this.atividadeService.listar();
-    this.atividades = todas.filter(a =>
-      a.noCaderno && a.noCaderno.some(u => u.id === this.usuario.id)
-    );
-    this.filtrar(this.filtroAtivo);
+    if (!this.usuario.id) {
+      this.atividades = [];
+      this.atividadesFiltradas = [];
+      return;
+    }
+
+    this.atividadeService.listarPorUsuarioNoCaderno(this.usuario.id).subscribe({
+      next: (res) => {
+        this.atividades = res;
+        this.filtrar(this.filtroAtivo);
+      },
+      error: () => {
+        this.atividades = [];
+        this.atividadesFiltradas = [];
+      }
+    });
   }
 
   filtrar(filtro: string) {
@@ -64,39 +110,51 @@ export class CadernoPage implements OnInit {
 
     if (filtro === 'todas') {
       this.atividadesFiltradas = this.atividades;
-    } else {
-      this.atividadesFiltradas = this.atividades.filter(a =>
-        this.statusDoUsuario(a.status) === filtro
-      );
+      return;
     }
+
+    this.atividadesFiltradas = this.atividades.filter(a =>
+      a.status === filtro
+    );
   }
 
-  iconeStatus(status: Record<string, string>): string {
-    switch (this.statusDoUsuario(status)) {
+  iconeStatus(status: string | null): string {
+    switch (status) {
       case 'concluido':
         return 'checkmark-circle-outline';
       case 'nao_iniciada':
+      case null:
+      case undefined:
         return 'ellipse-outline';
       default:
         return 'time-outline';
     }
   }
 
-  labelStatus(status: Record<string, string>): string {
-    switch (this.statusDoUsuario(status)) {
+  labelStatus(status: string | null): string {
+    switch (status) {
       case 'concluido':
         return 'Concluído';
       case 'nao_iniciada':
+      case null:
+      case undefined:
         return 'Não iniciada';
       default:
         return 'Em andamento';
     }
   }
 
+  classeStatus(status: string | null): string {
+    return status || 'nao_iniciada';
+  }
+
   formatarData(data: string): string {
     if (!data) return '';
+
     const [ano, mes, dia] = data.split('-');
+
     if (!ano || !mes || !dia) return data;
+
     return `${dia}/${mes}/${ano}`;
   }
 }

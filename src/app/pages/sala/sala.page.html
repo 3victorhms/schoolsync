@@ -49,11 +49,11 @@
                     <span><ion-icon name="calendar-outline"></ion-icon> {{ atividade.dataEntrega }}</span>
                     <span><ion-icon name="star-outline"></ion-icon> {{ atividade.valor }} pontos</span>
                 </div>
-                <div class="atividade-status"
-                    [ngClass]="estaNoCaderno(atividade) ? statusDoUsuario(atividade.status) : 'fora_caderno'">
+                <div class="atividade-status" [ngClass]="atividade.estaNoCaderno ? atividade.status : 'fora_caderno'">
                     <ion-icon
-                        [name]="estaNoCaderno(atividade) ? iconeStatus(atividade.status) : 'bookmark-outline'"></ion-icon>
-                    {{ estaNoCaderno(atividade) ? labelStatus(atividade.status) : 'Não está no caderno' }}
+                        [name]="atividade.estaNoCaderno ? iconeStatus(atividade.status) : 'bookmark-outline'"></ion-icon>
+
+                    {{ atividade.estaNoCaderno ? labelStatus(atividade.status) : 'Não está no caderno' }}
                 </div>
             </div>
             } @empty {
@@ -69,18 +69,18 @@
             Membros
         </h3>
         <div class="membros-lista">
-            @for (membro of sala.membros?.slice(0, 3); track membro.id; let i = $index) {
+            @for (membro of membros; track membro.id; let i = $index) {
             <div class="membro-item">
                 <span class="membro-pos">{{ i + 1 }}</span>
                 <div class="avatar-small" [class.lider]="membro.id === sala.idLider">
-                    {{ iniciais(membro.nome) }}
+                    {{ iniciais(nomeMembro(membro)) }}
                     @if (membro.id === sala.idLider) {
                     <span class="coroa">👑</span>
                     }
                 </div>
                 <div class="membro-info">
                     <span class="membro-nome">
-                        {{ membro.nome }}
+                        {{ nomeMembro(membro) }}
                         @if (membro.id === usuario.id) {
                         <span class="voce">(você)</span>
                         }

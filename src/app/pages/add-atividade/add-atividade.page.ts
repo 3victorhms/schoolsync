@@ -58,7 +58,7 @@ export class AddAtividadePage implements OnInit {
 
     if (id) {
       this.editando = true;
-      this.atividadeService.buscarPorId(id).subscribe(res => {
+      this.atividadeService.buscarPorId(id, this.usuario.id).subscribe(res => {
         if (!res) {
           this.exibirMensagem('Atividade não encontrada');
           return;
@@ -76,7 +76,7 @@ export class AddAtividadePage implements OnInit {
     const idSala = this.activatedRoute.snapshot.params['idSala'];
 
     if (idSala) {
-      this.salaService.buscarPorId(idSala).subscribe(res => {
+      this.salaService.buscarPorId(idSala, this.usuario.id).subscribe(res => {
         if (!res) {
           this.exibirMensagem('Sala não encontrada');
           this.navController.navigateBack('/salas');
@@ -101,13 +101,12 @@ export class AddAtividadePage implements OnInit {
     this.atividade.disciplina = this.formGroup.get('disciplina')?.value;
     this.atividade.valor = this.formGroup.get('valor')?.value;
     this.atividade.dataEntrega = this.formGroup.get('dataEntrega')?.value || this.atividade.dataEntrega;
-    this.atividade.criadaPor = this.atividade.criadaPor || this.usuario.id;
+    this.atividade.idCriador = this.atividade.idCriador || this.usuario.id;
 
     if (this.atividade.id) {
       // edição
       this.atividadeService.salvar(this.atividade).subscribe({
         next: () => {
-          this.salaService.sincronizarAtividade(this.atividade);
           this.exibirMensagem('Atividade atualizada com sucesso!');
           this.navController.navigateForward('/atividade/' + this.atividade.id);
         },
@@ -115,7 +114,7 @@ export class AddAtividadePage implements OnInit {
       });
     } else {
       // criação
-      this.salaService.adicionarAtividade(this.atividade, this.atividadeService).subscribe({
+      this.atividadeService.salvar(this.atividade).subscribe({
         next: () => {
           this.exibirMensagem('Atividade criada com sucesso!');
           this.navController.navigateForward('/sala/' + this.atividade.idSala);

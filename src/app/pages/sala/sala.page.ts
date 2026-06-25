@@ -11,6 +11,8 @@ import { SalaService } from 'src/app/services/sala.service';
 import { addIcons } from 'ionicons';
 import { addOutline, peopleOutline, trophyOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline } from 'ionicons/icons';
 import { AtividadeModel } from 'src/app/model/atividade.model';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
     selector: 'app-sala',
@@ -53,16 +55,18 @@ export class SalaPage implements OnInit {
         const id = this.activatedRoute.snapshot.params['id'];
 
         if (id) {
-            this.salaService.buscarPorId(id).subscribe(res => {
-                if (!res) {
+            this.salaService.buscarPorId(id, this.usuario.id).subscribe({
+                next: (res) => {
+                    this.sala = res;
+                    this.sala.membros = this.sala.membros || [];
+                    this.sala.atividades = this.sala.atividades || [];
+                    this.carregarMembros(this.sala.membros);
+                    localStorage.setItem(`ultimaSala:${this.usuario.id}`, this.sala.id);
+                },
+                error: () => {
                     this.exibirMensagem('Sala não encontrada');
                     this.navController.navigateBack('/salas');
-                    return;
                 }
-
-                this.sala = res;
-
-                localStorage.setItem('ultimaSala', this.sala.id);
             });
         }
     }
@@ -76,35 +80,90 @@ export class SalaPage implements OnInit {
             .join('');
     }
 
-    statusDoUsuario(status: Record<string, string>): string {
-        if (!status) return 'nao_iniciada';
-        return status[this.usuario.id] || 'nao_iniciada';
+    nomeMembro(membro: UsuarioModel): string {
+        return membro?.nome || membro?.email || 'Aluno';
     }
 
-    iconeStatus(status: Record<string, string>): string {
-        switch (this.statusDoUsuario(status)) {
+    carregarMembros(membros: unknown[]) {
+        const membrosNormalizados = membros
+            .map(membro => this.normalizarMembro(membro))
+            .filter((membro): membro is UsuarioModel => !!membro);
+
+        const idsSemNome = membrosNormalizados
+            .filter(membro => membro.id && !membro.nome)
+            .map(membro => membro.id);
+
+        if (idsSemNome.length === 0) {
+            this.membros = membrosNormalizados;
+            return;
+        }
+
+        forkJoin(
+            idsSemNome.map(id =>
+                this.usuarioService.buscarPorId(id).pipe(
+                    catchError(() => of(this.criarMembroFallback(id)))
+                )
+            )
+        ).subscribe(usuarios => {
+            const usuariosPorId = new Map(usuarios.map(usuario => [usuario.id, usuario]));
+            this.membros = membrosNormalizados.map(membro =>
+                usuariosPorId.get(membro.id) || membro
+            );
+        });
+    }
+
+    normalizarMembro(membro: unknown): UsuarioModel | null {
+        if (!membro) return null;
+
+        if (typeof membro === 'string') {
+            return this.criarMembroFallback(membro);
+        }
+
+        const dados = membro as Partial<UsuarioModel> & {
+            idUsuario?: string;
+            nomeUsuario?: string;
+        };
+
+        const usuario = new UsuarioModel();
+        usuario.id = dados.id || dados.idUsuario || '';
+        usuario.nome = dados.nome || dados.nomeUsuario || '';
+        usuario.email = dados.email || '';
+        usuario.senha = dados.senha || '';
+        usuario.foto = dados.foto || '';
+
+        return usuario;
+    }
+
+    criarMembroFallback(id: string): UsuarioModel {
+        const usuario = new UsuarioModel();
+        usuario.id = id;
+        return usuario;
+    }
+
+    iconeStatus(status: string | null): string {
+        switch (status) {
             case 'concluido':
                 return 'checkmark-circle-outline';
             case 'nao_iniciada':
+            case null:
+            case undefined:
                 return 'ellipse-outline';
             default:
                 return 'time-outline';
         }
     }
 
-    labelStatus(status: Record<string, string>): string {
-        switch (this.statusDoUsuario(status)) {
+    labelStatus(status: string | null): string {
+        switch (status) {
             case 'concluido':
                 return 'Concluído';
             case 'nao_iniciada':
+            case null:
+            case undefined:
                 return 'Não iniciada';
             default:
                 return 'Em andamento';
         }
-    }
-
-    estaNoCaderno(atividade: AtividadeModel): boolean {
-        return atividade.noCaderno?.some(u => u.id === this.usuario.id) ?? false;
     }
 
     editar() {
@@ -124,9 +183,15 @@ export class SalaPage implements OnInit {
                     text: 'Excluir',
                     role: 'destructive',
                     handler: () => {
-                        this.salaService.excluir(this.sala.id);
-                        this.exibirMensagem('Sala excluída.');
-                        this.navController.navigateBack('/salas');
+                        this.salaService.excluir(this.sala.id).subscribe({
+                            next: () => {
+                                this.exibirMensagem('Sala excluída.');
+                                this.navController.navigateBack('/salas');
+                            },
+                            error: () => {
+                                this.exibirMensagem('Erro ao excluir sala.');
+                            }
+                        });
                     }
                 }
             ]

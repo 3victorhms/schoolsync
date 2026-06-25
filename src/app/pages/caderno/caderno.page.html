@@ -19,14 +19,17 @@
         <ion-icon name="book-outline"></ion-icon>
         Todas
       </button>
+
       <button class="filtro-btn" [class.ativo]="filtroAtivo === 'nao_iniciada'" (click)="filtrar('nao_iniciada')">
         <ion-icon name="ellipse-outline"></ion-icon>
         Não iniciadas
       </button>
+
       <button class="filtro-btn" [class.ativo]="filtroAtivo === 'em_andamento'" (click)="filtrar('em_andamento')">
         <ion-icon name="time-outline"></ion-icon>
         Em andamento
       </button>
+
       <button class="filtro-btn" [class.ativo]="filtroAtivo === 'concluido'" (click)="filtrar('concluido')">
         <ion-icon name="checkmark-circle-outline"></ion-icon>
         Concluídas
@@ -41,14 +44,23 @@
             <h4 class="atividade-titulo">{{ atividade.titulo }}</h4>
             <p class="atividade-descricao">{{ atividade.descricao }}</p>
           </div>
+
           <span class="atividade-disciplina">{{ atividade.disciplina }}</span>
         </div>
+
         <div class="atividade-meta">
-          <span><ion-icon name="calendar-outline"></ion-icon> {{ formatarData(atividade.dataEntrega) }}</span>
-          <span><ion-icon name="people-outline"></ion-icon> {{ atividade.noCaderno.length }} no caderno</span>
-          <span><ion-icon name="star-outline"></ion-icon> {{ atividade.valor }} pontos</span>
+          <span>
+            <ion-icon name="calendar-outline"></ion-icon>
+            {{ formatarData(atividade.dataEntrega) }}
+          </span>
+
+          <span>
+            <ion-icon name="star-outline"></ion-icon>
+            {{ atividade.valor }} pontos
+          </span>
         </div>
-        <div class="atividade-status" [ngClass]="statusDoUsuario(atividade.status)">
+
+        <div class="atividade-status" [ngClass]="classeStatus(atividade.status)">
           <ion-icon [name]="iconeStatus(atividade.status)"></ion-icon>
           {{ labelStatus(atividade.status) }}
         </div>

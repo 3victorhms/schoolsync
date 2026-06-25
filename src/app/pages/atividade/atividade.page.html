@@ -3,11 +3,13 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/salas"></ion-back-button>
     </ion-buttons>
+
     <ion-buttons slot="end">
-      @if (usuario.id === atividade.criadaPor) {
+      @if (usuario.id === atividade.idCriador) {
       <ion-button fill="clear" class="editar-btn" (click)="editar()">
         <ion-icon name="create-outline" slot="icon-only"></ion-icon>
       </ion-button>
+
       <ion-button fill="clear" class="excluir-btn" (click)="excluir()">
         <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
       </ion-button>
@@ -23,12 +25,15 @@
     <p class="atividade-descricao-titulo">{{ atividade.descricao }}</p>
 
     <div class="atividade-meta">
-      <span><ion-icon name="calendar-outline"></ion-icon> {{ formatarData(atividade.dataEntrega) }}</span>
-      <span><ion-icon name="people-outline"></ion-icon> {{ atividade.noCaderno.length }} no caderno</span>
+      <span>
+        <ion-icon name="calendar-outline"></ion-icon>
+        {{ formatarData(atividade.dataEntrega) }}
+      </span>
     </div>
 
     <div class="atividade-tags">
       <span class="tag-disciplina">{{ atividade.disciplina }}</span>
+
       <span class="tag-valor">
         <ion-icon name="star-outline"></ion-icon>
         {{ atividade.valor }} pontos
@@ -44,7 +49,7 @@
 
     @if (prazoEncerrado) {
     <div class="aviso-prazo">
-      <ion-icon name="alert-triangle-outline"></ion-icon>
+      <ion-icon name="triangle-outline"></ion-icon>
       Prazo encerrado — atividade somente leitura
     </div>
     }
@@ -53,25 +58,28 @@
 
   <div class="status-secao">
     <p class="secao-label">Status da atividade</p>
+
     <div class="status-botoes">
-      <button class="status-btn" [class.ativo]="estaNoCaderno && statusAtual === 'nao_iniciada'"
-        [disabled]="prazoEncerrado || !estaNoCaderno" (click)="alterarStatus('nao_iniciada')">
+      <button class="status-btn" [class.ativo]="atividade.estaNoCaderno && statusAtual === 'nao_iniciada'"
+        [disabled]="prazoEncerrado || !atividade.estaNoCaderno" (click)="alterarStatus('nao_iniciada')">
         <ion-icon name="ellipse-outline"></ion-icon>
         Não iniciada
       </button>
+
       <button class="status-btn" [class.ativo]="statusAtual === 'em_andamento'"
-        [disabled]="prazoEncerrado || !estaNoCaderno" (click)="alterarStatus('em_andamento')">
+        [disabled]="prazoEncerrado || !atividade.estaNoCaderno" (click)="alterarStatus('em_andamento')">
         <ion-icon name="time-outline"></ion-icon>
         Em andamento
       </button>
+
       <button class="status-btn" [class.ativo]="statusAtual === 'concluido'"
-        [disabled]="prazoEncerrado || !estaNoCaderno" (click)="alterarStatus('concluido')">
+        [disabled]="prazoEncerrado || !atividade.estaNoCaderno" (click)="alterarStatus('concluido')">
         <ion-icon name="checkmark-circle-outline"></ion-icon>
         Concluído
       </button>
     </div>
 
-    @if (estaNoCaderno) {
+    @if (atividade.estaNoCaderno) {
     <button class="remover-btn" (click)="removerDoCaderno()">
       <ion-icon name="trash-outline"></ion-icon>
       Remover do caderno
@@ -89,6 +97,7 @@
       <ion-icon name="chatbox-outline"></ion-icon>
       Comentários
     </h3>
+
     <div class="comentarios-vazio">
       <p>Comentários em breve.</p>
     </div>

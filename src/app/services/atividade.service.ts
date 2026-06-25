@@ -1,63 +1,82 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { AtividadeModel } from '../model/atividade.model';
-import { Observable, of } from 'rxjs';
-import { UsuarioModel } from '../model/usuario.model';
-import { SalaModel } from '../model/sala.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AtividadeService {
 
-  excluirAtividadesDaSala(sala: SalaModel): void {
-    let atividades = JSON.parse(localStorage.getItem('atividades') || '[]') as AtividadeModel[];
-    atividades = atividades.filter((a: AtividadeModel) => a.idSala !== sala.id);
-    localStorage.setItem('atividades', JSON.stringify(atividades));
-  }
+  private readonly API_URL = 'http://localhost:8080/atividades';
+
+  constructor(private http: HttpClient) { }
 
   salvar(atividade: AtividadeModel): Observable<AtividadeModel> {
-    let atividades = JSON.parse(localStorage.getItem('atividades') || '[]');
-
-    if (!atividade.id) {
-      atividade.id = this.gerarId(11); // Gera um ID aleatório
-      atividade.noCaderno[0] = JSON.parse(localStorage.getItem('usuarioAutenticado') || '{}') as UsuarioModel;
-      // adiciona a atividade no caderno do usuário criador
-      atividades.push(atividade);
-    } else {
-      let posicao = atividades.findIndex((temp: AtividadeModel) => temp.id === atividade.id);
-      atividades[posicao] = atividade;
+    if (atividade.id) {
+      return this.atualizar(atividade.id, atividade);
     }
-    localStorage.setItem('atividades', JSON.stringify(atividades));
-    return of(atividade);
+
+    return this.http.post<AtividadeModel>(
+      this.API_URL,
+      atividade
+    );
   }
 
-  buscarPorId(id: string): Observable<AtividadeModel> {
-    let atividades = JSON.parse(localStorage.getItem('atividades') || '[]');
-    let atividade = atividades.find((temp: AtividadeModel) => temp.id === id);
-
-    return of(atividade);
+  atualizar(id: string, atividade: AtividadeModel): Observable<AtividadeModel> {
+    return this.http.put<AtividadeModel>(
+      `${this.API_URL}/${id}`,
+      atividade
+    );
   }
 
-  listar(): AtividadeModel[] {
-    return JSON.parse(localStorage.getItem('atividades') || '[]');
+  buscarPorId(id: string, idUsuarioLogado: string): Observable<AtividadeModel> {
+    return this.http.get<AtividadeModel>(
+      `${this.API_URL}/${id}?idUsuarioLogado=${idUsuarioLogado}`
+    );
   }
 
-  listarPorSala(idSala: string): AtividadeModel[] {
-    return this.listar().filter((a: AtividadeModel) => a.idSala === idSala);
+  listarPorSala(idSala: string): Observable<AtividadeModel[]> {
+    return this.http.get<AtividadeModel[]>(
+      `${this.API_URL}/sala/${idSala}`
+    );
   }
 
-  excluir(id: string): boolean {
-    let atividades = this.listar().filter((a: AtividadeModel) => a.id !== id);
-    localStorage.setItem('atividades', JSON.stringify(atividades));
-    return true;
+  listarPorUsuarioNoCaderno(idUsuario: string): Observable<AtividadeModel[]> {
+    return this.http.get<AtividadeModel[]>(
+      `${this.API_URL}/caderno/usuario/${idUsuario}`
+    );
   }
 
-  private gerarId(tamanho: number = 11): string {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let resultado = '';
-    for (let i = 0; i < tamanho; i++) {
-      resultado += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return resultado;
+  excluir(id: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.API_URL}/${id}`
+    );
+  }
+
+  excluirAtividadesDaSala(idSala: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.API_URL}/sala/${idSala}`
+    );
+  }
+
+  adicionarNoCaderno(idAtividade: string, idUsuario: string): Observable<void> {
+    return this.http.post<void>(
+      `${this.API_URL}/${idAtividade}/caderno?idUsuario=${idUsuario}`,
+      null
+    );
+  }
+
+  removerDoCaderno(idAtividade: string, idUsuario: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.API_URL}/${idAtividade}/caderno?idUsuario=${idUsuario}`
+    );
+  }
+
+  alterarStatus(idAtividade: string, idUsuario: string, status: string): Observable<void> {
+    return this.http.put<void>(
+      `${this.API_URL}/${idAtividade}/status?idUsuario=${idUsuario}&status=${status}`,
+      null
+    );
   }
 }

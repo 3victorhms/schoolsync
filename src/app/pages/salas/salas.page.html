@@ -31,11 +31,12 @@
             <div class="sala-meta">
               <span>
                 <ion-icon name="people-outline"></ion-icon>
-                {{ sala.membros.length }}
+                {{ quantidadeMembros(sala) }}
               </span>
+
               <span>
                 <ion-icon name="documents-outline"></ion-icon>
-                {{ sala.atividades.length }}
+                {{ quantidadeAtividades(sala) }}
               </span>
               <span class="sala-codigoConvite">{{ sala.codigoConvite }}</span>
             </div>

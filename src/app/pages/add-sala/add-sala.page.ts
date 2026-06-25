@@ -43,7 +43,7 @@ export class AddSalaPage implements OnInit {
     if (id) {
       this.editando = true;
 
-      this.salaService.buscarPorId(id).subscribe(res => {
+      this.salaService.buscarPorId(id, this.usuario.id).subscribe(res => {
         if (!res) {
           this.exibirMensagem('Sala não encontrada');
           return;
@@ -58,10 +58,10 @@ export class AddSalaPage implements OnInit {
     this.sala.nome = this.formGroup.get('nomeSala')?.value;
     this.sala.idLider = this.usuario.id;
 
-    this.salaService.salvar(this.sala).subscribe({
-      next: () => {
+    this.salaService.salvar(this.sala, this.usuario.id).subscribe({
+      next: (salaSalva) => {
         this.exibirMensagem(this.editando ? 'Sala atualizada com sucesso!' : 'Sala criada com sucesso!!!');
-        this.navController.navigateBack(this.editando ? '/sala/' + this.sala.id : '/sala');
+        this.navController.navigateBack('/sala/' + salaSalva.id);
       },
       error: () => {
         this.exibirMensagem(this.editando ? 'Erro ao atualizar sala.' : 'Erro ao criar sala.');

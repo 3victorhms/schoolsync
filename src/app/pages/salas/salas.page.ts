@@ -76,7 +76,29 @@ export class SalasPage implements OnInit {
   }
 
   carregarSalas() {
-    this.salas = this.salaService.listarPorUsuario();
+    const usuario = JSON.parse(localStorage.getItem('usuarioAutenticado') || '{}');
+
+    if (!usuario.id) {
+      this.salas = [];
+      return;
+    }
+
+    this.salaService.listarPorUsuario(usuario.id).subscribe({
+      next: (res) => {
+        this.salas = res;
+      },
+      error: () => {
+        this.salas = [];
+      }
+    });
+  }
+
+  quantidadeMembros(sala: SalaModel): number {
+    return sala.quantidadeMembros ?? sala.membros?.length ?? 0;
+  }
+
+  quantidadeAtividades(sala: SalaModel): number {
+    return sala.quantidadeAtividades ?? sala.atividades?.length ?? 0;
   }
 
 }

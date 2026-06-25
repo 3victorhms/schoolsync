@@ -32,6 +32,7 @@ export class PerfilPage implements OnInit {
   filtroAtivo: string = 'todas';
 
   usuario = {
+    id: this.usuarioService.buscarAutenticacao().id,
     nome: this.usuarioService.buscarAutenticacao().nome,
   };
 
@@ -57,6 +58,7 @@ export class PerfilPage implements OnInit {
 
   ionViewWillEnter() {
     this.usuario = {
+      id: this.usuarioService.buscarAutenticacao().id,
       nome: this.usuarioService.buscarAutenticacao().nome,
     };
     this.carregarCaderno();
@@ -64,11 +66,23 @@ export class PerfilPage implements OnInit {
 
   carregarCaderno() {
     const usuario = this.usuarioService.buscarAutenticacao();
-    const todas = this.atividadeService.listar();
-    this.atividades = todas.filter(a =>
-      a.noCaderno && a.noCaderno.some(u => u.id === usuario.id)
-    );
-    this.filtrar(this.filtroAtivo);
+
+    if (!usuario.id) {
+      this.atividades = [];
+      this.atividadesFiltradas = [];
+      return;
+    }
+
+    this.atividadeService.listarPorUsuarioNoCaderno(usuario.id).subscribe({
+      next: (res) => {
+        this.atividades = res;
+        this.filtrar(this.filtroAtivo);
+      },
+      error: () => {
+        this.atividades = [];
+        this.atividadesFiltradas = [];
+      }
+    });
   }
 
   filtrar(filtro: string) {
@@ -77,20 +91,22 @@ export class PerfilPage implements OnInit {
       this.atividadesFiltradas = this.atividades;
     } else {
       this.atividadesFiltradas = this.atividades.filter(a => {
-        const status = a.status?.[this.usuario.nome] || 'em_andamento';
+        const status = a.status || 'nao_iniciada';
         return status === filtro;
       });
     }
   }
 
-  iconeStatus(status: Record<string, string>): string {
-    const s = status?.[this.usuario.nome] || 'em_andamento';
+  iconeStatus(status: string | null): string {
+    const s = status || 'nao_iniciada';
     return s === 'concluido' ? 'checkmark-circle-outline' : 'time-outline';
   }
 
-  labelStatus(status: Record<string, string>): string {
-    const s = status?.[this.usuario.nome] || 'em_andamento';
-    return s === 'concluido' ? 'Concluído' : 'Em andamento';
+  labelStatus(status: string | null): string {
+    const s = status || 'nao_iniciada';
+    if (s === 'concluido') return 'Concluído';
+    if (s === 'nao_iniciada') return 'Não iniciada';
+    return 'Em andamento';
   }
 
   formatarData(data: string): string {

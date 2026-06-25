@@ -121,17 +121,41 @@ export class InicioPage implements OnInit {
   }
 
   carregarAtividadesDoDia() {
-    const todas = this.atividadeService.listar();
+    if (!this.usuario.id) {
+      this.atividadesDoDia = [];
+      return;
+    }
+
     const d = this.dataSelecionada;
     const dataStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    this.atividadesDoDia = todas.filter(a => a.dataEntrega === dataStr);
+
+    this.atividadeService.listarPorUsuarioNoCaderno(this.usuario.id).subscribe({
+      next: (todas) => {
+        this.atividadesDoDia = todas.filter((a: AtividadeModel) => a.dataEntrega === dataStr);
+      },
+      error: () => {
+        this.atividadesDoDia = [];
+      }
+    });
   }
 
   carregarUltimaSala() {
-    const id = localStorage.getItem('ultimaSala');
+    this.ultimaSala = null;
+
+    if (!this.usuario.id) {
+      return;
+    }
+
+    const id = localStorage.getItem(`ultimaSala:${this.usuario.id}`);
     if (id) {
-      this.salaService.buscarPorId(id).subscribe(sala => {
-        this.ultimaSala = sala || null;
+      this.salaService.buscarPorId(id, this.usuario.id).subscribe({
+        next: (sala) => {
+          this.ultimaSala = sala || null;
+        },
+        error: () => {
+          localStorage.removeItem(`ultimaSala:${this.usuario.id}`);
+          this.ultimaSala = null;
+        }
       });
     }
   }
