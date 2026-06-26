@@ -1,6 +1,6 @@
 # SchoolSync
 
-SchoolSync é uma aplicação para organização escolar, permitindo que usuários criem e participem de salas, acompanhem atividades, adicionem tarefas ao caderno e gerenciem o progresso das entregas.
+SchoolSync é uma aplicação para organização escolar, permitindo que usuários criem e participem de salas, acompanhem atividades, adicionem ao seu caderno e gerenciem o progresso das entregas.
 
 ## Funcionalidades
 
