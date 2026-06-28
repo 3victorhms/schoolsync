@@ -55,6 +55,7 @@ export class AddAtividadePage implements OnInit {
 
   ionViewWillEnter() {
     const id = this.activatedRoute.snapshot.params['id'];
+    this.usuario = this.usuarioService.buscarAutenticacao();
 
     if (id) {
       this.editando = true;
@@ -71,6 +72,11 @@ export class AddAtividadePage implements OnInit {
         this.formGroup.get('dataEntrega')?.setValue(this.atividade.dataEntrega);
         this.formGroup.get('dataEntrega')?.disable();
       });
+    } else {
+      this.editando = false;
+      this.atividade = new AtividadeModel();
+      this.formGroup.reset();
+      this.formGroup.get('dataEntrega')?.enable();
     }
 
     const idSala = this.activatedRoute.snapshot.params['idSala'];
@@ -108,7 +114,7 @@ export class AddAtividadePage implements OnInit {
       this.atividadeService.salvar(this.atividade).subscribe({
         next: () => {
           this.exibirMensagem('Atividade atualizada com sucesso!');
-          this.navController.navigateForward('/atividade/' + this.atividade.id);
+          this.navController.navigateRoot('/atividade/' + this.atividade.id + '?refresh=' + Date.now());
         },
         error: () => this.exibirMensagem('Erro ao atualizar atividade.')
       });
@@ -117,7 +123,7 @@ export class AddAtividadePage implements OnInit {
       this.atividadeService.salvar(this.atividade).subscribe({
         next: () => {
           this.exibirMensagem('Atividade criada com sucesso!');
-          this.navController.navigateForward('/sala/' + this.atividade.idSala);
+          this.navController.navigateRoot('/sala/' + this.atividade.idSala);
         },
         error: () => this.exibirMensagem('Erro ao criar atividade.')
       });

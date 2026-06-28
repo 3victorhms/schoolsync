@@ -159,4 +159,9 @@ export class InicioPage implements OnInit {
       });
     }
   }
+
+  labelPontos(valor: number | string): string {
+    const pontos = Number(valor);
+    return `${valor} ${pontos === 1 ? 'ponto' : 'pontos'}`;
+  }
 }

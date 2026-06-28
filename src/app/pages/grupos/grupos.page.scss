@@ -1,0 +1,147 @@
+ion-toolbar {
+  --background: #0f1117;
+  --border-color: transparent;
+
+  ion-back-button {
+    --color: #ffffff;
+  }
+
+  ion-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    padding: 0;
+  }
+}
+
+ion-content {
+  --background: #0f1117;
+}
+
+.acoes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 20px 16px 8px;
+}
+
+.acao-card {
+  min-height: 82px;
+  background: #171c28;
+  border: none;
+  border-radius: 16px;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+
+  ion-icon {
+    color: #3a6ff7;
+    font-size: 22px;
+  }
+}
+
+.grupos-secao {
+  padding: 16px 16px 28px;
+
+  h2 {
+    color: #6f8fc7;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 12px;
+  }
+}
+
+.grupos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.grupo-card {
+  background: #171c28;
+  border: 1px solid #252b3d;
+  border-radius: 16px;
+  min-height: 76px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+}
+
+.grupo-icone {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #1e2540;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    color: #3a6ff7;
+    font-size: 24px;
+  }
+}
+
+.grupo-info {
+  flex: 1;
+
+  h3 {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+
+  p {
+    color: #8891aa;
+    font-size: 13px;
+    margin: 0;
+  }
+}
+
+.grupo-seta {
+  color: #6b7693;
+  font-size: 20px;
+}
+
+.vazio {
+  color: #6f7b98;
+  text-align: center;
+  padding: 28px 12px;
+}
+
+ion-tab-bar {
+  --background: #0f1117;
+  --border: none;
+  padding-bottom: env(safe-area-inset-bottom);
+  height: 64px;
+  border-top: 1px solid #1e2540;
+}
+
+ion-tab-button {
+  --color: #4e5670;
+  --color-selected: #3a6ff7;
+  --ripple-color: transparent;
+
+  ion-icon {
+    font-size: 22px;
+  }
+
+  ion-label {
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+}
+
+.selecionado {
+  color: #3a79df;
+}

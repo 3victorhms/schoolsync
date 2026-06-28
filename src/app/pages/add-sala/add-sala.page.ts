@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonItem, IonLabel, IonButton, IonInput, IonIcon } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonItem, IonLabel, IonButton, IonInput } from '@ionic/angular/standalone';
 import { ActivatedRoute } from '@angular/router';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -14,7 +14,7 @@ import { SalaService } from 'src/app/services/sala.service';
   templateUrl: './add-sala.page.html',
   styleUrls: ['./add-sala.page.scss'],
   standalone: true,
-  imports: [IonButton, IonLabel, IonItem, IonBackButton, IonButtons, IonInput, IonIcon, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, ReactiveFormsModule]
+  imports: [IonButton, IonLabel, IonItem, IonBackButton, IonButtons, IonInput, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class AddSalaPage implements OnInit {
 

@@ -55,4 +55,18 @@ export class SalaService {
       `${this.API_URL}/${id}`
     );
   }
+
+  sairDaSala(idSala: string, idUsuario: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.API_URL}/${idSala}/sair`,
+      { params: { idUsuario } }
+    );
+  }
+
+  removerMembro(idSala: string, idUsuarioRemover: string, idUsuarioLogado: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.API_URL}/${idSala}/membros/${idUsuarioRemover}`,
+      { params: { idUsuarioLogado } }
+    );
+  }
 }

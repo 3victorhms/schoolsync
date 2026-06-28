@@ -59,11 +59,11 @@ export class EntrarSalaPage implements OnInit {
         this.exibirMensagem('Voce entrou na sala com sucesso!');
 
         if (sala?.id) {
-          this.navController.navigateForward('/sala/' + sala.id);
+          this.navController.navigateRoot('/sala/' + sala.id);
           return;
         }
 
-        this.navController.navigateBack('/salas');
+        this.navController.navigateRoot('/salas');
       },
       error: (err) => {
         this.exibirMensagem(err?.error?.message || 'Codigo invalido ou sala nao encontrada.');

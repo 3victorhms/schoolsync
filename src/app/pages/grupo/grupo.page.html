@@ -1,0 +1,103 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/grupos/' + grupo.idSala"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>
+      {{ grupo.nome }}
+      <p class="subtitulo">{{ grupo.nomeSala }}</p>
+    </ion-title>
+
+    <ion-buttons slot="end">
+      @if (grupo.criador) {
+      <ion-button fill="clear" class="editar-btn" (click)="editar()">
+        <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" class="excluir-btn" (click)="excluir()">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      } @else {
+      <ion-button fill="clear" class="sair-btn" (click)="sair()">
+        <ion-icon name="log-out-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      }
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="tarefa-link" [routerLink]="['/grupo', grupo.id, 'tarefas']">
+    <div class="tarefa-icone">
+      <ion-icon name="list-outline"></ion-icon>
+    </div>
+
+    <div class="tarefa-info">
+      <h2>Divisao de Tarefas</h2>
+      <p>{{ labelTarefasAtribuidas() }}</p>
+    </div>
+
+    <ion-icon class="seta" name="chevron-forward-outline"></ion-icon>
+  </div>
+
+  <div class="codigo-card">
+    <p>Codigo de convite</p>
+    <button type="button" (click)="copiarCodigo()">
+      <span>{{ grupo.codigoConvite }}</span>
+      <ion-icon name="clipboard-outline"></ion-icon>
+    </button>
+  </div>
+
+  <section class="membros-secao">
+    <h2>Membros ({{ grupo.membros.length }})</h2>
+
+    <div class="membros-lista">
+      @for (membro of grupo.membros; track membro.idUsuario; let i = $index) {
+      <div class="membro-item">
+        <span class="membro-pos">{{ i + 1 }}</span>
+
+        <div class="avatar-small" [class.lider]="ehLiderGrupo(membro)">
+          {{ iniciais(nomeMembro(membro)) }}
+          @if (ehLiderGrupo(membro)) {
+          <span class="coroa">&#128081;</span>
+          }
+        </div>
+
+        <div class="membro-info">
+          <span class="membro-nome">
+            {{ nomeMembro(membro) }}
+            @if (membro.idUsuario === usuario.id) {
+            <span class="voce">(voce)</span>
+            }
+          </span>
+          @if (ehLiderGrupo(membro)) {
+          <span class="membro-tag-lider">Lider</span>
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </section>
+</ion-content>
+
+<ion-tab-bar slot="bottom">
+  <ion-tab-button tab="inicio" routerLink="/inicio">
+    <ion-icon name="home-outline"></ion-icon>
+    <ion-label>Inicio</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button class="selecionado" tab="salas" routerLink="/salas">
+    <ion-icon name="business-outline"></ion-icon>
+    <ion-label>Salas</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button tab="caderno" routerLink="/caderno">
+    <ion-icon name="book"></ion-icon>
+    <ion-label>Caderno</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button tab="perfil" routerLink="/perfil">
+    <ion-icon name="person-outline"></ion-icon>
+    <ion-label>Perfil</ion-label>
+  </ion-tab-button>
+</ion-tab-bar>

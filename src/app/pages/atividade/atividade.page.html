@@ -36,7 +36,7 @@
 
       <span class="tag-valor">
         <ion-icon name="star-outline"></ion-icon>
-        {{ atividade.valor }} pontos
+        {{ labelPontos(atividade.valor) }}
       </span>
     </div>
 
@@ -95,11 +95,96 @@
   <div class="comentarios-secao">
     <h3 class="secao-titulo">
       <ion-icon name="chatbox-outline"></ion-icon>
-      Comentários
+      Comentarios
     </h3>
 
-    <div class="comentarios-vazio">
-      <p>Comentários em breve.</p>
+    <div class="comentarios-lista">
+      @for (comentario of comentarios; track comentario.id) {
+      <div class="comentario-card">
+        <div class="comentario-avatar">
+          {{ iniciaisComentario(comentario.nomeUsuario) }}
+        </div>
+
+        <div class="comentario-conteudo">
+          <div class="comentario-topo">
+            <strong>{{ comentario.nomeUsuario }}</strong>
+            <span>{{ formatarDataComentario(comentario.dataCriacao) }}</span>
+          </div>
+
+          <p>{{ comentario.texto }}</p>
+
+          <div class="comentario-acoes">
+            <button type="button" (click)="responderComentario(comentario)">
+              <ion-icon name="return-down-back-outline"></ion-icon>
+              Responder
+            </button>
+
+            @if (podeAlterarComentario(comentario)) {
+            <button type="button" class="acao-excluir" (click)="excluirComentario(comentario)">
+              <ion-icon name="trash-outline"></ion-icon>
+              Excluir
+            </button>
+            }
+          </div>
+
+          @if (comentario.respostas.length > 0) {
+          <div class="comentario-respostas">
+            @for (resposta of comentario.respostas; track resposta.id) {
+            <div class="comentario-card resposta">
+              <div class="comentario-avatar">
+                {{ iniciaisComentario(resposta.nomeUsuario) }}
+              </div>
+
+              <div class="comentario-conteudo">
+                <div class="comentario-topo">
+                  <strong>{{ resposta.nomeUsuario }}</strong>
+                  <span>{{ formatarDataComentario(resposta.dataCriacao) }}</span>
+                </div>
+
+                <p>{{ resposta.texto }}</p>
+
+                <div class="comentario-acoes">
+                  @if (podeAlterarComentario(resposta)) {
+                  <button type="button" class="acao-excluir" (click)="excluirComentario(resposta)">
+                    <ion-icon name="trash-outline"></ion-icon>
+                    Excluir
+                  </button>
+                  }
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+      } @empty {
+      <div class="comentarios-vazio">
+        <p>Nenhum comentario ainda.</p>
+      </div>
+      }
+    </div>
+
+    @if (comentarioRespondendo) {
+    <div class="resposta-aviso">
+      <span>Respondendo {{ comentarioRespondendo.nomeUsuario }}</span>
+      <button type="button" (click)="cancelarResposta()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+    }
+
+    <div class="comentario-form">
+      <textarea
+        [(ngModel)]="novoComentario"
+        [ngModelOptions]="{standalone: true}"
+        maxlength="1000"
+        rows="1"
+        placeholder="Escrever comentario..."></textarea>
+
+      <button type="button" (click)="enviarComentario()" [disabled]="!novoComentario.trim()">
+        <ion-icon name="send-outline"></ion-icon>
+      </button>
     </div>
   </div>
 

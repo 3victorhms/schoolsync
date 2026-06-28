@@ -1,23 +1,23 @@
 export class ComentarioModel {
     id: string;
-    idAtividade: string;
-    idAutor: string;
-    nomeAutor: string;
-    fotoAutor: string;
     texto: string;
-    data: string;
-    respondeA: string;
-    tipo: string;
+    dataCriacao: string;
+    idAtividade: string;
+    idUsuario: string;
+    nomeUsuario: string;
+    fotoUsuario: string;
+    idComentarioPai: string | null;
+    respostas: ComentarioModel[];
 
     constructor() {
         this.id = "";
-        this.idAtividade = "";
-        this.idAutor = "";
-        this.nomeAutor = "";
-        this.fotoAutor = "";
         this.texto = "";
-        this.data = "";
-        this.respondeA = "";
-        this.tipo = "";
+        this.dataCriacao = "";
+        this.idAtividade = "";
+        this.idUsuario = "";
+        this.nomeUsuario = "";
+        this.fotoUsuario = "";
+        this.idComentarioPai = null;
+        this.respostas = [];
     }
 }

@@ -1,0 +1,41 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { ComentarioModel } from '../model/comentario.model';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ComentarioService {
+
+  private readonly API_URL = 'http://localhost:8080';
+
+  constructor(private http: HttpClient) { }
+
+  listarPorAtividade(idAtividade: string): Observable<ComentarioModel[]> {
+    return this.http.get<ComentarioModel[]>(
+      `${this.API_URL}/atividades/${idAtividade}/comentarios`
+    );
+  }
+
+  criar(idAtividade: string, texto: string, idUsuario: string, idComentarioPai?: string | null): Observable<ComentarioModel> {
+    return this.http.post<ComentarioModel>(
+      `${this.API_URL}/atividades/${idAtividade}/comentarios`,
+      { texto, idUsuario, idComentarioPai }
+    );
+  }
+
+  atualizar(idComentario: string, texto: string, idUsuario: string): Observable<ComentarioModel> {
+    return this.http.put<ComentarioModel>(
+      `${this.API_URL}/comentarios/${idComentario}`,
+      { texto, idUsuario }
+    );
+  }
+
+  excluir(idComentario: string, idUsuario: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.API_URL}/comentarios/${idComentario}`,
+      { params: { idUsuario } }
+    );
+  }
+}

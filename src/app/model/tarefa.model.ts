@@ -1,23 +1,29 @@
-import { AtividadeModel } from "./atividade.model";
-import { GrupoModel } from "./grupo.model";
-import { UsuarioModel } from "./usuario.model";
-
-export class SalaModel {
+export class TarefaModel {
     id: string;
-    nome: string;
-    codigo: string;
-    idLider: string;
-    membros: UsuarioModel[];
-    atividades: AtividadeModel[];
-    grupos: GrupoModel[];
+    titulo: string;
+    status: string;
+    dataCriacao: string;
+    idGrupo: string;
+    idAtividade: string;
+    tituloAtividade: string;
+    disciplinaAtividade: string;
+    idUsuarioAtribuido: string;
+    nomeUsuarioAtribuido: string;
+    idCriador: string;
+    nomeCriador: string;
 
     constructor() {
         this.id = "";
-        this.nome = "";
-        this.codigo = "";
-        this.idLider = "";
-        this.membros = [];
-        this.atividades = [];
-        this.grupos = [];
+        this.titulo = "";
+        this.status = "";
+        this.dataCriacao = "";
+        this.idGrupo = "";
+        this.idAtividade = "";
+        this.tituloAtividade = "";
+        this.disciplinaAtividade = "";
+        this.idUsuarioAtribuido = "";
+        this.nomeUsuarioAtribuido = "";
+        this.idCriador = "";
+        this.nomeCriador = "";
     }
 }

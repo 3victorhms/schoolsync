@@ -1,0 +1,24 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/grupos/' + idSala"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Entrar em Grupo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form [formGroup]="formGroup" (ngSubmit)="entrar()">
+    <div class="campo-grupo">
+      <label class="campo-label">Codigo do grupo</label>
+      <ion-item class="campo-item" lines="none">
+        <input type="text" placeholder="Ex: ALPHA01" formControlName="codigoConvite" maxlength="20" />
+      </ion-item>
+    </div>
+
+    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="formGroup.invalid">
+      <ion-icon name="person-add-outline" slot="start"></ion-icon>
+      Entrar no grupo
+    </ion-button>
+  </form>
+</ion-content>

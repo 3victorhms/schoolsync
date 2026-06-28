@@ -1,0 +1,93 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/grupo/' + grupo.id"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <section class="hero">
+    <h1>Divisao de Tarefas</h1>
+    <p>{{ grupo.nome }}</p>
+  </section>
+
+  @if (grupo.criador) {
+  <section class="nova-tarefa-card">
+    <h2>Nova tarefa</h2>
+
+    <select [(ngModel)]="idAtividadeSelecionada">
+      <option value="">Selecionar atividade</option>
+      @for (atividade of atividades; track atividade.id) {
+      <option [value]="atividade.id">{{ atividade.titulo }}</option>
+      }
+    </select>
+
+    <input type="text" [(ngModel)]="tituloTarefa" placeholder="Ex: Implementacao do Login" maxlength="150" />
+
+    <select [(ngModel)]="idUsuarioAtribuido">
+      <option value="">Atribuir a membro</option>
+      @for (membro of grupo.membros; track membro.idUsuario) {
+      <option [value]="membro.idUsuario">{{ membro.nomeUsuario }}</option>
+      }
+    </select>
+
+    <button type="button" (click)="criarTarefa()" [disabled]="!idAtividadeSelecionada || !idUsuarioAtribuido || !tituloTarefa.trim()">
+      Criar tarefa
+    </button>
+  </section>
+  } @else {
+  <div class="aviso">
+    Somente o lider do grupo pode atribuir tarefas
+  </div>
+  }
+
+  <section class="tarefas-lista">
+    @for (tarefa of tarefas; track tarefa.id) {
+    <div class="tarefa-card">
+      <button class="status-icone" type="button" (click)="alterarStatus(tarefa)" [disabled]="!podeAlterar(tarefa)">
+        <ion-icon [name]="iconeStatus(tarefa.status)"></ion-icon>
+      </button>
+
+      <div class="tarefa-info">
+        <h2>{{ tarefa.titulo }}</h2>
+        <p>{{ tarefa.disciplinaAtividade }} • {{ tarefa.nomeUsuarioAtribuido }}</p>
+      </div>
+
+      <span class="status-tag" [ngClass]="tarefa.status">{{ labelStatus(tarefa.status) }}</span>
+
+      @if (grupo.criador) {
+      <button type="button" class="excluir-tarefa" (click)="excluirTarefa(tarefa)">
+        <ion-icon name="trash-outline"></ion-icon>
+      </button>
+      }
+    </div>
+    } @empty {
+    <div class="tarefas-vazio">
+      Nenhuma tarefa criada
+    </div>
+    }
+  </section>
+</ion-content>
+
+<ion-tab-bar slot="bottom">
+  <ion-tab-button tab="inicio" routerLink="/inicio">
+    <ion-icon name="home-outline"></ion-icon>
+    <ion-label>Inicio</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button class="selecionado" tab="salas" routerLink="/salas">
+    <ion-icon name="business-outline"></ion-icon>
+    <ion-label>Salas</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button tab="caderno" routerLink="/caderno">
+    <ion-icon name="book"></ion-icon>
+    <ion-label>Caderno</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button tab="perfil" routerLink="/perfil">
+    <ion-icon name="person-outline"></ion-icon>
+    <ion-label>Perfil</ion-label>
+  </ion-tab-button>
+</ion-tab-bar>

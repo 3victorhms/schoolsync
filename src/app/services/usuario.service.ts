@@ -33,8 +33,8 @@ export class UsuarioService {
   }
 
   autenticar(login: string, senha: string): Observable<UsuarioModel> {
-    const params = { email: login, senha: senha };
-    return this.http.post<UsuarioModel>(`${this.API_URL_USUARIOS}/autenticar`, null, { params });
+    const loginDTO = { email: login, senha };
+    return this.http.post<UsuarioModel>(`${this.API_URL_USUARIOS}/autenticar`, loginDTO);
   }
 
   verificarLogin(login: string): Observable<boolean> {

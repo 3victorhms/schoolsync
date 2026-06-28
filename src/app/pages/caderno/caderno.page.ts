@@ -23,10 +23,14 @@ import {
   businessOutline,
   book,
   personOutline,
-  ellipseOutline
+  ellipseOutline,
+  searchOutline,
+  closeOutline
 } from 'ionicons/icons';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
+import { TarefaModel } from 'src/app/model/tarefa.model';
+import { TarefaService } from 'src/app/services/tarefa.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 
@@ -54,16 +58,23 @@ export class CadernoPage implements OnInit {
   usuario: UsuarioModel;
   atividades: AtividadeModel[];
   atividadesFiltradas: AtividadeModel[];
+  tarefas: TarefaModel[];
+  tarefasFiltradas: TarefaModel[];
   filtroAtivo: string;
+  termoBusca: string;
 
   constructor(
     private usuarioService: UsuarioService,
-    private atividadeService: AtividadeService
+    private atividadeService: AtividadeService,
+    private tarefaService: TarefaService
   ) {
     this.usuario = new UsuarioModel();
     this.atividades = [];
     this.atividadesFiltradas = [];
+    this.tarefas = [];
+    this.tarefasFiltradas = [];
     this.filtroAtivo = 'todas';
+    this.termoBusca = '';
 
     addIcons({
       bookOutline,
@@ -75,7 +86,9 @@ export class CadernoPage implements OnInit {
       businessOutline,
       book,
       personOutline,
-      ellipseOutline
+      ellipseOutline,
+      searchOutline,
+      closeOutline
     });
   }
 
@@ -90,32 +103,106 @@ export class CadernoPage implements OnInit {
     if (!this.usuario.id) {
       this.atividades = [];
       this.atividadesFiltradas = [];
+      this.tarefas = [];
+      this.tarefasFiltradas = [];
+      this.termoBusca = '';
       return;
     }
 
     this.atividadeService.listarPorUsuarioNoCaderno(this.usuario.id).subscribe({
       next: (res) => {
         this.atividades = res;
-        this.filtrar(this.filtroAtivo);
+        this.aplicarFiltros();
       },
       error: () => {
         this.atividades = [];
         this.atividadesFiltradas = [];
       }
     });
+
+    this.tarefaService.listarPorUsuario(this.usuario.id).subscribe({
+      next: (res) => {
+        this.tarefas = res || [];
+        this.aplicarFiltros();
+      },
+      error: () => {
+        this.tarefas = [];
+        this.tarefasFiltradas = [];
+      }
+    });
   }
 
   filtrar(filtro: string) {
     this.filtroAtivo = filtro;
+    this.aplicarFiltros();
+  }
 
-    if (filtro === 'todas') {
-      this.atividadesFiltradas = this.atividades;
-      return;
-    }
+  buscar() {
+    this.aplicarFiltros();
+  }
 
-    this.atividadesFiltradas = this.atividades.filter(a =>
-      a.status === filtro
-    );
+  limparBusca() {
+    this.termoBusca = '';
+    this.aplicarFiltros();
+  }
+
+  aplicarFiltros() {
+    const termo = this.normalizarTexto(this.termoBusca);
+
+    this.atividadesFiltradas = this.atividades.filter(atividade => {
+      const bateStatus = this.filtroAtivo === 'todas' || atividade.status === this.filtroAtivo;
+      const bateBusca = !termo || this.textoBuscaAtividade(atividade).includes(termo);
+
+      return bateStatus && bateBusca;
+    });
+
+    this.tarefasFiltradas = this.tarefas.filter(tarefa => {
+      const bateStatus = this.filtroAtivo === 'todas' || this.statusNormalizadoTarefa(tarefa.status) === this.filtroAtivo;
+      const bateBusca = !termo || this.textoBuscaTarefa(tarefa).includes(termo);
+
+      return bateStatus && bateBusca;
+    });
+  }
+
+  textoBuscaAtividade(atividade: AtividadeModel): string {
+    return this.normalizarTexto([
+      atividade.titulo,
+      atividade.descricao,
+      atividade.disciplina,
+      atividade.valor?.toString(),
+      this.formatarData(atividade.dataEntrega),
+      atividade.dataEntrega
+    ].join(' '));
+  }
+
+  textoBuscaTarefa(tarefa: TarefaModel): string {
+    return this.normalizarTexto([
+      tarefa.titulo,
+      tarefa.status,
+      tarefa.tituloAtividade,
+      tarefa.disciplinaAtividade,
+      tarefa.nomeUsuarioAtribuido,
+      tarefa.nomeCriador,
+      this.formatarData(tarefa.dataCriacao),
+      tarefa.dataCriacao
+    ].join(' '));
+  }
+
+  statusNormalizadoTarefa(status: string | null): string {
+    if (!status || status === 'pendente') return 'nao_iniciada';
+    return status;
+  }
+
+  get temResultados(): boolean {
+    return this.atividadesFiltradas.length > 0 || this.tarefasFiltradas.length > 0;
+  }
+
+  normalizarTexto(texto: string): string {
+    return (texto || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
   }
 
   iconeStatus(status: string | null): string {
@@ -123,6 +210,7 @@ export class CadernoPage implements OnInit {
       case 'concluido':
         return 'checkmark-circle-outline';
       case 'nao_iniciada':
+      case 'pendente':
       case null:
       case undefined:
         return 'ellipse-outline';
@@ -136,6 +224,7 @@ export class CadernoPage implements OnInit {
       case 'concluido':
         return 'Concluído';
       case 'nao_iniciada':
+      case 'pendente':
       case null:
       case undefined:
         return 'Não iniciada';
@@ -145,16 +234,22 @@ export class CadernoPage implements OnInit {
   }
 
   classeStatus(status: string | null): string {
-    return status || 'nao_iniciada';
+    return this.statusNormalizadoTarefa(status);
   }
 
   formatarData(data: string): string {
     if (!data) return '';
 
-    const [ano, mes, dia] = data.split('-');
+    const dataBase = data.includes('T') ? data.split('T')[0] : data;
+    const [ano, mes, dia] = dataBase.split('-');
 
-    if (!ano || !mes || !dia) return data;
+    if (!ano || !mes || !dia) return dataBase;
 
     return `${dia}/${mes}/${ano}`;
+  }
+
+  labelPontos(valor: number | string): string {
+    const pontos = Number(valor);
+    return `${valor} ${pontos === 1 ? 'ponto' : 'pontos'}`;
   }
 }

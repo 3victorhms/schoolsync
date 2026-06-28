@@ -25,10 +25,16 @@
             <ion-icon name="add-outline"></ion-icon>
             <span>Nova Atividade</span>
         </button>
-        <button class="acao-btn">
+        <button type="button" class="acao-btn" (click)="abrirGrupos()">
             <ion-icon name="people-outline"></ion-icon>
             <span>Grupos</span>
         </button>
+        @if (!liderLogado) {
+        <button class="acao-btn sair-sala-btn" (click)="sairDaSala()">
+            <ion-icon name="log-out-outline"></ion-icon>
+            <span>Sair da sala</span>
+        </button>
+        }
     </div>
     <section class="secao">
         <h3 class="secao-titulo">
@@ -47,7 +53,7 @@
                 </div>
                 <div class="atividade-meta">
                     <span><ion-icon name="calendar-outline"></ion-icon> {{ atividade.dataEntrega }}</span>
-                    <span><ion-icon name="star-outline"></ion-icon> {{ atividade.valor }} pontos</span>
+                    <span><ion-icon name="star-outline"></ion-icon> {{ labelPontos(atividade.valor) }}</span>
                 </div>
                 <div class="atividade-status" [ngClass]="atividade.estaNoCaderno ? atividade.status : 'fora_caderno'">
                     <ion-icon
@@ -89,6 +95,11 @@
                     <span class="membro-tag-lider">Líder</span>
                     }
                 </div>
+                @if (podeRemoverMembro(membro)) {
+                <ion-button fill="clear" class="remover-membro-btn" (click)="removerMembro(membro)">
+                    <ion-icon name="person-remove-outline" slot="icon-only"></ion-icon>
+                </ion-button>
+                }
             </div>
             }
         </div>

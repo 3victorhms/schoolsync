@@ -58,7 +58,6 @@ export const routes: Routes = [
     path: 'add-sala-editar/:id',
     loadComponent: () => import('./pages/add-sala/add-sala.page').then(m => m.AddSalaPage)
   },
-
   {
     path: 'add-atividade',
     loadComponent: () => import('./pages/add-atividade/add-atividade.page').then(m => m.AddAtividadePage)
@@ -82,9 +81,33 @@ export const routes: Routes = [
   {
     path: 'entrar-sala',
     loadComponent: () => import('./pages/entrar-sala/entrar-sala.page').then(m => m.EntrarSalaPage)
-  },  {
-    path: 'caderno',
-    loadComponent: () => import('./pages/caderno/caderno.page').then( m => m.CadernoPage)
   },
-
+  {
+    path: 'grupos/:idSala',
+    loadComponent: () => import('./pages/grupos/grupos.page').then(m => m.GruposPage)
+  },
+  {
+    path: 'add-grupo/:idSala',
+    loadComponent: () => import('./pages/add-grupo/add-grupo.page').then(m => m.AddGrupoPage)
+  },
+  {
+    path: 'add-grupo-editar/:id',
+    loadComponent: () => import('./pages/add-grupo/add-grupo.page').then(m => m.AddGrupoPage)
+  },
+  {
+    path: 'entrar-grupo/:idSala',
+    loadComponent: () => import('./pages/entrar-grupo/entrar-grupo.page').then(m => m.EntrarGrupoPage)
+  },
+  {
+    path: 'grupo/:id',
+    loadComponent: () => import('./pages/grupo/grupo.page').then(m => m.GrupoPage)
+  },
+  {
+    path: 'grupo/:id/tarefas',
+    loadComponent: () => import('./pages/grupo-tarefas/grupo-tarefas.page').then(m => m.GrupoTarefasPage)
+  },
+  {
+    path: 'caderno',
+    loadComponent: () => import('./pages/caderno/caderno.page').then(m => m.CadernoPage)
+  },
 ];

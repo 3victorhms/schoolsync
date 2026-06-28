@@ -50,6 +50,10 @@ ion-content {
         ion-icon {
             font-size: 22px;
         }
+
+        &.sair-sala-btn {
+            color: #ff5c6c;
+        }
     }
 }
 
@@ -185,6 +189,19 @@ ion-content {
         display: flex;
         align-items: center;
         gap: 12px;
+
+        .remover-membro-btn {
+            --color: #ff5c6c;
+            --padding-start: 8px;
+            --padding-end: 8px;
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+
+            ion-icon {
+                font-size: 19px;
+            }
+        }
 
         .membro-pos {
             width: 28px;

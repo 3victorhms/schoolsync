@@ -9,7 +9,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { addIcons } from 'ionicons';
-import { addOutline, peopleOutline, trophyOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline } from 'ionicons/icons';
+import { addOutline, peopleOutline, trophyOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline, logOutOutline, personRemoveOutline } from 'ionicons/icons';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -27,6 +27,7 @@ export class SalaPage implements OnInit {
     atividades: AtividadeModel[];
     membros: UsuarioModel[];
     usuario: UsuarioModel;
+    idSala: string;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -40,12 +41,14 @@ export class SalaPage implements OnInit {
         this.atividades = [];
         this.membros = [];
         this.usuario = this.usuarioService.buscarAutenticacao();
+        this.idSala = '';
 
         addIcons({
             addOutline, peopleOutline, trophyOutline, bookOutline,
             calendarOutline, starOutline, timeOutline,
             checkmarkCircleOutline, bookmarkOutline,
-            createOutline, trashOutline
+            createOutline, trashOutline, logOutOutline,
+            personRemoveOutline
         });
     }
 
@@ -53,11 +56,13 @@ export class SalaPage implements OnInit {
 
     ionViewWillEnter() {
         const id = this.activatedRoute.snapshot.params['id'];
+        this.idSala = id || '';
 
         if (id) {
             this.salaService.buscarPorId(id, this.usuario.id).subscribe({
                 next: (res) => {
                     this.sala = res;
+                    this.sala.id = this.sala.id || id;
                     this.sala.membros = this.sala.membros || [];
                     this.sala.atividades = this.sala.atividades || [];
                     this.carregarMembros(this.sala.membros);
@@ -71,6 +76,17 @@ export class SalaPage implements OnInit {
         }
     }
 
+    abrirGrupos() {
+        const idSala = this.idSala || this.sala.id;
+
+        if (!idSala) {
+            this.exibirMensagem('Sala ainda nao carregada.');
+            return;
+        }
+
+        this.navController.navigateForward('/grupos/' + idSala);
+    }
+
     iniciais(nome: string): string {
         if (!nome) return '?';
 
@@ -82,6 +98,14 @@ export class SalaPage implements OnInit {
 
     nomeMembro(membro: UsuarioModel): string {
         return membro?.nome || membro?.email || 'Aluno';
+    }
+
+    get liderLogado(): boolean {
+        return this.usuario.id === this.sala.idLider;
+    }
+
+    podeRemoverMembro(membro: UsuarioModel): boolean {
+        return this.liderLogado && membro.id !== this.usuario.id && membro.id !== this.sala.idLider;
     }
 
     carregarMembros(membros: unknown[]) {
@@ -166,8 +190,80 @@ export class SalaPage implements OnInit {
         }
     }
 
+    labelPontos(valor: number | string): string {
+        const pontos = Number(valor);
+        return `${valor} ${pontos === 1 ? 'ponto' : 'pontos'}`;
+    }
+
     editar() {
         this.navController.navigateForward('/add-sala-editar/' + this.sala.id);
+    }
+
+    async sairDaSala() {
+        const alert = await this.alertController.create({
+            header: 'Sair da sala',
+            message: 'Tem certeza que deseja sair desta sala?',
+            buttons: [
+                {
+                    text: 'Cancelar',
+                    role: 'cancel'
+                },
+                {
+                    text: 'Sair',
+                    role: 'destructive',
+                    handler: () => {
+                        this.salaService.sairDaSala(this.sala.id, this.usuario.id).subscribe({
+                            next: () => {
+                                localStorage.removeItem(`ultimaSala:${this.usuario.id}`);
+                                this.exibirMensagem('Voce saiu da sala.');
+                                this.navController.navigateBack('/salas');
+                            },
+                            error: () => {
+                                this.exibirMensagem('Erro ao sair da sala.');
+                            }
+                        });
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
+    }
+
+    async removerMembro(membro: UsuarioModel) {
+        const alert = await this.alertController.create({
+            header: 'Remover membro',
+            message: `Remover ${this.nomeMembro(membro)} desta sala?`,
+            buttons: [
+                {
+                    text: 'Cancelar',
+                    role: 'cancel'
+                },
+                {
+                    text: 'Remover',
+                    role: 'destructive',
+                    handler: () => {
+                        this.salaService.removerMembro(this.sala.id, membro.id, this.usuario.id).subscribe({
+                            next: () => {
+                                this.membros = this.membros.filter(item => item.id !== membro.id);
+                                this.sala.membros = this.sala.membros.filter(item => item.id !== membro.id);
+
+                                if (this.sala.quantidadeMembros && this.sala.quantidadeMembros > 0) {
+                                    this.sala.quantidadeMembros--;
+                                }
+
+                                this.exibirMensagem('Membro removido da sala.');
+                            },
+                            error: () => {
+                                this.exibirMensagem('Erro ao remover membro.');
+                            }
+                        });
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
     }
 
     async excluir() {

@@ -1,0 +1,69 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/salas"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Grupos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="acoes-grid">
+    <button class="acao-card" [routerLink]="['/add-grupo', idSala]">
+      <ion-icon name="add-outline"></ion-icon>
+      <span>Criar grupo</span>
+    </button>
+
+    <button class="acao-card" [routerLink]="['/entrar-grupo', idSala]">
+      <ion-icon name="person-add-outline"></ion-icon>
+      <span>Entrar em grupo</span>
+    </button>
+  </div>
+
+  <section class="grupos-secao">
+    <h2>Meus grupos</h2>
+
+    <div class="grupos-lista">
+      @for (grupo of grupos; track grupo.id) {
+      <div class="grupo-card" [routerLink]="['/grupo', grupo.id]">
+        <div class="grupo-icone">
+          <ion-icon name="people-outline"></ion-icon>
+        </div>
+
+        <div class="grupo-info">
+          <h3>{{ grupo.nome }}</h3>
+          <p>{{ grupo.quantidadeMembros }} membros</p>
+        </div>
+
+        <ion-icon class="grupo-seta" name="chevron-forward-outline"></ion-icon>
+      </div>
+      } @empty {
+      <div class="vazio">
+        <p>Nenhum grupo encontrado.</p>
+      </div>
+      }
+    </div>
+  </section>
+</ion-content>
+
+<ion-tab-bar slot="bottom">
+  <ion-tab-button tab="inicio" routerLink="/inicio">
+    <ion-icon name="home-outline"></ion-icon>
+    <ion-label>Inicio</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button class="selecionado" tab="salas" routerLink="/salas">
+    <ion-icon name="business-outline"></ion-icon>
+    <ion-label>Salas</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button tab="caderno" routerLink="/caderno">
+    <ion-icon name="book"></ion-icon>
+    <ion-label>Caderno</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button tab="perfil" routerLink="/perfil">
+    <ion-icon name="person-outline"></ion-icon>
+    <ion-label>Perfil</ion-label>
+  </ion-tab-button>
+</ion-tab-bar>

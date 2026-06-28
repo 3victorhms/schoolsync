@@ -1,0 +1,227 @@
+ion-toolbar {
+  --background: #0f1117;
+  --border-color: transparent;
+
+  ion-back-button {
+    --color: #ffffff;
+  }
+}
+
+ion-content {
+  --background: #0f1117;
+}
+
+.hero {
+  padding: 16px 16px 20px;
+
+  h1 {
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+
+  p {
+    color: #6f8fc7;
+    font-size: 15px;
+    margin: 0;
+  }
+}
+
+.nova-tarefa-card,
+.aviso,
+.tarefa-card {
+  background: #171c28;
+  border: 1px solid #252b3d;
+  border-radius: 16px;
+}
+
+.nova-tarefa-card {
+  margin: 0 16px 28px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  h2 {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+
+  select,
+  input {
+    width: 100%;
+    min-height: 52px;
+    background: #1a1f2e;
+    border: 1px solid #252b3d;
+    border-radius: 14px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 0 16px;
+    outline: none;
+
+    &::placeholder {
+      color: #4e5670;
+      font-weight: 500;
+    }
+  }
+
+  select {
+    appearance: auto;
+  }
+
+  button {
+    min-height: 52px;
+    border: none;
+    border-radius: 14px;
+    background: #3a6ff7;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:disabled {
+      background: #252b3d;
+      color: #4e5670;
+      cursor: default;
+    }
+  }
+}
+
+.aviso {
+  margin: 0 16px 28px;
+  padding: 16px;
+  color: #8891aa;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tarefas-lista {
+  padding: 0 16px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tarefa-card {
+  min-height: 76px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-icone {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #1e2540;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3a6ff7;
+  flex-shrink: 0;
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 20px;
+  }
+
+  &:disabled {
+    color: #6b7693;
+    cursor: default;
+  }
+}
+
+.tarefa-info {
+  flex: 1;
+  min-width: 0;
+
+  h2 {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    overflow-wrap: anywhere;
+  }
+
+  p {
+    color: #8891aa;
+    font-size: 13px;
+    margin: 0;
+  }
+}
+
+.status-tag {
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #252b3d;
+  color: #8891aa;
+  white-space: nowrap;
+
+  &.em_andamento {
+    background: #16264a;
+    color: #3a6ff7;
+  }
+
+  &.concluido {
+    background: #123626;
+    color: #3abf7f;
+  }
+}
+
+.excluir-tarefa {
+  background: transparent;
+  border: none;
+  color: #ff5c6c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
+.tarefas-vazio {
+  color: #6f8fc7;
+  text-align: center;
+  font-size: 15px;
+  padding: 28px 12px;
+}
+
+ion-tab-bar {
+  --background: #0f1117;
+  --border: none;
+  padding-bottom: env(safe-area-inset-bottom);
+  height: 64px;
+  border-top: 1px solid #1e2540;
+}
+
+ion-tab-button {
+  --color: #4e5670;
+  --color-selected: #3a6ff7;
+  --ripple-color: transparent;
+
+  ion-icon {
+    font-size: 22px;
+  }
+
+  ion-label {
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+}
+
+.selecionado {
+  color: #3a79df;
+}

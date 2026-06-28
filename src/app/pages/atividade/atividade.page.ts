@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   IonContent,
   IonHeader,
@@ -14,6 +15,8 @@ import { ActivatedRoute } from '@angular/router';
 import { NavController, ToastController, AlertController } from '@ionic/angular';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
+import { ComentarioModel } from 'src/app/model/comentario.model';
+import { ComentarioService } from 'src/app/services/comentario.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { addIcons } from 'ionicons';
@@ -31,7 +34,10 @@ import {
   alertCircleOutline,
   ellipseOutline,
   bookmarkOutline,
-  triangleOutline
+  triangleOutline,
+  sendOutline,
+  returnDownBackOutline,
+  closeOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -48,7 +54,8 @@ import {
     IonTitle,
     IonButton,
     IonToolbar,
-    CommonModule
+    CommonModule,
+    FormsModule
   ]
 })
 export class AtividadePage implements OnInit {
@@ -56,6 +63,9 @@ export class AtividadePage implements OnInit {
   atividade: AtividadeModel;
   usuario: UsuarioModel;
   criadorNome: string = '';
+  comentarios: ComentarioModel[] = [];
+  novoComentario: string = '';
+  comentarioRespondendo: ComentarioModel | null = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -63,7 +73,8 @@ export class AtividadePage implements OnInit {
     private toastController: ToastController,
     private alertController: AlertController,
     private atividadeService: AtividadeService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private comentarioService: ComentarioService
   ) {
     this.atividade = new AtividadeModel();
     this.usuario = this.usuarioService.buscarAutenticacao();
@@ -82,12 +93,18 @@ export class AtividadePage implements OnInit {
       alertCircleOutline,
       ellipseOutline,
       bookmarkOutline,
-      triangleOutline
+      triangleOutline,
+      sendOutline,
+      returnDownBackOutline,
+      closeOutline
     });
   }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  ionViewWillEnter() {
     const id = this.activatedRoute.snapshot.params['id'];
+    this.usuario = this.usuarioService.buscarAutenticacao();
 
     if (id) {
       this.carregarAtividade(id);
@@ -98,13 +115,120 @@ export class AtividadePage implements OnInit {
     this.atividadeService.buscarPorId(id, this.usuario.id).subscribe({
       next: (res) => {
         this.atividade = res;
+        this.novoComentario = '';
+        this.comentarioRespondendo = null;
         this.carregarCriador();
+        this.carregarComentarios();
       },
       error: () => {
         this.exibirMensagem('Atividade não encontrada');
         this.navController.navigateBack('/salas');
       }
     });
+  }
+
+  carregarComentarios() {
+    if (!this.atividade.id) {
+      this.comentarios = [];
+      return;
+    }
+
+    this.comentarioService.listarPorAtividade(this.atividade.id).subscribe({
+      next: (res) => {
+        this.comentarios = res || [];
+      },
+      error: () => {
+        this.comentarios = [];
+      }
+    });
+  }
+
+  enviarComentario() {
+    const texto = this.novoComentario.trim();
+
+    if (!texto) return;
+
+    this.comentarioService.criar(
+      this.atividade.id,
+      texto,
+      this.usuario.id,
+      this.comentarioRespondendo?.id
+    ).subscribe({
+      next: () => {
+        this.novoComentario = '';
+        this.comentarioRespondendo = null;
+        this.carregarComentarios();
+      },
+      error: () => {
+        this.exibirMensagem('Erro ao enviar comentario.');
+      }
+    });
+  }
+
+  responderComentario(comentario: ComentarioModel) {
+    this.comentarioRespondendo = comentario;
+  }
+
+  cancelarResposta() {
+    this.comentarioRespondendo = null;
+  }
+
+  async excluirComentario(comentario: ComentarioModel) {
+    const alert = await this.alertController.create({
+      header: 'Excluir comentario',
+      message: 'Tem certeza que deseja excluir este comentario?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Excluir',
+          role: 'destructive',
+          handler: () => {
+            this.comentarioService.excluir(comentario.id, this.usuario.id).subscribe({
+              next: () => {
+                this.carregarComentarios();
+                this.exibirMensagem('Comentario excluido.');
+              },
+              error: () => {
+                this.exibirMensagem('Erro ao excluir comentario.');
+              }
+            });
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  podeAlterarComentario(comentario: ComentarioModel): boolean {
+    return comentario.idUsuario === this.usuario.id;
+  }
+
+  iniciaisComentario(nome: string): string {
+    if (!nome) return '?';
+
+    return nome.split(' ')
+      .slice(0, 2)
+      .map(parte => parte[0]?.toUpperCase())
+      .join('');
+  }
+
+  formatarDataComentario(data: string): string {
+    if (!data) return '';
+
+    const dataComentario = new Date(data);
+
+    if (Number.isNaN(dataComentario.getTime())) return '';
+
+    const dia = String(dataComentario.getDate()).padStart(2, '0');
+    const mes = String(dataComentario.getMonth() + 1).padStart(2, '0');
+    const hora = String(dataComentario.getHours()).padStart(2, '0');
+    const minuto = String(dataComentario.getMinutes()).padStart(2, '0');
+
+    return `${dia}/${mes} ${hora}:${minuto}`;
   }
 
   editar() {
@@ -258,6 +382,11 @@ export class AtividadePage implements OnInit {
     ];
 
     return `${dia} de ${meses[parseInt(mes) - 1]}, ${ano}`;
+  }
+
+  labelPontos(valor: number | string): string {
+    const pontos = Number(valor);
+    return `${valor} ${pontos === 1 ? 'ponto' : 'pontos'}`;
   }
 
   async exibirMensagem(texto: string) {
