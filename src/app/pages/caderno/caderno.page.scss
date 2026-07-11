@@ -123,6 +123,17 @@ ion-content {
         flex-direction: column;
         gap: 12px;
 
+        .lista-titulo {
+            color: #6f8fc7;
+            font-size: 15px;
+            font-weight: 700;
+            margin: 4px 0 0;
+
+            &.tarefas {
+                margin-top: 12px;
+            }
+        }
+
         .atividade-card {
             background: #171c28;
             border-radius: 16px;
@@ -159,6 +170,11 @@ ion-content {
                     padding: 4px 10px;
                     border-radius: 20px;
                     white-space: nowrap;
+
+                    &.tarefa-tag {
+                        background: #123626;
+                        color: #3abf7f;
+                    }
                 }
             }
 

@@ -6,12 +6,13 @@ import {
   IonButtons, IonButton, IonIcon, IonCard, IonLabel, IonCardContent, IonTabButton, IonTabBar
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { homeOutline, businessOutline, trophyOutline, personOutline, pencilOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, book } from 'ionicons/icons';
+import { homeOutline, businessOutline, trophyOutline, personOutline, pencilOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, book, sunnyOutline, moonOutline } from 'ionicons/icons';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { AtividadeModel } from 'src/app/model/atividade.model';
+import { TemaService } from 'src/app/services/tema.service';
 
 @Component({
   selector: 'app-perfil',
@@ -30,6 +31,7 @@ export class PerfilPage implements OnInit {
   atividades: AtividadeModel[] = [];
   atividadesFiltradas: AtividadeModel[] = [];
   filtroAtivo: string = 'todas';
+  temaClaro: boolean = false;
 
   usuario = {
     id: this.usuarioService.buscarAutenticacao().id,
@@ -46,9 +48,15 @@ export class PerfilPage implements OnInit {
       .join('');
   }
 
-  constructor(private router: Router, private usuarioService: UsuarioService, private navController: NavController, private atividadeService: AtividadeService) {
+  constructor(
+    private router: Router,
+    private usuarioService: UsuarioService,
+    private navController: NavController,
+    private atividadeService: AtividadeService,
+    private temaService: TemaService
+  ) {
     addIcons({
-      book, pencilOutline, homeOutline, businessOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline
+      book, pencilOutline, homeOutline, businessOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline
 
     });
   }
@@ -61,6 +69,7 @@ export class PerfilPage implements OnInit {
       id: this.usuarioService.buscarAutenticacao().id,
       nome: this.usuarioService.buscarAutenticacao().nome,
     };
+    this.temaClaro = this.temaService.temaClaroAtivo();
     this.carregarCaderno();
   }
 
@@ -124,5 +133,9 @@ export class PerfilPage implements OnInit {
   logout() {
     this.usuarioService.encerrarAutenticacao();
     this.navController.navigateRoot('/login');
+  }
+
+  alternarTema() {
+    this.temaClaro = this.temaService.alternarTema();
   }
 }

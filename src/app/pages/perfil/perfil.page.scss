@@ -79,6 +79,28 @@ ion-content {
     margin: 0;
 }
 
+.tema-btn {
+    margin-top: 22px;
+    min-height: 42px;
+    border: 1px solid #252b3d;
+    border-radius: 14px;
+    background: #1a1f2e;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+
+    ion-icon {
+        color: #3a6ff7;
+        font-size: 18px;
+    }
+}
+
 ion-tab-bar {
     --background: #0f1117;
     --border: none;

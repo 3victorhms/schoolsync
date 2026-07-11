@@ -35,3 +35,349 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+body {
+  --app-bg: #0f1117;
+  --app-bg-soft: #171c28;
+  --app-bg-muted: #1a1f2e;
+  --app-surface: #171c28;
+  --app-surface-strong: #252b3d;
+  --app-border: #252b3d;
+  --app-text: #ffffff;
+  --app-text-soft: #c8cfe0;
+  --app-muted: #8891aa;
+  --app-muted-strong: #4e5670;
+  --app-accent: #3a6ff7;
+  --app-accent-soft: #16264a;
+  --app-success: #3abf7f;
+  --app-warning: #f5a623;
+  --app-danger: #ff5c6c;
+}
+
+body.tema-claro {
+  --app-bg: #edf2f8;
+  --app-bg-soft: #f9fbfe;
+  --app-bg-muted: #e7edf6;
+  --app-surface: #f9fbfe;
+  --app-surface-strong: #dde7f3;
+  --app-border: #cfd9e8;
+  --app-text: #111827;
+  --app-text-soft: #2f3a4f;
+  --app-muted: #667085;
+  --app-muted-strong: #9aa7ba;
+  --app-accent: #2f6df6;
+  --app-accent-soft: #e4edff;
+  --app-success: #158a55;
+  --app-warning: #b7791f;
+  --app-danger: #d33f49;
+
+  --ion-background-color: var(--app-bg);
+  --ion-text-color: var(--app-text);
+  --ion-color-primary: var(--app-accent);
+}
+
+body.tema-claro ion-app,
+body.tema-claro ion-content {
+  --background: var(--app-bg) !important;
+  background: var(--app-bg) !important;
+  color: var(--app-text) !important;
+}
+
+body.tema-claro .login-content {
+  --background: var(--app-bg) !important;
+}
+
+body.tema-claro ion-toolbar,
+body.tema-claro ion-tab-bar {
+  --background: var(--app-bg-soft) !important;
+  --border-color: var(--app-border) !important;
+  background: var(--app-bg-soft) !important;
+  border-color: var(--app-border) !important;
+}
+
+body.tema-claro ion-title,
+body.tema-claro h1,
+body.tema-claro h2,
+body.tema-claro h3,
+body.tema-claro h4,
+body.tema-claro .page-title,
+body.tema-claro .perfil-nome,
+body.tema-claro .nome,
+body.tema-claro .cal-titulo,
+body.tema-claro .form-area h2,
+body.tema-claro .logo-area h1,
+body.tema-claro .atividade-titulo,
+body.tema-claro .membro-nome,
+body.tema-claro .sala-info h2,
+body.tema-claro .grupo-info h3,
+body.tema-claro .tarefa-info h2,
+body.tema-claro .campo-label,
+body.tema-claro .caderno-titulo,
+body.tema-claro .secao-titulo {
+  color: var(--app-text) !important;
+}
+
+body.tema-claro p,
+body.tema-claro .subtitulo,
+body.tema-claro .ola,
+body.tema-claro .data-titulo,
+body.tema-claro .lista-titulo,
+body.tema-claro .calendario-dias-semana span,
+body.tema-claro .perfil-app,
+body.tema-claro .logo-area p,
+body.tema-claro .register-text,
+body.tema-claro .atividade-descricao,
+body.tema-claro .atividade-meta,
+body.tema-claro .sala-meta,
+body.tema-claro .membro-info p,
+body.tema-claro .grupo-info p,
+body.tema-claro .tarefa-info p,
+body.tema-claro .campo-grupo .campo-label,
+body.tema-claro .caderno-vazio,
+body.tema-claro .vazio,
+body.tema-claro .tarefas-vazio {
+  color: var(--app-muted) !important;
+}
+
+body.tema-claro ion-back-button,
+body.tema-claro ion-tab-button {
+  --color: var(--app-muted) !important;
+  --color-selected: var(--app-accent) !important;
+}
+
+body.tema-claro .selecionado,
+body.tema-claro ion-tab-button.selecionado,
+body.tema-claro .voce,
+body.tema-claro .editar-btn,
+body.tema-claro .grupo-seta,
+body.tema-claro .seta {
+  color: var(--app-accent) !important;
+}
+
+body.tema-claro .perfil-card,
+body.tema-claro .sala-card,
+body.tema-claro .atividade-card,
+body.tema-claro .atividade-item,
+body.tema-claro .membro-item,
+body.tema-claro .grupo-card,
+body.tema-claro .codigo-card,
+body.tema-claro .tarefa-link,
+body.tema-claro .tarefa-card,
+body.tema-claro .nova-tarefa-card,
+body.tema-claro .aviso,
+body.tema-claro .calendario-card,
+body.tema-claro .notificacao-btn,
+body.tema-claro .vazio-data,
+body.tema-claro .acao-btn,
+body.tema-claro .acao-card,
+body.tema-claro .barra-busca,
+body.tema-claro .campo-item,
+body.tema-claro .custom-input,
+body.tema-claro .logo-icon,
+body.tema-claro .filtro-btn,
+body.tema-claro .tema-btn {
+  --background: var(--app-surface) !important;
+  background: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+  color: var(--app-text) !important;
+  box-shadow: none !important;
+}
+
+body.tema-claro .campo-grupo {
+  background: transparent !important;
+}
+
+body.tema-claro .campo-item,
+body.tema-claro .custom-input,
+body.tema-claro .barra-busca,
+body.tema-claro .tema-btn,
+body.tema-claro .nova-tarefa-card select,
+body.tema-claro .nova-tarefa-card input {
+  --background: var(--app-bg-muted) !important;
+  background: var(--app-bg-muted) !important;
+}
+
+body.tema-claro input,
+body.tema-claro select,
+body.tema-claro ion-input,
+body.tema-claro .custom-input {
+  --border-color: var(--app-border) !important;
+  --color: var(--app-text) !important;
+  --placeholder-color: var(--app-muted-strong) !important;
+  color: var(--app-text) !important;
+}
+
+body.tema-claro input::placeholder {
+  color: var(--app-muted-strong) !important;
+}
+
+body.tema-claro .avatar,
+body.tema-claro .avatar-small,
+body.tema-claro .membro-pos,
+body.tema-claro .sala-icone,
+body.tema-claro .grupo-icone,
+body.tema-claro .tarefa-icone,
+body.tema-claro .logo-icon,
+body.tema-claro .status-icone {
+  background: var(--app-accent-soft) !important;
+  color: var(--app-accent) !important;
+}
+
+body.tema-claro .avatar span,
+body.tema-claro .avatar-small,
+body.tema-claro .membro-pos {
+  color: var(--app-accent) !important;
+}
+
+body.tema-claro ion-icon {
+  color: var(--app-muted);
+}
+
+body.tema-claro ion-tab-button.selecionado ion-icon,
+body.tema-claro ion-tab-button.selecionado ion-label,
+body.tema-claro ion-tab-button[aria-selected="true"] ion-icon,
+body.tema-claro ion-tab-button[aria-selected="true"] ion-label,
+body.tema-claro .filtro-btn.ativo ion-icon,
+body.tema-claro .filtro-btn.ativo,
+body.tema-claro .cal-dia.hoje,
+body.tema-claro .acao-btn ion-icon,
+body.tema-claro .acao-card ion-icon,
+body.tema-claro .sala-icone ion-icon,
+body.tema-claro .grupo-icone ion-icon,
+body.tema-claro .tarefa-icone ion-icon,
+body.tema-claro .logo-icon ion-icon,
+body.tema-claro .status-icone ion-icon,
+body.tema-claro .tema-btn ion-icon {
+  color: var(--app-accent) !important;
+}
+
+body.tema-claro .atividade-meta ion-icon,
+body.tema-claro .sala-meta ion-icon,
+body.tema-claro .cal-nav ion-icon,
+body.tema-claro .barra-busca ion-icon,
+body.tema-claro .olho-btn ion-icon {
+  color: var(--app-muted) !important;
+}
+
+body.tema-claro .notificacao-btn ion-icon {
+  color: var(--app-text) !important;
+}
+
+body.tema-claro .notificacao-badge {
+  background: var(--app-danger) !important;
+  color: #ffffff !important;
+}
+
+body.tema-claro .atividade-disciplina,
+body.tema-claro .atividade-materia,
+body.tema-claro .sala-codigo,
+body.tema-claro .cal-dia.selecionado,
+body.tema-claro .status-tag.em_andamento {
+  background: var(--app-accent-soft) !important;
+  color: var(--app-accent) !important;
+}
+
+body.tema-claro .cal-dia {
+  color: var(--app-text) !important;
+}
+
+body.tema-claro .cal-dia.outro-mes {
+  color: var(--app-muted-strong) !important;
+}
+
+body.tema-claro .cal-dia.selecionado {
+  background: var(--app-accent) !important;
+  color: #ffffff !important;
+}
+
+body.tema-claro .atividade-disciplina {
+  background: var(--app-accent-soft) !important;
+  color: var(--app-accent) !important;
+}
+
+body.tema-claro .atividade-disciplina.tarefa-tag,
+body.tema-claro .status-tag.concluido {
+  background: #e1f6eb !important;
+  color: var(--app-success) !important;
+}
+
+body.tema-claro .atividade-status.em_andamento,
+body.tema-claro .atividade-status.pendente,
+body.tema-claro .status-tag.em_andamento,
+body.tema-claro .membro-tag-lider,
+body.tema-claro .lider-tag {
+  color: var(--app-accent) !important;
+}
+
+body.tema-claro .status-tag {
+  background: var(--app-surface-strong) !important;
+  color: var(--app-muted) !important;
+}
+
+body.tema-claro .atividade-status.concluido {
+  color: var(--app-success) !important;
+}
+
+body.tema-claro .excluir-btn,
+body.tema-claro .sair-btn,
+body.tema-claro .logout-btn,
+body.tema-claro .excluir-tarefa,
+body.tema-claro .sair-sala-btn {
+  --color: var(--app-danger) !important;
+  color: var(--app-danger) !important;
+}
+
+body.tema-claro .botao-criar,
+body.tema-claro .botao-salvar,
+body.tema-claro .login-button,
+body.tema-claro .criar-btn,
+body.tema-claro .nova-tarefa-card button:not(:disabled) {
+  --background: var(--app-accent) !important;
+  background: var(--app-accent) !important;
+  --color: #ffffff !important;
+  color: #ffffff !important;
+}
+
+body.tema-claro .botao-criar[disabled],
+body.tema-claro .botao-salvar[disabled],
+body.tema-claro .nova-tarefa-card button:disabled {
+  --background: var(--app-surface-strong) !important;
+  background: var(--app-surface-strong) !important;
+  --color: var(--app-muted) !important;
+  color: var(--app-muted) !important;
+}
+
+body.tema-claro .register-button {
+  color: var(--app-accent) !important;
+}
+
+body.tema-claro .coroa {
+  color: var(--app-warning) !important;
+}
+
+body.tema-claro .entrar-btn {
+  --background: var(--app-accent-soft) !important;
+  --background-activated: #d7e5ff !important;
+  --border-color: #b8cbef !important;
+  --color: var(--app-accent) !important;
+  color: var(--app-accent) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+
+body.tema-claro .entrar-btn ion-icon {
+  color: var(--app-accent) !important;
+}
+
+body.tema-claro .criar-btn {
+  --background: var(--app-accent) !important;
+  --background-activated: #245bd8 !important;
+  --color: #ffffff !important;
+  --border-radius: 999px !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+
+body.tema-claro .criar-btn ion-icon {
+  color: #ffffff !important;
+}

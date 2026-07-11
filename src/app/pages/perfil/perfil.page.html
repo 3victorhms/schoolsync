@@ -26,6 +26,11 @@
       <h2 class="perfil-nome">{{ usuario.nome }}</h2>
       <p class="perfil-app">EscolaSync</p>
 
+      <button type="button" class="tema-btn" (click)="alternarTema()">
+        <ion-icon [name]="temaClaro ? 'moon-outline' : 'sunny-outline'"></ion-icon>
+        {{ temaClaro ? 'Usar tema escuro' : 'Usar tema claro' }}
+      </button>
+
     </ion-card-content>
   </ion-card>
 
