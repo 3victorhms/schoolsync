@@ -1,13 +1,33 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>notificacao</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">notificacao</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <main class="pagina-notificacoes">
+    <header class="cabecalho">
+      <h1>Notificações</h1>
+      <div class="acoes">
+        <a routerLink="/notificacao/configuracoes" aria-label="Configurar notificações"><ion-icon name="settings-outline"></ion-icon></a>
+        <button type="button" (click)="marcarTodas()">Marcar todas como lidas</button>
+        <a routerLink="/inicio" aria-label="Fechar"><ion-icon name="close-outline"></ion-icon></a>
+      </div>
+    </header>
+
+    <section class="lista" aria-live="polite">
+      @if (!carregando && notificacoes.length === 0) {
+      <div class="estado-vazio">
+        <ion-icon name="notifications-outline"></ion-icon>
+        <h2>Nenhuma notificação</h2>
+        <p>As novidades sobre suas atividades e grupos aparecerão aqui.</p>
+      </div>
+      }
+      @for (notificacao of notificacoes; track notificacao.id) {
+      <button class="notificacao" type="button" [class.nao-lida]="!notificacao.lido" (click)="abrir(notificacao)">
+        <span class="icone"><ion-icon [name]="icone(notificacao.tipo)"></ion-icon></span>
+        <span class="conteudo">
+          <strong>{{ notificacao.titulo }}</strong>
+          <span class="mensagem">{{ notificacao.mensagem }}</span>
+          <small>{{ notificacao.horario }}</small>
+        </span>
+        @if (!notificacao.lido) { <span class="indicador" aria-label="Não lida"></span> }
+      </button>
+      }
+    </section>
+  </main>
 </ion-content>

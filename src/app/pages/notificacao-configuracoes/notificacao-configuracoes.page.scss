@@ -1,0 +1,25 @@
+ion-content { --background: #0f1117; }
+.pagina-configuracoes { min-height: 100%; padding: calc(18px + env(safe-area-inset-top)) 20px 36px; color: #fff; }
+header { display: flex; align-items: center; gap: 16px; margin-bottom: 30px; }
+header a { display: flex; color: #8290aa; font-size: 24px; text-decoration: none; }
+header h1 { margin: 0; font-size: 26px; font-weight: 750; }
+section { margin-bottom: 26px; }
+section h2 { color: #7394c7; font-size: 18px; font-weight: 600; margin: 0 0 16px; }
+.opcao-canal { display: flex; align-items: center; gap: 16px; min-height: 92px; padding: 0 20px; margin-bottom: 14px; border: 1px solid #1c222d; border-radius: 24px; background: #10141c; }
+.icone { display: grid; width: 50px; height: 50px; flex: 0 0 50px; place-items: center; border-radius: 14px; background: #172b4c; color: #4285ec; font-size: 21px; }
+.texto { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 4px; }
+.texto strong { font-size: 18px; }
+.texto small { color: #7787a3; font-size: 13px; line-height: 1.35; }
+ion-toggle { --track-background: #273043; --track-background-checked: #3f82e4; --handle-background: #fff; }
+.lembretes h2 { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.lembretes h2 ion-icon { color: #4285ec; }
+.lembretes > p { color: #7394c7; margin: 0 0 16px; font-size: 15px; }
+.opcao-lembrete { width: 100%; height: 57px; padding: 0 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 10px; border: 1px solid #1c222d; border-radius: 22px; background: #10141c; color: #fff; cursor: pointer; }
+.radio { width: 25px; height: 25px; display: grid; place-items: center; border: 2px solid #344052; border-radius: 50%; color: transparent; }
+.opcao-lembrete.ativa .radio { border-color: #3f82e4; background: #3f82e4; color: #fff; }
+.opcao-lembrete strong { flex: 1; text-align: left; font-size: 17px; }
+.sino { color: #293445; font-size: 21px; }
+.opcao-lembrete.ativa .sino { color: #4285ec; }
+.salvar { width: 100%; height: 55px; border: 0; border-radius: 24px; background: #3f82e4; color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; }
+.salvar:disabled { opacity: .65; }
+@media (max-width: 430px) { header h1 { font-size: 22px; } .opcao-canal { padding: 0 14px; } .texto strong { font-size: 16px; } }

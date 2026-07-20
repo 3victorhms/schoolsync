@@ -1,0 +1,38 @@
+<ion-content [fullscreen]="true">
+  <main class="pagina-configuracoes">
+    <header>
+      <a routerLink="/notificacao" aria-label="Voltar"><ion-icon name="arrow-back-outline"></ion-icon></a>
+      <h1>Configurar Notificações</h1>
+    </header>
+
+    <section>
+      <h2>Canais de notificação</h2>
+      <div class="opcao-canal">
+        <span class="icone"><ion-icon name="notifications-outline"></ion-icon></span>
+        <span class="texto"><strong>No aplicativo</strong><small>Receber no painel de notificações do app</small></span>
+        <ion-toggle [(ngModel)]="configuracao.noAplicativo" aria-label="Notificações no aplicativo"></ion-toggle>
+      </div>
+      <div class="opcao-canal">
+        <span class="icone"><ion-icon name="phone-portrait-outline"></ion-icon></span>
+        <span class="texto"><strong>Push (smartphone)</strong><small>Receber no painel de notificações do dispositivo</small></span>
+        <ion-toggle [(ngModel)]="configuracao.push" aria-label="Notificações push"></ion-toggle>
+      </div>
+    </section>
+
+    <section class="lembretes">
+      <h2><ion-icon name="time-outline"></ion-icon> Lembrete de prazo</h2>
+      <p>Receba um alerta antes do prazo de entrega</p>
+      @for (dias of [1, 3, 7]; track dias) {
+      <button type="button" class="opcao-lembrete" [class.ativa]="configuracao.lembreteDias === dias" (click)="configuracao.lembreteDias = $any(dias)">
+        <span class="radio"><ion-icon name="checkmark-outline"></ion-icon></span>
+        <strong>{{ dias }} {{ dias === 1 ? 'dia' : 'dias' }} antes</strong>
+        <ion-icon class="sino" name="notifications-outline"></ion-icon>
+      </button>
+      }
+    </section>
+
+    <button class="salvar" type="button" [disabled]="salvando" (click)="salvar()">
+      {{ salvando ? 'Salvando...' : 'Salvar configurações' }}
+    </button>
+  </main>
+</ion-content>

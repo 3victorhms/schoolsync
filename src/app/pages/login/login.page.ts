@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonItem, IonInput, IonLabel, IonIcon } from '@ionic/angular/standalone';
 import { UsuarioModel } from '../../model/usuario.model';
-import { UsuarioService } from '../../services/usuario.service';
+import { LoginService } from '../../services/login.service';
+import { TokenService } from '../../services/token.service';
 import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { schoolOutline, arrowForwardOutline } from 'ionicons/icons';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,7 @@ export class LoginPage implements OnInit {
   login: string;
   senha: string;
 
-  constructor(private formBuilder: FormBuilder, private toastController: ToastController, private navController: NavController, private usuarioService: UsuarioService) {
+  constructor(private formBuilder: FormBuilder, private toastController: ToastController, private navController: NavController, private loginService: LoginService, private tokenService: TokenService, private route: ActivatedRoute) {
     this.login = "";
     this.senha = "";
     this.usuario = new UsuarioModel();
@@ -41,21 +42,47 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
-    this.usuarioService.encerrarAutenticacao();
+    this.loginService.encerrarAutenticacao();
+    this.exibirAvisoDeRedirecionamento();
+  }
+
+  private async exibirAvisoDeRedirecionamento() {
+    const motivo = this.route.snapshot.queryParamMap.get('motivo');
+    if (!motivo) return;
+
+    const mensagem = motivo === 'sessao-expirada'
+      ? 'Sua sessão expirou. Entre novamente para continuar.'
+      : 'Faça login para acessar esta página.';
+
+    const toast = await this.toastController.create({
+      message: mensagem,
+      duration: 2500,
+      position: 'top',
+      color: 'warning'
+    });
+    await toast.present();
   }
 
   autenticar() {
     this.login = this.formGroup.value.login;
     this.senha = this.formGroup.value.senha;
 
-    this.usuarioService.autenticar(this.login, this.senha)
+    this.loginService.autenticar({ email: this.login, senha: this.senha })
       .subscribe({
-        next: (usuario) => {
-          this.usuario = usuario;
+        next: () => {
+          const dadosToken = this.tokenService.extrair();
+          this.usuario = {
+            id: dadosToken.id,
+            nome: dadosToken.nome,
+            email: dadosToken.email || dadosToken.login || this.login,
+            senha: '',
+            foto: ''
+          };
 
           if (this.usuario && this.usuario.id != "") {
-            this.usuarioService.registrarAutenticacao(this.usuario);
-            this.navController.navigateBack('/inicio');
+            this.loginService.registrarAutenticacao(this.usuario);
+            const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+            this.navController.navigateRoot(returnUrl?.startsWith('/') ? returnUrl : '/inicio');
           }
         },
         error: () => {

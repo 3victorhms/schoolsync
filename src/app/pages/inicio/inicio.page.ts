@@ -8,6 +8,7 @@ import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
+import { NotificacaoService } from 'src/app/services/notificacao.service';
 import { addIcons } from 'ionicons';
 import { notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, businessOutline, book, personOutline, pencilOutline } from 'ionicons/icons';
 
@@ -35,6 +36,7 @@ export class InicioPage implements OnInit {
   dataSelecionada: Date = new Date();
   mesAtual: string = '';
   dataAtual: Date = new Date();
+  notificacoesNaoLidas = 0;
 
   private meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
     'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
@@ -42,7 +44,8 @@ export class InicioPage implements OnInit {
   constructor(
     private usuarioService: UsuarioService,
     private salaService: SalaService,
-    private atividadeService: AtividadeService
+    private atividadeService: AtividadeService,
+    private notificacaoService: NotificacaoService
   ) {
     this.usuario = this.usuarioService.buscarAutenticacao();
     addIcons({ notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, businessOutline, book, personOutline, pencilOutline });
@@ -54,6 +57,11 @@ export class InicioPage implements OnInit {
     this.gerarCalendario();
     this.carregarUltimaSala();
     this.carregarAtividadesDoDia();
+    this.notificacaoService.listar().subscribe({ error: () => this.notificacoesNaoLidas = 0 });
+    this.notificacaoService.conectar();
+    this.notificacaoService.notificacoes$.subscribe(notificacoes => {
+      this.notificacoesNaoLidas = notificacoes.filter(notificacao => !notificacao.lido).length;
+    });
   }
 
   gerarCalendario() {

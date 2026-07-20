@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UsuarioModel } from '../model/usuario.model';
+import { LoginService } from './login.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,14 +11,21 @@ export class UsuarioService {
 
   private API_URL_USUARIOS = 'http://localhost:8080/usuarios';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private loginService: LoginService) { }
 
   salvar(usuario: UsuarioModel): Observable<UsuarioModel> {
     if (usuario.id === "") {
-      return this.http.post<UsuarioModel>(this.API_URL_USUARIOS, usuario);
-    } else {
-      return this.http.put<UsuarioModel>(`${this.API_URL_USUARIOS}/${usuario.id}`, usuario);
+      return this.cadastrar(usuario);
     }
+    return this.atualizar(usuario.id, usuario);
+  }
+
+  cadastrar(usuario: UsuarioModel): Observable<UsuarioModel> {
+    return this.http.post<UsuarioModel>(this.API_URL_USUARIOS, usuario);
+  }
+
+  atualizar(id: string, usuario: UsuarioModel): Observable<UsuarioModel> {
+    return this.http.put<UsuarioModel>(`${this.API_URL_USUARIOS}/${id}`, usuario);
   }
 
   listar(): Observable<UsuarioModel[]> {
@@ -32,33 +40,13 @@ export class UsuarioService {
     return this.http.delete<void>(`${this.API_URL_USUARIOS}/${id}`);
   }
 
-  autenticar(login: string, senha: string): Observable<UsuarioModel> {
-    const loginDTO = { email: login, senha };
-    return this.http.post<UsuarioModel>(`${this.API_URL_USUARIOS}/autenticar`, loginDTO);
-  }
-
   verificarLogin(login: string): Observable<boolean> {
     const params = { email: login };
     return this.http.get<boolean>(`${this.API_URL_USUARIOS}/verificar-login`, { params });
   }
 
   buscarAutenticacao(): UsuarioModel {
-    let usuario = JSON.parse(localStorage.getItem('usuarioAutenticado') || '{}');
-    return usuario;
+    return this.loginService.buscarAutenticacao();
   }
 
-  registrarAutenticacao(usuario: UsuarioModel) {
-    const usuarioAnterior = this.buscarAutenticacao();
-
-    if (usuarioAnterior?.id && usuarioAnterior.id !== usuario.id) {
-      localStorage.removeItem('ultimaSala');
-    }
-
-    localStorage.setItem('usuarioAutenticado', JSON.stringify(usuario));
-  }
-
-  encerrarAutenticacao() {
-    localStorage.removeItem('usuarioAutenticado');
-    localStorage.removeItem('ultimaSala');
-  }
 }

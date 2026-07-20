@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
 
-export const routes: Routes = [
+const rotasDaAplicacao: Routes = [
   {
     path: '',
     redirectTo: 'login',
@@ -49,6 +50,10 @@ export const routes: Routes = [
   {
     path: 'notificacao',
     loadComponent: () => import('./pages/notificacao/notificacao.page').then(m => m.NotificacaoPage)
+  },
+  {
+    path: 'notificacao/configuracoes',
+    loadComponent: () => import('./pages/notificacao-configuracoes/notificacao-configuracoes.page').then(m => m.NotificacaoConfiguracoesPage)
   },
   {
     path: 'add-sala',
@@ -111,3 +116,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/caderno/caderno.page').then(m => m.CadernoPage)
   },
 ];
+
+const rotasPublicas = new Set(['', 'login', 'add-usuario']);
+
+export const routes: Routes = rotasDaAplicacao.map(route =>
+  rotasPublicas.has(route.path || '')
+    ? route
+    : { ...route, canActivate: [authGuard, ...(route.canActivate || [])] }
+);

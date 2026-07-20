@@ -13,6 +13,7 @@ import { NavController } from '@ionic/angular';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { TemaService } from 'src/app/services/tema.service';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-perfil',
@@ -53,7 +54,8 @@ export class PerfilPage implements OnInit {
     private usuarioService: UsuarioService,
     private navController: NavController,
     private atividadeService: AtividadeService,
-    private temaService: TemaService
+    private temaService: TemaService,
+    private loginService: LoginService
   ) {
     addIcons({
       book, pencilOutline, homeOutline, businessOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline
@@ -131,7 +133,7 @@ export class PerfilPage implements OnInit {
   }
 
   logout() {
-    this.usuarioService.encerrarAutenticacao();
+    this.loginService.encerrarAutenticacao();
     this.navController.navigateRoot('/login');
   }
 

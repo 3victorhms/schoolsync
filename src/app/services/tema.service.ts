@@ -1,3 +1,5 @@
+// feito com auxílio do Claude
+
 import { Injectable } from '@angular/core';
 
 const TEMA_STORAGE_KEY = 'schoolsync:tema';

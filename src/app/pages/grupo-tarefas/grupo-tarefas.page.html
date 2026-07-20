@@ -8,7 +8,7 @@
 
 <ion-content [fullscreen]="true">
   <section class="hero">
-    <h1>Divisao de Tarefas</h1>
+    <h1>Divisão de Tarefas</h1>
     <p>{{ grupo.nome }}</p>
   </section>
 
@@ -32,7 +32,8 @@
       }
     </select>
 
-    <button type="button" (click)="criarTarefa()" [disabled]="!idAtividadeSelecionada || !idUsuarioAtribuido || !tituloTarefa.trim()">
+    <button type="button" (click)="criarTarefa()"
+      [disabled]="!idAtividadeSelecionada || !idUsuarioAtribuido || !tituloTarefa.trim()">
       Criar tarefa
     </button>
   </section>

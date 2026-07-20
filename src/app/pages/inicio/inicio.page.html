@@ -6,10 +6,12 @@
           <p class="ola">Olá,</p>
           <h1 class="nome">{{ usuario.nome.split(' ')[0] }} 👋</h1>
         </div>
-        <div class="notificacao-btn">
+        <a class="notificacao-btn" routerLink="/notificacao" aria-label="Abrir notificações">
           <ion-icon name="notifications-outline"></ion-icon>
-          <span class="notificacao-badge">2</span>
-        </div>
+          @if (notificacoesNaoLidas > 0) {
+          <span class="notificacao-badge">{{ notificacoesNaoLidas > 9 ? '9+' : notificacoesNaoLidas }}</span>
+          }
+        </a>
       </div>
     </ion-title>
   </ion-toolbar>

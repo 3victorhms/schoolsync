@@ -1,0 +1,20 @@
+ion-content { --background: #0f1117; }
+.pagina-notificacoes { padding: calc(22px + env(safe-area-inset-top)) 20px 32px; min-height: 100%; }
+.cabecalho { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+.cabecalho h1 { color: #fff; font-size: 24px; margin: 0; font-weight: 750; }
+.acoes { display: flex; align-items: center; gap: 16px; }
+.acoes a { color: #71809b; display: flex; font-size: 22px; text-decoration: none; }
+.acoes button { border: 0; padding: 0; background: transparent; color: #3f86ef; font-size: 15px; cursor: pointer; }
+.lista { display: flex; flex-direction: column; gap: 10px; }
+.notificacao { width: 100%; min-height: 124px; padding: 20px 16px; display: flex; align-items: flex-start; gap: 16px; text-align: left; border-radius: 24px; border: 1px solid #1c222d; background: #10141c; color: #fff; cursor: pointer; }
+.icone { width: 40px; height: 40px; flex: 0 0 40px; display: grid; place-items: center; border-radius: 50%; background: #15233e; color: #4285ec; font-size: 21px; }
+.conteudo { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 4px; }
+.conteudo strong { font-size: 18px; line-height: 1.2; }
+.mensagem { color: #7e8ba5; font-size: 15px; line-height: 1.35; }
+.conteudo small { color: #475266; font-size: 13px; }
+.indicador { width: 10px; height: 10px; border-radius: 50%; background: #4388ef; flex: 0 0 10px; margin-top: 6px; }
+.estado-vazio { text-align: center; padding: 80px 24px; color: #71809b; }
+.estado-vazio ion-icon { font-size: 42px; color: #3f86ef; }
+.estado-vazio h2 { color: #fff; font-size: 18px; }
+.estado-vazio p { font-size: 14px; }
+@media (max-width: 520px) { .cabecalho { align-items: flex-start; } .acoes { gap: 12px; } .acoes button { max-width: 112px; line-height: 1.25; } }

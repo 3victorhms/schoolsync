@@ -12,6 +12,7 @@ import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-usuario',
@@ -65,7 +66,8 @@ export class UsuarioPage implements OnInit {
     private formBuilder: FormBuilder,
     private usuarioService: UsuarioService,
     private toastController: ToastController,
-    private navController: NavController
+    private navController: NavController,
+    private loginService: LoginService
   ) {
     addIcons({ eyeOutline, eyeOffOutline });
 
@@ -129,7 +131,7 @@ export class UsuarioPage implements OnInit {
         .subscribe({
           next: (usuarioAtualizado) => {
             this.usuario = usuarioAtualizado;
-            this.usuarioService.registrarAutenticacao(usuarioAtualizado);
+            this.loginService.registrarAutenticacao(usuarioAtualizado);
             this.navController.navigateForward('/perfil');
           },
           error: (erro) => {
@@ -140,7 +142,7 @@ export class UsuarioPage implements OnInit {
     };
 
     if (novaSenha) {
-      this.usuarioService.autenticar(this.usuario.email, senhaAtual)
+      this.loginService.autenticar({ email: this.usuario.email, senha: senhaAtual })
         .subscribe({
           next: () => {
             atualizar();
