@@ -381,3 +381,117 @@ body.tema-claro .criar-btn {
 body.tema-claro .criar-btn ion-icon {
   color: #ffffff !important;
 }
+
+/* Página de atividade ----------------------------------------------------- */
+body.tema-claro app-atividade ion-toolbar {
+  --background: var(--app-bg-soft) !important;
+  --border-color: var(--app-border) !important;
+}
+
+body.tema-claro app-atividade ion-toolbar ion-title {
+  color: var(--app-text) !important;
+}
+
+body.tema-claro app-atividade ion-toolbar ion-back-button {
+  --color: var(--app-muted) !important;
+}
+
+body.tema-claro app-atividade .atividade-card,
+body.tema-claro app-atividade .status-btn,
+body.tema-claro app-atividade .comentario-card,
+body.tema-claro app-atividade .comentarios-vazio,
+body.tema-claro app-atividade .comentario-form textarea {
+  background: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+  color: var(--app-text) !important;
+}
+
+body.tema-claro app-atividade .comentario-card.resposta {
+  background: var(--app-bg-muted) !important;
+}
+
+body.tema-claro app-atividade .atividade-descricao-titulo,
+body.tema-claro app-atividade .comentario-card p {
+  color: var(--app-text-soft) !important;
+}
+
+body.tema-claro app-atividade .atividade-meta,
+body.tema-claro app-atividade .criado-por,
+body.tema-claro app-atividade .secao-label,
+body.tema-claro app-atividade .comentario-topo span,
+body.tema-claro app-atividade .comentarios-vazio,
+body.tema-claro app-atividade .comentario-form textarea::placeholder {
+  color: var(--app-muted) !important;
+}
+
+body.tema-claro app-atividade .atividade-tags .tag-disciplina,
+body.tema-claro app-atividade .comentario-avatar {
+  background: var(--app-surface-strong) !important;
+  color: var(--app-text-soft) !important;
+}
+
+body.tema-claro app-atividade .atividade-tags .tag-valor,
+body.tema-claro app-atividade .status-btn.ativo,
+body.tema-claro app-atividade .adicionar-btn,
+body.tema-claro app-atividade .resposta-aviso {
+  background: var(--app-accent-soft) !important;
+  border-color: #b8cbef !important;
+  color: var(--app-accent) !important;
+}
+
+body.tema-claro app-atividade .status-btn {
+  color: var(--app-muted) !important;
+}
+
+body.tema-claro app-atividade .status-btn.ativo {
+  border-color: var(--app-accent) !important;
+}
+
+body.tema-claro app-atividade .remover-btn {
+  background: #fdebed !important;
+  color: var(--app-danger) !important;
+}
+
+body.tema-claro app-atividade .aviso-prazo,
+body.tema-claro app-atividade .status-badge.badge-expirada {
+  background: #fdebed !important;
+  color: var(--app-danger) !important;
+}
+
+body.tema-claro app-atividade .status-badge.badge-andamento {
+  background: var(--app-accent-soft) !important;
+  color: var(--app-accent) !important;
+}
+
+body.tema-claro app-atividade .status-badge.badge-concluido {
+  background: #e1f6eb !important;
+  color: var(--app-success) !important;
+}
+
+body.tema-claro app-atividade .status-badge.badge-naoiniciada {
+  background: var(--app-surface-strong) !important;
+  color: var(--app-muted) !important;
+}
+
+body.tema-claro app-atividade .status-badge.badge-fora_caderno {
+  border-color: var(--app-muted-strong) !important;
+  color: var(--app-muted) !important;
+}
+
+body.tema-claro app-atividade .comentario-topo strong,
+body.tema-claro app-atividade .comentario-avatar {
+  color: var(--app-text) !important;
+}
+
+body.tema-claro app-atividade .comentario-respostas {
+  border-color: var(--app-border) !important;
+}
+
+body.tema-claro app-atividade .comentario-acoes button,
+body.tema-claro app-atividade .resposta-aviso button {
+  color: var(--app-accent) !important;
+}
+
+body.tema-claro app-atividade .comentario-acoes button.acao-excluir {
+  color: var(--app-danger) !important;
+}
