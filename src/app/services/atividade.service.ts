@@ -8,7 +8,7 @@ import { AtividadeModel } from '../model/atividade.model';
 })
 export class AtividadeService {
 
-  private readonly API_URL = 'http://localhost:8080/atividades';
+  private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com/atividades';
 
   constructor(private http: HttpClient) { }
 

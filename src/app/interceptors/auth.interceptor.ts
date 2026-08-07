@@ -5,7 +5,7 @@ import { TokenService } from '../services/token.service';
 export const authInterceptor: HttpInterceptorFn = (request, next) => {
   const token = inject(TokenService).buscar();
 
-  if (!token || !request.url.startsWith('http://localhost:8080')) {
+  if (!token || !request.url.startsWith('https://schoolsync-api-kvfx.onrender.com')) {
     return next(request);
   }
 

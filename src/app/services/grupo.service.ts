@@ -8,7 +8,7 @@ import { GrupoModel } from '../model/grupo.model';
 })
 export class GrupoService {
 
-  private readonly API_URL = 'http://localhost:8080';
+  private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com';
 
   constructor(private http: HttpClient) { }
 

@@ -11,7 +11,7 @@ export interface CredenciaisLogin {
 
 @Injectable({ providedIn: 'root' })
 export class LoginService {
-  private readonly API_URL = 'http://localhost:8080/usuarios';
+  private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com/usuarios';
   private readonly USUARIO_AUTENTICADO = 'usuarioAutenticado';
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
