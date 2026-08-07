@@ -12,7 +12,7 @@ export interface ConfiguracaoNotificacao {
 
 @Injectable({ providedIn: 'root' })
 export class NotificacaoService {
-  private readonly API_URL = 'http://localhost:8080/notificacoes';
+  private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com/notificacoes';
   private eventSource: EventSource | null = null;
   private readonly notificacoesSubject = new BehaviorSubject<NotificacaoModel[]>([]);
 

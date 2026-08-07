@@ -8,7 +8,7 @@ import { SalaModel } from '../model/sala.model';
 })
 export class SalaService {
 
-  private readonly API_URL = 'http://localhost:8080/salas';
+  private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com/salas';
 
   constructor(private http: HttpClient) { }
 

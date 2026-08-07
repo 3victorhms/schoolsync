@@ -8,7 +8,7 @@ import { ComentarioModel } from '../model/comentario.model';
 })
 export class ComentarioService {
 
-  private readonly API_URL = 'http://localhost:8080';
+  private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com';
 
   constructor(private http: HttpClient) { }
 

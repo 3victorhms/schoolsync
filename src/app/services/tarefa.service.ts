@@ -8,7 +8,7 @@ import { TarefaModel } from '../model/tarefa.model';
 })
 export class TarefaService {
 
-  private readonly API_URL = 'http://localhost:8080';
+  private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com';
 
   constructor(private http: HttpClient) { }
 

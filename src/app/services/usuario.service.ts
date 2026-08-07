@@ -9,7 +9,7 @@ import { LoginService } from './login.service';
 })
 export class UsuarioService {
 
-  private API_URL_USUARIOS = 'http://localhost:8080/usuarios';
+  private API_URL_USUARIOS = 'https://schoolsync-api-kvfx.onrender.com/usuarios';
 
   constructor(private http: HttpClient, private loginService: LoginService) { }
 
