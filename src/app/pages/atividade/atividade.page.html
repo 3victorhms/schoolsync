@@ -10,7 +10,7 @@
         <ion-icon name="create-outline" slot="icon-only"></ion-icon>
       </ion-button>
 
-      <ion-button fill="clear" class="excluir-btn" (click)="excluir()">
+      <ion-button fill="clear" class="excluir-btn" [disabled]="excluindo" (click)="excluir()">
         <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
       </ion-button>
       }
@@ -120,7 +120,7 @@
             </button>
 
             @if (podeAlterarComentario(comentario)) {
-            <button type="button" class="acao-excluir" (click)="excluirComentario(comentario)">
+            <button type="button" class="acao-excluir" [disabled]="comentarioExcluindoId === comentario.id" (click)="excluirComentario(comentario)">
               <ion-icon name="trash-outline"></ion-icon>
               Excluir
             </button>
@@ -145,7 +145,7 @@
 
                 <div class="comentario-acoes">
                   @if (podeAlterarComentario(resposta)) {
-                  <button type="button" class="acao-excluir" (click)="excluirComentario(resposta)">
+                  <button type="button" class="acao-excluir" [disabled]="comentarioExcluindoId === resposta.id" (click)="excluirComentario(resposta)">
                     <ion-icon name="trash-outline"></ion-icon>
                     Excluir
                   </button>

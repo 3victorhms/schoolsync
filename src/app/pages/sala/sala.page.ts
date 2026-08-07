@@ -11,7 +11,7 @@ import { SalaService } from 'src/app/services/sala.service';
 import { addIcons } from 'ionicons';
 import { addOutline, peopleOutline, trophyOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline, logOutOutline, personRemoveOutline } from 'ionicons/icons';
 import { AtividadeModel } from 'src/app/model/atividade.model';
-import { forkJoin, of } from 'rxjs';
+import { finalize, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
@@ -28,6 +28,8 @@ export class SalaPage implements OnInit {
     membros: UsuarioModel[];
     usuario: UsuarioModel;
     idSala: string;
+    excluindoSala = false;
+    removendoMembroId = '';
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -234,6 +236,7 @@ export class SalaPage implements OnInit {
         const alert = await this.alertController.create({
             header: 'Remover membro',
             message: `Remover ${this.nomeMembro(membro)} desta sala?`,
+            backdropDismiss: false,
             buttons: [
                 {
                     text: 'Cancelar',
@@ -243,6 +246,9 @@ export class SalaPage implements OnInit {
                     text: 'Remover',
                     role: 'destructive',
                     handler: () => {
+                        if (this.removendoMembroId) return;
+                        this.removendoMembroId = membro.id;
+                        this.exibirMensagem('Removendo membro...');
                         this.salaService.removerMembro(this.sala.id, membro.id, this.usuario.id).subscribe({
                             next: () => {
                                 this.membros = this.membros.filter(item => item.id !== membro.id);
@@ -257,7 +263,7 @@ export class SalaPage implements OnInit {
                             error: () => {
                                 this.exibirMensagem('Erro ao remover membro.');
                             }
-                        });
+                        }).add(() => this.removendoMembroId = '');
                     }
                 }
             ]
@@ -270,6 +276,7 @@ export class SalaPage implements OnInit {
         const alert = await this.alertController.create({
             header: 'Excluir sala',
             message: 'Tem certeza que deseja excluir esta sala?',
+            backdropDismiss: false,
             buttons: [
                 {
                     text: 'Cancelar',
@@ -279,7 +286,12 @@ export class SalaPage implements OnInit {
                     text: 'Excluir',
                     role: 'destructive',
                     handler: () => {
-                        this.salaService.excluir(this.sala.id).subscribe({
+                        if (this.excluindoSala || !this.sala.id) return;
+                        this.excluindoSala = true;
+                        this.exibirMensagem('Excluindo sala...');
+                        this.salaService.excluir(this.sala.id).pipe(
+                            finalize(() => this.excluindoSala = false)
+                        ).subscribe({
                             next: () => {
                                 this.exibirMensagem('Sala excluída.');
                                 this.navController.navigateBack('/salas');

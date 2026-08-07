@@ -32,6 +32,7 @@ import { GrupoModel, MembroGrupoModel } from 'src/app/model/grupo.model';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { GrupoService } from 'src/app/services/grupo.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-grupo',
@@ -58,6 +59,7 @@ export class GrupoPage implements OnInit {
 
   grupo: GrupoModel;
   usuario: UsuarioModel;
+  excluindoGrupo = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -171,13 +173,19 @@ export class GrupoPage implements OnInit {
     const alert = await this.alertController.create({
       header: 'Excluir grupo',
       message: 'Tem certeza que deseja excluir este grupo?',
+      backdropDismiss: false,
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
         {
           text: 'Excluir',
           role: 'destructive',
           handler: () => {
-            this.grupoService.excluir(this.grupo.id, this.usuario.id).subscribe({
+            if (this.excluindoGrupo || !this.grupo.id) return;
+            this.excluindoGrupo = true;
+            this.exibirMensagem('Excluindo grupo...');
+            this.grupoService.excluir(this.grupo.id, this.usuario.id).pipe(
+              finalize(() => this.excluindoGrupo = false)
+            ).subscribe({
               next: () => {
                 this.exibirMensagem('Grupo excluido.');
                 this.navController.navigateRoot('/grupos/' + this.grupo.idSala);

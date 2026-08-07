@@ -33,6 +33,7 @@ import { GrupoService } from 'src/app/services/grupo.service';
 import { TarefaService } from 'src/app/services/tarefa.service';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-grupo-tarefas',
@@ -63,6 +64,7 @@ export class GrupoTarefasPage implements OnInit {
   idAtividadeSelecionada: string;
   idUsuarioAtribuido: string;
   tituloTarefa: string;
+  tarefaExcluindoId = '';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -199,13 +201,19 @@ export class GrupoTarefasPage implements OnInit {
     const alert = await this.alertController.create({
       header: 'Excluir tarefa',
       message: 'Tem certeza que deseja excluir esta tarefa?',
+      backdropDismiss: false,
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
         {
           text: 'Excluir',
           role: 'destructive',
           handler: () => {
-            this.tarefaService.excluir(tarefa.id, this.usuario.id).subscribe({
+            if (this.tarefaExcluindoId) return;
+            this.tarefaExcluindoId = tarefa.id;
+            this.exibirMensagem('Excluindo tarefa...');
+            this.tarefaService.excluir(tarefa.id, this.usuario.id).pipe(
+              finalize(() => this.tarefaExcluindoId = '')
+            ).subscribe({
               next: () => {
                 this.tarefas = this.tarefas.filter(item => item.id !== tarefa.id);
                 this.exibirMensagem('Tarefa excluida.');

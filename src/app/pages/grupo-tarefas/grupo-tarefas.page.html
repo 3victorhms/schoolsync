@@ -58,7 +58,7 @@
       <span class="status-tag" [ngClass]="tarefa.status">{{ labelStatus(tarefa.status) }}</span>
 
       @if (grupo.criador) {
-      <button type="button" class="excluir-tarefa" (click)="excluirTarefa(tarefa)">
+      <button type="button" class="excluir-tarefa" [disabled]="tarefaExcluindoId === tarefa.id" (click)="excluirTarefa(tarefa)">
         <ion-icon name="trash-outline"></ion-icon>
       </button>
       }

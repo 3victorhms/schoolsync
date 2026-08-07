@@ -12,7 +12,7 @@
             <ion-button fill="clear" class="editar-btn" (click)="editar()">
                 <ion-icon name="create-outline" slot="icon-only"></ion-icon>
             </ion-button>
-            <ion-button fill="clear" class="excluir-btn" (click)="excluir()">
+            <ion-button fill="clear" class="excluir-btn" [disabled]="excluindoSala" (click)="excluir()">
                 <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
             </ion-button>
             }
@@ -96,7 +96,7 @@
                     }
                 </div>
                 @if (podeRemoverMembro(membro)) {
-                <ion-button fill="clear" class="remover-membro-btn" (click)="removerMembro(membro)">
+                <ion-button fill="clear" class="remover-membro-btn" [disabled]="removendoMembroId === membro.id" (click)="removerMembro(membro)">
                     <ion-icon name="person-remove-outline" slot="icon-only"></ion-icon>
                 </ion-button>
                 }

@@ -20,6 +20,7 @@ import { ComentarioService } from 'src/app/services/comentario.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { addIcons } from 'ionicons';
+import { finalize } from 'rxjs';
 import {
   createOutline,
   calendarOutline,
@@ -66,6 +67,8 @@ export class AtividadePage implements OnInit {
   comentarios: ComentarioModel[] = [];
   novoComentario: string = '';
   comentarioRespondendo: ComentarioModel | null = null;
+  excluindo = false;
+  comentarioExcluindoId = '';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -177,6 +180,7 @@ export class AtividadePage implements OnInit {
     const alert = await this.alertController.create({
       header: 'Excluir comentario',
       message: 'Tem certeza que deseja excluir este comentario?',
+      backdropDismiss: false,
       buttons: [
         {
           text: 'Cancelar',
@@ -186,7 +190,12 @@ export class AtividadePage implements OnInit {
           text: 'Excluir',
           role: 'destructive',
           handler: () => {
-            this.comentarioService.excluir(comentario.id, this.usuario.id).subscribe({
+            if (this.comentarioExcluindoId) return;
+            this.comentarioExcluindoId = comentario.id;
+            this.exibirMensagem('Excluindo comentário...');
+            this.comentarioService.excluir(comentario.id, this.usuario.id).pipe(
+              finalize(() => this.comentarioExcluindoId = '')
+            ).subscribe({
               next: () => {
                 this.carregarComentarios();
                 this.exibirMensagem('Comentario excluido.');
@@ -239,6 +248,7 @@ export class AtividadePage implements OnInit {
     const alert = await this.alertController.create({
       header: 'Excluir atividade',
       message: 'Tem certeza que deseja excluir esta atividade?',
+      backdropDismiss: false,
       buttons: [
         {
           text: 'Cancelar',
@@ -248,21 +258,38 @@ export class AtividadePage implements OnInit {
           text: 'Excluir',
           role: 'destructive',
           handler: () => {
-            this.atividadeService.excluir(this.atividade.id).subscribe({
-              next: () => {
-                this.exibirMensagem('Atividade excluída.');
-                this.navController.navigateBack('/sala/' + this.atividade.idSala);
-              },
-              error: () => {
-                this.exibirMensagem('Erro ao excluir atividade.');
-              }
-            });
+            this.confirmarExclusao();
           }
         }
       ]
     });
 
     await alert.present();
+  }
+
+  private confirmarExclusao() {
+    if (this.excluindo || !this.atividade.id) return;
+
+    this.excluindo = true;
+    this.exibirMensagem('Excluindo atividade...');
+
+    this.atividadeService.excluir(this.atividade.id).pipe(
+      finalize(() => this.excluindo = false)
+    ).subscribe({
+      next: () => {
+        this.exibirMensagem('Atividade excluída.');
+        this.navController.navigateBack('/sala/' + this.atividade.idSala);
+      },
+      error: (erro) => {
+        console.error('Erro ao excluir atividade:', erro);
+        const mensagem = erro?.status === 0
+          ? 'Não foi possível conectar ao servidor.'
+          : erro?.status === 401 || erro?.status === 403
+            ? 'Você não tem permissão para excluir esta atividade.'
+            : 'Erro ao excluir atividade.';
+        this.exibirMensagem(mensagem);
+      }
+    });
   }
 
   carregarCriador() {
