@@ -31,9 +31,9 @@
         <ion-input type="password" formControlName="senha" placeholder="Senha" class="custom-input">
         </ion-input>
 
-        <ion-button expand="block" type="submit" class="login-button" [disabled]="!formGroup.valid">
+        <ion-button expand="block" type="submit" class="login-button" [disabled]="formGroup.invalid || salvando">
 
-          Cadastrar
+          {{ salvando ? 'Cadastrando...' : 'Cadastrar' }}
 
           <ion-icon slot="end" name="arrow-forward-outline">
           </ion-icon>

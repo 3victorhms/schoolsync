@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UsuarioModel } from '../model/usuario.model';
 import { LoginService } from './login.service';
+import { ApiDeleteService } from './api-delete.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,11 @@ export class UsuarioService {
 
   private API_URL_USUARIOS = 'https://schoolsync-api-kvfx.onrender.com/usuarios';
 
-  constructor(private http: HttpClient, private loginService: LoginService) { }
+  constructor(
+    private http: HttpClient,
+    private loginService: LoginService,
+    private apiDelete: ApiDeleteService
+  ) { }
 
   salvar(usuario: UsuarioModel): Observable<UsuarioModel> {
     if (usuario.id === "") {
@@ -37,7 +42,7 @@ export class UsuarioService {
   }
 
   excluir(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.API_URL_USUARIOS}/${id}`);
+    return this.apiDelete.excluir(`${this.API_URL_USUARIOS}/${id}`);
   }
 
   verificarLogin(login: string): Observable<boolean> {

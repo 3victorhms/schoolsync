@@ -33,7 +33,7 @@
     </select>
 
     <button type="button" (click)="criarTarefa()"
-      [disabled]="!idAtividadeSelecionada || !idUsuarioAtribuido || !tituloTarefa.trim()">
+      [disabled]="criandoTarefa || !idAtividadeSelecionada || !idUsuarioAtribuido || !tituloTarefa.trim()">
       Criar tarefa
     </button>
   </section>

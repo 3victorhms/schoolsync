@@ -48,7 +48,7 @@
       </ion-item>
     </div>
 
-    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="!formGroup.valid">
+    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="formGroup.invalid || salvando">
       {{ editando ? 'Salvar alterações' : 'Criar atividade' }}
     </ion-button>
 

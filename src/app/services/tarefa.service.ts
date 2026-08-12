@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TarefaModel } from '../model/tarefa.model';
+import { ApiDeleteService } from './api-delete.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class TarefaService {
 
   private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private apiDelete: ApiDeleteService) { }
 
   listarPorGrupo(idGrupo: string, idUsuarioLogado: string): Observable<TarefaModel[]> {
     return this.http.get<TarefaModel[]>(
@@ -40,9 +41,9 @@ export class TarefaService {
   }
 
   excluir(idTarefa: string, idUsuarioLogado: string): Observable<void> {
-    return this.http.delete<void>(
+    return this.apiDelete.excluir(
       `${this.API_URL}/tarefas/${idTarefa}`,
-      { params: { idUsuarioLogado } }
+      { idUsuarioLogado }
     );
   }
 }

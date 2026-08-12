@@ -14,7 +14,7 @@ import {
   IonTabButton,
   IonLabel
 } from '@ionic/angular/standalone';
-import { AlertController, NavController, ToastController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
   clipboardOutline,
@@ -33,6 +33,7 @@ import { UsuarioModel } from 'src/app/model/usuario.model';
 import { GrupoService } from 'src/app/services/grupo.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { finalize } from 'rxjs';
+import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
 
 @Component({
   selector: 'app-grupo',
@@ -66,7 +67,7 @@ export class GrupoPage implements OnInit {
     private grupoService: GrupoService,
     private usuarioService: UsuarioService,
     private toastController: ToastController,
-    private alertController: AlertController,
+    private confirmacaoService: ConfirmacaoService,
     private navController: NavController
   ) {
     this.grupo = new GrupoModel();
@@ -145,59 +146,51 @@ export class GrupoPage implements OnInit {
   }
 
   async sair() {
-    const alert = await this.alertController.create({
-      header: 'Sair do grupo',
-      message: 'Tem certeza que deseja sair deste grupo?',
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Sair',
-          role: 'destructive',
-          handler: () => {
-            this.grupoService.sair(this.grupo.id, this.usuario.id).subscribe({
-              next: () => {
-                this.exibirMensagem('Voce saiu do grupo.');
-                this.navController.navigateRoot('/grupos/' + this.grupo.idSala);
-              },
-              error: () => this.exibirMensagem('Erro ao sair do grupo.')
-            });
-          }
-        }
-      ]
-    });
+    const confirmou = await this.confirmacaoService.confirmar(
+      'Sair do grupo',
+      'Tem certeza que deseja sair deste grupo?',
+      'Sair'
+    );
 
-    await alert.present();
+    if (!confirmou) return;
+
+    this.grupoService.sair(this.grupo.id, this.usuario.id).subscribe({
+      next: () => {
+        this.exibirMensagem('Voce saiu do grupo.');
+        this.navController.navigateRoot('/grupos/' + this.grupo.idSala);
+      },
+      error: (erro) => {
+        console.error('Erro ao sair do grupo:', erro);
+        this.exibirMensagem(`Erro ao sair do grupo (${erro?.status || 'sem conexao'}).`);
+      }
+    });
   }
 
   async excluir() {
-    const alert = await this.alertController.create({
-      header: 'Excluir grupo',
-      message: 'Tem certeza que deseja excluir este grupo?',
-      backdropDismiss: false,
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Excluir',
-          role: 'destructive',
-          handler: () => {
-            if (this.excluindoGrupo || !this.grupo.id) return;
-            this.excluindoGrupo = true;
-            this.exibirMensagem('Excluindo grupo...');
-            this.grupoService.excluir(this.grupo.id, this.usuario.id).pipe(
-              finalize(() => this.excluindoGrupo = false)
-            ).subscribe({
-              next: () => {
-                this.exibirMensagem('Grupo excluido.');
-                this.navController.navigateRoot('/grupos/' + this.grupo.idSala);
-              },
-              error: () => this.exibirMensagem('Erro ao excluir grupo.')
-            });
-          }
-        }
-      ]
-    });
+    if (this.excluindoGrupo || !this.grupo.id) return;
 
-    await alert.present();
+    const confirmou = await this.confirmacaoService.confirmar(
+      'Excluir grupo',
+      'Tem certeza que deseja excluir este grupo?',
+      'Excluir'
+    );
+
+    if (!confirmou) return;
+
+    this.excluindoGrupo = true;
+    this.exibirMensagem('Excluindo grupo...');
+    this.grupoService.excluir(this.grupo.id, this.usuario.id).pipe(
+      finalize(() => this.excluindoGrupo = false)
+    ).subscribe({
+      next: () => {
+        this.exibirMensagem('Grupo excluido.');
+        this.navController.navigateRoot('/grupos/' + this.grupo.idSala);
+      },
+      error: (erro) => {
+        console.error('Erro ao excluir grupo:', erro);
+        this.exibirMensagem(`Erro ao excluir grupo (${erro?.status || 'sem conexao'}).`);
+      }
+    });
   }
 
   async exibirMensagem(texto: string) {

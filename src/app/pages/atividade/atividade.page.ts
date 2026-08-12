@@ -12,13 +12,14 @@ import {
   IonButton
 } from '@ionic/angular/standalone';
 import { ActivatedRoute } from '@angular/router';
-import { NavController, ToastController, AlertController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { ComentarioModel } from 'src/app/model/comentario.model';
 import { ComentarioService } from 'src/app/services/comentario.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
 import { addIcons } from 'ionicons';
 import { finalize } from 'rxjs';
 import {
@@ -69,12 +70,13 @@ export class AtividadePage implements OnInit {
   comentarioRespondendo: ComentarioModel | null = null;
   excluindo = false;
   comentarioExcluindoId = '';
+  enviandoComentario = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private navController: NavController,
     private toastController: ToastController,
-    private alertController: AlertController,
+    private confirmacaoService: ConfirmacaoService,
     private atividadeService: AtividadeService,
     private usuarioService: UsuarioService,
     private comentarioService: ComentarioService
@@ -149,13 +151,16 @@ export class AtividadePage implements OnInit {
   enviarComentario() {
     const texto = this.novoComentario.trim();
 
-    if (!texto) return;
+    if (this.enviandoComentario || !texto) return;
+    this.enviandoComentario = true;
 
     this.comentarioService.criar(
       this.atividade.id,
       texto,
       this.usuario.id,
       this.comentarioRespondendo?.id
+    ).pipe(
+      finalize(() => this.enviandoComentario = false)
     ).subscribe({
       next: () => {
         this.novoComentario = '';
@@ -177,39 +182,30 @@ export class AtividadePage implements OnInit {
   }
 
   async excluirComentario(comentario: ComentarioModel) {
-    const alert = await this.alertController.create({
-      header: 'Excluir comentario',
-      message: 'Tem certeza que deseja excluir este comentario?',
-      backdropDismiss: false,
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
-        {
-          text: 'Excluir',
-          role: 'destructive',
-          handler: () => {
-            if (this.comentarioExcluindoId) return;
-            this.comentarioExcluindoId = comentario.id;
-            this.exibirMensagem('Excluindo comentário...');
-            this.comentarioService.excluir(comentario.id, this.usuario.id).pipe(
-              finalize(() => this.comentarioExcluindoId = '')
-            ).subscribe({
-              next: () => {
-                this.carregarComentarios();
-                this.exibirMensagem('Comentario excluido.');
-              },
-              error: () => {
-                this.exibirMensagem('Erro ao excluir comentario.');
-              }
-            });
-          }
-        }
-      ]
-    });
+    if (this.comentarioExcluindoId) return;
 
-    await alert.present();
+    const confirmou = await this.confirmacaoService.confirmar(
+      'Excluir comentario',
+      'Tem certeza que deseja excluir este comentario?',
+      'Excluir'
+    );
+
+    if (!confirmou) return;
+
+    this.comentarioExcluindoId = comentario.id;
+    this.exibirMensagem('Excluindo comentario...');
+    this.comentarioService.excluir(comentario.id, this.usuario.id).pipe(
+      finalize(() => this.comentarioExcluindoId = '')
+    ).subscribe({
+      next: () => {
+        this.carregarComentarios();
+        this.exibirMensagem('Comentario excluido.');
+      },
+      error: (erro) => {
+        console.error('Erro ao excluir comentario:', erro);
+        this.exibirMensagem(`Erro ao excluir comentario (${erro?.status || 'sem conexao'}).`);
+      }
+    });
   }
 
   podeAlterarComentario(comentario: ComentarioModel): boolean {
@@ -245,26 +241,15 @@ export class AtividadePage implements OnInit {
   }
 
   async excluir() {
-    const alert = await this.alertController.create({
-      header: 'Excluir atividade',
-      message: 'Tem certeza que deseja excluir esta atividade?',
-      backdropDismiss: false,
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
-        {
-          text: 'Excluir',
-          role: 'destructive',
-          handler: () => {
-            this.confirmarExclusao();
-          }
-        }
-      ]
-    });
+    if (this.excluindo || !this.atividade.id) return;
 
-    await alert.present();
+    const confirmou = await this.confirmacaoService.confirmar(
+      'Excluir atividade',
+      'Tem certeza que deseja excluir esta atividade?',
+      'Excluir'
+    );
+
+    if (confirmou) this.confirmarExclusao();
   }
 
   private confirmarExclusao() {

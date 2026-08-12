@@ -13,7 +13,7 @@ import {
   IonTabButton,
   IonLabel
 } from '@ionic/angular/standalone';
-import { AlertController, ToastController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
   ellipsisHorizontalOutline,
@@ -34,6 +34,7 @@ import { TarefaService } from 'src/app/services/tarefa.service';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { finalize } from 'rxjs';
+import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
 
 @Component({
   selector: 'app-grupo-tarefas',
@@ -65,6 +66,7 @@ export class GrupoTarefasPage implements OnInit {
   idUsuarioAtribuido: string;
   tituloTarefa: string;
   tarefaExcluindoId = '';
+  criandoTarefa = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -73,7 +75,7 @@ export class GrupoTarefasPage implements OnInit {
     private atividadeService: AtividadeService,
     private usuarioService: UsuarioService,
     private toastController: ToastController,
-    private alertController: AlertController
+    private confirmacaoService: ConfirmacaoService
   ) {
     this.grupo = new GrupoModel();
     this.tarefas = [];
@@ -147,9 +149,10 @@ export class GrupoTarefasPage implements OnInit {
   }
 
   criarTarefa() {
-    if (!this.grupo.criador || !this.idAtividadeSelecionada || !this.idUsuarioAtribuido || !this.tituloTarefa.trim()) {
+    if (this.criandoTarefa || !this.grupo.criador || !this.idAtividadeSelecionada || !this.idUsuarioAtribuido || !this.tituloTarefa.trim()) {
       return;
     }
+    this.criandoTarefa = true;
 
     this.tarefaService.criar(
       this.grupo.id,
@@ -157,6 +160,8 @@ export class GrupoTarefasPage implements OnInit {
       this.idAtividadeSelecionada,
       this.idUsuarioAtribuido,
       this.usuario.id
+    ).pipe(
+      finalize(() => this.criandoTarefa = false)
     ).subscribe({
       next: () => {
         this.exibirMensagem('Tarefa criada.');
@@ -198,34 +203,30 @@ export class GrupoTarefasPage implements OnInit {
   }
 
   async excluirTarefa(tarefa: TarefaModel) {
-    const alert = await this.alertController.create({
-      header: 'Excluir tarefa',
-      message: 'Tem certeza que deseja excluir esta tarefa?',
-      backdropDismiss: false,
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Excluir',
-          role: 'destructive',
-          handler: () => {
-            if (this.tarefaExcluindoId) return;
-            this.tarefaExcluindoId = tarefa.id;
-            this.exibirMensagem('Excluindo tarefa...');
-            this.tarefaService.excluir(tarefa.id, this.usuario.id).pipe(
-              finalize(() => this.tarefaExcluindoId = '')
-            ).subscribe({
-              next: () => {
-                this.tarefas = this.tarefas.filter(item => item.id !== tarefa.id);
-                this.exibirMensagem('Tarefa excluida.');
-              },
-              error: () => this.exibirMensagem('Erro ao excluir tarefa.')
-            });
-          }
-        }
-      ]
-    });
+    if (this.tarefaExcluindoId) return;
 
-    await alert.present();
+    const confirmou = await this.confirmacaoService.confirmar(
+      'Excluir tarefa',
+      'Tem certeza que deseja excluir esta tarefa?',
+      'Excluir'
+    );
+
+    if (!confirmou) return;
+
+    this.tarefaExcluindoId = tarefa.id;
+    this.exibirMensagem('Excluindo tarefa...');
+    this.tarefaService.excluir(tarefa.id, this.usuario.id).pipe(
+      finalize(() => this.tarefaExcluindoId = '')
+    ).subscribe({
+      next: () => {
+        this.tarefas = this.tarefas.filter(item => item.id !== tarefa.id);
+        this.exibirMensagem('Tarefa excluida.');
+      },
+      error: (erro) => {
+        console.error('Erro ao excluir tarefa:', erro);
+        this.exibirMensagem(`Erro ao excluir tarefa (${erro?.status || 'sem conexao'}).`);
+      }
+    });
   }
 
   iconeStatus(status: string): string {

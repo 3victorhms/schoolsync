@@ -10,6 +10,7 @@ import { AtividadeModel } from 'src/app/model/atividade.model';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-add-atividade',
@@ -24,6 +25,7 @@ export class AddAtividadePage implements OnInit {
   sala: SalaModel;
   formGroup: FormGroup;
   editando: boolean = false;
+  salvando = false;
 
   hoje = new Date().toISOString().split('T')[0];
   // O método toISOString() retorna uma cadeia de caracteres (string) simplificada no formato ISO extendido (ISO 8601), 
@@ -102,6 +104,9 @@ export class AddAtividadePage implements OnInit {
   }
 
   salvar() {
+    if (this.salvando || this.formGroup.invalid) return;
+    this.salvando = true;
+
     this.atividade.titulo = this.formGroup.get('titulo')?.value;
     this.atividade.descricao = this.formGroup.get('descricao')?.value;
     this.atividade.disciplina = this.formGroup.get('disciplina')?.value;
@@ -111,7 +116,9 @@ export class AddAtividadePage implements OnInit {
 
     if (this.atividade.id) {
       // edição
-      this.atividadeService.salvar(this.atividade).subscribe({
+      this.atividadeService.salvar(this.atividade).pipe(
+        finalize(() => this.salvando = false)
+      ).subscribe({
         next: () => {
           this.exibirMensagem('Atividade atualizada com sucesso!');
           this.navController.navigateRoot('/atividade/' + this.atividade.id + '?refresh=' + Date.now());
@@ -120,7 +127,9 @@ export class AddAtividadePage implements OnInit {
       });
     } else {
       // criação
-      this.atividadeService.salvar(this.atividade).subscribe({
+      this.atividadeService.salvar(this.atividade).pipe(
+        finalize(() => this.salvando = false)
+      ).subscribe({
         next: () => {
           this.exibirMensagem('Atividade criada com sucesso!');
           this.navController.navigateRoot('/sala/' + this.atividade.idSala);

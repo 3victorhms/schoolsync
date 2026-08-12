@@ -495,3 +495,28 @@ body.tema-claro app-atividade .resposta-aviso button {
 body.tema-claro app-atividade .comentario-acoes button.acao-excluir {
   color: var(--app-danger) !important;
 }
+
+/* Mantem as confirmacoes visiveis e clicaveis tambem no WebView mobile. */
+ion-alert.app-confirmation-alert {
+  --backdrop-opacity: 0.65;
+  --background: var(--app-surface);
+  --color: var(--app-text);
+  z-index: 20000;
+}
+
+ion-alert.app-confirmation-alert .alert-wrapper {
+  border: 1px solid var(--app-border);
+}
+
+ion-alert.app-confirmation-alert .alert-title,
+ion-alert.app-confirmation-alert .alert-message {
+  color: var(--app-text);
+}
+
+ion-alert.app-confirmation-alert .alert-button {
+  color: var(--app-accent);
+}
+
+ion-alert.app-confirmation-alert .alert-button[role='destructive'] {
+  color: var(--app-danger);
+}

@@ -8,6 +8,7 @@ import { GrupoService } from 'src/app/services/grupo.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { GrupoModel } from 'src/app/model/grupo.model';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-add-grupo',
@@ -23,6 +24,7 @@ export class AddGrupoPage implements OnInit {
   grupo: GrupoModel;
   usuario: UsuarioModel;
   formGroup: FormGroup;
+  salvando = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -57,19 +59,25 @@ export class AddGrupoPage implements OnInit {
   }
 
   salvar() {
-    if (this.formGroup.invalid || !this.usuario.id) return;
+    if (this.salvando || this.formGroup.invalid || !this.usuario.id) return;
+    this.salvando = true;
 
     if (this.modoEdicao) {
       this.atualizar();
       return;
     }
 
-    if (!this.idSala) return;
+    if (!this.idSala) {
+      this.salvando = false;
+      return;
+    }
 
     this.grupoService.criar(
       this.formGroup.get('nome')?.value,
       this.idSala,
       this.usuario.id
+    ).pipe(
+      finalize(() => this.salvando = false)
     ).subscribe({
       next: (grupo) => {
         this.exibirMensagem('Grupo criado com sucesso!');
@@ -98,13 +106,18 @@ export class AddGrupoPage implements OnInit {
   }
 
   atualizar() {
-    if (!this.idGrupo || !this.idSala) return;
+    if (!this.idGrupo || !this.idSala) {
+      this.salvando = false;
+      return;
+    }
 
     this.grupoService.atualizar(
       this.idGrupo,
       this.formGroup.get('nome')?.value,
       this.idSala,
       this.grupo.idCriador || this.usuario.id
+    ).pipe(
+      finalize(() => this.salvando = false)
     ).subscribe({
       next: (grupo) => {
         this.exibirMensagem('Grupo atualizado com sucesso!');

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ComentarioModel } from '../model/comentario.model';
+import { ApiDeleteService } from './api-delete.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class ComentarioService {
 
   private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private apiDelete: ApiDeleteService) { }
 
   listarPorAtividade(idAtividade: string): Observable<ComentarioModel[]> {
     return this.http.get<ComentarioModel[]>(
@@ -33,9 +34,9 @@ export class ComentarioService {
   }
 
   excluir(idComentario: string, idUsuario: string): Observable<void> {
-    return this.http.delete<void>(
+    return this.apiDelete.excluir(
       `${this.API_URL}/comentarios/${idComentario}`,
-      { params: { idUsuario } }
+      { idUsuario }
     );
   }
 }

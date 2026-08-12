@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SalaModel } from '../model/sala.model';
+import { ApiDeleteService } from './api-delete.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class SalaService {
 
   private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com/salas';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private apiDelete: ApiDeleteService) { }
 
   salvar(sala: SalaModel, idLider: string): Observable<SalaModel> {
     if (sala.id) {
@@ -51,22 +52,17 @@ export class SalaService {
   }
 
   excluir(id: string): Observable<void> {
-    return this.http.delete<void>(
-      `${this.API_URL}/${id}`
-    );
+    return this.apiDelete.excluir(`${this.API_URL}/${id}`);
   }
 
   sairDaSala(idSala: string, idUsuario: string): Observable<void> {
-    return this.http.delete<void>(
-      `${this.API_URL}/${idSala}/sair`,
-      { params: { idUsuario } }
-    );
+    return this.apiDelete.excluir(`${this.API_URL}/${idSala}/sair`, { idUsuario });
   }
 
   removerMembro(idSala: string, idUsuarioRemover: string, idUsuarioLogado: string): Observable<void> {
-    return this.http.delete<void>(
+    return this.apiDelete.excluir(
       `${this.API_URL}/${idSala}/membros/${idUsuarioRemover}`,
-      { params: { idUsuarioLogado } }
+      { idUsuarioLogado }
     );
   }
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonIcon, IonButton } from '@ionic/angular/standalone';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { ToastController, AlertController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { SalaModel } from 'src/app/model/sala.model';
@@ -13,6 +13,7 @@ import { addOutline, peopleOutline, trophyOutline, bookOutline, calendarOutline,
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { finalize, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
 
 @Component({
     selector: 'app-sala',
@@ -34,7 +35,7 @@ export class SalaPage implements OnInit {
     constructor(
         private activatedRoute: ActivatedRoute,
         private navController: NavController,
-        private alertController: AlertController,
+        private confirmacaoService: ConfirmacaoService,
         private toastController: ToastController,
         private salaService: SalaService,
         private usuarioService: UsuarioService
@@ -202,110 +203,83 @@ export class SalaPage implements OnInit {
     }
 
     async sairDaSala() {
-        const alert = await this.alertController.create({
-            header: 'Sair da sala',
-            message: 'Tem certeza que deseja sair desta sala?',
-            buttons: [
-                {
-                    text: 'Cancelar',
-                    role: 'cancel'
-                },
-                {
-                    text: 'Sair',
-                    role: 'destructive',
-                    handler: () => {
-                        this.salaService.sairDaSala(this.sala.id, this.usuario.id).subscribe({
-                            next: () => {
-                                localStorage.removeItem(`ultimaSala:${this.usuario.id}`);
-                                this.exibirMensagem('Voce saiu da sala.');
-                                this.navController.navigateBack('/salas');
-                            },
-                            error: () => {
-                                this.exibirMensagem('Erro ao sair da sala.');
-                            }
-                        });
-                    }
-                }
-            ]
-        });
+        const confirmou = await this.confirmacaoService.confirmar(
+            'Sair da sala',
+            'Tem certeza que deseja sair desta sala?',
+            'Sair'
+        );
 
-        await alert.present();
+        if (!confirmou) return;
+
+        this.salaService.sairDaSala(this.sala.id, this.usuario.id).subscribe({
+            next: () => {
+                localStorage.removeItem(`ultimaSala:${this.usuario.id}`);
+                this.exibirMensagem('Voce saiu da sala.');
+                this.navController.navigateBack('/salas');
+            },
+            error: (erro) => {
+                console.error('Erro ao sair da sala:', erro);
+                this.exibirMensagem(`Erro ao sair da sala (${erro?.status || 'sem conexao'}).`);
+            }
+        });
     }
 
     async removerMembro(membro: UsuarioModel) {
-        const alert = await this.alertController.create({
-            header: 'Remover membro',
-            message: `Remover ${this.nomeMembro(membro)} desta sala?`,
-            backdropDismiss: false,
-            buttons: [
-                {
-                    text: 'Cancelar',
-                    role: 'cancel'
-                },
-                {
-                    text: 'Remover',
-                    role: 'destructive',
-                    handler: () => {
-                        if (this.removendoMembroId) return;
-                        this.removendoMembroId = membro.id;
-                        this.exibirMensagem('Removendo membro...');
-                        this.salaService.removerMembro(this.sala.id, membro.id, this.usuario.id).subscribe({
-                            next: () => {
-                                this.membros = this.membros.filter(item => item.id !== membro.id);
-                                this.sala.membros = this.sala.membros.filter(item => item.id !== membro.id);
+        if (this.removendoMembroId) return;
 
-                                if (this.sala.quantidadeMembros && this.sala.quantidadeMembros > 0) {
-                                    this.sala.quantidadeMembros--;
-                                }
+        const confirmou = await this.confirmacaoService.confirmar(
+            'Remover membro',
+            `Remover ${this.nomeMembro(membro)} desta sala?`,
+            'Remover'
+        );
 
-                                this.exibirMensagem('Membro removido da sala.');
-                            },
-                            error: () => {
-                                this.exibirMensagem('Erro ao remover membro.');
-                            }
-                        }).add(() => this.removendoMembroId = '');
-                    }
+        if (!confirmou) return;
+
+        this.removendoMembroId = membro.id;
+        this.exibirMensagem('Removendo membro...');
+        this.salaService.removerMembro(this.sala.id, membro.id, this.usuario.id).subscribe({
+            next: () => {
+                this.membros = this.membros.filter(item => item.id !== membro.id);
+                this.sala.membros = this.sala.membros.filter(item => item.id !== membro.id);
+
+                if (this.sala.quantidadeMembros && this.sala.quantidadeMembros > 0) {
+                    this.sala.quantidadeMembros--;
                 }
-            ]
-        });
 
-        await alert.present();
+                this.exibirMensagem('Membro removido da sala.');
+            },
+            error: (erro) => {
+                console.error('Erro ao remover membro:', erro);
+                this.exibirMensagem(`Erro ao remover membro (${erro?.status || 'sem conexao'}).`);
+            }
+        }).add(() => this.removendoMembroId = '');
     }
 
     async excluir() {
-        const alert = await this.alertController.create({
-            header: 'Excluir sala',
-            message: 'Tem certeza que deseja excluir esta sala?',
-            backdropDismiss: false,
-            buttons: [
-                {
-                    text: 'Cancelar',
-                    role: 'cancel'
-                },
-                {
-                    text: 'Excluir',
-                    role: 'destructive',
-                    handler: () => {
-                        if (this.excluindoSala || !this.sala.id) return;
-                        this.excluindoSala = true;
-                        this.exibirMensagem('Excluindo sala...');
-                        this.salaService.excluir(this.sala.id).pipe(
-                            finalize(() => this.excluindoSala = false)
-                        ).subscribe({
-                            next: () => {
-                                this.exibirMensagem('Sala excluída.');
-                                this.navController.navigateBack('/salas');
-                            },
-                            error: () => {
-                                this.exibirMensagem('Erro ao excluir sala.');
-                            }
-                        });
-                    }
-                }
-            ]
-        });
+        if (this.excluindoSala || !this.sala.id) return;
 
-        await alert.present();
+        const confirmou = await this.confirmacaoService.confirmar(
+            'Excluir sala',
+            'Tem certeza que deseja excluir esta sala?',
+            'Excluir'
+        );
+
+        if (!confirmou) return;
+
+        this.excluindoSala = true;
+        this.exibirMensagem('Excluindo sala...');
+        this.salaService.excluir(this.sala.id).pipe(
+            finalize(() => this.excluindoSala = false)
+        ).subscribe({
+            next: () => {
+                this.exibirMensagem('Sala excluída.');
+                this.navController.navigateBack('/salas');
+            },
+            error: (erro) => {
+                console.error('Erro ao excluir sala:', erro);
+                this.exibirMensagem(`Erro ao excluir sala (${erro?.status || 'sem conexao'}).`);
+            }
+        });
     }
 
     async exibirMensagem(texto: string) {

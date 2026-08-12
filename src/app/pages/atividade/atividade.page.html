@@ -182,7 +182,7 @@
         rows="1"
         placeholder="Escrever comentario..."></textarea>
 
-      <button type="button" (click)="enviarComentario()" [disabled]="!novoComentario.trim()">
+      <button type="button" (click)="enviarComentario()" [disabled]="enviandoComentario || !novoComentario.trim()">
         <ion-icon name="send-outline"></ion-icon>
       </button>
     </div>

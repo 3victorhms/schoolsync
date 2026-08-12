@@ -6,6 +6,7 @@ import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import { UsuarioModel } from '../../model/usuario.model';
 import { UsuarioService } from '../../services/usuario.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-add-usuario',
@@ -19,6 +20,7 @@ export class AddUsuarioPage implements OnInit {
   usuario: UsuarioModel;
   formGroup: FormGroup;
   loginExistente: boolean = false;
+  salvando = false;
 
   constructor(private formBuilder: FormBuilder, private toastController: ToastController, private navController: NavController, private usuarioService: UsuarioService) {
     this.usuario = new UsuarioModel();
@@ -33,11 +35,16 @@ export class AddUsuarioPage implements OnInit {
   }
 
   salvar() {
+    if (this.salvando || this.formGroup.invalid) return;
+    this.salvando = true;
+
     this.usuario.nome = this.formGroup.value.nome;
     this.usuario.email = this.formGroup.value.email;
     this.usuario.senha = this.formGroup.value.senha;
 
-    this.usuarioService.salvar(this.usuario).subscribe({
+    this.usuarioService.salvar(this.usuario).pipe(
+      finalize(() => this.salvando = false)
+    ).subscribe({
       next: (resultado) => {
         this.exibirMensagem('Registro salvo com sucesso!!!');
         this.navController.navigateBack('/login');

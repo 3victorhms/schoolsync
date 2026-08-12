@@ -8,6 +8,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { ToastController, NavController } from '@ionic/angular';
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-add-sala',
@@ -22,6 +23,7 @@ export class AddSalaPage implements OnInit {
   usuario: UsuarioModel;
   formGroup: FormGroup;
   editando: boolean;
+  salvando = false;
 
   constructor(
     private formBuilder: FormBuilder, private toastController: ToastController,
@@ -55,10 +57,15 @@ export class AddSalaPage implements OnInit {
   }
 
   salvar() {
+    if (this.salvando || this.formGroup.invalid) return;
+    this.salvando = true;
+
     this.sala.nome = this.formGroup.get('nomeSala')?.value;
     this.sala.idLider = this.usuario.id;
 
-    this.salaService.salvar(this.sala, this.usuario.id).subscribe({
+    this.salaService.salvar(this.sala, this.usuario.id).pipe(
+      finalize(() => this.salvando = false)
+    ).subscribe({
       next: (salaSalva) => {
         this.exibirMensagem(this.editando ? 'Sala atualizada com sucesso!' : 'Sala criada com sucesso!!!');
         this.navController.navigateBack('/sala/' + salaSalva.id);

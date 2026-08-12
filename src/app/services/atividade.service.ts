@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AtividadeModel } from '../model/atividade.model';
+import { ApiDeleteService } from './api-delete.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class AtividadeService {
 
   private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com/atividades';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private apiDelete: ApiDeleteService) { }
 
   salvar(atividade: AtividadeModel): Observable<AtividadeModel> {
     if (atividade.id) {
@@ -49,15 +50,11 @@ export class AtividadeService {
   }
 
   excluir(id: string): Observable<void> {
-    return this.http.delete<void>(
-      `${this.API_URL}/${id}`
-    );
+    return this.apiDelete.excluir(`${this.API_URL}/${id}`);
   }
 
   excluirAtividadesDaSala(idSala: string): Observable<void> {
-    return this.http.delete<void>(
-      `${this.API_URL}/sala/${idSala}`
-    );
+    return this.apiDelete.excluir(`${this.API_URL}/sala/${idSala}`);
   }
 
   adicionarNoCaderno(idAtividade: string, idUsuario: string): Observable<void> {
@@ -68,8 +65,9 @@ export class AtividadeService {
   }
 
   removerDoCaderno(idAtividade: string, idUsuario: string): Observable<void> {
-    return this.http.delete<void>(
-      `${this.API_URL}/${idAtividade}/caderno?idUsuario=${idUsuario}`
+    return this.apiDelete.excluir(
+      `${this.API_URL}/${idAtividade}/caderno`,
+      { idUsuario }
     );
   }
 

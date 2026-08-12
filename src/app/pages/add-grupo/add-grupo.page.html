@@ -18,7 +18,7 @@
       </ion-item>
     </div>
 
-    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="formGroup.invalid">
+    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="formGroup.invalid || salvando">
       {{ modoEdicao ? 'Salvar alterações' : 'Criar grupo' }}
     </ion-button>
   </form>
