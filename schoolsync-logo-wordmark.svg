@@ -1,0 +1,29 @@
+<svg width="440" height="560" viewBox="0 0 440 560" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="0" y="0" width="440" height="560" fill="#FFFFFF"/>
+  <circle cx="220" cy="220" r="210" fill="#0B1F3A"/>
+
+  <!-- SYNC ICON -->
+  <g>
+    <path d="M 97.8 175.5 A 130 130 0 0 1 342.2 175.5"
+          fill="none" stroke="#EAF1FB" stroke-width="24" stroke-linecap="round"/>
+    <polygon points="25,0 -15,-22 -15,22" fill="#EAF1FB"
+             transform="translate(342.2,175.5) rotate(70)"/>
+
+    <path d="M 342.2 264.5 A 130 130 0 0 1 97.8 264.5"
+          fill="none" stroke="#EAF1FB" stroke-width="24" stroke-linecap="round"/>
+    <polygon points="25,0 -15,-22 -15,22" fill="#EAF1FB"
+             transform="translate(97.8,264.5) rotate(-110)"/>
+  </g>
+
+  <!-- Graduation cap -->
+  <g transform="translate(220,220) scale(1.35) translate(-220,-220)">
+    <polygon points="220,178 274,203 220,228 166,203" fill="#EAF1FB"/>
+    <path d="M 192 212 L 248 212 L 248 228 Q 248 239 220 239 Q 192 239 192 228 Z" fill="#EAF1FB"/>
+    <line x1="262" y1="207" x2="262" y2="242" stroke="#EAF1FB" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="262" cy="248" r="5.5" fill="#EAF1FB"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="220" y="500" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700" fill="#0B1F3A">School<tspan fill="#3A6EA5">Sync</tspan></text>
+</svg>
