@@ -1,3 +1,5 @@
+/// <reference types="@capacitor/local-notifications" />
+/// <reference types="@capacitor/push-notifications" />
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
@@ -9,6 +11,13 @@ const config: CapacitorConfig = {
     // bloqueadas pelo preflight CORS do WebView.
     CapacitorHttp: {
       enabled: true
+    },
+    LocalNotifications: {
+      iconColor: '#3A6FF7',
+      presentationOptions: ['badge', 'sound', 'banner', 'list']
+    },
+    PushNotifications: {
+      presentationOptions: ['badge', 'sound', 'banner', 'list']
     }
   }
 };

@@ -17,4 +17,9 @@ ion-content { --background: #0f1117; }
 .estado-vazio ion-icon { font-size: 42px; color: #3f86ef; }
 .estado-vazio h2 { color: #fff; font-size: 18px; }
 .estado-vazio p { font-size: 14px; }
+.estado-carregando, .estado-erro { padding: 18px; border-radius: 14px; text-align: center; color: #aeb8ca; background: #171c28; }
+.estado-erro { border: 1px solid #7d1f35; color: #ffadb7; }
+.notificacao:hover, .notificacao:focus-visible { border-color: #3a6ff7; outline: none; background: #171c28; }
+.notificacao:not(.nao-lida) { opacity: .78; }
+
 @media (max-width: 520px) { .cabecalho { align-items: flex-start; } .acoes { gap: 12px; } .acoes button { max-width: 112px; line-height: 1.25; } }

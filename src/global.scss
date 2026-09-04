@@ -513,10 +513,144 @@ ion-alert.app-confirmation-alert .alert-message {
   color: var(--app-text);
 }
 
+ion-alert.app-confirmation-alert .alert-message {
+  white-space: pre-line;
+}
+
 ion-alert.app-confirmation-alert .alert-button {
   color: var(--app-accent);
 }
 
 ion-alert.app-confirmation-alert .alert-button[role='destructive'] {
   color: var(--app-danger);
+}
+
+/* Notificações no tema claro precisam ficar globais porque os overlays e o body
+   não recebem o atributo de encapsulamento do componente Angular. */
+body.tema-claro app-notificacao ion-content { --background: var(--app-bg); }
+body.tema-claro app-notificacao .cabecalho h1,
+body.tema-claro app-notificacao .conteudo strong,
+body.tema-claro app-notificacao .estado-vazio h2 { color: var(--app-text); }
+body.tema-claro app-notificacao .notificacao,
+body.tema-claro app-notificacao .estado-carregando {
+  background: var(--app-surface);
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+body.tema-claro app-notificacao .notificacao:not(.nao-lida) {
+  background: var(--app-bg-muted);
+  opacity: 1;
+}
+body.tema-claro app-notificacao .mensagem,
+body.tema-claro app-notificacao .conteudo small,
+body.tema-claro app-notificacao .estado-vazio { color: var(--app-muted); }
+body.tema-claro app-notificacao .notificacao:hover,
+body.tema-claro app-notificacao .notificacao:focus-visible {
+  border-color: var(--app-accent);
+  background: var(--app-accent-soft);
+}
+
+/* Configurações de notificações no tema claro. */
+body.tema-claro app-notificacao-configuracoes .pagina-configuracoes {
+  color: var(--app-text);
+}
+body.tema-claro app-notificacao-configuracoes header a,
+body.tema-claro app-notificacao-configuracoes section h2,
+body.tema-claro app-notificacao-configuracoes .lembretes > p,
+body.tema-claro app-notificacao-configuracoes .texto small {
+  color: var(--app-muted);
+}
+body.tema-claro app-notificacao-configuracoes .opcao-canal,
+body.tema-claro app-notificacao-configuracoes .opcao-lembrete {
+  background: var(--app-surface);
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+body.tema-claro app-notificacao-configuracoes .opcao-lembrete:hover,
+body.tema-claro app-notificacao-configuracoes .opcao-lembrete:focus-visible,
+body.tema-claro app-notificacao-configuracoes .opcao-lembrete.ativa {
+  background: var(--app-accent-soft);
+  border-color: var(--app-accent);
+  outline: none;
+}
+body.tema-claro app-notificacao-configuracoes .icone {
+  background: var(--app-accent-soft);
+  color: var(--app-accent);
+}
+body.tema-claro app-notificacao-configuracoes .radio {
+  border-color: var(--app-muted-strong);
+}
+body.tema-claro app-notificacao-configuracoes .opcao-lembrete.ativa .radio {
+  background: var(--app-accent);
+  border-color: var(--app-accent);
+  color: #ffffff;
+}
+body.tema-claro app-notificacao-configuracoes .sino {
+  color: var(--app-muted);
+}
+body.tema-claro app-notificacao-configuracoes .opcao-lembrete.ativa .sino {
+  color: var(--app-accent);
+}
+body.tema-claro app-notificacao-configuracoes ion-toggle {
+  --track-background: var(--app-surface-strong);
+  --track-background-checked: var(--app-accent);
+  --handle-background: #ffffff;
+  --handle-background-checked: #ffffff;
+}
+
+/* Ações novas do perfil no tema claro. */
+body.tema-claro app-perfil .notificacao-teste-btn {
+  background: var(--app-accent-soft);
+  border-color: var(--app-accent);
+  color: var(--app-accent);
+}
+body.tema-claro app-perfil .notificacao-teste-btn ion-icon {
+  color: var(--app-accent);
+}
+body.tema-claro app-perfil .inativacao-aviso {
+  background: #fff4f5;
+  border-color: #efb6bc;
+  color: #8f2f39;
+}
+body.tema-claro app-perfil .inativacao-aviso strong,
+body.tema-claro app-perfil .inativacao-aviso p,
+body.tema-claro app-perfil .inativacao-aviso li {
+  color: #8f2f39 !important;
+}
+
+/* Mantém os círculos de atividade legíveis no calendário claro. */
+app-inicio .cal-dia .numero-dia {
+  position: relative;
+  z-index: 2;
+}
+app-inicio .cal-dia[data-indicador] {
+  background: transparent;
+  color: #ffffff;
+  font-weight: 750;
+}
+app-inicio .cal-dia[data-indicador='proxima'],
+app-inicio .cal-dia[data-indicador='semana'],
+app-inicio .cal-dia[data-indicador='mes'] {
+  color: #151922;
+}
+app-inicio .cal-dia[data-indicador].selecionado .indicador-atividade {
+  box-shadow: 0 0 0 2px #171c28, 0 0 0 4px #6ea0ff, 0 4px 12px rgba(0, 0, 0, .28);
+}
+body.tema-claro app-inicio .cal-dia[data-indicador] {
+  background: transparent !important;
+}
+body.tema-claro app-inicio .cal-dia[data-indicador] .numero-dia {
+  color: #ffffff !important;
+}
+body.tema-claro app-inicio .cal-dia[data-indicador='proxima'] .numero-dia,
+body.tema-claro app-inicio .cal-dia[data-indicador='semana'] .numero-dia,
+body.tema-claro app-inicio .cal-dia[data-indicador='mes'] .numero-dia {
+  color: #151922 !important;
+}
+body.tema-claro app-inicio .cal-dia[data-indicador].selecionado .indicador-atividade {
+  box-shadow: 0 0 0 2px var(--app-surface), 0 0 0 4px var(--app-accent), 0 4px 12px rgba(30, 64, 175, .24);
+}
+
+body.tema-claro app-inicio .cal-dia .indicador-concluida {
+  border-color: var(--app-surface);
 }

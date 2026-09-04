@@ -10,6 +10,7 @@ import { NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { schoolOutline, arrowForwardOutline } from 'ionicons/icons';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { NotificacaoPushService } from '../../services/notificacao-push.service';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +26,7 @@ export class LoginPage implements OnInit {
   login: string;
   senha: string;
 
-  constructor(private formBuilder: FormBuilder, private toastController: ToastController, private navController: NavController, private loginService: LoginService, private tokenService: TokenService, private route: ActivatedRoute) {
+  constructor(private formBuilder: FormBuilder, private toastController: ToastController, private navController: NavController, private loginService: LoginService, private tokenService: TokenService, private route: ActivatedRoute, private notificacaoPushService: NotificacaoPushService) {
     this.login = "";
     this.senha = "";
     this.usuario = new UsuarioModel();
@@ -76,11 +77,13 @@ export class LoginPage implements OnInit {
             nome: dadosToken.nome,
             email: dadosToken.email || dadosToken.login || this.login,
             senha: '',
-            foto: ''
+            foto: '',
+            ativo: true
           };
 
           if (this.usuario && this.usuario.id != "") {
             this.loginService.registrarAutenticacao(this.usuario);
+            void this.notificacaoPushService.sincronizarAposLogin();
             const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
             this.navController.navigateRoot(returnUrl?.startsWith('/') ? returnUrl : '/inicio');
           }

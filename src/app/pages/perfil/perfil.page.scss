@@ -128,3 +128,60 @@ ion-tab-button {
 .selecionado {
     color: #3a79df;
 }
+
+.inativar-conta-btn {
+    margin-top: 12px;
+    border: 0;
+    background: transparent;
+    color: #ff5c6c;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.notificacao-teste-btn {
+    margin-top: 12px;
+    min-height: 44px;
+    border: 1px solid #315fae;
+    border-radius: 14px;
+    background: #16264a;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+
+    ion-icon { color: #6ea0ff; font-size: 18px; }
+}
+
+.notificacao-teste-btn:disabled,
+.inativar-conta-btn:disabled { opacity: .55; cursor: wait; }
+
+.notificacao-teste-ajuda {
+    max-width: 360px;
+    margin: 8px 0 20px;
+    color: #8891aa;
+    font-size: 12px;
+    line-height: 1.45;
+    text-align: center;
+}
+
+.inativacao-aviso {
+    width: min(100%, 520px);
+    padding: 16px;
+    border: 1px solid #5e2a34;
+    border-radius: 14px;
+    background: #25181e;
+    color: #d7aab2;
+    text-align: left;
+
+    strong { display: block; margin-bottom: 8px; color: #ff8a98; }
+    p { margin: 6px 0; font-size: 13px; line-height: 1.45; }
+    ul { margin: 8px 0; padding-left: 20px; font-size: 13px; line-height: 1.55; }
+}

@@ -6,6 +6,8 @@ import { IonContent, IonIcon, IonToggle, ToastController } from '@ionic/angular/
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, checkmarkOutline, notificationsOutline, phonePortraitOutline, timeOutline } from 'ionicons/icons';
 import { ConfiguracaoNotificacao, NotificacaoService } from '../../services/notificacao.service';
+import { NotificacaoPushService } from '../../services/notificacao-push.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-notificacao-configuracoes',
@@ -18,7 +20,11 @@ export class NotificacaoConfiguracoesPage {
   configuracao: ConfiguracaoNotificacao = { noAplicativo: true, push: false, lembreteDias: 1 };
   salvando = false;
 
-  constructor(private service: NotificacaoService, private toastController: ToastController) {
+  constructor(
+    private service: NotificacaoService,
+    private notificacaoPushService: NotificacaoPushService,
+    private toastController: ToastController
+  ) {
     addIcons({ arrowBackOutline, checkmarkOutline, notificationsOutline, phonePortraitOutline, timeOutline });
   }
 
@@ -32,17 +38,21 @@ export class NotificacaoConfiguracoesPage {
   async salvar(): Promise<void> {
     if (this.salvando) return;
     this.salvando = true;
-    this.service.salvarConfiguracao(this.configuracao).subscribe({
-      next: async configuracao => {
-        this.configuracao = configuracao;
-        this.salvando = false;
-        await this.exibirMensagem('Configurações salvas');
-      },
-      error: async () => {
-        this.salvando = false;
-        await this.exibirMensagem('Não foi possível salvar as configurações');
+    try {
+      if (this.configuracao.push) {
+        await this.notificacaoPushService.ativar();
       }
-    });
+
+      this.configuracao = await firstValueFrom(this.service.salvarConfiguracao(this.configuracao));
+      if (!this.configuracao.push) {
+        await this.notificacaoPushService.desregistrar().catch(() => undefined);
+      }
+      await this.exibirMensagem('Configurações salvas');
+    } catch (erro: any) {
+      await this.exibirMensagem(erro?.message || 'Não foi possível salvar as configurações');
+    } finally {
+      this.salvando = false;
+    }
   }
 
   private async exibirMensagem(message: string): Promise<void> {

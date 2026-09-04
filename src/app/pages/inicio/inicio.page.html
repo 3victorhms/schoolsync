@@ -4,7 +4,7 @@
       <div class="header-titulo">
         <div>
           <p class="ola">Olá,</p>
-          <h1 class="nome">{{ usuario.nome.split(' ')[0] }} 👋</h1>
+          <h1 class="nome">{{ primeiroNomeUsuario }} 👋</h1>
         </div>
         <a class="notificacao-btn" routerLink="/notificacao" aria-label="Abrir notificações">
           <ion-icon name="notifications-outline"></ion-icon>
@@ -43,11 +43,16 @@
     <div class="calendario-dias">
       @for (dia of diasCalendario; track dia.data) {
       <button class="cal-dia" [class.outro-mes]="!dia.mesAtual" [class.hoje]="dia.hoje"
-        [class.selecionado]="dia.selecionado" (click)="selecionarDia(dia)">
-        {{ dia.numero }}
+        [class.selecionado]="dia.selecionado" [attr.title]="dia.resumoAtividades || null"
+        [attr.data-indicador]="dia.indicador || null"
+        [attr.aria-label]="dia.resumoAtividades ? dia.numero + '. ' + dia.resumoAtividades : dia.numero" (click)="selecionarDia(dia)">
+        <span class="numero-dia">{{ dia.numero }}</span>
+        @if (dia.indicador) { <span class="indicador-atividade" [ngClass]="dia.indicador" [attr.aria-label]="dia.resumoAtividades"></span> }
+        @if (dia.indicador === 'concluida') { <span class="indicador-concluida" aria-hidden="true">✓</span> }
       </button>
       }
     </div>
+    @if (resumoDiaSelecionado) { <p class="resumo-indicador" aria-live="polite">{{ resumoDiaSelecionado }}</p> }
   </div>
 
   <div class="data-secao">

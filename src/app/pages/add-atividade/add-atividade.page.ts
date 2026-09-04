@@ -123,7 +123,7 @@ export class AddAtividadePage implements OnInit {
           this.exibirMensagem('Atividade atualizada com sucesso!');
           this.navController.navigateRoot('/atividade/' + this.atividade.id + '?refresh=' + Date.now());
         },
-        error: () => this.exibirMensagem('Erro ao atualizar atividade.')
+        error: erro => this.exibirMensagem(this.mensagemErroAcademico(erro, 'Erro ao atualizar atividade.'))
       });
     } else {
       // criação
@@ -134,7 +134,7 @@ export class AddAtividadePage implements OnInit {
           this.exibirMensagem('Atividade criada com sucesso!');
           this.navController.navigateRoot('/sala/' + this.atividade.idSala);
         },
-        error: () => this.exibirMensagem('Erro ao criar atividade.')
+        error: erro => this.exibirMensagem(this.mensagemErroAcademico(erro, 'Erro ao criar atividade.'))
       });
     }
   }
@@ -145,6 +145,10 @@ export class AddAtividadePage implements OnInit {
       duration: 1500
     });
     toast.present();
+  }
+
+  private mensagemErroAcademico(erro: any, padrao: string): string {
+    return erro?.error?.message || erro?.error?.detail || erro?.message || padrao;
   }
 
 }

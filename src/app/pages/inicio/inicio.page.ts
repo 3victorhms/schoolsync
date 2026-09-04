@@ -10,6 +10,7 @@ import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { NotificacaoService } from 'src/app/services/notificacao.service';
 import { addIcons } from 'ionicons';
+import { Subscription } from 'rxjs';
 import { notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, businessOutline, book, personOutline, pencilOutline } from 'ionicons/icons';
 
 interface DiaCalendario {
@@ -18,6 +19,8 @@ interface DiaCalendario {
   mesAtual: boolean;
   hoje: boolean;
   selecionado: boolean;
+  indicador?: 'concluida' | 'atrasada' | 'hoje' | 'proxima' | 'semana' | 'mes' | 'futuro';
+  resumoAtividades?: string;
 }
 
 @Component({
@@ -37,6 +40,8 @@ export class InicioPage implements OnInit {
   mesAtual: string = '';
   dataAtual: Date = new Date();
   notificacoesNaoLidas = 0;
+  atividadesCalendario: AtividadeModel[] = [];
+  private notificacoesSubscription?: Subscription;
 
   private meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
     'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
@@ -53,15 +58,23 @@ export class InicioPage implements OnInit {
 
   ngOnInit() { }
 
+  get primeiroNomeUsuario(): string {
+    return (this.usuario.nome || '').trim().split(/\s+/)[0] || 'Estudante';
+  }
+
   ionViewWillEnter() {
-    this.gerarCalendario();
     this.carregarUltimaSala();
-    this.carregarAtividadesDoDia();
+    this.carregarAtividadesCalendario();
     this.notificacaoService.listar().subscribe({ error: () => this.notificacoesNaoLidas = 0 });
     this.notificacaoService.conectar();
-    this.notificacaoService.notificacoes$.subscribe(notificacoes => {
+    this.notificacoesSubscription?.unsubscribe();
+    this.notificacoesSubscription = this.notificacaoService.notificacoes$.subscribe(notificacoes => {
       this.notificacoesNaoLidas = notificacoes.filter(notificacao => !notificacao.lido).length;
     });
+  }
+
+  ionViewWillLeave() {
+    this.notificacoesSubscription?.unsubscribe();
   }
 
   gerarCalendario() {
@@ -96,6 +109,8 @@ export class InicioPage implements OnInit {
       const data = new Date(ano, mes + 1, i);
       this.diasCalendario.push({ numero: i, data, mesAtual: false, hoje: false, selecionado: false });
     }
+
+    this.atualizarIndicadoresCalendario();
   }
 
   formatarData(data: string): string {
@@ -137,14 +152,69 @@ export class InicioPage implements OnInit {
     const d = this.dataSelecionada;
     const dataStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
+    this.atividadesDoDia = this.atividadesCalendario.filter(a => a.dataEntrega === dataStr);
+  }
+
+  private carregarAtividadesCalendario() {
+    if (!this.usuario.id) return;
+
     this.atividadeService.listarPorUsuarioNoCaderno(this.usuario.id).subscribe({
-      next: (todas) => {
-        this.atividadesDoDia = todas.filter((a: AtividadeModel) => a.dataEntrega === dataStr);
+      next: atividades => {
+        this.atividadesCalendario = atividades || [];
+        this.gerarCalendario();
+        this.carregarAtividadesDoDia();
       },
       error: () => {
-        this.atividadesDoDia = [];
+        this.atividadesCalendario = [];
+        this.gerarCalendario();
+        this.carregarAtividadesDoDia();
       }
     });
+  }
+
+  private atualizarIndicadoresCalendario() {
+    for (const dia of this.diasCalendario) {
+      const data = this.dataParaChave(dia.data);
+      const atividades = this.atividadesCalendario.filter(atividade => atividade.dataEntrega === data);
+      if (!atividades.length) continue;
+
+      dia.indicador = this.indicadorMaisUrgente(atividades);
+      const pendentes = atividades.filter(atividade => atividade.status !== 'concluido').length;
+      dia.resumoAtividades = `${atividades.length} atividade${atividades.length === 1 ? '' : 's'}: ${pendentes} pendente${pendentes === 1 ? '' : 's'} e ${atividades.length - pendentes} concluída${atividades.length - pendentes === 1 ? '' : 's'}`;
+    }
+  }
+
+  private indicadorMaisUrgente(atividades: AtividadeModel[]): DiaCalendario['indicador'] {
+    const pendentes = atividades.filter(atividade => atividade.status !== 'concluido');
+    if (!pendentes.length) return 'concluida';
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const domingo = new Date(hoje);
+    domingo.setDate(hoje.getDate() + ((7 - hoje.getDay()) % 7));
+    const fimMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
+
+    const prioridades = pendentes.map(atividade => {
+      const [ano, mes, dia] = atividade.dataEntrega.split('-').map(Number);
+      const prazo = new Date(ano, mes - 1, dia);
+      const diferenca = Math.round((prazo.getTime() - hoje.getTime()) / 86400000);
+      if (diferenca < 0) return { ordem: 0, tipo: 'atrasada' as const };
+      if (diferenca === 0) return { ordem: 1, tipo: 'hoje' as const };
+      if (diferenca <= 3) return { ordem: 2, tipo: 'proxima' as const };
+      if (prazo <= domingo) return { ordem: 3, tipo: 'semana' as const };
+      if (prazo <= fimMes) return { ordem: 4, tipo: 'mes' as const };
+      return { ordem: 5, tipo: 'futuro' as const };
+    });
+
+    return prioridades.sort((a, b) => a.ordem - b.ordem)[0].tipo;
+  }
+
+  private dataParaChave(data: Date): string {
+    return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}`;
+  }
+
+  get resumoDiaSelecionado(): string {
+    return this.diasCalendario.find(dia => dia.selecionado)?.resumoAtividades || '';
   }
 
   carregarUltimaSala() {

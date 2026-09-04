@@ -10,7 +10,9 @@
     </header>
 
     <section class="lista" aria-live="polite">
-      @if (!carregando && notificacoes.length === 0) {
+      @if (carregando) { <div class="estado-carregando">Carregando notificações...</div> }
+      @if (erro) { <div class="estado-erro" role="alert">{{ erro }}</div> }
+      @if (!carregando && !erro && notificacoes.length === 0) {
       <div class="estado-vazio">
         <ion-icon name="notifications-outline"></ion-icon>
         <h2>Nenhuma notificação</h2>
@@ -23,7 +25,7 @@
         <span class="conteudo">
           <strong>{{ notificacao.titulo }}</strong>
           <span class="mensagem">{{ notificacao.mensagem }}</span>
-          <small>{{ notificacao.horario }}</small>
+          <small>{{ formatarHorario(notificacao.horario) }}</small>
         </span>
         @if (!notificacao.lido) { <span class="indicador" aria-label="Não lida"></span> }
       </button>

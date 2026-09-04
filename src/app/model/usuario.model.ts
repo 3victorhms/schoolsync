@@ -4,6 +4,7 @@ export class UsuarioModel {
     email: string;
     senha: string;
     foto: string;
+    ativo: boolean;
 
     constructor() {
         this.id = "";
@@ -11,5 +12,6 @@ export class UsuarioModel {
         this.email = "";
         this.senha = "";
         this.foto = "";
+        this.ativo = true;
     }
 }

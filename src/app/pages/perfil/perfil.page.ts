@@ -6,14 +6,18 @@ import {
   IonButtons, IonButton, IonIcon, IonCard, IonLabel, IonCardContent, IonTabButton, IonTabBar
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { homeOutline, businessOutline, trophyOutline, personOutline, pencilOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, book, sunnyOutline, moonOutline } from 'ionicons/icons';
+import { homeOutline, businessOutline, trophyOutline, personOutline, pencilOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, book, sunnyOutline, moonOutline, trashOutline, notificationsOutline } from 'ionicons/icons';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { ToastController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { TemaService } from 'src/app/services/tema.service';
 import { LoginService } from 'src/app/services/login.service';
+import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
+import { NotificacaoLocalService } from 'src/app/services/notificacao-local.service';
+import { NotificacaoPushService } from 'src/app/services/notificacao-push.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-perfil',
@@ -33,6 +37,8 @@ export class PerfilPage implements OnInit {
   atividadesFiltradas: AtividadeModel[] = [];
   filtroAtivo: string = 'todas';
   temaClaro: boolean = false;
+  inativando = false;
+  agendandoNotificacao = false;
 
   usuario = {
     id: this.usuarioService.buscarAutenticacao().id,
@@ -55,10 +61,15 @@ export class PerfilPage implements OnInit {
     private navController: NavController,
     private atividadeService: AtividadeService,
     private temaService: TemaService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private confirmacaoService: ConfirmacaoService,
+    private toastController: ToastController,
+    private alertController: AlertController,
+    private notificacaoLocalService: NotificacaoLocalService,
+    private notificacaoPushService: NotificacaoPushService
   ) {
     addIcons({
-      book, pencilOutline, homeOutline, businessOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline
+      book, pencilOutline, homeOutline, businessOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline
 
     });
   }
@@ -132,12 +143,77 @@ export class PerfilPage implements OnInit {
     this.router.navigate(['usuario']);
   }
 
-  logout() {
+  async logout() {
+    await this.notificacaoPushService.desregistrar().catch(() => undefined);
     this.loginService.encerrarAutenticacao();
     this.navController.navigateRoot('/login');
   }
 
   alternarTema() {
     this.temaClaro = this.temaService.alternarTema();
+  }
+
+  async testarNotificacao(): Promise<void> {
+    if (this.agendandoNotificacao) return;
+    this.agendandoNotificacao = true;
+
+    try {
+      const horario = await this.notificacaoLocalService.agendarTesteEmUmMinuto();
+      const horaFormatada = horario.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      const toast = await this.toastController.create({
+        message: `Notificação agendada para ${horaFormatada}. Agora você pode fechar o aplicativo.`,
+        duration: 5000,
+        color: 'success',
+        position: 'top'
+      });
+      await toast.present();
+    } catch (erro: any) {
+      const toast = await this.toastController.create({
+        message: erro?.message || 'Não foi possível agendar a notificação de teste.',
+        duration: 6000,
+        color: 'danger',
+        position: 'top'
+      });
+      await toast.present();
+    } finally {
+      this.agendandoNotificacao = false;
+    }
+  }
+
+  async inativarConta() {
+    if (this.inativando) return;
+    const confirmou = await this.confirmacaoService.confirmar(
+      'Inativar conta',
+      'Sua conta será inativada e seus comentários serão preservados como histórico. Esta ação não pode ser desfeita pelo aplicativo.',
+      'Inativar'
+    );
+    if (!confirmou) return;
+
+    this.inativando = true;
+    this.usuarioService.excluir(this.usuario.id).pipe(
+      finalize(() => this.inativando = false)
+    ).subscribe({
+      next: () => {
+        void this.notificacaoPushService.desregistrar().catch(() => undefined);
+        this.loginService.encerrarAutenticacao();
+        this.navController.navigateRoot('/login');
+      },
+      error: async erro => {
+        const mensagem = erro?.error?.message || erro?.error?.detail || 'Não foi possível inativar a conta.';
+        if (erro?.status === 409) {
+          const alerta = await this.alertController.create({
+            header: 'Conta ainda possui vínculos',
+            message: `${mensagem}\n\nTransfira as lideranças das salas e dos grupos e reatribua todas as tarefas antes de tentar novamente.`,
+            cssClass: 'app-confirmation-alert',
+            buttons: ['Entendi']
+          });
+          await alerta.present();
+          return;
+        }
+        const toast = await this.toastController.create({ message: mensagem, duration: 5000, color: 'danger', position: 'top' });
+        await toast.present();
+        console.error('Erro ao inativar conta:', erro);
+      }
+    });
   }
 }
