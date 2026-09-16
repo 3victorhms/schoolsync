@@ -64,6 +64,17 @@ ion-content {
         font-weight: 700;
         color: #ffffff;
     }
+
+    img {
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        object-fit: cover;
+    }
+}
+
+.avatar.tem-foto {
+    background: transparent;
 }
 
 .perfil-nome {

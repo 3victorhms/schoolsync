@@ -40,6 +40,49 @@ form {
         font-weight: 700;
         color: #ffffff;
     }
+
+    img {
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        object-fit: cover;
+    }
+}
+
+.avatar.tem-foto {
+    background: transparent;
+}
+
+.input-foto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.acoes-foto {
+    align-self: center;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: -12px;
+    margin-bottom: 4px;
+}
+
+.botao-foto {
+    --border-color: #3a6ff7;
+    --color: #86aaff;
+    --border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: none;
+}
+
+.remover-foto {
+    --color: #f87171;
+    font-size: 13px;
+    text-transform: none;
 }
 
 .secao-titulo {

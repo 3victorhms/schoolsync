@@ -30,7 +30,8 @@ export class UsuarioPage implements OnInit {
 
   formGroup: FormGroup;
   usuario: UsuarioModel = new UsuarioModel();
-  usuarioOriginal: { nome: string; email: string } = { nome: '', email: '' };
+  usuarioOriginal: { nome: string; email: string; foto: string } = { nome: '', email: '', foto: '' };
+  processandoFoto = false;
 
   mostrarSenhaAtual = false;
   mostrarNovaSenha = false;
@@ -85,9 +86,10 @@ export class UsuarioPage implements OnInit {
 
     const nomeIgual = nome === this.usuarioOriginal.nome;
     const emailIgual = email === this.usuarioOriginal.email;
+    const fotoIgual = (this.usuario.foto || '') === this.usuarioOriginal.foto;
     const semSenha = !novaSenha && !confirmarSenha;
 
-    return nomeIgual && emailIgual && semSenha;
+    return nomeIgual && emailIgual && fotoIgual && semSenha;
   }
 
   ngOnInit() {
@@ -96,11 +98,76 @@ export class UsuarioPage implements OnInit {
     this.usuarioOriginal = {
       nome: this.usuario.nome,
       email: this.usuario.email,
+      foto: this.usuario.foto || '',
     };
 
     this.formGroup.patchValue({
       nome: this.usuario.nome,
       email: this.usuario.email,
+    });
+  }
+
+  async selecionarFoto(evento: Event): Promise<void> {
+    const input = evento.target as HTMLInputElement;
+    const arquivo = input.files?.[0];
+    input.value = '';
+
+    if (!arquivo) return;
+    if (!arquivo.type.startsWith('image/')) {
+      await this.exibirToast('Escolha um arquivo de imagem.');
+      return;
+    }
+    if (arquivo.size > 5 * 1024 * 1024) {
+      await this.exibirToast('Escolha uma imagem de no máximo 5 MB.');
+      return;
+    }
+
+    this.processandoFoto = true;
+    try {
+      this.usuario.foto = await this.redimensionarFoto(arquivo);
+    } catch {
+      await this.exibirToast('Não foi possível preparar essa imagem. Tente outra foto.');
+    } finally {
+      this.processandoFoto = false;
+    }
+  }
+
+  removerFoto(): void {
+    this.usuario.foto = '';
+  }
+
+  private redimensionarFoto(arquivo: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const leitor = new FileReader();
+      leitor.onerror = () => reject();
+      leitor.onload = () => {
+        const imagem = new Image();
+        imagem.onerror = () => reject();
+        imagem.onload = () => {
+          const ladoMaximo = 360;
+          const proporcao = Math.min(ladoMaximo / imagem.width, ladoMaximo / imagem.height, 1);
+          const largura = Math.max(1, Math.round(imagem.width * proporcao));
+          const altura = Math.max(1, Math.round(imagem.height * proporcao));
+          const canvas = document.createElement('canvas');
+          canvas.width = largura;
+          canvas.height = altura;
+          const contexto = canvas.getContext('2d');
+          if (!contexto) {
+            reject();
+            return;
+          }
+          contexto.drawImage(imagem, 0, 0, largura, altura);
+          const foto = canvas.toDataURL('image/jpeg', 0.82);
+
+          if (foto.length > 750_000) {
+            reject();
+            return;
+          }
+          resolve(foto);
+        };
+        imagem.src = String(leitor.result);
+      };
+      leitor.readAsDataURL(arquivo);
     });
   }
 

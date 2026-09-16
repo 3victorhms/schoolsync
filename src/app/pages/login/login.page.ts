@@ -4,11 +4,10 @@ import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } 
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonItem, IonInput, IonLabel, IonIcon } from '@ionic/angular/standalone';
 import { UsuarioModel } from '../../model/usuario.model';
 import { LoginService } from '../../services/login.service';
-import { TokenService } from '../../services/token.service';
 import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { schoolOutline, arrowForwardOutline } from 'ionicons/icons';
+import { schoolOutline, arrowForwardOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NotificacaoPushService } from '../../services/notificacao-push.service';
 
@@ -25,8 +24,9 @@ export class LoginPage implements OnInit {
   formGroup: FormGroup;
   login: string;
   senha: string;
+  mostrarSenha = false;
 
-  constructor(private formBuilder: FormBuilder, private toastController: ToastController, private navController: NavController, private loginService: LoginService, private tokenService: TokenService, private route: ActivatedRoute, private notificacaoPushService: NotificacaoPushService) {
+  constructor(private formBuilder: FormBuilder, private toastController: ToastController, private navController: NavController, private loginService: LoginService, private route: ActivatedRoute, private notificacaoPushService: NotificacaoPushService) {
     this.login = "";
     this.senha = "";
     this.usuario = new UsuarioModel();
@@ -37,7 +37,7 @@ export class LoginPage implements OnInit {
     });
 
     addIcons({
-      schoolOutline, arrowForwardOutline
+      schoolOutline, arrowForwardOutline, eyeOutline, eyeOffOutline
     })
 
   }
@@ -70,15 +70,12 @@ export class LoginPage implements OnInit {
 
     this.loginService.autenticar({ email: this.login, senha: this.senha })
       .subscribe({
-        next: () => {
-          const dadosToken = this.tokenService.extrair();
+        next: (resposta) => {
           this.usuario = {
-            id: dadosToken.id,
-            nome: dadosToken.nome,
-            email: dadosToken.email || dadosToken.login || this.login,
+            ...resposta.usuario,
             senha: '',
-            foto: '',
-            ativo: true
+            foto: resposta.usuario.foto || '',
+            ativo: resposta.usuario.ativo !== false
           };
 
           if (this.usuario && this.usuario.id != "") {

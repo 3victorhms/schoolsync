@@ -19,8 +19,9 @@
   <ion-card class="perfil-card">
     <ion-card-content>
 
-      <div class="avatar">
-        <span>{{ iniciais }}</span>
+      <div class="avatar" [class.tem-foto]="!!usuario.foto">
+        <img *ngIf="usuario.foto" [src]="usuario.foto" alt="Foto de perfil de {{ usuario.nome }}">
+        <span *ngIf="!usuario.foto">{{ iniciais }}</span>
       </div>
 
       <h2 class="perfil-nome">{{ usuario.nome }}</h2>

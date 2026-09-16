@@ -10,8 +10,19 @@
 <ion-content [fullscreen]="true">
   <form [formGroup]="formGroup" (ngSubmit)="salvar()" autocomplete="off">
 
-    <div class="avatar">
-      <span>{{ iniciais }}</span>
+    <div class="avatar" [class.tem-foto]="!!usuario.foto">
+      <img *ngIf="usuario.foto" [src]="usuario.foto" alt="Prévia da foto de perfil">
+      <span *ngIf="!usuario.foto">{{ iniciais }}</span>
+    </div>
+
+    <input #inputFoto class="input-foto" type="file" accept="image/*" (change)="selecionarFoto($event)">
+    <div class="acoes-foto">
+      <ion-button type="button" fill="outline" class="botao-foto" (click)="inputFoto.click()" [disabled]="processandoFoto">
+        {{ processandoFoto ? 'Preparando foto...' : (usuario.foto ? 'Trocar foto' : 'Adicionar foto') }}
+      </ion-button>
+      <ion-button *ngIf="usuario.foto" type="button" fill="clear" class="remover-foto" (click)="removerFoto()" [disabled]="processandoFoto">
+        Remover
+      </ion-button>
     </div>
 
     <div class="secao-titulo">Informações</div>
@@ -67,7 +78,7 @@
     </div>
 
     <ion-button type="submit" expand="block" class="botao-salvar"
-      [disabled]="!formGroup.valid || senhasDiferentes || semAlteracoes || senhaAtualObrigatoria">
+      [disabled]="!formGroup.valid || senhasDiferentes || semAlteracoes || senhaAtualObrigatoria || processandoFoto">
       Salvar alterações
     </ion-button>
 

@@ -9,6 +9,11 @@ export interface CredenciaisLogin {
   senha: string;
 }
 
+export interface RespostaLogin {
+  token: string;
+  usuario: UsuarioModel;
+}
+
 @Injectable({ providedIn: 'root' })
 export class LoginService {
   private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com/usuarios';
@@ -16,9 +21,9 @@ export class LoginService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  autenticar(credenciais: CredenciaisLogin): Observable<string> {
-    return this.http.post(`${this.API_URL}/autenticar`, credenciais, { responseType: 'text' }).pipe(
-      tap(token => this.tokenService.salvar(token))
+  autenticar(credenciais: CredenciaisLogin): Observable<RespostaLogin> {
+    return this.http.post<RespostaLogin>(`${this.API_URL}/autenticar`, credenciais).pipe(
+      tap(resposta => this.tokenService.salvar(resposta.token))
     );
   }
 

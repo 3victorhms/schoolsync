@@ -25,8 +25,15 @@
         <ion-input type="email" formControlName="login" placeholder="Email" class="custom-input">
         </ion-input>
 
-        <ion-input type="password" formControlName="senha" placeholder="Senha" class="custom-input">
-        </ion-input>
+        <div class="senha-container">
+          <ion-input [type]="mostrarSenha ? 'text' : 'password'" formControlName="senha" placeholder="Senha"
+            class="custom-input senha-input" autocomplete="current-password">
+          </ion-input>
+          <button type="button" class="olho-senha" (click)="mostrarSenha = !mostrarSenha"
+            [attr.aria-label]="mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'">
+            <ion-icon [name]="mostrarSenha ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </button>
+        </div>
 
         <ion-button expand="block" type="submit" class="login-button" [disabled]="!formGroup.valid">
 

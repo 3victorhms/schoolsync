@@ -43,6 +43,7 @@ export class PerfilPage implements OnInit {
   usuario = {
     id: this.usuarioService.buscarAutenticacao().id,
     nome: this.usuarioService.buscarAutenticacao().nome,
+    foto: this.usuarioService.buscarAutenticacao().foto,
   };
 
   get iniciais(): string {
@@ -81,6 +82,7 @@ export class PerfilPage implements OnInit {
     this.usuario = {
       id: this.usuarioService.buscarAutenticacao().id,
       nome: this.usuarioService.buscarAutenticacao().nome,
+      foto: this.usuarioService.buscarAutenticacao().foto,
     };
     this.temaClaro = this.temaService.temaClaroAtivo();
     this.carregarCaderno();
