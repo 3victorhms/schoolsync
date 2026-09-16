@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { UsuarioModel } from '../model/usuario.model';
 import { LoginService } from './login.service';
 import { ApiDeleteService } from './api-delete.service';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,8 @@ export class UsuarioService {
   constructor(
     private http: HttpClient,
     private loginService: LoginService,
-    private apiDelete: ApiDeleteService
+    private apiDelete: ApiDeleteService,
+    private tokenService: TokenService
   ) { }
 
   salvar(usuario: UsuarioModel): Observable<UsuarioModel> {
@@ -30,7 +32,9 @@ export class UsuarioService {
   }
 
   atualizar(id: string, usuario: UsuarioModel): Observable<UsuarioModel> {
-    return this.http.put<UsuarioModel>(`${this.API_URL_USUARIOS}/${id}`, usuario);
+    return this.http.put<UsuarioModel>(`${this.API_URL_USUARIOS}/${id}`, usuario, {
+      headers: this.tokenService.gerarCabecalhoAutenticacao()
+    });
   }
 
   listar(): Observable<UsuarioModel[]> {

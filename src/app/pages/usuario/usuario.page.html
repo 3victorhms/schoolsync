@@ -78,8 +78,8 @@
     </div>
 
     <ion-button type="submit" expand="block" class="botao-salvar"
-      [disabled]="!formGroup.valid || senhasDiferentes || semAlteracoes || senhaAtualObrigatoria || processandoFoto">
-      Salvar alterações
+      [disabled]="!formGroup.valid || senhasDiferentes || semAlteracoes || senhaAtualObrigatoria || processandoFoto || salvando">
+      {{ salvando ? 'Salvando...' : 'Salvar alterações' }}
     </ion-button>
 
   </form>

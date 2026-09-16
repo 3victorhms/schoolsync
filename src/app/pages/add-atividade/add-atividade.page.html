@@ -35,9 +35,9 @@
     </div>
 
     <div class="campo-grupo">
-      <label class="campo-label">Valor</label>
+      <label class="campo-label">Valor (máximo: 15 pontos)</label>
       <ion-item class="campo-item" lines="none">
-        <input type="number" placeholder="Ex: 10 pontos" formControlName="valor" min=0 />
+        <input type="number" placeholder="Ex: 10 pontos" formControlName="valor" min="0.01" max="15" step="0.01" />
       </ion-item>
     </div>
 

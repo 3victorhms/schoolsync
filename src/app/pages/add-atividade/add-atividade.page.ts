@@ -47,7 +47,7 @@ export class AddAtividadePage implements OnInit {
       'titulo': ['', Validators.required],
       'descricao': ['', Validators.required],
       'disciplina': ['', Validators.required],
-      'valor': ['', Validators.required],
+      'valor': ['', [Validators.required, Validators.min(0.01), Validators.max(15)]],
       'dataEntrega': ['', [Validators.required, this.dataMinima()]],
     });
   }

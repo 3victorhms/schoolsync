@@ -13,6 +13,8 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import { LoginService } from 'src/app/services/login.service';
+import { TokenService } from 'src/app/services/token.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-usuario',
@@ -32,6 +34,7 @@ export class UsuarioPage implements OnInit {
   usuario: UsuarioModel = new UsuarioModel();
   usuarioOriginal: { nome: string; email: string; foto: string } = { nome: '', email: '', foto: '' };
   processandoFoto = false;
+  salvando = false;
 
   mostrarSenhaAtual = false;
   mostrarNovaSenha = false;
@@ -68,7 +71,8 @@ export class UsuarioPage implements OnInit {
     private usuarioService: UsuarioService,
     private toastController: ToastController,
     private navController: NavController,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private tokenService: TokenService
   ) {
     addIcons({ eyeOutline, eyeOffOutline });
 
@@ -182,7 +186,16 @@ export class UsuarioPage implements OnInit {
   }
 
   salvar() {
-    if (!this.formGroup.valid || this.senhasDiferentes) return;
+    if (this.salvando || !this.formGroup.valid || this.senhasDiferentes) return;
+
+    if (!this.tokenService.estaValido()) {
+      this.loginService.encerrarAutenticacao();
+      this.exibirToast('Sua sessão expirou. Entre novamente para salvar o perfil.');
+      this.navController.navigateRoot('/login');
+      return;
+    }
+
+    this.salvando = true;
 
     const { nome, email, senhaAtual, novaSenha } = this.formGroup.value;
 
@@ -194,7 +207,9 @@ export class UsuarioPage implements OnInit {
         this.usuario.senha = novaSenha;
       }
 
-      this.usuarioService.salvar(this.usuario)
+      this.usuarioService.salvar(this.usuario).pipe(
+        finalize(() => this.salvando = false)
+      )
         .subscribe({
           next: (usuarioAtualizado) => {
             this.usuario = usuarioAtualizado;
@@ -202,6 +217,12 @@ export class UsuarioPage implements OnInit {
             this.navController.navigateForward('/perfil');
           },
           error: (erro) => {
+            if (erro?.status === 401 || erro?.status === 403) {
+              this.loginService.encerrarAutenticacao();
+              this.exibirToast('Sua sessão não foi aceita pelo servidor. Entre novamente e tente salvar a foto.');
+              this.navController.navigateRoot('/login');
+              return;
+            }
             const mensagem = erro?.error?.message || 'Erro ao atualizar usuário.';
             this.exibirToast(mensagem);
           }
@@ -215,6 +236,7 @@ export class UsuarioPage implements OnInit {
             atualizar();
           },
           error: () => {
+            this.salvando = false;
             this.exibirToast('Senha atual incorreta.');
           }
         });
