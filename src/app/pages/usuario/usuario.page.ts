@@ -188,8 +188,6 @@ export class UsuarioPage implements OnInit {
 
       if (novaSenha) {
         this.usuario.senha = novaSenha;
-      } else {
-        this.usuario.senha = null as any;
       }
 
       const salvarDadosUsuario = () => this.usuarioService.salvar(this.usuario);
