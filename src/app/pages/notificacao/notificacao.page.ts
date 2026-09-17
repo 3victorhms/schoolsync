@@ -32,6 +32,7 @@ export class NotificacaoPage {
       next: notificacoes => { this.notificacoes = notificacoes; this.carregando = false; },
       error: () => { this.notificacoes = []; this.carregando = false; this.erro = 'Não foi possível carregar as notificações. Tente novamente.'; }
     });
+    this.service.conectar();
     this.notificacoesSubscription?.unsubscribe();
     this.notificacoesSubscription = this.service.notificacoes$.subscribe(notificacoes => this.notificacoes = notificacoes);
   }

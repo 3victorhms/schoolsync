@@ -14,7 +14,7 @@ import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import { LoginService } from 'src/app/services/login.service';
 import { TokenService } from 'src/app/services/token.service';
-import { finalize } from 'rxjs';
+import { finalize, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-usuario',
@@ -33,6 +33,8 @@ export class UsuarioPage implements OnInit {
   formGroup: FormGroup;
   usuario: UsuarioModel = new UsuarioModel();
   usuarioOriginal: { nome: string; email: string; foto: string } = { nome: '', email: '', foto: '' };
+  private imagemSelecionada: File | null = null;
+  private previewUrl: string | null = null;
   processandoFoto = false;
   salvando = false;
 
@@ -128,7 +130,10 @@ export class UsuarioPage implements OnInit {
 
     this.processandoFoto = true;
     try {
-      this.usuario.foto = await this.redimensionarFoto(arquivo);
+      if (this.previewUrl) URL.revokeObjectURL(this.previewUrl);
+      this.previewUrl = URL.createObjectURL(arquivo);
+      this.imagemSelecionada = arquivo;
+      this.usuario.foto = this.previewUrl;
     } catch {
       await this.exibirToast('Não foi possível preparar essa imagem. Tente outra foto.');
     } finally {
@@ -137,42 +142,10 @@ export class UsuarioPage implements OnInit {
   }
 
   removerFoto(): void {
+    if (this.previewUrl) URL.revokeObjectURL(this.previewUrl);
+    this.previewUrl = null;
+    this.imagemSelecionada = null;
     this.usuario.foto = '';
-  }
-
-  private redimensionarFoto(arquivo: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const leitor = new FileReader();
-      leitor.onerror = () => reject();
-      leitor.onload = () => {
-        const imagem = new Image();
-        imagem.onerror = () => reject();
-        imagem.onload = () => {
-          const ladoMaximo = 360;
-          const proporcao = Math.min(ladoMaximo / imagem.width, ladoMaximo / imagem.height, 1);
-          const largura = Math.max(1, Math.round(imagem.width * proporcao));
-          const altura = Math.max(1, Math.round(imagem.height * proporcao));
-          const canvas = document.createElement('canvas');
-          canvas.width = largura;
-          canvas.height = altura;
-          const contexto = canvas.getContext('2d');
-          if (!contexto) {
-            reject();
-            return;
-          }
-          contexto.drawImage(imagem, 0, 0, largura, altura);
-          const foto = canvas.toDataURL('image/jpeg', 0.82);
-
-          if (foto.length > 750_000) {
-            reject();
-            return;
-          }
-          resolve(foto);
-        };
-        imagem.src = String(leitor.result);
-      };
-      leitor.readAsDataURL(arquivo);
-    });
   }
 
   private async exibirToast(mensagem: string, cor: 'success' | 'danger' = 'danger') {
@@ -207,9 +180,23 @@ export class UsuarioPage implements OnInit {
         this.usuario.senha = novaSenha;
       }
 
-      this.usuarioService.salvar(this.usuario).pipe(
-        finalize(() => this.salvando = false)
-      )
+      const salvarDadosUsuario = () => this.usuarioService.salvar(this.usuario);
+      const atualizarFoto = this.imagemSelecionada
+        ? this.usuarioService.atualizarImagem(this.usuario.id, this.imagemSelecionada)
+        : null;
+
+      (atualizarFoto
+        ? atualizarFoto.pipe(
+          switchMap(resposta => {
+            this.usuario.foto = resposta.foto;
+            return salvarDadosUsuario();
+          })
+        )
+        : salvarDadosUsuario()
+      ).pipe(finalize(() => {
+        this.imagemSelecionada = null;
+        this.salvando = false;
+      }))
         .subscribe({
           next: (usuarioAtualizado) => {
             this.usuario = usuarioAtualizado;

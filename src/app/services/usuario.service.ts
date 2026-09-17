@@ -37,6 +37,14 @@ export class UsuarioService {
     });
   }
 
+  atualizarImagem(id: string, imagem: File): Observable<UsuarioModel | { foto: string }> {
+    const dados = new FormData();
+    dados.append('imagem', imagem, imagem.name);
+    return this.http.patch<UsuarioModel | { foto: string }>(
+      `${this.API_URL_USUARIOS}/${id}/imagem`, dados
+    );
+  }
+
   listar(): Observable<UsuarioModel[]> {
     return this.http.get<UsuarioModel[]>(this.API_URL_USUARIOS);
   }

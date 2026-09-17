@@ -1,16 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { Capacitor, registerPlugin } from '@capacitor/core';
+import { Capacitor } from '@capacitor/core';
 import { ActionPerformed, PushNotifications } from '@capacitor/push-notifications';
 import { firstValueFrom } from 'rxjs';
 import { TokenService } from './token.service';
-
-interface FirebaseInstallationPlugin {
-  getId(): Promise<{ value: string }>;
-}
-
-const FirebaseInstallation = registerPlugin<FirebaseInstallationPlugin>('FirebaseInstallation');
 
 @Injectable({ providedIn: 'root' })
 export class NotificacaoPushService {
@@ -130,7 +124,7 @@ export class NotificacaoPushService {
       lightColor: '#3A6FF7'
     });
 
-    await new Promise<string>((resolve, reject) => {
+    const token = await new Promise<string>((resolve, reject) => {
       this.limparRegistroPendente();
       const timeout = setTimeout(() => {
         this.registroPendente = undefined;
@@ -141,8 +135,6 @@ export class NotificacaoPushService {
         this.rejeitarRegistro(new Error(erro?.message || 'Não foi possível registrar este celular.'));
       });
     });
-
-    const { value: token } = await FirebaseInstallation.getId();
     if (!token) {
       throw new Error('O celular não forneceu um identificador válido para as notificações.');
     }

@@ -14,6 +14,7 @@ export interface ConfiguracaoNotificacao {
 export class NotificacaoService {
   private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com/notificacoes';
   private eventSource: EventSource | null = null;
+  private reconexaoTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly notificacoesSubject = new BehaviorSubject<NotificacaoModel[]>([]);
 
   readonly notificacoes$ = this.notificacoesSubject.asObservable();
@@ -52,19 +53,28 @@ export class NotificacaoService {
 
   conectar(): void {
     const usuarioId = this.usuarioId;
-    if (!usuarioId || this.eventSource) return;
+    if (!usuarioId || this.eventSource || this.reconexaoTimer) return;
 
     this.eventSource = new EventSource(`${this.API_URL}/usuario/${usuarioId}/stream`);
+    this.eventSource.onopen = () => {
+      this.listar().subscribe({ error: () => undefined });
+    };
     this.eventSource.onmessage = event => this.tratar(event.data);
     ['ATIVIDADE', 'GRUPO', 'TAREFA'].forEach(tipo =>
       this.eventSource?.addEventListener(tipo, event => this.tratar((event as MessageEvent).data))
     );
-    this.eventSource.onerror = () => this.desconectar();
+    this.eventSource.onerror = () => {
+      this.desconectarStream();
+      this.agendarReconexao();
+    };
   }
 
   desconectar(): void {
-    this.eventSource?.close();
-    this.eventSource = null;
+    if (this.reconexaoTimer) {
+      clearTimeout(this.reconexaoTimer);
+      this.reconexaoTimer = null;
+    }
+    this.desconectarStream();
   }
 
   get quantidadeNaoLidas(): number {
@@ -85,6 +95,20 @@ export class NotificacaoService {
     } catch (erro) {
       console.error('Erro ao processar notificação recebida', erro);
     }
+  }
+
+  private desconectarStream(): void {
+    this.eventSource?.close();
+    this.eventSource = null;
+  }
+
+  private agendarReconexao(): void {
+    if (this.reconexaoTimer || !this.usuarioId) return;
+
+    this.reconexaoTimer = setTimeout(() => {
+      this.reconexaoTimer = null;
+      this.conectar();
+    }, 5000);
   }
 
   private atualizarLeituraLocal(id: string): void {
