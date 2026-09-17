@@ -185,6 +185,7 @@ export class UsuarioPage implements OnInit {
     const atualizar = () => {
       this.usuario.nome = nome;
       this.usuario.email = email;
+      this.usuario.senha = novaSenha || null as any;
 
       if (novaSenha) {
         this.usuario.senha = novaSenha;
