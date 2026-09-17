@@ -168,6 +168,16 @@ export class UsuarioPage implements OnInit {
       return;
     }
 
+    const idUsuarioAutenticado = this.tokenService.extrair().id;
+    if (!idUsuarioAutenticado) {
+      this.loginService.encerrarAutenticacao();
+      this.exibirToast('Sua sessão não foi identificada. Entre novamente para salvar o perfil.');
+      this.navController.navigateRoot('/login');
+      return;
+    }
+
+    this.usuario.id = idUsuarioAutenticado;
+
     this.salvando = true;
 
     const { nome, email, senhaAtual, novaSenha } = this.formGroup.value;

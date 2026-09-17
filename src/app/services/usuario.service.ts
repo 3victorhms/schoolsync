@@ -41,7 +41,9 @@ export class UsuarioService {
     const dados = new FormData();
     dados.append('imagem', imagem, imagem.name);
     return this.http.patch<UsuarioModel | { foto: string }>(
-      `${this.API_URL_USUARIOS}/${id}/imagem`, dados
+      `${this.API_URL_USUARIOS}/${id}/imagem`, dados, {
+      headers: this.tokenService.gerarCabecalhoAutenticacao()
+    }
     );
   }
 
