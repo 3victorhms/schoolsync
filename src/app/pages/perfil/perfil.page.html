@@ -32,12 +32,12 @@
         {{ temaClaro ? 'Usar tema escuro' : 'Usar tema claro' }}
       </button>
 
-      <button type="button" class="notificacao-teste-btn" [disabled]="agendandoNotificacao" (click)="testarNotificacao()">
+      <button type="button" class="notificacao-teste-btn" [disabled]="testandoNotificacaoPush" (click)="testarNotificacao()">
         <ion-icon name="notifications-outline"></ion-icon>
-        {{ agendandoNotificacao ? 'Agendando...' : 'Testar notificação em 1 minuto' }}
+        {{ testandoNotificacaoPush ? 'Enviando...' : 'Testar notificação push' }}
       </button>
 
-      <p class="notificacao-teste-ajuda">Depois de agendar, feche o aplicativo e aguarde o aviso no celular.</p>
+      <p class="notificacao-teste-ajuda">O servidor envia o aviso pelo Firebase; o aplicativo não agenda uma notificação no celular.</p>
 
       <aside class="inativacao-aviso" aria-labelledby="titulo-inativacao">
         <strong id="titulo-inativacao">Antes de inativar a conta</strong>

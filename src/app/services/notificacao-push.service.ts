@@ -15,6 +15,7 @@ const FirebaseInstallation = registerPlugin<FirebaseInstallationPlugin>('Firebas
 @Injectable({ providedIn: 'root' })
 export class NotificacaoPushService {
   private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com/notificacoes/push/dispositivo';
+  private readonly API_TESTE_URL = 'https://schoolsync-api-kvfx.onrender.com/notificacoes/push/teste';
   private readonly TOKEN_STORAGE = 'schoolsyncPushToken';
   private listenersProntos?: Promise<void>;
   private registroPendente?: {
@@ -57,6 +58,17 @@ export class NotificacaoPushService {
     }
 
     await this.registrar();
+  }
+
+  async testar(): Promise<void> {
+    // O aviso é criado e enviado pela API/Firebase; o app só registra o
+    // dispositivo e pede o disparo. Assim ele não depende de um alarme local.
+    await this.ativar();
+    try {
+      await firstValueFrom(this.http.post<void>(this.API_TESTE_URL, {}));
+    } catch {
+      throw new Error('Não foi possível pedir a notificação push ao servidor. Verifique sua internet e tente novamente.');
+    }
   }
 
   async sincronizarAposLogin(): Promise<void> {

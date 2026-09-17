@@ -15,7 +15,6 @@ import { AtividadeModel } from 'src/app/model/atividade.model';
 import { TemaService } from 'src/app/services/tema.service';
 import { LoginService } from 'src/app/services/login.service';
 import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
-import { NotificacaoLocalService } from 'src/app/services/notificacao-local.service';
 import { NotificacaoPushService } from 'src/app/services/notificacao-push.service';
 import { finalize } from 'rxjs';
 
@@ -38,7 +37,7 @@ export class PerfilPage implements OnInit {
   filtroAtivo: string = 'todas';
   temaClaro: boolean = false;
   inativando = false;
-  agendandoNotificacao = false;
+  testandoNotificacaoPush = false;
 
   usuario = {
     id: this.usuarioService.buscarAutenticacao().id,
@@ -66,7 +65,6 @@ export class PerfilPage implements OnInit {
     private confirmacaoService: ConfirmacaoService,
     private toastController: ToastController,
     private alertController: AlertController,
-    private notificacaoLocalService: NotificacaoLocalService,
     private notificacaoPushService: NotificacaoPushService
   ) {
     addIcons({
@@ -156,14 +154,13 @@ export class PerfilPage implements OnInit {
   }
 
   async testarNotificacao(): Promise<void> {
-    if (this.agendandoNotificacao) return;
-    this.agendandoNotificacao = true;
+    if (this.testandoNotificacaoPush) return;
+    this.testandoNotificacaoPush = true;
 
     try {
-      const horario = await this.notificacaoLocalService.agendarTesteEmUmMinuto();
-      const horaFormatada = horario.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      await this.notificacaoPushService.testar();
       const toast = await this.toastController.create({
-        message: `Notificação agendada para ${horaFormatada}. Agora você pode fechar o aplicativo.`,
+        message: 'Notificação push solicitada ao servidor. Ela deve chegar em instantes.',
         duration: 5000,
         color: 'success',
         position: 'top'
@@ -171,14 +168,14 @@ export class PerfilPage implements OnInit {
       await toast.present();
     } catch (erro: any) {
       const toast = await this.toastController.create({
-        message: erro?.message || 'Não foi possível agendar a notificação de teste.',
+        message: erro?.message || 'Não foi possível solicitar a notificação push de teste.',
         duration: 6000,
         color: 'danger',
         position: 'top'
       });
       await toast.present();
     } finally {
-      this.agendandoNotificacao = false;
+      this.testandoNotificacaoPush = false;
     }
   }
 
