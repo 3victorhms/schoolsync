@@ -21,14 +21,7 @@ ion-content {
 }
 
 .caderno-secao {
-    padding: 0 16px 32px;
-
-    .caderno-titulo {
-        font-size: 20px;
-        font-weight: 700;
-        color: #ffffff;
-        margin: 0 0 16px;
-    }
+    padding: 8px 16px 32px;
 
     .barra-busca {
         display: flex;
@@ -113,100 +106,145 @@ ion-content {
             }
 
             &.ativo {
-                border-color: #3a6ff7;
+                background: #16264a;
+                border-color: transparent;
                 color: #3a6ff7;
             }
         }
     }
 
-    .atividades-lista {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+    .group-title {
+        &.tarefas {
+            margin-top: 24px;
+        }
+    }
 
-        .lista-titulo {
-            color: #6f8fc7;
+    .vazio-data {
+        margin-top: 8px;
+    }
+}
+
+.group {
+    background: #171c28;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    position: relative;
+    cursor: pointer;
+
+    & + .row::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 56px;
+        right: 0;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.06);
+    }
+
+    .row-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        // Cor solida por status (como no app Lembretes do iOS), pra funcionar
+        // igual em qualquer tema sem precisar de ajuste.
+        ion-icon {
+            font-size: 17px;
+            color: #ffffff !important;
+        }
+
+        &.nao_iniciada { background: #8e8e93; }
+        &.em_andamento { background: #3a6ff7; }
+        &.concluido { background: #3abf7f; }
+    }
+
+    .row-body {
+        flex: 1;
+        min-width: 0;
+
+        .row-label {
             font-size: 15px;
             font-weight: 700;
-            margin: 4px 0 0;
+            color: #ffffff;
+            margin: 0 0 3px;
+        }
 
-            &.tarefas {
-                margin-top: 12px;
+        .row-sub {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+
+            .row-desc {
+                font-size: 13px;
+                color: #8891aa;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .tag-pontos {
+                background: #1a1f2e;
+                color: #c8cfe0;
+                font-size: 10.5px;
+                font-weight: 700;
+                padding: 2px 7px;
+                border-radius: 6px;
+                white-space: nowrap;
+                flex-shrink: 0;
             }
         }
 
-        .atividade-card {
-            background: #171c28;
-            border-radius: 16px;
-            padding: 16px;
+        .row-meta {
             display: flex;
-            flex-direction: column;
+            align-items: center;
             gap: 10px;
-            cursor: pointer;
+            margin-top: 4px;
+            flex-wrap: wrap;
 
-            .atividade-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-                gap: 8px;
+            .tag-disciplina {
+                background: #2a1f5e;
+                color: #a78bfa;
+                font-size: 11px;
+                font-weight: 600;
+                padding: 3px 9px;
+                border-radius: 20px;
+                white-space: nowrap;
 
-                .atividade-titulo {
-                    font-size: 15px;
-                    font-weight: 700;
-                    color: #ffffff;
-                    margin: 0 0 4px;
-                }
-
-                .atividade-descricao {
-                    font-size: 13px;
-                    color: #8891aa;
-                    margin: 0;
-                }
-
-                .atividade-disciplina {
-                    background: #1e2f5e;
-                    color: #3a6ff7;
-                    font-size: 12px;
-                    font-weight: 600;
-                    padding: 4px 10px;
-                    border-radius: 20px;
-                    white-space: nowrap;
-
-                    &.tarefa-tag {
-                        background: #123626;
-                        color: #3abf7f;
-                    }
+                &.tarefa-tag {
+                    background: #123626;
+                    color: #3abf7f;
                 }
             }
 
-            .atividade-meta {
+            .row-data {
                 display: flex;
-                gap: 12px;
+                align-items: center;
+                gap: 4px;
                 font-size: 12px;
                 color: #8891aa;
-                flex-wrap: wrap;
 
-                span {
-                    display: flex;
-                    align-items: center;
-                    gap: 4px;
-
-                    ion-icon {
-                        font-size: 13px;
-                    }
+                ion-icon {
+                    font-size: 13px;
                 }
             }
 
             .atividade-status {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                font-size: 13px;
-                font-weight: 600;
-
-                ion-icon {
-                    font-size: 15px;
-                }
+                font-size: 11.5px;
+                font-weight: 700;
+                color: #8891aa;
 
                 &.em_andamento {
                     color: #3a6ff7;
@@ -217,13 +255,12 @@ ion-content {
                 }
             }
         }
+    }
 
-        .caderno-vazio {
-            text-align: center;
-            padding: 24px;
-            color: #4e5670;
-            font-size: 14px;
-        }
+    .row-seta {
+        font-size: 18px;
+        color: #4e5670;
+        flex-shrink: 0;
     }
 }
 

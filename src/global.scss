@@ -652,6 +652,17 @@ body.tema-claro .tag-disciplina {
   color: #6d28d9 !important;
 }
 
+body.tema-claro .tag-disciplina.tarefa-tag {
+  background: #e1f6eb !important;
+  color: var(--app-success) !important;
+}
+
+body.tema-claro .filtro-btn.ativo {
+  background: var(--app-accent-soft) !important;
+  border-color: transparent !important;
+  color: var(--app-accent) !important;
+}
+
 body.tema-claro .tag-codigo {
   background: var(--app-accent-soft) !important;
   color: var(--app-accent) !important;
