@@ -720,3 +720,30 @@ body.tema-claro app-inicio .cal-dia[data-indicador].selecionado .indicador-ativi
 body.tema-claro app-inicio .cal-dia .indicador-concluida {
   border-color: var(--app-surface);
 }
+
+/* ------------------------------------------------------------------------ *
+ * Telas maiores (tablet/desktop): o layout foi pensado para celular, entao
+ * em janelas largas os cards e o calendario esticavam e ficavam enormes.
+ * Em vez disso, o app roda dentro de uma "moldura" com largura de celular,
+ * centralizada, e o resto da tela fica com um fundo neutro. Abaixo do
+ * breakpoint nada muda: continua exatamente o layout mobile original.
+ *
+ * O <body> ja vem com "position: fixed" e "transform: translateZ(0)" (ver
+ * @ionic/angular/css/structure.css importado no topo deste arquivo) — esse
+ * transform faz com que qualquer elemento "position: fixed" dentro do app
+ * (como a tab bar flutuante) passe a se posicionar em relacao ao proprio
+ * <body>, e nao a janela inteira. Por isso basta limitar a largura do body
+ * e centralizar: a tab bar acompanha automaticamente.
+ * ------------------------------------------------------------------------ */
+@media (min-width: 700px) {
+  html {
+    background: #05070d;
+  }
+
+  body {
+    max-width: 480px;
+    left: 50%;
+    transform: translateX(-50%) translateZ(0);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 30px 70px rgba(0, 0, 0, 0.55);
+  }
+}
