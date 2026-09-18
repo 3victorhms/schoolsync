@@ -39,17 +39,6 @@
 
       <p class="notificacao-teste-ajuda">O servidor envia o aviso pelo Firebase; o aplicativo não agenda uma notificação no celular.</p>
 
-      <aside class="inativacao-aviso" aria-labelledby="titulo-inativacao">
-        <strong id="titulo-inativacao">Antes de inativar a conta</strong>
-        <p>A inativação será bloqueada enquanto você:</p>
-        <ul>
-          <li>for líder de alguma sala;</li>
-          <li>for líder de algum grupo;</li>
-          <li>tiver tarefas atribuídas ao seu nome.</li>
-        </ul>
-        <p>Transfira as lideranças e reatribua as tarefas. Seus comentários e o histórico serão preservados.</p>
-      </aside>
-
       <button type="button" class="inativar-conta-btn" [disabled]="inativando" (click)="inativarConta()">
         <ion-icon name="trash-outline"></ion-icon>
         {{ inativando ? 'Inativando...' : 'Inativar conta' }}
