@@ -20,8 +20,7 @@ import {
   peopleOutline,
   chevronForwardOutline,
   homeOutline,
-  businessOutline,
-  book,
+  bookOutline,
   personOutline
 } from 'ionicons/icons';
 import { GrupoModel } from 'src/app/model/grupo.model';
@@ -70,8 +69,7 @@ export class GruposPage implements OnInit {
       peopleOutline,
       chevronForwardOutline,
       homeOutline,
-      businessOutline,
-      book,
+      bookOutline,
       personOutline
     });
   }

@@ -6,7 +6,7 @@ import {
   IonButtons, IonButton, IonIcon, IonCard, IonLabel, IonCardContent, IonTabButton, IonTabBar
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { homeOutline, businessOutline, trophyOutline, personOutline, pencilOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, book, sunnyOutline, moonOutline, trashOutline, notificationsOutline } from 'ionicons/icons';
+import { homeOutline, trophyOutline, personOutline, pencilOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline } from 'ionicons/icons';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { AlertController, ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
@@ -68,7 +68,7 @@ export class PerfilPage implements OnInit {
     private notificacaoPushService: NotificacaoPushService
   ) {
     addIcons({
-      book, pencilOutline, homeOutline, businessOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline
+      pencilOutline, homeOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline
 
     });
   }
