@@ -215,6 +215,7 @@ export class UsuarioPage implements OnInit {
             this.navController.navigateForward('/perfil');
           },
           error: (erro) => {
+            console.error('[SchoolSync] Falha ao salvar perfil/foto - status:', erro?.status, 'corpo:', erro?.error);
             if (erro?.status === 401 || erro?.status === 403) {
               this.loginService.encerrarAutenticacao();
               this.exibirToast('Sua sessão não foi aceita pelo servidor. Entre novamente e tente salvar a foto.');
