@@ -183,7 +183,7 @@ export class PerfilPage implements OnInit {
     if (this.inativando) return;
     const confirmou = await this.confirmacaoService.confirmar(
       'Inativar conta',
-      'Sua conta será inativada e seus comentários serão preservados como histórico. Esta ação não pode ser desfeita pelo aplicativo.',
+      'A inativação será bloqueada enquanto você for líder de alguma sala ou grupo, ou tiver tarefas atribuídas ao seu nome. Transfira as lideranças e reatribua as tarefas antes de continuar.\n\nSua conta será inativada e seus comentários serão preservados como histórico. Esta ação não pode ser desfeita pelo aplicativo.',
       'Inativar'
     );
     if (!confirmou) return;

@@ -183,16 +183,3 @@ ion-tab-button {
     text-align: center;
 }
 
-.inativacao-aviso {
-    width: min(100%, 520px);
-    padding: 16px;
-    border: 1px solid #5e2a34;
-    border-radius: 14px;
-    background: #25181e;
-    color: #d7aab2;
-    text-align: left;
-
-    strong { display: block; margin-bottom: 8px; color: #ff8a98; }
-    p { margin: 6px 0; font-size: 13px; line-height: 1.45; }
-    ul { margin: 8px 0; padding-left: 20px; font-size: 13px; line-height: 1.55; }
-}
