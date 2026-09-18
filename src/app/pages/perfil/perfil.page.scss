@@ -141,29 +141,17 @@ ion-content {
         justify-content: center;
         flex-shrink: 0;
 
+        // Badges com cor solida (como no Ajustes do iOS), para o icone continuar
+        // legivel tanto no tema escuro quanto no tema claro sem precisar de ajuste.
         ion-icon {
             font-size: 17px;
+            color: #ffffff !important;
         }
 
-        &.laranja {
-            background: #3a2a14;
-            ion-icon { color: #ff9f43; }
-        }
-
-        &.azul {
-            background: #16264a;
-            ion-icon { color: #3a6ff7; }
-        }
-
-        &.cinza {
-            background: #23283a;
-            ion-icon { color: #8891aa; }
-        }
-
-        &.vermelho {
-            background: #3a1a1e;
-            ion-icon { color: #ff5c6c; }
-        }
+        &.laranja { background: #ff9f43; }
+        &.azul { background: #3a6ff7; }
+        &.cinza { background: #8e8e93; }
+        &.vermelho { background: #ff3b30; }
     }
 
     .row-body {
