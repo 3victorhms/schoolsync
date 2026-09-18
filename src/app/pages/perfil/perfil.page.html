@@ -2,10 +2,6 @@
   <ion-toolbar>
     <ion-title>Perfil</ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="clear" class="logout-btn" (click)="logout()">
-        <ion-icon name="log-out-outline" slot="start"></ion-icon>
-        Sair
-      </ion-button>
       <ion-button class="editar-btn" (click)="editarPerfil()">
         <ion-icon name="pencil-outline" slot="start"></ion-icon>
         Editar
@@ -16,34 +12,64 @@
 
 <ion-content [fullscreen]="true">
 
-  <ion-card class="perfil-card">
-    <ion-card-content>
-
-      <div class="avatar" [class.tem-foto]="!!usuario.foto">
-        <img *ngIf="usuario.foto" [src]="usuario.foto" alt="Foto de perfil de {{ usuario.nome }}">
-        <span *ngIf="!usuario.foto">{{ iniciais }}</span>
-      </div>
-
+  <div class="profile-hero" (click)="editarPerfil()">
+    <div class="avatar" [class.tem-foto]="!!usuario.foto">
+      <img *ngIf="usuario.foto" [src]="usuario.foto" alt="Foto de perfil de {{ usuario.nome }}">
+      <span *ngIf="!usuario.foto">{{ iniciais }}</span>
+    </div>
+    <div class="hero-info">
       <h2 class="perfil-nome">{{ usuario.nome }}</h2>
       <p class="perfil-app">EscolaSync</p>
+    </div>
+    <ion-icon name="chevron-forward-outline" class="hero-seta"></ion-icon>
+  </div>
 
-      <button type="button" class="tema-btn" (click)="alternarTema()">
-        <ion-icon [name]="temaClaro ? 'moon-outline' : 'sunny-outline'"></ion-icon>
-        {{ temaClaro ? 'Usar tema escuro' : 'Usar tema claro' }}
-      </button>
+  <h3 class="group-title">Preferências</h3>
+  <div class="group">
+    <button type="button" class="row" (click)="alternarTema()">
+      <div class="row-icon laranja">
+        <ion-icon [name]="temaClaro ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+      </div>
+      <div class="row-body">
+        <span class="row-label">Tema escuro</span>
+      </div>
+      <div class="switch" [class.on]="!temaClaro"></div>
+    </button>
+  </div>
 
-      <button type="button" class="notificacao-teste-btn" [disabled]="testandoNotificacaoPush" (click)="testarNotificacao()">
+  <h3 class="group-title">Notificações</h3>
+  <div class="group">
+    <button type="button" class="row" [class.loading]="testandoNotificacaoPush" [disabled]="testandoNotificacaoPush" (click)="testarNotificacao()">
+      <div class="row-icon azul">
         <ion-icon name="notifications-outline"></ion-icon>
-        {{ testandoNotificacaoPush ? 'Enviando...' : 'Testar notificação push' }}
-      </button>
+      </div>
+      <div class="row-body">
+        <span class="row-label">Testar notificação push</span>
+      </div>
+      <span class="btn-pill">{{ testandoNotificacaoPush ? 'Enviando...' : 'Testar' }}</span>
+    </button>
+  </div>
 
-      <button type="button" class="inativar-conta-btn" [disabled]="inativando" (click)="inativarConta()">
+  <h3 class="group-title">Conta</h3>
+  <div class="group">
+    <button type="button" class="row" (click)="logout()">
+      <div class="row-icon cinza">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </div>
+      <div class="row-body">
+        <span class="row-label">Sair</span>
+      </div>
+      <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
+    </button>
+    <button type="button" class="row destructive" [class.loading]="inativando" [disabled]="inativando" (click)="inativarConta()">
+      <div class="row-icon vermelho">
         <ion-icon name="trash-outline"></ion-icon>
-        {{ inativando ? 'Inativando...' : 'Inativar conta' }}
-      </button>
-
-    </ion-card-content>
-  </ion-card>
+      </div>
+      <div class="row-body">
+        <span class="row-label">{{ inativando ? 'Inativando...' : 'Inativar conta' }}</span>
+      </div>
+    </button>
+  </div>
 
 </ion-content>
 
