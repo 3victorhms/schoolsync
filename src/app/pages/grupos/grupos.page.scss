@@ -177,4 +177,9 @@ ion-tab-button {
     background: #16264a;
     padding: 10px 16px;
   }
+
+  // Pequeno espaco entre o icone e o texto do item ativo (senao ficam colados).
+  ion-icon {
+    margin-inline-end: 6px;
+  }
 }
