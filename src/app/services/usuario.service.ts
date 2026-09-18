@@ -38,7 +38,7 @@ export class UsuarioService {
   }
 
   atualizarImagem(id: string, imagemBase64: string): Observable<UsuarioModel> {
-    return this.http.put<UsuarioModel>(
+    return this.http.patch<UsuarioModel>(
       `${this.API_URL_USUARIOS}/${id}/imagem`,
       { imagemBase64 },
       { headers: this.tokenService.gerarCabecalhoAutenticacao() }
