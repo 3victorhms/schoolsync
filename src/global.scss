@@ -618,6 +618,72 @@ body.tema-claro app-perfil .inativacao-aviso li {
   color: #8f2f39 !important;
 }
 
+/* Telas de Início e Perfil em estilo iOS (listas agrupadas) no tema claro. */
+body.tema-claro .profile-hero,
+body.tema-claro .group {
+  background: var(--app-surface) !important;
+}
+
+body.tema-claro .row + .row::before {
+  background: var(--app-border) !important;
+}
+
+body.tema-claro .row-label {
+  color: var(--app-text) !important;
+}
+
+body.tema-claro .row.destructive .row-label {
+  color: var(--app-danger) !important;
+}
+
+body.tema-claro .row-desc,
+body.tema-claro .row-data,
+body.tema-claro .group-title {
+  color: var(--app-muted) !important;
+}
+
+body.tema-claro .tag-pontos {
+  background: var(--app-surface-strong) !important;
+  color: var(--app-text-soft) !important;
+}
+
+body.tema-claro .tag-disciplina {
+  background: #ede9fe !important;
+  color: #6d28d9 !important;
+}
+
+body.tema-claro .tag-codigo {
+  background: var(--app-accent-soft) !important;
+  color: var(--app-accent) !important;
+}
+
+body.tema-claro .btn-pill {
+  background: var(--app-accent-soft) !important;
+  color: var(--app-accent) !important;
+}
+
+body.tema-claro .switch {
+  background: var(--app-bg-muted) !important;
+}
+
+body.tema-claro .switch.on {
+  background: var(--app-accent) !important;
+}
+
+body.tema-claro app-inicio .row-icon {
+  background: var(--app-accent-soft) !important;
+}
+
+body.tema-claro app-inicio .row-icon ion-icon {
+  color: var(--app-accent) !important;
+}
+
+/* Nav bar flutuante (iOS): o item selecionado tinha o fundo do realce fixo
+   no tom escuro; usa o token para acompanhar o tema em todas as paginas. */
+body.tema-claro .selecionado::part(native) {
+  background: var(--app-accent-soft) !important;
+}
+
 /* Mantém os círculos de atividade legíveis no calendário claro. */
 app-inicio .cal-dia .numero-dia {
   position: relative;
