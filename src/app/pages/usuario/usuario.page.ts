@@ -34,6 +34,7 @@ export class UsuarioPage implements OnInit {
   usuario: UsuarioModel = new UsuarioModel();
   usuarioOriginal: { nome: string; email: string; foto: string } = { nome: '', email: '', foto: '' };
   private imagemSelecionada: File | null = null;
+  private imagemBase64Selecionada: string | null = null;
   private previewUrl: string | null = null;
   processandoFoto = false;
   salvando = false;
@@ -130,9 +131,11 @@ export class UsuarioPage implements OnInit {
 
     this.processandoFoto = true;
     try {
+      const dataUri = await this.lerComoDataUri(arquivo);
       if (this.previewUrl) URL.revokeObjectURL(this.previewUrl);
       this.previewUrl = URL.createObjectURL(arquivo);
       this.imagemSelecionada = arquivo;
+      this.imagemBase64Selecionada = dataUri;
       this.usuario.foto = this.previewUrl;
     } catch {
       await this.exibirToast('Não foi possível preparar essa imagem. Tente outra foto.');
@@ -141,10 +144,20 @@ export class UsuarioPage implements OnInit {
     }
   }
 
+  private lerComoDataUri(arquivo: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const leitor = new FileReader();
+      leitor.onload = () => resolve(leitor.result as string);
+      leitor.onerror = () => reject(leitor.error);
+      leitor.readAsDataURL(arquivo);
+    });
+  }
+
   removerFoto(): void {
     if (this.previewUrl) URL.revokeObjectURL(this.previewUrl);
     this.previewUrl = null;
     this.imagemSelecionada = null;
+    this.imagemBase64Selecionada = null;
     this.usuario.foto = '';
   }
 
@@ -192,8 +205,8 @@ export class UsuarioPage implements OnInit {
       }
 
       const salvarDadosUsuario = () => this.usuarioService.salvar(this.usuario);
-      const atualizarFoto = this.imagemSelecionada
-        ? this.usuarioService.atualizarImagem(this.usuario.id, this.imagemSelecionada)
+      const atualizarFoto = this.imagemBase64Selecionada
+        ? this.usuarioService.atualizarImagem(this.usuario.id, this.imagemBase64Selecionada)
         : null;
 
       (atualizarFoto
@@ -206,6 +219,7 @@ export class UsuarioPage implements OnInit {
         : salvarDadosUsuario()
       ).pipe(finalize(() => {
         this.imagemSelecionada = null;
+        this.imagemBase64Selecionada = null;
         this.salvando = false;
       }))
         .subscribe({
