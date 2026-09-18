@@ -63,55 +63,53 @@
         <span>Nenhuma atividade nesta data</span>
       </div>
       } @else {
-      @for (atividade of atividadesDoDia; track atividade.id) {
-      <div class="atividade-item" [routerLink]="['/atividade', atividade.id]" button>
-        <div class="atividade-header">
-          <div>
-            <h4 class="atividade-titulo">{{ atividade.titulo }}</h4>
-            <p class="atividade-descricao">{{ atividade.descricao }}</p>
+      <div class="group">
+        @for (atividade of atividadesDoDia; track atividade.id) {
+        <div class="row atividade-item" [routerLink]="['/atividade', atividade.id]" button>
+          <div class="row-icon">
+            <ion-icon name="book-outline"></ion-icon>
           </div>
-          <span class="atividade-disciplina">{{ atividade.disciplina }}</span>
+          <div class="row-body">
+            <h4 class="row-label">{{ atividade.titulo }}</h4>
+            <div class="row-sub">
+              <span class="row-desc">{{ atividade.descricao }}</span>
+              <span class="tag-pontos">{{ labelPontos(atividade.valor) }}</span>
+            </div>
+            <div class="row-meta">
+              <span class="tag-disciplina">{{ atividade.disciplina }}</span>
+              <span class="row-data">
+                <ion-icon name="calendar-outline"></ion-icon>
+                {{ formatarData(atividade.dataEntrega) }}
+              </span>
+            </div>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
         </div>
-        <div class="atividade-meta">
-          <span><ion-icon name="calendar-outline"></ion-icon> {{ formatarData(atividade.dataEntrega) }}</span>
-          <span><ion-icon name="book"></ion-icon> No caderno</span>
-        </div>
-        <div class="atividade-meta">
-          <span><ion-icon name="star-outline"></ion-icon> {{ labelPontos(atividade.valor) }}</span>
-        </div>
+        }
       </div>
-      }
       }
     </div>
   </div>
 
   @if (ultimaSala) {
   <div class="ultima-sala-secao">
-    <h3 class="secao-titulo">Última sala</h3>
-    <ion-card class="sala-card" [routerLink]="['/sala', ultimaSala.id]" button>
-      <ion-card-content>
-        <div class="sala-row">
-          <div class="sala-icone">
-            <ion-icon name="business-outline"></ion-icon>
-          </div>
-          <div class="sala-info">
-            <h2>{{ ultimaSala.nome }}</h2>
-            <div class="sala-meta">
-              <span>
-                <ion-icon name="people-outline"></ion-icon>
-                {{ ultimaSala.membros.length }}
-              </span>
-              <span>
-                <ion-icon name="documents-outline"></ion-icon>
-                {{ ultimaSala.atividades.length }}
-              </span>
-              <span class="sala-codigo">{{ ultimaSala.codigoConvite }}</span>
-            </div>
-          </div>
-          <ion-icon name="chevron-forward-outline" class="sala-seta"></ion-icon>
+    <h3 class="group-title">Última sala</h3>
+    <div class="group">
+      <div class="row sala-row" [routerLink]="['/sala', ultimaSala.id]" button>
+        <div class="row-icon">
+          <ion-icon name="business-outline"></ion-icon>
         </div>
-      </ion-card-content>
-    </ion-card>
+        <div class="row-body">
+          <h4 class="row-label">{{ ultimaSala.nome }}</h4>
+          <div class="row-sub">
+            <span class="row-data"><ion-icon name="people-outline"></ion-icon>{{ ultimaSala.membros.length }}</span>
+            <span class="row-data"><ion-icon name="documents-outline"></ion-icon>{{ ultimaSala.atividades.length }}</span>
+            <span class="tag-codigo">{{ ultimaSala.codigoConvite }}</span>
+          </div>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
+      </div>
+    </div>
   </div>
   }
 
