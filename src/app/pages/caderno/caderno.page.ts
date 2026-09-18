@@ -18,13 +18,13 @@ import {
   timeOutline,
   checkmarkCircleOutline,
   calendarOutline,
-  starOutline,
   homeOutline,
   peopleOutline,
   personOutline,
   ellipseOutline,
   searchOutline,
-  closeOutline
+  closeOutline,
+  chevronForwardOutline
 } from 'ionicons/icons';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
@@ -80,13 +80,13 @@ export class CadernoPage implements OnInit {
       timeOutline,
       checkmarkCircleOutline,
       calendarOutline,
-      starOutline,
       homeOutline,
       peopleOutline,
       personOutline,
       ellipseOutline,
       searchOutline,
-      closeOutline
+      closeOutline,
+      chevronForwardOutline
     });
   }
 

@@ -12,7 +12,6 @@
   </ion-header>
 
   <div class="caderno-secao">
-    <h3 class="caderno-titulo">Meu Caderno</h3>
 
     <div class="barra-busca">
       <ion-icon name="search-outline"></ion-icon>
@@ -51,81 +50,73 @@
       </button>
     </div>
 
-    <div class="atividades-lista">
-      @if (atividadesFiltradas.length > 0) {
-      <h4 class="lista-titulo">Atividades salvas</h4>
-      }
-
+    @if (atividadesFiltradas.length > 0) {
+    <h3 class="group-title">Atividades salvas</h3>
+    <div class="group">
       @for (atividade of atividadesFiltradas; track atividade.id) {
-      <div class="atividade-card" [routerLink]="['/atividade', atividade.id]">
-        <div class="atividade-header">
-          <div>
-            <h4 class="atividade-titulo">{{ atividade.titulo }}</h4>
-            <p class="atividade-descricao">{{ atividade.descricao }}</p>
-          </div>
-
-          <span class="atividade-disciplina">{{ atividade.disciplina }}</span>
-        </div>
-
-        <div class="atividade-meta">
-          <span>
-            <ion-icon name="calendar-outline"></ion-icon>
-            {{ formatarData(atividade.dataEntrega) }}
-          </span>
-
-          <span>
-            <ion-icon name="star-outline"></ion-icon>
-            {{ labelPontos(atividade.valor) }}
-          </span>
-        </div>
-
-        <div class="atividade-status" [ngClass]="classeStatus(atividade.status)">
+      <div class="row atividade-item" [routerLink]="['/atividade', atividade.id]" button>
+        <div class="row-icon" [ngClass]="classeStatus(atividade.status)">
           <ion-icon [name]="iconeStatus(atividade.status)"></ion-icon>
-          {{ labelStatus(atividade.status) }}
         </div>
-      </div>
-      }
-
-      @if (tarefasFiltradas.length > 0) {
-      <h4 class="lista-titulo tarefas">Tarefas atribuidas</h4>
-      }
-
-      @for (tarefa of tarefasFiltradas; track tarefa.id) {
-      <div class="atividade-card tarefa-card" [routerLink]="['/grupo', tarefa.idGrupo, 'tarefas']">
-        <div class="atividade-header">
-          <div>
-            <h4 class="atividade-titulo">{{ tarefa.titulo }}</h4>
-            <p class="atividade-descricao">{{ tarefa.tituloAtividade || 'Tarefa de grupo' }}</p>
+        <div class="row-body">
+          <h4 class="row-label">{{ atividade.titulo }}</h4>
+          <div class="row-sub">
+            <span class="row-desc">{{ atividade.descricao }}</span>
+            <span class="tag-pontos">{{ labelPontos(atividade.valor) }}</span>
           </div>
-
-          <span class="atividade-disciplina tarefa-tag">Tarefa</span>
+          <div class="row-meta">
+            <span class="tag-disciplina">{{ atividade.disciplina }}</span>
+            <span class="row-data">
+              <ion-icon name="calendar-outline"></ion-icon>
+              {{ formatarData(atividade.dataEntrega) }}
+            </span>
+            <span class="atividade-status" [ngClass]="classeStatus(atividade.status)">{{ labelStatus(atividade.status) }}</span>
+          </div>
         </div>
-
-        <div class="atividade-meta">
-          <span>
-            <ion-icon name="book-outline"></ion-icon>
-            {{ tarefa.disciplinaAtividade || 'Sem disciplina' }}
-          </span>
-
-          <span>
-            <ion-icon name="calendar-outline"></ion-icon>
-            {{ formatarData(tarefa.dataCriacao) }}
-          </span>
-        </div>
-
-        <div class="atividade-status" [ngClass]="classeStatus(tarefa.status)">
-          <ion-icon [name]="iconeStatus(tarefa.status)"></ion-icon>
-          {{ labelStatus(tarefa.status) }}
-        </div>
-      </div>
-      }
-
-      @if (!temResultados) {
-      <div class="caderno-vazio">
-        <p>Nenhuma atividade ou tarefa encontrada.</p>
+        <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
       </div>
       }
     </div>
+    }
+
+    @if (tarefasFiltradas.length > 0) {
+    <h3 class="group-title tarefas">Tarefas atribuídas</h3>
+    <div class="group">
+      @for (tarefa of tarefasFiltradas; track tarefa.id) {
+      <div class="row atividade-item" [routerLink]="['/grupo', tarefa.idGrupo, 'tarefas']" button>
+        <div class="row-icon" [ngClass]="classeStatus(tarefa.status)">
+          <ion-icon [name]="iconeStatus(tarefa.status)"></ion-icon>
+        </div>
+        <div class="row-body">
+          <h4 class="row-label">{{ tarefa.titulo }}</h4>
+          <div class="row-sub">
+            <span class="row-desc">{{ tarefa.tituloAtividade || 'Tarefa de grupo' }}</span>
+            <span class="tag-disciplina tarefa-tag">Tarefa</span>
+          </div>
+          <div class="row-meta">
+            <span class="row-data">
+              <ion-icon name="book-outline"></ion-icon>
+              {{ tarefa.disciplinaAtividade || 'Sem disciplina' }}
+            </span>
+            <span class="row-data">
+              <ion-icon name="calendar-outline"></ion-icon>
+              {{ formatarData(tarefa.dataCriacao) }}
+            </span>
+            <span class="atividade-status" [ngClass]="classeStatus(tarefa.status)">{{ labelStatus(tarefa.status) }}</span>
+          </div>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
+      </div>
+      }
+    </div>
+    }
+
+    @if (!temResultados) {
+    <div class="vazio-data">
+      <span>Nenhuma atividade ou tarefa encontrada.</span>
+    </div>
+    }
+
   </div>
 </ion-content>
 
