@@ -37,8 +37,6 @@
         {{ testandoNotificacaoPush ? 'Enviando...' : 'Testar notificação push' }}
       </button>
 
-      <p class="notificacao-teste-ajuda">O servidor envia o aviso pelo Firebase; o aplicativo não agenda uma notificação no celular.</p>
-
       <button type="button" class="inativar-conta-btn" [disabled]="inativando" (click)="inativarConta()">
         <ion-icon name="trash-outline"></ion-icon>
         {{ inativando ? 'Inativando...' : 'Inativar conta' }}
