@@ -20,8 +20,8 @@ import {
   ellipseOutline,
   checkmarkCircleOutline,
   homeOutline,
-  businessOutline,
-  book,
+  bookOutline,
+  peopleOutline,
   personOutline,
   trashOutline
 } from 'ionicons/icons';
@@ -90,8 +90,8 @@ export class GrupoTarefasPage implements OnInit {
       ellipseOutline,
       checkmarkCircleOutline,
       homeOutline,
-      businessOutline,
-      book,
+      bookOutline,
+      peopleOutline,
       personOutline,
       trashOutline
     });
