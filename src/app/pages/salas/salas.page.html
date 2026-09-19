@@ -15,9 +15,17 @@
 
 <ion-content [fullscreen]="true">
 
+  <ion-refresher slot="fixed" (ionRefresh)="atualizar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <div class="salas-lista">
 
-    @if (salas.length > 0) {
+    @if (carregando) {
+    <div class="vazio-data">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+    } @else if (salas.length > 0) {
     <div class="group">
       @for (sala of salas; track sala.id) {
       <div class="row sala-row" [routerLink]="['/sala', sala.id]" button>

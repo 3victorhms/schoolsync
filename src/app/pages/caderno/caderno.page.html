@@ -11,7 +11,17 @@
     </ion-toolbar>
   </ion-header>
 
+  <ion-refresher slot="fixed" (ionRefresh)="atualizar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <div class="caderno-secao">
+
+    @if (carregando) {
+    <div class="vazio-data">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+    } @else {
 
     <div class="barra-busca">
       <ion-icon name="search-outline"></ion-icon>
@@ -115,6 +125,8 @@
     <div class="vazio-data">
       <span>Nenhuma atividade ou tarefa encontrada.</span>
     </div>
+    }
+
     }
 
   </div>

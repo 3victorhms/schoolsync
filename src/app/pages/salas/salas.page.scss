@@ -128,6 +128,12 @@ ion-content {
     padding: 36px 20px;
     text-align: center;
 
+    ion-spinner {
+        color: #3a6ff7;
+        width: 32px;
+        height: 32px;
+    }
+
     .vazio-titulo {
         display: block;
         color: #ffffff;
