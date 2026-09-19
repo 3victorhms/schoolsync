@@ -38,131 +38,95 @@ ion-content {
   --padding-bottom: 96px;
 }
 
-.tarefa-link,
-.codigo-card {
+.grupo-secao {
+  padding: 16px 16px 24px;
+}
+
+.group-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7590;
+  margin: 0 4px 10px;
+}
+
+.group {
   background: #171c28;
-  border: 1px solid #252b3d;
   border-radius: 16px;
+  overflow: hidden;
 }
 
-.tarefa-link {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin: 20px 16px 24px;
-  padding: 16px;
-  cursor: pointer;
-}
-
-.tarefa-icone {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: #1e2540;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  ion-icon {
-    color: #3a6ff7;
-    font-size: 24px;
-  }
-}
-
-.tarefa-info {
-  flex: 1;
-
-  h2 {
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 700;
-    margin: 0 0 6px;
-  }
-
-  p {
-    color: #8891aa;
-    font-size: 13px;
-    margin: 0;
-  }
-}
-
-.seta {
-  color: #6b7693;
-  font-size: 20px;
-}
-
-.codigo-card {
-  margin: 0 16px 24px;
-  padding: 16px;
-
-  p {
-    color: #8891aa;
-    font-size: 13px;
-    font-weight: 600;
-    margin: 0 0 12px;
-  }
-
-  button {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-
-    span {
-      color: #3a6ff7;
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 3px;
-    }
-
-    ion-icon {
-      color: #8891aa;
-      font-size: 20px;
-    }
-  }
-}
-
-.membros-secao {
-  padding: 0 16px 28px;
-
-  h2 {
-    color: #6f8fc7;
-    font-size: 18px;
-    font-weight: 700;
-    margin: 0 0 12px;
-  }
-}
-
-.membros-lista {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding-bottom: 32px;
-}
-
+.row,
 .membro-item {
-  background: #171c28;
-  border-radius: 16px;
-  padding: 14px 16px;
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 14px;
+  position: relative;
 }
 
-.membro-pos {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+.row {
+  cursor: pointer;
+}
+
+.row + .row::before,
+.membro-item + .membro-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 56px;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.row-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   background: #1e2540;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 20px;
+    color: #3a6ff7;
+  }
+}
+
+.row-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.row-label {
+  font-size: 15px;
   font-weight: 700;
+  color: #ffffff;
+}
+
+.row-data {
+  font-size: 13px;
   color: #8891aa;
+}
+
+.tag-codigo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #3a6ff7;
+  letter-spacing: 2px;
+}
+
+.row-seta {
+  font-size: 18px;
+  color: #4e5670;
+  flex-shrink: 0;
 }
 
 .avatar-small {
@@ -193,29 +157,17 @@ ion-content {
   }
 }
 
-.membro-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.membro-tag-lider {
+  color: #f5a623;
+  font-size: 12px;
+  font-weight: 700;
+}
 
-  .membro-nome {
-    font-size: 15px;
-    font-weight: 600;
-    color: #ffffff;
-
-    .voce {
-      color: #3a6ff7;
-      font-size: 13px;
-      margin-left: 4px;
-    }
-  }
-
-  .membro-tag-lider {
-    color: #f5a623;
-    font-size: 13px;
-    font-weight: 700;
-  }
+.row-label .voce {
+  color: #3a6ff7;
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 4px;
 }
 
 ion-tab-bar {
