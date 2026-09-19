@@ -8,6 +8,9 @@ import {
   IonTitle,
   IonToolbar,
   IonIcon,
+  IonRefresher,
+  IonRefresherContent,
+  IonSpinner,
   IonTabBar,
   IonLabel,
   IonTabButton
@@ -32,6 +35,7 @@ import { TarefaModel } from 'src/app/model/tarefa.model';
 import { TarefaService } from 'src/app/services/tarefa.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-caderno',
@@ -44,6 +48,9 @@ import { UsuarioService } from 'src/app/services/usuario.service';
     IonTitle,
     IonToolbar,
     IonIcon,
+    IonRefresher,
+    IonRefresherContent,
+    IonSpinner,
     IonTabBar,
     IonTabButton,
     IonLabel,
@@ -61,6 +68,8 @@ export class CadernoPage implements OnInit {
   tarefasFiltradas: TarefaModel[];
   filtroAtivo: string;
   termoBusca: string;
+  carregando = true;
+  private pendentesCarregamento = 0;
 
   constructor(
     private usuarioService: UsuarioService,
@@ -97,17 +106,30 @@ export class CadernoPage implements OnInit {
     this.carregarCaderno();
   }
 
-  carregarCaderno() {
+  carregarCaderno(event?: any) {
     if (!this.usuario.id) {
       this.atividades = [];
       this.atividadesFiltradas = [];
       this.tarefas = [];
       this.tarefasFiltradas = [];
       this.termoBusca = '';
+      this.carregando = false;
+      event?.target.complete();
       return;
     }
 
-    this.atividadeService.listarPorUsuarioNoCaderno(this.usuario.id).subscribe({
+    this.pendentesCarregamento = 2;
+    const finalizarUma = () => {
+      this.pendentesCarregamento--;
+      if (this.pendentesCarregamento <= 0) {
+        this.carregando = false;
+        event?.target.complete();
+      }
+    };
+
+    this.atividadeService.listarPorUsuarioNoCaderno(this.usuario.id).pipe(
+      finalize(finalizarUma)
+    ).subscribe({
       next: (res) => {
         this.atividades = res;
         this.aplicarFiltros();
@@ -118,7 +140,9 @@ export class CadernoPage implements OnInit {
       }
     });
 
-    this.tarefaService.listarPorUsuario(this.usuario.id).subscribe({
+    this.tarefaService.listarPorUsuario(this.usuario.id).pipe(
+      finalize(finalizarUma)
+    ).subscribe({
       next: (res) => {
         this.tarefas = res || [];
         this.aplicarFiltros();
@@ -128,6 +152,10 @@ export class CadernoPage implements OnInit {
         this.tarefasFiltradas = [];
       }
     });
+  }
+
+  atualizar(event: any) {
+    this.carregarCaderno(event);
   }
 
   filtrar(filtro: string) {

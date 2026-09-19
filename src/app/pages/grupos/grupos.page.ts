@@ -9,6 +9,9 @@ import {
   IonButtons,
   IonBackButton,
   IonIcon,
+  IonRefresher,
+  IonRefresherContent,
+  IonSpinner,
   IonTabBar,
   IonTabButton,
   IonLabel
@@ -27,6 +30,7 @@ import { GrupoModel } from 'src/app/model/grupo.model';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { GrupoService } from 'src/app/services/grupo.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-grupos',
@@ -41,6 +45,9 @@ import { UsuarioService } from 'src/app/services/usuario.service';
     IonButtons,
     IonBackButton,
     IonIcon,
+    IonRefresher,
+    IonRefresherContent,
+    IonSpinner,
     IonTabBar,
     IonTabButton,
     IonLabel,
@@ -53,6 +60,7 @@ export class GruposPage implements OnInit {
   idSala: string;
   usuario: UsuarioModel;
   grupos: GrupoModel[];
+  carregando = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -82,13 +90,20 @@ export class GruposPage implements OnInit {
     this.carregarGrupos();
   }
 
-  carregarGrupos() {
+  carregarGrupos(event?: any) {
     if (!this.idSala || !this.usuario.id) {
       this.grupos = [];
+      this.carregando = false;
+      event?.target.complete();
       return;
     }
 
-    this.grupoService.listarPorSalaEUsuario(this.idSala, this.usuario.id).subscribe({
+    this.grupoService.listarPorSalaEUsuario(this.idSala, this.usuario.id).pipe(
+      finalize(() => {
+        this.carregando = false;
+        event?.target.complete();
+      })
+    ).subscribe({
       next: (res) => {
         this.grupos = res;
       },
@@ -96,5 +111,9 @@ export class GruposPage implements OnInit {
         this.grupos = [];
       }
     });
+  }
+
+  atualizar(event: any) {
+    this.carregarGrupos(event);
   }
 }

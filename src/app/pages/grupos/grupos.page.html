@@ -8,6 +8,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="atualizar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <div class="acoes-grid">
     <button class="acao-card" [routerLink]="['/add-grupo', idSala]">
       <div class="acao-icone">
@@ -27,7 +31,11 @@
   <div class="grupos-secao">
     <h3 class="group-title">Meus grupos</h3>
 
-    @if (grupos.length > 0) {
+    @if (carregando) {
+    <div class="vazio-data">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+    } @else if (grupos.length > 0) {
     <div class="group">
       @for (grupo of grupos; track grupo.id) {
       <div class="row" [routerLink]="['/grupo', grupo.id]" button>
