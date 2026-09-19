@@ -47,26 +47,23 @@ ion-content {
         font-weight: 600;
         cursor: pointer;
 
-        // Cor solida, pra ficar certo em qualquer tema sem precisar de ajuste.
+        // Sem fundo, so o icone colorido. Cor solida (com !important, ja que
+        // o global.scss forca ".acao-btn ion-icon" pra cor de acento no tema
+        // claro), pra ficar certo em qualquer tema sem precisar de ajuste.
         .acao-icone {
             width: 40px;
             height: 40px;
-            border-radius: 12px;
-            background: #3a6ff7;
             display: flex;
             align-items: center;
             justify-content: center;
 
-            // Cor solida, pra ficar certo em qualquer tema sem precisar de ajuste
-            // (o global.scss forca ".acao-btn ion-icon" pra cor de acento no tema
-            // claro, entao precisa do !important aqui pra nao ficar azul sobre azul).
             ion-icon {
-                font-size: 20px;
-                color: #ffffff !important;
+                font-size: 24px;
+                color: #3a6ff7 !important;
             }
 
-            &.sair {
-                background: #ff5c6c;
+            &.sair ion-icon {
+                color: #ff5c6c !important;
             }
         }
 
