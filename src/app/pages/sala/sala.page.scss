@@ -52,7 +52,7 @@ ion-content {
             width: 40px;
             height: 40px;
             border-radius: 12px;
-            background: #3a6ff7;
+            background: #4c6fa6;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -140,7 +140,7 @@ ion-content {
     }
 
     &.nao_iniciada { background: #8e8e93; }
-    &.em_andamento { background: #3a6ff7; }
+    &.em_andamento { background: #4c6fa6; }
     &.concluido { background: #3abf7f; }
     &.fora_caderno { background: #4e5670; }
 }
@@ -193,8 +193,8 @@ ion-content {
     flex-wrap: wrap;
 
     .tag-disciplina {
-        background: #1e2f5e;
-        color: #3a6ff7;
+        background: #26344a;
+        color: #4c6fa6;
         font-size: 11px;
         font-weight: 600;
         padding: 3px 9px;
@@ -219,7 +219,7 @@ ion-content {
         font-weight: 700;
         color: #8891aa;
 
-        &.em_andamento { color: #3a6ff7; }
+        &.em_andamento { color: #4c6fa6; }
         &.concluido { color: #3abf7f; }
         &.fora_caderno { color: #4e5670; }
     }
@@ -263,7 +263,7 @@ ion-content {
     }
 
     .voce {
-        color: #3a6ff7;
+        color: #4c6fa6;
         font-size: 13px;
         font-weight: 600;
         margin-left: 4px;

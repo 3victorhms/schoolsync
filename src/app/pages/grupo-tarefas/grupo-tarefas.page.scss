@@ -93,7 +93,7 @@ button {
   min-height: 52px;
   border: none;
   border-radius: 14px;
-  background: #3a6ff7;
+  background: #4c6fa6;
   color: #ffffff;
   font-size: 16px;
   font-weight: 700;
@@ -171,7 +171,7 @@ button {
   }
 
   &.pendente { background: #8e8e93; }
-  &.em_andamento { background: #3a6ff7; }
+  &.em_andamento { background: #4c6fa6; }
   &.concluido { background: #3abf7f; }
 
   &:disabled {
@@ -214,8 +214,8 @@ button {
   flex-shrink: 0;
 
   &.em_andamento {
-    background: #16264a;
-    color: #3a6ff7;
+    background: #22304a;
+    color: #4c6fa6;
   }
 
   &.concluido {
@@ -274,7 +274,7 @@ ion-tab-bar {
 
 ion-tab-button {
   --color: #4e5670;
-  --color-selected: #3a6ff7;
+  --color-selected: #4c6fa6;
   --ripple-color: transparent;
   --padding-top: 0;
   --padding-bottom: 0;
@@ -305,10 +305,10 @@ ion-tab-button {
 }
 
 .selecionado {
-  color: #3a79df;
+  color: #5578b0;
 
   &::part(native) {
-    background: #16264a;
+    background: #22304a;
     padding: 10px 16px;
   }
 
