@@ -3,15 +3,14 @@
     <ion-buttons slot="start">
       <ion-back-button [defaultHref]="'/grupo/' + grupo.id"></ion-back-button>
     </ion-buttons>
+    <ion-title>
+      Divisão de Tarefas
+      <p class="subtitulo">{{ grupo.nome }}</p>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <section class="hero">
-    <h1>Divisão de Tarefas</h1>
-    <p>{{ grupo.nome }}</p>
-  </section>
-
   @if (grupo.criador) {
   <section class="secao-form">
     <h3 class="group-title">Nova tarefa</h3>

@@ -5,6 +5,20 @@ ion-toolbar {
   ion-back-button {
     --color: #ffffff;
   }
+
+  ion-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    padding: 0;
+
+    .subtitulo {
+      font-size: 13px;
+      font-weight: 400;
+      color: #8891aa;
+      margin: 2px 0 0;
+    }
+  }
 }
 
 ion-content {
@@ -12,26 +26,13 @@ ion-content {
   --padding-bottom: 96px;
 }
 
-.hero {
-  padding: 16px 16px 20px;
-
-  h1 {
-    color: #ffffff;
-    font-size: 22px;
-    font-weight: 700;
-    margin: 0 0 4px;
-  }
-
-  p {
-    color: #6f8fc7;
-    font-size: 15px;
-    margin: 0;
-  }
-}
-
 .secao-form,
 .secao-tarefas {
-  padding: 0 16px 24px;
+  padding: 20px 16px 24px;
+}
+
+.secao-tarefas {
+  padding-top: 0;
 }
 
 .group-title {
@@ -107,7 +108,7 @@ button {
 }
 
 .aviso {
-  margin: 0 16px 24px;
+  margin: 20px 16px 24px;
   padding: 16px;
   background: #171c28;
   border: 1px solid #252b3d;
