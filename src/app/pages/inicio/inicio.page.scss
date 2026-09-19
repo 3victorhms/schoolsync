@@ -134,12 +134,12 @@ ion-content {
             }
 
             &.hoje {
-                color: #4c6fa6;
+                color: #3a6ff7;
                 font-weight: 700;
             }
 
             &.selecionado {
-                background: #4c6fa6;
+                background: #3a6ff7;
                 color: #ffffff;
                 font-weight: 700;
             }
@@ -268,7 +268,7 @@ ion-content {
         width: 34px;
         height: 34px;
         border-radius: 10px;
-        background: #22304a;
+        background: #16264a;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -276,7 +276,7 @@ ion-content {
 
         ion-icon {
             font-size: 17px;
-            color: #4c6fa6;
+            color: #3a6ff7;
         }
     }
 
@@ -343,7 +343,7 @@ ion-content {
             }
 
             .tag-codigo {
-                color: #4c6fa6;
+                color: #3a6ff7;
                 font-weight: 600;
                 font-size: 12px;
             }
@@ -382,7 +382,7 @@ ion-tab-bar {
 
 ion-tab-button {
     --color: #4e5670;
-    --color-selected: #4c6fa6;
+    --color-selected: #3a6ff7;
     --ripple-color: transparent;
     --padding-top: 0;
     --padding-bottom: 0;
@@ -413,10 +413,10 @@ ion-tab-button {
 }
 
 .selecionado {
-    color: #5578b0;
+    color: #3a79df;
 
     &::part(native) {
-        background: #22304a;
+        background: #16264a;
         padding: 10px 16px;
     }
 

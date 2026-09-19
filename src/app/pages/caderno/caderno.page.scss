@@ -106,9 +106,9 @@ ion-content {
             }
 
             &.ativo {
-                background: #22304a;
+                background: #16264a;
                 border-color: transparent;
-                color: #4c6fa6;
+                color: #3a6ff7;
             }
         }
     }
@@ -173,7 +173,7 @@ ion-content {
         }
 
         &.nao_iniciada { background: #8e8e93; }
-        &.em_andamento { background: #4c6fa6; }
+        &.em_andamento { background: #3a6ff7; }
         &.concluido { background: #3abf7f; }
     }
 
@@ -254,7 +254,7 @@ ion-content {
                 color: #8891aa;
 
                 &.em_andamento {
-                    color: #4c6fa6;
+                    color: #3a6ff7;
                 }
 
                 &.concluido {
@@ -292,7 +292,7 @@ ion-tab-bar {
 
 ion-tab-button {
     --color: #4e5670;
-    --color-selected: #4c6fa6;
+    --color-selected: #3a6ff7;
     --ripple-color: transparent;
     --padding-top: 0;
     --padding-bottom: 0;
@@ -323,10 +323,10 @@ ion-tab-button {
 }
 
 .selecionado {
-    color: #5578b0;
+    color: #3a79df;
 
     &::part(native) {
-        background: #22304a;
+        background: #16264a;
         padding: 10px 16px;
     }
 

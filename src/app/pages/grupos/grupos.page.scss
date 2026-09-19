@@ -46,7 +46,7 @@ ion-content {
     width: 40px;
     height: 40px;
     border-radius: 12px;
-    background: #4c6fa6;
+    background: #3a6ff7;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -99,7 +99,7 @@ ion-content {
     width: 42px;
     height: 42px;
     border-radius: 12px;
-    background: #26344a;
+    background: #1e2540;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -107,7 +107,7 @@ ion-content {
 
     ion-icon {
       font-size: 20px;
-      color: #4c6fa6;
+      color: #3a6ff7;
     }
   }
 
@@ -167,7 +167,7 @@ ion-tab-bar {
 
 ion-tab-button {
   --color: #4e5670;
-  --color-selected: #4c6fa6;
+  --color-selected: #3a6ff7;
   --ripple-color: transparent;
   --padding-top: 0;
   --padding-bottom: 0;
@@ -198,10 +198,10 @@ ion-tab-button {
 }
 
 .selecionado {
-  color: #5578b0;
+  color: #3a79df;
 
   &::part(native) {
-    background: #22304a;
+    background: #16264a;
     padding: 10px 16px;
   }
 
