@@ -27,35 +27,38 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="tarefa-link" [routerLink]="['/grupo', grupo.id, 'tarefas']">
-    <div class="tarefa-icone">
-      <ion-icon name="list-outline"></ion-icon>
-    </div>
 
-    <div class="tarefa-info">
-      <h2>Divisão de Tarefas</h2>
-      <p>{{ labelTarefasAtribuidas() }}</p>
-    </div>
+  <div class="grupo-secao">
+    <div class="group">
+      <div class="row" [routerLink]="['/grupo', grupo.id, 'tarefas']" button>
+        <div class="row-icon">
+          <ion-icon name="list-outline"></ion-icon>
+        </div>
+        <div class="row-body">
+          <span class="row-label">Divisão de Tarefas</span>
+          <span class="row-data">{{ labelTarefasAtribuidas() }}</span>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
+      </div>
 
-    <ion-icon class="seta" name="chevron-forward-outline"></ion-icon>
+      <div class="row" (click)="copiarCodigo()" button>
+        <div class="row-icon">
+          <ion-icon name="clipboard-outline"></ion-icon>
+        </div>
+        <div class="row-body">
+          <span class="row-label">Código de convite</span>
+          <span class="tag-codigo">{{ grupo.codigoConvite }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="codigo-card">
-    <p>Codigo de convite</p>
-    <button type="button" (click)="copiarCodigo()">
-      <span>{{ grupo.codigoConvite }}</span>
-      <ion-icon name="clipboard-outline"></ion-icon>
-    </button>
-  </div>
+  <div class="grupo-secao">
+    <h3 class="group-title">Membros ({{ grupo.membros.length }})</h3>
 
-  <section class="membros-secao">
-    <h2>Membros ({{ grupo.membros.length }})</h2>
-
-    <div class="membros-lista">
-      @for (membro of grupo.membros; track membro.idUsuario; let i = $index) {
+    <div class="group">
+      @for (membro of grupo.membros; track membro.idUsuario) {
       <div class="membro-item">
-        <span class="membro-pos">{{ i + 1 }}</span>
-
         <div class="avatar-small" [class.lider]="ehLiderGrupo(membro)">
           {{ iniciais(nomeMembro(membro)) }}
           @if (ehLiderGrupo(membro)) {
@@ -63,21 +66,22 @@
           }
         </div>
 
-        <div class="membro-info">
-          <span class="membro-nome">
+        <div class="row-body">
+          <span class="row-label">
             {{ nomeMembro(membro) }}
             @if (membro.idUsuario === usuario.id) {
             <span class="voce">(voce)</span>
             }
           </span>
           @if (ehLiderGrupo(membro)) {
-          <span class="membro-tag-lider">Lider</span>
+          <span class="membro-tag-lider">Líder</span>
           }
         </div>
       </div>
       }
     </div>
-  </section>
+  </div>
+
 </ion-content>
 
 <ion-tab-bar slot="bottom">
