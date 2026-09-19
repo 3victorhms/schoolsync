@@ -17,40 +17,35 @@
 
   <div class="salas-lista">
 
-    @for (sala of salas; track sala.id) {
-    <ion-card class="sala-card" [routerLink]="['/sala', sala.id]" button>
-      <ion-card-content>
-        <div class="sala-row">
-
-          <div class="sala-icone">
-            <ion-icon name="business-outline"></ion-icon>
-          </div>
-
-          <div class="sala-info">
-            <h2>{{ sala.nome }}</h2>
-            <div class="sala-meta">
-              <span>
-                <ion-icon name="people-outline"></ion-icon>
-                {{ quantidadeMembros(sala) }}
-              </span>
-
-              <span>
-                <ion-icon name="documents-outline"></ion-icon>
-                {{ quantidadeAtividades(sala) }}
-              </span>
-              <span class="sala-codigoConvite">{{ sala.codigoConvite }}</span>
-            </div>
-          </div>
-
-          <ion-icon name="chevron-forward-outline" class="sala-seta"></ion-icon>
-
+    @if (salas.length > 0) {
+    <div class="group">
+      @for (sala of salas; track sala.id) {
+      <div class="row sala-row" [routerLink]="['/sala', sala.id]" button>
+        <div class="row-icon">
+          <ion-icon name="business-outline"></ion-icon>
         </div>
-      </ion-card-content>
-    </ion-card>
-    } @empty {
-    <div class="salas-vazio">
-      <p>Você não está em nenhuma sala :(</p>
-      <span>Crie uma sala ou entre com um código</span>
+        <div class="row-body">
+          <h4 class="row-label">{{ sala.nome }}</h4>
+          <div class="row-sub">
+            <span class="row-data">
+              <ion-icon name="people-outline"></ion-icon>
+              {{ quantidadeMembros(sala) }}
+            </span>
+            <span class="row-data">
+              <ion-icon name="documents-outline"></ion-icon>
+              {{ quantidadeAtividades(sala) }}
+            </span>
+            <span class="tag-codigo">{{ sala.codigoConvite }}</span>
+          </div>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
+      </div>
+      }
+    </div>
+    } @else {
+    <div class="vazio-data">
+      <span class="vazio-titulo">Você não está em nenhuma sala ainda</span>
+      <span class="vazio-sub">Crie uma sala ou entre com um código</span>
     </div>
     }
 

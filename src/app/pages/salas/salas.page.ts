@@ -11,8 +11,7 @@ import {
   IonBackButton,
   IonIcon,
   IonButton,
-  IonCard,
-  IonCardContent, IonTabButton, IonTabBar, IonLabel
+  IonTabButton, IonTabBar, IonLabel
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -40,8 +39,6 @@ import { SalaService } from 'src/app/services/sala.service';
     IonBackButton,
     IonIcon,
     IonButton,
-    IonCard,
-    IonCardContent,
     IonTabButton, IonTabBar, IonLabel,
     CommonModule,
     FormsModule,
