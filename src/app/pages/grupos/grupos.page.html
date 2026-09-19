@@ -10,40 +10,46 @@
 <ion-content [fullscreen]="true">
   <div class="acoes-grid">
     <button class="acao-card" [routerLink]="['/add-grupo', idSala]">
-      <ion-icon name="add-outline"></ion-icon>
+      <div class="acao-icone">
+        <ion-icon name="add-outline"></ion-icon>
+      </div>
       <span>Criar grupo</span>
     </button>
 
     <button class="acao-card" [routerLink]="['/entrar-grupo', idSala]">
-      <ion-icon name="person-add-outline"></ion-icon>
+      <div class="acao-icone">
+        <ion-icon name="person-add-outline"></ion-icon>
+      </div>
       <span>Entrar em grupo</span>
     </button>
   </div>
 
-  <section class="grupos-secao">
-    <h2>Meus grupos</h2>
+  <div class="grupos-secao">
+    <h3 class="group-title">Meus grupos</h3>
 
-    <div class="grupos-lista">
+    @if (grupos.length > 0) {
+    <div class="group">
       @for (grupo of grupos; track grupo.id) {
-      <div class="grupo-card" [routerLink]="['/grupo', grupo.id]">
-        <div class="grupo-icone">
+      <div class="row" [routerLink]="['/grupo', grupo.id]" button>
+        <div class="row-icon">
           <ion-icon name="people-outline"></ion-icon>
         </div>
-
-        <div class="grupo-info">
-          <h3>{{ grupo.nome }}</h3>
-          <p>{{ grupo.quantidadeMembros }} membros</p>
+        <div class="row-body">
+          <h4 class="row-label">{{ grupo.nome }}</h4>
+          <div class="row-sub">
+            <span class="row-data">{{ grupo.quantidadeMembros }} membros</span>
+          </div>
         </div>
-
-        <ion-icon class="grupo-seta" name="chevron-forward-outline"></ion-icon>
-      </div>
-      } @empty {
-      <div class="vazio">
-        <p>Nenhum grupo encontrado.</p>
+        <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
       </div>
       }
     </div>
-  </section>
+    } @else {
+    <div class="vazio-data">
+      <span>Nenhum grupo encontrado.</span>
+    </div>
+    }
+  </div>
 </ion-content>
 
 <ion-tab-bar slot="bottom">
