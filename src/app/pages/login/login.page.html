@@ -35,9 +35,9 @@
           </button>
         </div>
 
-        <ion-button expand="block" type="submit" class="login-button" [disabled]="!formGroup.valid">
+        <ion-button expand="block" type="submit" class="login-button" [disabled]="formGroup.invalid || autenticando">
 
-          Entrar
+          {{ autenticando ? 'Entrando...' : 'Entrar' }}
 
           <ion-icon slot="end" name="arrow-forward-outline">
           </ion-icon>
