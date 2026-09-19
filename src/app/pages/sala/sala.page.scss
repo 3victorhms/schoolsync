@@ -57,9 +57,12 @@ ion-content {
             align-items: center;
             justify-content: center;
 
+            // Cor solida, pra ficar certo em qualquer tema sem precisar de ajuste
+            // (o global.scss forca ".acao-btn ion-icon" pra cor de acento no tema
+            // claro, entao precisa do !important aqui pra nao ficar azul sobre azul).
             ion-icon {
                 font-size: 20px;
-                color: #ffffff;
+                color: #ffffff !important;
             }
 
             &.sair {
