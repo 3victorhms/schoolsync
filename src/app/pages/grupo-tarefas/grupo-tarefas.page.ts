@@ -10,6 +10,9 @@ import {
   IonButtons,
   IonBackButton,
   IonIcon,
+  IonRefresher,
+  IonRefresherContent,
+  IonSpinner,
   IonTabBar,
   IonTabButton,
   IonLabel
@@ -51,6 +54,9 @@ import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
     IonButtons,
     IonBackButton,
     IonIcon,
+    IonRefresher,
+    IonRefresherContent,
+    IonSpinner,
     IonTabBar,
     IonTabButton,
     IonLabel,
@@ -70,6 +76,8 @@ export class GrupoTarefasPage implements OnInit {
   tituloTarefa: string;
   tarefaExcluindoId = '';
   criandoTarefa = false;
+  carregando = true;
+  private pendentesCarregamento = 0;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -108,13 +116,37 @@ export class GrupoTarefasPage implements OnInit {
     this.usuario = this.usuarioService.buscarAutenticacao();
 
     if (idGrupo && this.usuario.id) {
+      this.pendentesCarregamento = 2;
       this.carregarGrupo(idGrupo);
       this.carregarTarefas(idGrupo);
+    } else {
+      this.carregando = false;
     }
   }
 
-  carregarGrupo(idGrupo: string) {
-    this.grupoService.buscarPorId(idGrupo, this.usuario.id).subscribe({
+  atualizar(event: any) {
+    const idGrupo = this.activatedRoute.snapshot.params['id'];
+    if (idGrupo && this.usuario.id) {
+      this.pendentesCarregamento = 2;
+      this.carregarGrupo(idGrupo, event);
+      this.carregarTarefas(idGrupo, event);
+    } else {
+      event?.target.complete();
+    }
+  }
+
+  private finalizarCarregamento(event?: any) {
+    this.pendentesCarregamento--;
+    if (this.pendentesCarregamento <= 0) {
+      this.carregando = false;
+      event?.target.complete();
+    }
+  }
+
+  carregarGrupo(idGrupo: string, event?: any) {
+    this.grupoService.buscarPorId(idGrupo, this.usuario.id).pipe(
+      finalize(() => this.finalizarCarregamento(event))
+    ).subscribe({
       next: (res) => {
         this.grupo = res;
         this.carregarAtividades();
@@ -125,8 +157,10 @@ export class GrupoTarefasPage implements OnInit {
     });
   }
 
-  carregarTarefas(idGrupo: string) {
-    this.tarefaService.listarPorGrupo(idGrupo, this.usuario.id).subscribe({
+  carregarTarefas(idGrupo: string, event?: any) {
+    this.tarefaService.listarPorGrupo(idGrupo, this.usuario.id).pipe(
+      finalize(() => this.finalizarCarregamento(event))
+    ).subscribe({
       next: (res) => {
         this.tarefas = res;
       },

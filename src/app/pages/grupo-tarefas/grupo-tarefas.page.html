@@ -11,6 +11,18 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="atualizar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (carregando) {
+  <section class="secao-form">
+    <div class="vazio-data">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  </section>
+  } @else {
+
   @if (grupo.criador) {
   <section class="secao-form">
     <h3 class="group-title">Nova tarefa</h3>
@@ -88,6 +100,8 @@
     </div>
     }
   </section>
+
+  }
 </ion-content>
 
 <ion-tab-bar slot="bottom">

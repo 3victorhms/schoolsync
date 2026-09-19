@@ -28,6 +28,18 @@
 
 <ion-content [fullscreen]="true">
 
+  <ion-refresher slot="fixed" (ionRefresh)="atualizar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (carregando) {
+  <div class="grupo-secao">
+    <div class="vazio-data">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  </div>
+  } @else {
+
   <div class="grupo-secao">
     <div class="group">
       <div class="row" [routerLink]="['/grupo', grupo.id, 'tarefas']" button>
@@ -81,6 +93,8 @@
       }
     </div>
   </div>
+
+  }
 
 </ion-content>
 
