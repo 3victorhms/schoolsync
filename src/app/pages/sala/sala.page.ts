@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonIcon, IonButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonIcon, IonButton, IonRefresher, IonRefresherContent, IonSpinner } from '@ionic/angular/standalone';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
@@ -20,7 +20,7 @@ import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
     templateUrl: './sala.page.html',
     styleUrls: ['./sala.page.scss'],
     standalone: true,
-    imports: [IonIcon, IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, CommonModule, RouterLink]
+    imports: [IonIcon, IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonRefresher, IonRefresherContent, IonSpinner, CommonModule, RouterLink]
 })
 export class SalaPage implements OnInit {
 
@@ -31,6 +31,7 @@ export class SalaPage implements OnInit {
     idSala: string;
     excluindoSala = false;
     removendoMembroId = '';
+    carregando = true;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -62,20 +63,40 @@ export class SalaPage implements OnInit {
         this.idSala = id || '';
 
         if (id) {
-            this.salaService.buscarPorId(id, this.usuario.id).subscribe({
-                next: (res) => {
-                    this.sala = res;
-                    this.sala.id = this.sala.id || id;
-                    this.sala.membros = this.sala.membros || [];
-                    this.sala.atividades = this.sala.atividades || [];
-                    this.carregarMembros(this.sala.membros);
-                    localStorage.setItem(`ultimaSala:${this.usuario.id}`, this.sala.id);
-                },
-                error: () => {
-                    this.exibirMensagem('Sala não encontrada');
-                    this.navController.navigateBack('/salas');
-                }
-            });
+            this.carregarSala(id);
+        } else {
+            this.carregando = false;
+        }
+    }
+
+    carregarSala(id: string, event?: any) {
+        this.salaService.buscarPorId(id, this.usuario.id).pipe(
+            finalize(() => {
+                this.carregando = false;
+                event?.target.complete();
+            })
+        ).subscribe({
+            next: (res) => {
+                this.sala = res;
+                this.sala.id = this.sala.id || id;
+                this.sala.membros = this.sala.membros || [];
+                this.sala.atividades = this.sala.atividades || [];
+                this.carregarMembros(this.sala.membros);
+                localStorage.setItem(`ultimaSala:${this.usuario.id}`, this.sala.id);
+            },
+            error: () => {
+                this.exibirMensagem('Sala não encontrada');
+                this.navController.navigateBack('/salas');
+            }
+        });
+    }
+
+    atualizar(event: any) {
+        const id = this.idSala || this.activatedRoute.snapshot.params['id'];
+        if (id) {
+            this.carregarSala(id, event);
+        } else {
+            event?.target.complete();
         }
     }
 

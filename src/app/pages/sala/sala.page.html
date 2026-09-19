@@ -20,6 +20,16 @@
     </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
+    <ion-refresher slot="fixed" (ionRefresh)="atualizar($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    @if (carregando) {
+    <div class="vazio-data">
+        <ion-spinner name="crescent"></ion-spinner>
+    </div>
+    } @else {
+
     <div class="acoes">
         <button class="acao-btn" [routerLink]="['/add-atividade/', sala.id]">
             <div class="acao-icone">
@@ -116,4 +126,6 @@
             }
         </div>
     </section>
+
+    }
 </ion-content>
