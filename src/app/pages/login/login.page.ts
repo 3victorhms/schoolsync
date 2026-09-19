@@ -10,6 +10,7 @@ import { addIcons } from 'ionicons';
 import { schoolOutline, arrowForwardOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NotificacaoPushService } from '../../services/notificacao-push.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -25,6 +26,7 @@ export class LoginPage implements OnInit {
   login: string;
   senha: string;
   mostrarSenha = false;
+  autenticando = false;
 
   constructor(private formBuilder: FormBuilder, private toastController: ToastController, private navController: NavController, private loginService: LoginService, private route: ActivatedRoute, private notificacaoPushService: NotificacaoPushService) {
     this.login = "";
@@ -65,10 +67,14 @@ export class LoginPage implements OnInit {
   }
 
   autenticar() {
+    if (this.autenticando || this.formGroup.invalid) return;
+    this.autenticando = true;
+
     this.login = this.formGroup.value.login;
     this.senha = this.formGroup.value.senha;
 
     this.loginService.autenticar({ email: this.login, senha: this.senha })
+      .pipe(finalize(() => this.autenticando = false))
       .subscribe({
         next: (resposta) => {
           this.usuario = {
