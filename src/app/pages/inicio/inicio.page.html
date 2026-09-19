@@ -21,11 +21,11 @@
 
   <div class="calendario-card">
     <div class="calendario-header">
-      <button class="cal-nav" (click)="mesAnterior()">
+      <button class="cal-nav" (click)="mesAnterior()" aria-label="Mês anterior">
         <ion-icon name="chevron-back-outline"></ion-icon>
       </button>
       <span class="cal-titulo">{{ mesAtual }}</span>
-      <button class="cal-nav" (click)="proximoMes()">
+      <button class="cal-nav" (click)="proximoMes()" aria-label="Próximo mês">
         <ion-icon name="chevron-forward-outline"></ion-icon>
       </button>
     </div>
