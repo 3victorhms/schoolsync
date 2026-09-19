@@ -19,6 +19,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="atualizar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <main class="pagina-notificacoes">
     <section class="lista" aria-live="polite">
       @if (carregando) { <div class="estado-carregando">Carregando notificações...</div> }
