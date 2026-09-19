@@ -20,6 +20,16 @@
 
 <ion-content [fullscreen]="true">
 
+  <ion-refresher slot="fixed" (ionRefresh)="atualizar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (carregando) {
+  <div class="vazio-data">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  } @else {
+
   <div class="atividade-card">
     <h2 class="atividade-titulo">{{ atividade.titulo }}</h2>
     <p class="atividade-descricao-titulo">{{ atividade.descricao }}</p>
@@ -187,5 +197,7 @@
       </button>
     </div>
   </div>
+
+  }
 
 </ion-content>

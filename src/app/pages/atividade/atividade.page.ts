@@ -9,7 +9,10 @@ import {
   IonButtons,
   IonBackButton,
   IonIcon,
-  IonButton
+  IonButton,
+  IonRefresher,
+  IonRefresherContent,
+  IonSpinner
 } from '@ionic/angular/standalone';
 import { ActivatedRoute } from '@angular/router';
 import { NavController, ToastController } from '@ionic/angular';
@@ -56,6 +59,9 @@ import {
     IonTitle,
     IonButton,
     IonToolbar,
+    IonRefresher,
+    IonRefresherContent,
+    IonSpinner,
     CommonModule,
     FormsModule
   ]
@@ -71,6 +77,7 @@ export class AtividadePage implements OnInit {
   excluindo = false;
   comentarioExcluindoId = '';
   enviandoComentario = false;
+  carregando = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -113,11 +120,18 @@ export class AtividadePage implements OnInit {
 
     if (id) {
       this.carregarAtividade(id);
+    } else {
+      this.carregando = false;
     }
   }
 
-  carregarAtividade(id: string) {
-    this.atividadeService.buscarPorId(id, this.usuario.id).subscribe({
+  carregarAtividade(id: string, event?: any) {
+    this.atividadeService.buscarPorId(id, this.usuario.id).pipe(
+      finalize(() => {
+        this.carregando = false;
+        event?.target.complete();
+      })
+    ).subscribe({
       next: (res) => {
         this.atividade = res;
         this.novoComentario = '';
@@ -130,6 +144,15 @@ export class AtividadePage implements OnInit {
         this.navController.navigateBack('/salas');
       }
     });
+  }
+
+  atualizar(event: any) {
+    const id = this.activatedRoute.snapshot.params['id'];
+    if (id) {
+      this.carregarAtividade(id, event);
+    } else {
+      event?.target.complete();
+    }
   }
 
   carregarComentarios() {
