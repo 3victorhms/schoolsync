@@ -13,59 +13,79 @@
   </section>
 
   @if (grupo.criador) {
-  <section class="nova-tarefa-card">
-    <h2>Nova tarefa</h2>
+  <section class="secao-form">
+    <h3 class="group-title">Nova tarefa</h3>
 
-    <select [(ngModel)]="idAtividadeSelecionada">
-      <option value="">Selecionar atividade</option>
-      @for (atividade of atividades; track atividade.id) {
-      <option [value]="atividade.id">{{ atividade.titulo }}</option>
-      }
-    </select>
+    <div class="nova-tarefa-card">
+      <div class="campo">
+        <label class="campo-label">Atividade</label>
+        <select [(ngModel)]="idAtividadeSelecionada">
+          <option value="">Selecionar atividade</option>
+          @for (atividade of atividades; track atividade.id) {
+          <option [value]="atividade.id">{{ atividade.titulo }}</option>
+          }
+        </select>
+      </div>
 
-    <input type="text" [(ngModel)]="tituloTarefa" placeholder="Ex: Implementacao do Login" maxlength="150" />
+      <div class="campo">
+        <label class="campo-label">Título</label>
+        <input type="text" [(ngModel)]="tituloTarefa" placeholder="Ex: Implementação do Login" maxlength="150" />
+      </div>
 
-    <select [(ngModel)]="idUsuarioAtribuido">
-      <option value="">Atribuir a membro</option>
-      @for (membro of grupo.membros; track membro.idUsuario) {
-      <option [value]="membro.idUsuario">{{ membro.nomeUsuario }}</option>
-      }
-    </select>
+      <div class="campo">
+        <label class="campo-label">Atribuir a</label>
+        <select [(ngModel)]="idUsuarioAtribuido">
+          <option value="">Atribuir a membro</option>
+          @for (membro of grupo.membros; track membro.idUsuario) {
+          <option [value]="membro.idUsuario">{{ membro.nomeUsuario }}</option>
+          }
+        </select>
+      </div>
 
-    <button type="button" (click)="criarTarefa()"
-      [disabled]="criandoTarefa || !idAtividadeSelecionada || !idUsuarioAtribuido || !tituloTarefa.trim()">
-      Criar tarefa
-    </button>
+      <button type="button" (click)="criarTarefa()"
+        [disabled]="criandoTarefa || !idAtividadeSelecionada || !idUsuarioAtribuido || !tituloTarefa.trim()">
+        Criar tarefa
+      </button>
+    </div>
   </section>
   } @else {
   <div class="aviso">
-    Somente o lider do grupo pode atribuir tarefas
+    <ion-icon name="lock-closed-outline"></ion-icon>
+    <span>Somente o líder do grupo pode atribuir tarefas</span>
   </div>
   }
 
-  <section class="tarefas-lista">
-    @for (tarefa of tarefas; track tarefa.id) {
-    <div class="tarefa-card">
-      <button class="status-icone" type="button" (click)="alterarStatus(tarefa)" [disabled]="!podeAlterar(tarefa)">
-        <ion-icon [name]="iconeStatus(tarefa.status)"></ion-icon>
-      </button>
+  <section class="secao-tarefas">
+    <h3 class="group-title">Tarefas</h3>
 
-      <div class="tarefa-info">
-        <h2>{{ tarefa.titulo }}</h2>
-        <p>{{ tarefa.disciplinaAtividade }} • {{ tarefa.nomeUsuarioAtribuido }}</p>
+    @if (tarefas.length) {
+    <div class="group">
+      @for (tarefa of tarefas; track tarefa.id) {
+      <div class="row">
+        <button class="row-icon" [ngClass]="tarefa.status" type="button" (click)="alterarStatus(tarefa)"
+          [disabled]="!podeAlterar(tarefa)">
+          <ion-icon [name]="iconeStatus(tarefa.status)"></ion-icon>
+        </button>
+
+        <div class="row-body">
+          <span class="row-label">{{ tarefa.titulo }}</span>
+          <span class="row-desc">{{ tarefa.disciplinaAtividade }} • {{ tarefa.nomeUsuarioAtribuido }}</span>
+        </div>
+
+        <span class="status-tag" [ngClass]="tarefa.status">{{ labelStatus(tarefa.status) }}</span>
+
+        @if (grupo.criador) {
+        <button type="button" class="excluir-tarefa" [disabled]="tarefaExcluindoId === tarefa.id"
+          (click)="excluirTarefa(tarefa)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </button>
+        }
       </div>
-
-      <span class="status-tag" [ngClass]="tarefa.status">{{ labelStatus(tarefa.status) }}</span>
-
-      @if (grupo.criador) {
-      <button type="button" class="excluir-tarefa" [disabled]="tarefaExcluindoId === tarefa.id" (click)="excluirTarefa(tarefa)">
-        <ion-icon name="trash-outline"></ion-icon>
-      </button>
       }
     </div>
-    } @empty {
-    <div class="tarefas-vazio">
-      Nenhuma tarefa criada
+    } @else {
+    <div class="vazio-data">
+      <span>Nenhuma tarefa criada</span>
     </div>
     }
   </section>
