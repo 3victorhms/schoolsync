@@ -663,6 +663,14 @@ body.tema-claro .filtro-btn.ativo {
   color: var(--app-accent) !important;
 }
 
+body.tema-claro .vazio-titulo {
+  color: var(--app-text) !important;
+}
+
+body.tema-claro .vazio-sub {
+  color: var(--app-muted) !important;
+}
+
 body.tema-claro .tag-codigo {
   background: var(--app-accent-soft) !important;
   color: var(--app-accent) !important;
