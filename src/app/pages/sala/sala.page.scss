@@ -236,6 +236,18 @@ ion-content {
     text-align: center;
     color: #7e88a6;
     font-size: 14px;
+
+    ion-spinner {
+        color: #3a6ff7;
+        width: 32px;
+        height: 32px;
+    }
+}
+
+// Quando usado direto dentro do ion-content (estado de carregamento
+// inicial), fora de uma secao com padding proprio.
+ion-content > .vazio-data {
+    margin: 20px 16px;
 }
 
 .membro-item {
