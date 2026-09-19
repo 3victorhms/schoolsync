@@ -15,7 +15,6 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
-  businessOutline,
   peopleOutline,
   documentsOutline,
   chevronForwardOutline,
@@ -52,7 +51,6 @@ export class SalasPage implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private salaService: SalaService) {
     addIcons({
-      businessOutline,
       peopleOutline,
       documentsOutline,
       chevronForwardOutline,

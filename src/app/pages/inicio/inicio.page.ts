@@ -11,7 +11,7 @@ import { AtividadeService } from 'src/app/services/atividade.service';
 import { NotificacaoService } from 'src/app/services/notificacao.service';
 import { addIcons } from 'ionicons';
 import { Subscription } from 'rxjs';
-import { notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, businessOutline, book, bookOutline, personOutline, pencilOutline } from 'ionicons/icons';
+import { notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, bookOutline, personOutline, pencilOutline } from 'ionicons/icons';
 
 interface DiaCalendario {
   numero: number;
@@ -53,7 +53,7 @@ export class InicioPage implements OnInit {
     private notificacaoService: NotificacaoService
   ) {
     this.usuario = this.usuarioService.buscarAutenticacao();
-    addIcons({ notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, businessOutline, book, bookOutline, personOutline, pencilOutline });
+    addIcons({ notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, bookOutline, personOutline, pencilOutline });
   }
 
   ngOnInit() { }

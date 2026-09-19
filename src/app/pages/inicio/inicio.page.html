@@ -97,12 +97,12 @@
     <div class="group">
       <div class="row sala-row" [routerLink]="['/sala', ultimaSala.id]" button>
         <div class="row-icon">
-          <ion-icon name="business-outline"></ion-icon>
+          <ion-icon name="people-outline"></ion-icon>
         </div>
         <div class="row-body">
           <h4 class="row-label">{{ ultimaSala.nome }}</h4>
           <div class="row-sub">
-            <span class="row-data"><ion-icon name="people-outline"></ion-icon>{{ ultimaSala.membros.length }}</span>
+            <span class="row-data"><ion-icon name="person-outline"></ion-icon>{{ ultimaSala.membros.length }}</span>
             <span class="row-data"><ion-icon name="documents-outline"></ion-icon>{{ ultimaSala.atividades.length }}</span>
             <span class="tag-codigo">{{ ultimaSala.codigoConvite }}</span>
           </div>
