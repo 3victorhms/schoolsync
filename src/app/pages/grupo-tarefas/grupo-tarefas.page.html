@@ -74,7 +74,7 @@
       @for (tarefa of tarefas; track tarefa.id) {
       <div class="row">
         <button class="row-icon" [ngClass]="tarefa.status" type="button" (click)="alterarStatus(tarefa)"
-          [disabled]="!podeAlterar(tarefa)">
+          [disabled]="!podeAlterar(tarefa)" aria-label="Alterar status da tarefa">
           <ion-icon [name]="iconeStatus(tarefa.status)"></ion-icon>
         </button>
 
@@ -87,7 +87,7 @@
 
         @if (grupo.criador) {
         <button type="button" class="excluir-tarefa" [disabled]="tarefaExcluindoId === tarefa.id"
-          (click)="excluirTarefa(tarefa)">
+          (click)="excluirTarefa(tarefa)" aria-label="Excluir tarefa">
           <ion-icon name="trash-outline"></ion-icon>
         </button>
         }

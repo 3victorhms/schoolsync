@@ -32,7 +32,7 @@
         placeholder="Pesquisar atividades e tarefas..." />
 
       @if (termoBusca) {
-      <button type="button" (click)="limparBusca()">
+      <button type="button" (click)="limparBusca()" aria-label="Limpar busca">
         <ion-icon name="close-outline"></ion-icon>
       </button>
       }

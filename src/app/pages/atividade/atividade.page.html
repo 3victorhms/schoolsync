@@ -6,11 +6,11 @@
 
     <ion-buttons slot="end">
       @if (usuario.id === atividade.idCriador) {
-      <ion-button fill="clear" class="editar-btn" (click)="editar()">
+      <ion-button fill="clear" class="editar-btn" (click)="editar()" aria-label="Editar atividade">
         <ion-icon name="create-outline" slot="icon-only"></ion-icon>
       </ion-button>
 
-      <ion-button fill="clear" class="excluir-btn" [disabled]="excluindo" (click)="excluir()">
+      <ion-button fill="clear" class="excluir-btn" [disabled]="excluindo" (click)="excluir()" aria-label="Excluir atividade">
         <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
       </ion-button>
       }
@@ -178,7 +178,7 @@
     @if (comentarioRespondendo) {
     <div class="resposta-aviso">
       <span>Respondendo {{ comentarioRespondendo.nomeUsuario }}</span>
-      <button type="button" (click)="cancelarResposta()">
+      <button type="button" (click)="cancelarResposta()" aria-label="Cancelar resposta">
         <ion-icon name="close-outline"></ion-icon>
       </button>
     </div>
@@ -192,7 +192,7 @@
         rows="1"
         placeholder="Escrever comentario..."></textarea>
 
-      <button type="button" (click)="enviarComentario()" [disabled]="enviandoComentario || !novoComentario.trim()">
+      <button type="button" (click)="enviarComentario()" [disabled]="enviandoComentario || !novoComentario.trim()" aria-label="Enviar comentário">
         <ion-icon name="send-outline"></ion-icon>
       </button>
     </div>

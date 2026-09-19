@@ -48,7 +48,8 @@
       <ion-item class="campo-item" lines="none">
         <ion-input [type]="mostrarSenhaAtual ? 'text' : 'password'" placeholder="••••••••" formControlName="senhaAtual"
           autocomplete="new-password"></ion-input>
-        <ion-button fill="clear" slot="end" class="olho-btn" (click)="mostrarSenhaAtual = !mostrarSenhaAtual">
+        <ion-button fill="clear" slot="end" class="olho-btn" (click)="mostrarSenhaAtual = !mostrarSenhaAtual"
+          [attr.aria-label]="mostrarSenhaAtual ? 'Ocultar senha' : 'Mostrar senha'">
           <ion-icon [name]="mostrarSenhaAtual ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
         </ion-button>
       </ion-item>
@@ -59,7 +60,8 @@
       <ion-item class="campo-item" lines="none">
         <ion-input [type]="mostrarNovaSenha ? 'text' : 'password'" placeholder="••••••••" formControlName="novaSenha"
           autocomplete="new-password"></ion-input>
-        <ion-button fill="clear" slot="end" class="olho-btn" (click)="mostrarNovaSenha = !mostrarNovaSenha">
+        <ion-button fill="clear" slot="end" class="olho-btn" (click)="mostrarNovaSenha = !mostrarNovaSenha"
+          [attr.aria-label]="mostrarNovaSenha ? 'Ocultar senha' : 'Mostrar senha'">
           <ion-icon [name]="mostrarNovaSenha ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
         </ion-button>
       </ion-item>
@@ -70,7 +72,8 @@
       <ion-item class="campo-item" lines="none">
         <ion-input [type]="mostrarConfirmar ? 'text' : 'password'" placeholder="••••••••"
           formControlName="confirmarSenha" autocomplete="new-password"></ion-input>
-        <ion-button fill="clear" slot="end" class="olho-btn" (click)="mostrarConfirmar = !mostrarConfirmar">
+        <ion-button fill="clear" slot="end" class="olho-btn" (click)="mostrarConfirmar = !mostrarConfirmar"
+          [attr.aria-label]="mostrarConfirmar ? 'Ocultar senha' : 'Mostrar senha'">
           <ion-icon [name]="mostrarConfirmar ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
         </ion-button>
       </ion-item>
