@@ -35,11 +35,11 @@ SchoolSync é uma aplicação para organização escolar, permitindo que usuári
 ## Pré-requisitos
 
 - Node.js
-- npm
+- npm install
 - Ionic CLI
 - Java JDK
 - Maven
-- XAMPP ligado no Apache e MySQL, além do Back-end SchoolSync em execução
+- Deploy atualizado na API no Render
 
 ## Autores
 
