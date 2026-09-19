@@ -41,14 +41,30 @@ ion-content {
         background: #171c28;
         border: none;
         border-radius: 16px;
-        padding: 18px 12px;
-        color: #3a6ff7;
-        font-size: 13px;
+        padding: 16px 10px;
+        color: #ffffff;
+        font-size: 12.5px;
         font-weight: 600;
         cursor: pointer;
 
-        ion-icon {
-            font-size: 22px;
+        // Cor solida, pra ficar certo em qualquer tema sem precisar de ajuste.
+        .acao-icone {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #3a6ff7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            ion-icon {
+                font-size: 20px;
+                color: #ffffff;
+            }
+
+            &.sair {
+                background: #ff5c6c;
+            }
         }
 
         &.sair-sala-btn {
@@ -60,186 +76,202 @@ ion-content {
 .secao {
     padding: 16px 16px 0;
     margin-bottom: 8px;
+}
 
-    .secao-titulo {
+.group-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6b7590;
+    margin: 0 4px 10px;
+}
+
+.group {
+    background: #171c28;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.row,
+.membro-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    position: relative;
+}
+
+.row {
+    align-items: flex-start;
+    cursor: pointer;
+}
+
+.row + .row::before,
+.membro-item + .membro-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 56px;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.row-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+
+    // Cor solida por status (como no app Lembretes do iOS), pra funcionar
+    // igual em qualquer tema sem precisar de ajuste.
+    ion-icon {
+        font-size: 17px;
+        color: #ffffff !important;
+    }
+
+    &.nao_iniciada { background: #8e8e93; }
+    &.em_andamento { background: #3a6ff7; }
+    &.concluido { background: #3abf7f; }
+    &.fora_caderno { background: #4e5670; }
+}
+
+.row-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.row-label {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 4px;
+    overflow-wrap: anywhere;
+}
+
+.row-sub {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+
+    .row-desc {
+        font-size: 13px;
+        color: #8891aa;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .tag-pontos {
+        background: #1a1f2e;
+        color: #c8cfe0;
+        font-size: 10.5px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 6px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+}
+
+.row-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+
+    .tag-disciplina {
+        background: #1e2f5e;
+        color: #3a6ff7;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 9px;
+        border-radius: 20px;
+        white-space: nowrap;
+    }
+
+    .row-data {
         display: flex;
         align-items: center;
-        gap: 8px;
-        font-size: 18px;
-        font-weight: 700;
-        color: #ffffff;
-        margin: 0 0 12px;
+        gap: 4px;
+        font-size: 12px;
+        color: #8891aa;
 
         ion-icon {
-            color: #3a6ff7;
-            font-size: 20px;
+            font-size: 13px;
         }
+    }
+
+    .atividade-status {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: #8891aa;
+
+        &.em_andamento { color: #3a6ff7; }
+        &.concluido { color: #3abf7f; }
+        &.fora_caderno { color: #4e5670; }
     }
 }
 
-.atividades-lista {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    .atividade-card {
-        background: #171c28;
-        border-radius: 16px;
-        padding: 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-
-        .atividade-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 8px;
-
-            .atividade-titulo {
-                font-size: 15px;
-                font-weight: 700;
-                color: #ffffff;
-                margin: 0 0 4px;
-            }
-
-            .atividade-descricao {
-                font-size: 13px;
-                color: #8891aa;
-                margin: 0;
-            }
-
-            .atividade-materia {
-                background: #1e2f5e;
-                color: #3a6ff7;
-                font-size: 12px;
-                font-weight: 600;
-                padding: 4px 10px;
-                border-radius: 20px;
-                white-space: nowrap;
-            }
-        }
-
-        .atividade-meta {
-            display: flex;
-            gap: 16px;
-            font-size: 12px;
-            color: #8891aa;
-
-            span {
-                display: flex;
-                align-items: center;
-                gap: 4px;
-
-                ion-icon {
-                    font-size: 14px;
-                }
-            }
-        }
-
-        .atividade-status {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            font-weight: 600;
-
-            ion-icon {
-                font-size: 15px;
-            }
-
-            &.pendente {
-                color: #3a6ff7;
-            }
-
-            &.concluido {
-                color: #3abf7f;
-            }
-
-            &.no_caderno {
-                color: #8891aa;
-            }
-
-            &.fora_caderno {
-                background: transparent;
-                border: 1.5px #4e5670;
-                color: #4e5670;
-            }
-        }
-    }
-
-    .vazio {
-        text-align: center;
-        padding: 24px;
-        color: #4e5670;
-        font-size: 14px;
-    }
+.row-seta {
+    font-size: 18px;
+    color: #4e5670;
+    flex-shrink: 0;
+    margin-top: 8px;
 }
 
-.membros-lista {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding-bottom: 32px;
+.vazio-data {
+    background: #171c28;
+    border-radius: 16px;
+    padding: 28px 20px;
+    text-align: center;
+    color: #4e5670;
+    font-size: 14px;
+}
 
-    .membro-item {
-        background: #171c28;
-        border-radius: 16px;
-        padding: 14px 16px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
+.membro-item {
+    .remover-membro-btn {
+        --color: #ff5c6c;
+        --padding-start: 8px;
+        --padding-end: 8px;
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        margin: 0;
 
-        .remover-membro-btn {
-            --color: #ff5c6c;
-            --padding-start: 8px;
-            --padding-end: 8px;
-            width: 40px;
-            height: 40px;
-            flex-shrink: 0;
-
-            ion-icon {
-                font-size: 19px;
-            }
+        ion-icon {
+            font-size: 19px;
         }
+    }
 
-        .membro-pos {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: #1e2540;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            font-weight: 700;
-            color: #8891aa;
-        }
+    .row-label {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 0;
+    }
 
-        .membro-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
+    .voce {
+        color: #3a6ff7;
+        font-size: 13px;
+        font-weight: 600;
+        margin-left: 4px;
+    }
 
-            .membro-nome {
-                font-size: 15px;
-                font-weight: 600;
-                color: #ffffff;
-
-                .voce {
-                    color: #3a6ff7;
-                    font-size: 13px;
-                    margin-left: 4px;
-                }
-            }
-
-            .membro-tag-lider {
-                color: #f5a623;
-                font-size: 12px;
-                font-weight: 700;
-            }
-        }
+    .membro-tag-lider {
+        display: block;
+        color: #f5a623;
+        font-size: 12px;
+        font-weight: 700;
+        margin-top: 2px;
     }
 }
 
