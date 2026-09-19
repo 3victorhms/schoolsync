@@ -114,6 +114,13 @@ ion-content {
     }
 
     .group-title {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #6b7590;
+        margin: 0 4px 10px;
+
         &.tarefas {
             margin-top: 24px;
         }
