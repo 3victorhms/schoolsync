@@ -83,7 +83,7 @@ ion-content {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #6b7590;
+    color: #7c859e;
     margin: 0 4px 10px;
 }
 
@@ -139,7 +139,7 @@ ion-content {
     &.nao_iniciada { background: #8e8e93; }
     &.em_andamento { background: #3a6ff7; }
     &.concluido { background: #3abf7f; }
-    &.fora_caderno { background: #4e5670; }
+    &.fora_caderno { background: #7e88a6; }
 }
 
 .row-body {
@@ -218,13 +218,13 @@ ion-content {
 
         &.em_andamento { color: #3a6ff7; }
         &.concluido { color: #3abf7f; }
-        &.fora_caderno { color: #4e5670; }
+        &.fora_caderno { color: #7e88a6; }
     }
 }
 
 .row-seta {
     font-size: 18px;
-    color: #4e5670;
+    color: #7e88a6;
     flex-shrink: 0;
     margin-top: 8px;
 }
@@ -234,7 +234,7 @@ ion-content {
     border-radius: 16px;
     padding: 28px 20px;
     text-align: center;
-    color: #4e5670;
+    color: #7e88a6;
     font-size: 14px;
 }
 

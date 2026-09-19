@@ -51,7 +51,7 @@ form {
         padding: 10px 0;
 
         &::placeholder {
-          color: #4e5670;
+          color: #7e88a6;
         }
       }
     }
@@ -72,7 +72,7 @@ form {
 
     &[disabled] {
       --background: #252b3d;
-      --color: #4e5670;
+      --color: #7e88a6;
       opacity: 1;
     }
   }

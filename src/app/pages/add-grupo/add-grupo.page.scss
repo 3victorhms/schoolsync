@@ -56,7 +56,7 @@ form {
 
   ion-input {
     --color: #ffffff;
-    --placeholder-color: #4e5670;
+    --placeholder-color: #7e88a6;
     --placeholder-opacity: 1;
     font-size: 15px;
   }
@@ -75,7 +75,7 @@ form {
 
   &[disabled] {
     --background: #252b3d;
-    --color: #4e5670;
+    --color: #7e88a6;
     opacity: 1;
   }
 }
