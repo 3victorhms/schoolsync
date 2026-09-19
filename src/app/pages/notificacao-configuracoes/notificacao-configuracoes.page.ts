@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { IonContent, IonIcon, IonToggle, ToastController } from '@ionic/angular/standalone';
+import { IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonTitle, IonToggle, IonToolbar, ToastController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { arrowBackOutline, checkmarkOutline, notificationsOutline, phonePortraitOutline, timeOutline } from 'ionicons/icons';
+import { checkmarkOutline, notificationsOutline, phonePortraitOutline, timeOutline } from 'ionicons/icons';
 import { ConfiguracaoNotificacao, NotificacaoService } from '../../services/notificacao.service';
 import { NotificacaoPushService } from '../../services/notificacao-push.service';
 import { firstValueFrom } from 'rxjs';
@@ -14,7 +13,7 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './notificacao-configuracoes.page.html',
   styleUrls: ['./notificacao-configuracoes.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, IonContent, IonIcon, IonToggle]
+  imports: [CommonModule, FormsModule, IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonTitle, IonToggle, IonToolbar]
 })
 export class NotificacaoConfiguracoesPage {
   configuracao: ConfiguracaoNotificacao = { noAplicativo: true, push: false, lembreteDias: 1 };
@@ -25,7 +24,7 @@ export class NotificacaoConfiguracoesPage {
     private notificacaoPushService: NotificacaoPushService,
     private toastController: ToastController
   ) {
-    addIcons({ arrowBackOutline, checkmarkOutline, notificationsOutline, phonePortraitOutline, timeOutline });
+    addIcons({ checkmarkOutline, notificationsOutline, phonePortraitOutline, timeOutline });
   }
 
   ionViewWillEnter(): void {

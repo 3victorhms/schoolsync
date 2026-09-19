@@ -1,14 +1,25 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/inicio"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>Notificações</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button fill="clear" class="marcar-lidas-btn" (click)="marcarTodas()" aria-label="Marcar todas como lidas">
+        <ion-icon name="checkmark-done-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+
+      <ion-button fill="clear" routerLink="/notificacao/configuracoes" aria-label="Configurar notificações">
+        <ion-icon name="settings-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content [fullscreen]="true">
   <main class="pagina-notificacoes">
-    <header class="cabecalho">
-      <h1>Notificações</h1>
-      <div class="acoes">
-        <a routerLink="/notificacao/configuracoes" aria-label="Configurar notificações"><ion-icon name="settings-outline"></ion-icon></a>
-        <button type="button" (click)="marcarTodas()">Marcar todas como lidas</button>
-        <a routerLink="/inicio" aria-label="Fechar"><ion-icon name="close-outline"></ion-icon></a>
-      </div>
-    </header>
-
     <section class="lista" aria-live="polite">
       @if (carregando) { <div class="estado-carregando">Carregando notificações...</div> }
       @if (erro) { <div class="estado-erro" role="alert">{{ erro }}</div> }

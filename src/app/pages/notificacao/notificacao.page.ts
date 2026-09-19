@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { IonContent, IonIcon } from '@ionic/angular/standalone';
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { bookOutline, checkmarkCircleOutline, closeOutline, notificationsOutline, peopleOutline, settingsOutline } from 'ionicons/icons';
+import { bookOutline, checkmarkCircleOutline, checkmarkDoneOutline, notificationsOutline, peopleOutline, settingsOutline } from 'ionicons/icons';
 import { NotificacaoModel } from '../../model/notificacao.model';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './notificacao.page.html',
   styleUrls: ['./notificacao.page.scss'],
   standalone: true,
-  imports: [IonContent, IonIcon, CommonModule, RouterLink]
+  imports: [IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonTitle, IonToolbar, CommonModule, RouterLink]
 })
 export class NotificacaoPage {
   notificacoes: NotificacaoModel[] = [];
@@ -22,7 +22,7 @@ export class NotificacaoPage {
   private notificacoesSubscription?: Subscription;
 
   constructor(private service: NotificacaoService, private router: Router) {
-    addIcons({ bookOutline, checkmarkCircleOutline, closeOutline, notificationsOutline, peopleOutline, settingsOutline });
+    addIcons({ bookOutline, checkmarkCircleOutline, checkmarkDoneOutline, notificationsOutline, peopleOutline, settingsOutline });
   }
 
   ionViewWillEnter(): void {
