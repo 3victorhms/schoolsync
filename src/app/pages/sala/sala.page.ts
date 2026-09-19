@@ -9,7 +9,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { addIcons } from 'ionicons';
-import { addOutline, peopleOutline, trophyOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline, logOutOutline, personRemoveOutline } from 'ionicons/icons';
+import { addOutline, peopleOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline, logOutOutline, personRemoveOutline, chevronForwardOutline } from 'ionicons/icons';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { finalize, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -47,11 +47,11 @@ export class SalaPage implements OnInit {
         this.idSala = '';
 
         addIcons({
-            addOutline, peopleOutline, trophyOutline, bookOutline,
+            addOutline, peopleOutline, bookOutline,
             calendarOutline, starOutline, timeOutline,
             checkmarkCircleOutline, bookmarkOutline,
             createOutline, trashOutline, logOutOutline,
-            personRemoveOutline
+            personRemoveOutline, chevronForwardOutline
         });
     }
 
@@ -165,6 +165,11 @@ export class SalaPage implements OnInit {
         const usuario = new UsuarioModel();
         usuario.id = id;
         return usuario;
+    }
+
+    classeStatus(status: string | null): string {
+        if (!status || status === 'pendente') return 'nao_iniciada';
+        return status;
     }
 
     iconeStatus(status: string | null): string {

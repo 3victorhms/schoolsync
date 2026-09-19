@@ -22,70 +22,81 @@
 <ion-content [fullscreen]="true">
     <div class="acoes">
         <button class="acao-btn" [routerLink]="['/add-atividade/', sala.id]">
-            <ion-icon name="add-outline"></ion-icon>
+            <div class="acao-icone">
+                <ion-icon name="add-outline"></ion-icon>
+            </div>
             <span>Nova Atividade</span>
         </button>
         <button type="button" class="acao-btn" (click)="abrirGrupos()">
-            <ion-icon name="people-outline"></ion-icon>
+            <div class="acao-icone">
+                <ion-icon name="people-outline"></ion-icon>
+            </div>
             <span>Grupos</span>
         </button>
         @if (!liderLogado) {
         <button class="acao-btn sair-sala-btn" (click)="sairDaSala()">
-            <ion-icon name="log-out-outline"></ion-icon>
+            <div class="acao-icone sair">
+                <ion-icon name="log-out-outline"></ion-icon>
+            </div>
             <span>Sair da sala</span>
         </button>
         }
     </div>
+
     <section class="secao">
-        <h3 class="secao-titulo">
-            <ion-icon name="book-outline"></ion-icon>
-            Atividades
-        </h3>
-        <div class="atividades-lista">
+        <h3 class="group-title">Atividades</h3>
+
+        @if (sala.atividades.length) {
+        <div class="group">
             @for (atividade of sala.atividades; track atividade.id) {
-            <div class="atividade-card" [routerLink]="['/atividade', atividade.id]" button>
-                <div class="atividade-header">
-                    <div>
-                        <h4 class="atividade-titulo">{{ atividade.titulo }}</h4>
-                        <p class="atividade-descricao">{{ atividade.descricao }}</p>
-                    </div>
-                    <span class="atividade-materia">{{ atividade.disciplina }}</span>
-                </div>
-                <div class="atividade-meta">
-                    <span><ion-icon name="calendar-outline"></ion-icon> {{ atividade.dataEntrega }}</span>
-                    <span><ion-icon name="star-outline"></ion-icon> {{ labelPontos(atividade.valor) }}</span>
-                </div>
-                <div class="atividade-status" [ngClass]="atividade.estaNoCaderno ? atividade.status : 'fora_caderno'">
+            <div class="row" [routerLink]="['/atividade', atividade.id]" button>
+                <div class="row-icon" [ngClass]="atividade.estaNoCaderno ? classeStatus(atividade.status) : 'fora_caderno'">
                     <ion-icon
                         [name]="atividade.estaNoCaderno ? iconeStatus(atividade.status) : 'bookmark-outline'"></ion-icon>
-
-                    {{ atividade.estaNoCaderno ? labelStatus(atividade.status) : 'Não está no caderno' }}
                 </div>
-            </div>
-            } @empty {
-            <div class="vazio">
-                <p>Nenhuma atividade ainda.</p>
+                <div class="row-body">
+                    <h4 class="row-label">{{ atividade.titulo }}</h4>
+                    <div class="row-sub">
+                        <span class="row-desc">{{ atividade.descricao }}</span>
+                        <span class="tag-pontos">{{ labelPontos(atividade.valor) }}</span>
+                    </div>
+                    <div class="row-meta">
+                        <span class="tag-disciplina">{{ atividade.disciplina }}</span>
+                        <span class="row-data">
+                            <ion-icon name="calendar-outline"></ion-icon>
+                            {{ atividade.dataEntrega }}
+                        </span>
+                        <span class="atividade-status"
+                            [ngClass]="atividade.estaNoCaderno ? classeStatus(atividade.status) : 'fora_caderno'">
+                            {{ atividade.estaNoCaderno ? labelStatus(atividade.status) : 'Não está no caderno' }}
+                        </span>
+                    </div>
+                </div>
+                <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
             </div>
             }
         </div>
+        } @else {
+        <div class="vazio-data">
+            <span>Nenhuma atividade ainda.</span>
+        </div>
+        }
     </section>
+
     <section class="secao">
-        <h3 class="secao-titulo">
-            <ion-icon name="people-outline"></ion-icon>
-            Membros
-        </h3>
-        <div class="membros-lista">
-            @for (membro of membros; track membro.id; let i = $index) {
+        <h3 class="group-title">Membros</h3>
+
+        <div class="group">
+            @for (membro of membros; track membro.id) {
             <div class="membro-item">
-                <span class="membro-pos">{{ i + 1 }}</span>
                 <div class="avatar-small" [class.lider]="membro.id === sala.idLider">
                     {{ iniciais(nomeMembro(membro)) }}
                     @if (membro.id === sala.idLider) {
                     <span class="coroa">👑</span>
                     }
                 </div>
-                <div class="membro-info">
-                    <span class="membro-nome">
+                <div class="row-body">
+                    <span class="row-label">
                         {{ nomeMembro(membro) }}
                         @if (membro.id === usuario.id) {
                         <span class="voce">(você)</span>
@@ -96,7 +107,8 @@
                     }
                 </div>
                 @if (podeRemoverMembro(membro)) {
-                <ion-button fill="clear" class="remover-membro-btn" [disabled]="removendoMembroId === membro.id" (click)="removerMembro(membro)">
+                <ion-button fill="clear" class="remover-membro-btn" [disabled]="removendoMembroId === membro.id"
+                    (click)="removerMembro(membro)">
                     <ion-icon name="person-remove-outline" slot="icon-only"></ion-icon>
                 </ion-button>
                 }
