@@ -31,7 +31,7 @@
 
     border-radius: 24px;
 
-    background: #22304a;
+    background: #16264a;
 
     display: flex;
     justify-content: center;
@@ -42,7 +42,7 @@
 
 .logo-icon ion-icon {
     font-size: 34px;
-    color: #4c6fa6;
+    color: #3a6ff7;
 }
 
 .logo-area h1 {
@@ -158,16 +158,16 @@
 }
 
 .olho-senha:focus-visible {
-    outline: 2px solid #4c6fa6;
+    outline: 2px solid #3a6ff7;
     outline-offset: 2px;
 }
 
 .login-button {
     margin-top: 10px;
 
-    --background: #4c6fa6;
+    --background: #3a6ff7;
 
-    --background-activated: #3d577e;
+    --background-activated: #2f5fd9;
 
     --border-radius: 18px;
 
@@ -199,7 +199,7 @@
 
     border: none;
 
-    color: #4c6fa6;
+    color: #3a6ff7;
 
     font-size: 14px;
     font-weight: 600;

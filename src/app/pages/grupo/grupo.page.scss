@@ -85,7 +85,7 @@ ion-content {
   width: 42px;
   height: 42px;
   border-radius: 12px;
-  background: #26344a;
+  background: #1e2540;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,7 +93,7 @@ ion-content {
 
   ion-icon {
     font-size: 20px;
-    color: #4c6fa6;
+    color: #3a6ff7;
   }
 }
 
@@ -119,7 +119,7 @@ ion-content {
 .tag-codigo {
   font-size: 15px;
   font-weight: 700;
-  color: #4c6fa6;
+  color: #3a6ff7;
   letter-spacing: 2px;
 }
 
@@ -164,7 +164,7 @@ ion-content {
 }
 
 .row-label .voce {
-  color: #4c6fa6;
+  color: #3a6ff7;
   font-size: 13px;
   font-weight: 600;
   margin-left: 4px;
@@ -191,7 +191,7 @@ ion-tab-bar {
 
 ion-tab-button {
   --color: #4e5670;
-  --color-selected: #4c6fa6;
+  --color-selected: #3a6ff7;
   --ripple-color: transparent;
   --padding-top: 0;
   --padding-bottom: 0;
@@ -222,10 +222,10 @@ ion-tab-button {
 }
 
 .selecionado {
-  color: #5578b0;
+  color: #3a79df;
 
   &::part(native) {
-    background: #22304a;
+    background: #16264a;
     padding: 10px 16px;
   }
 

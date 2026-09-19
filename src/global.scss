@@ -47,8 +47,8 @@ body {
   --app-text-soft: #c8cfe0;
   --app-muted: #8891aa;
   --app-muted-strong: #4e5670;
-  --app-accent: #4c6fa6;
-  --app-accent-soft: #22304a;
+  --app-accent: #3a6ff7;
+  --app-accent-soft: #16264a;
   --app-success: #3abf7f;
   --app-warning: #f5a623;
   --app-danger: #ff5c6c;
@@ -65,8 +65,8 @@ body.tema-claro {
   --app-text-soft: #2f3a4f;
   --app-muted: #667085;
   --app-muted-strong: #9aa7ba;
-  --app-accent: #3e5c8a;
-  --app-accent-soft: #e1e6ef;
+  --app-accent: #2f6df6;
+  --app-accent-soft: #e4edff;
   --app-success: #158a55;
   --app-warning: #b7791f;
   --app-danger: #d33f49;
@@ -371,7 +371,7 @@ body.tema-claro .entrar-btn ion-icon {
 
 body.tema-claro .criar-btn {
   --background: var(--app-accent) !important;
-  --background-activated: #3d577e !important;
+  --background-activated: #245bd8 !important;
   --color: #ffffff !important;
   --border-radius: 999px !important;
   border-radius: 999px !important;
