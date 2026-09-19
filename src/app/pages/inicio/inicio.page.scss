@@ -1,12 +1,30 @@
 // Estilos feitos com auxílio das I.As Lovable e Claude
+//
+// Cores lidas dos tokens definidos em src/global.scss (--app-*) para que o
+// tema claro (body.tema-claro) funcione automaticamente, sem precisar de
+// overrides manuais por página. Cores sem token equivalente no design
+// system (ex.: a escala de urgência do calendário) ficam como variáveis
+// locais, documentadas abaixo.
+
+// Escala de urgência do calendário: azul → vermelho → laranja → amarelo →
+// verde. Não faz parte da paleta semântica (accent/success/warning/danger)
+// porque precisa de 5 degraus distintos; candidata a virar tokens próprios
+// (--app-cal-*) se for reaproveitada em outra tela.
+$cal-concluida: #3670cd;
+$cal-atrasada: #d62f2f;
+$cal-atrasada-borda: #7f1720;
+$cal-proxima: #ee7d1a;
+$cal-semana: #f9ca32;
+$cal-mes: #299c32;
+$cal-selo-texto: #2458a9;
 
 ion-toolbar {
-    --background: #0f1117;
+    --background: var(--app-bg);
     --border-color: transparent;
 }
 
 ion-content {
-    --background: #0f1117;
+    --background: var(--app-bg);
     --padding-bottom: 96px;
 }
 
@@ -19,14 +37,14 @@ ion-content {
     .ola {
         font-size: 14px;
         font-weight: 400;
-        color: #8891aa;
+        color: var(--app-muted);
         margin: 0;
     }
 
     .nome {
         font-size: 24px;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--app-text);
         margin: 0;
     }
 
@@ -34,7 +52,7 @@ ion-content {
         position: relative;
         width: 40px;
         height: 40px;
-        background: #171c28;
+        background: var(--app-surface);
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -43,15 +61,17 @@ ion-content {
 
         ion-icon {
             font-size: 20px;
-            color: #ffffff;
+            color: var(--app-text);
         }
 
         .notificacao-badge {
             position: absolute;
             top: 2px;
             right: 2px;
-            background: #e05c5c;
-            color: #ffffff;
+            // Era #e05c5c: um vermelho quase idêntico ao token de perigo,
+            // provavelmente uma cópia manual que divergiu com o tempo.
+            background: var(--app-danger);
+            color: var(--app-text);
             font-size: 10px;
             font-weight: 700;
             width: 16px;
@@ -65,7 +85,7 @@ ion-content {
 }
 
 .calendario-card {
-    background: #171c28;
+    background: var(--app-surface);
     border-radius: 20px;
     margin: 8px 16px 16px;
     padding: 16px;
@@ -79,13 +99,13 @@ ion-content {
         .cal-titulo {
             font-size: 16px;
             font-weight: 600;
-            color: #ffffff;
+            color: var(--app-text);
         }
 
         .cal-nav {
             background: transparent;
             border: none;
-            color: #8891aa;
+            color: var(--app-muted);
             font-size: 18px;
             display: flex;
             align-items: center;
@@ -104,7 +124,7 @@ ion-content {
             text-align: center;
             font-size: 12px;
             font-weight: 600;
-            color: #7e88a6;
+            color: var(--app-muted-strong);
             padding: 4px 0;
         }
     }
@@ -118,7 +138,7 @@ ion-content {
             position: relative;
             background: transparent;
             border: none;
-            color: #ffffff;
+            color: var(--app-text);
             font-size: 14px;
             font-weight: 500;
             width: 100%;
@@ -130,17 +150,21 @@ ion-content {
             cursor: pointer;
 
             &.outro-mes {
+                // Era #2e3450: próximo de --app-border, mas usado aqui como
+                // cor de texto "apagado", não de fundo/borda — mantido como
+                // valor dedicado até o design system ganhar um token de
+                // texto desabilitado.
                 color: #2e3450;
             }
 
             &.hoje {
-                color: #3a6ff7;
+                color: var(--app-accent);
                 font-weight: 700;
             }
 
             &.selecionado {
-                background: #3a6ff7;
-                color: #ffffff;
+                background: var(--app-accent);
+                color: var(--app-text);
                 font-weight: 700;
             }
 
@@ -162,15 +186,15 @@ ion-content {
                 z-index: 1;
                 box-shadow: 0 3px 10px rgba(0, 0, 0, .24);
                 // Escala de urgência: vermelho → laranja → amarelo → verde → azul.
-                &.concluida, &.futuro { background: #3670cd; }
-                &.atrasada, &.hoje { background: #d62f2f; }
-                &.proxima { background: #ee7d1a; }
-                &.semana { background: #f9ca32; }
-                &.mes { background: #299c32; }
+                &.concluida, &.futuro { background: $cal-concluida; }
+                &.atrasada, &.hoje { background: $cal-atrasada; }
+                &.proxima { background: $cal-proxima; }
+                &.semana { background: $cal-semana; }
+                &.mes { background: $cal-mes; }
 
                 // Prazo vencido continua vermelho, mas fica visualmente marcado como atraso.
                 &.atrasada {
-                    border-color: #7f1720;
+                    border-color: $cal-atrasada-borda;
                     box-shadow: 0 0 0 2px rgba(214, 47, 47, .22), 0 3px 10px rgba(0, 0, 0, .28);
                 }
             }
@@ -184,10 +208,10 @@ ion-content {
                 width: 15px;
                 height: 15px;
                 place-items: center;
-                border: 2px solid #171c28;
+                border: 2px solid var(--app-surface);
                 border-radius: 50%;
-                background: #ffffff;
-                color: #2458a9;
+                background: var(--app-text);
+                color: $cal-selo-texto;
                 font-size: 9px;
                 font-weight: 900;
                 line-height: 1;
@@ -198,7 +222,8 @@ ion-content {
 
     .resumo-indicador {
         margin: 10px 4px 0;
-        color: #aeb8ca;
+        // Era #aeb8ca: variação próxima de --app-muted-strong.
+        color: var(--app-muted-strong);
         font-size: 12px;
         text-align: center;
     }
@@ -210,17 +235,17 @@ ion-content {
     .data-titulo {
         font-size: 19px;
         font-weight: 800;
-        color: #ffffff;
+        color: var(--app-text);
         letter-spacing: -0.2px;
         margin: 0 4px 10px;
     }
 
     .vazio-data {
-        background: #171c28;
+        background: var(--app-surface);
         border-radius: 16px;
         padding: 18px;
         text-align: center;
-        color: #7e88a6;
+        color: var(--app-muted-strong);
         font-size: 14px;
     }
 }
@@ -230,12 +255,13 @@ ion-content {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #7c859e;
+    // Era #7c859e: variação próxima de --app-muted-strong.
+    color: var(--app-muted-strong);
     margin: 0 4px 10px;
 }
 
 .group {
-    background: #171c28;
+    background: var(--app-surface);
     border-radius: 16px;
     overflow: hidden;
 }
@@ -268,7 +294,7 @@ ion-content {
         width: 34px;
         height: 34px;
         border-radius: 10px;
-        background: #16264a;
+        background: var(--app-accent-soft);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -276,7 +302,7 @@ ion-content {
 
         ion-icon {
             font-size: 17px;
-            color: #3a6ff7;
+            color: var(--app-accent);
         }
     }
 
@@ -287,7 +313,7 @@ ion-content {
         .row-label {
             font-size: 15px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--app-text);
             margin: 0 0 3px;
         }
 
@@ -299,12 +325,12 @@ ion-content {
 
             .row-desc {
                 font-size: 13px;
-                color: #8891aa;
+                color: var(--app-muted);
             }
 
             .tag-pontos {
-                background: #1a1f2e;
-                color: #c8cfe0;
+                background: var(--app-bg-muted);
+                color: var(--app-text-soft);
                 font-size: 10.5px;
                 font-weight: 700;
                 padding: 2px 7px;
@@ -321,6 +347,10 @@ ion-content {
             flex-wrap: wrap;
 
             .tag-disciplina {
+                // Roxo de categoria: não existe token semântico para isso
+                // hoje (só accent/success/warning/danger). Mantido explícito
+                // — candidato a virar --app-category-purple ou similar caso
+                // apareça em outras telas.
                 background: #2a1f5e;
                 color: #a78bfa;
                 font-size: 11px;
@@ -335,7 +365,7 @@ ion-content {
                 align-items: center;
                 gap: 4px;
                 font-size: 12px;
-                color: #8891aa;
+                color: var(--app-muted);
 
                 ion-icon {
                     font-size: 13px;
@@ -343,7 +373,7 @@ ion-content {
             }
 
             .tag-codigo {
-                color: #3a6ff7;
+                color: var(--app-accent);
                 font-weight: 600;
                 font-size: 12px;
             }
@@ -352,7 +382,7 @@ ion-content {
 
     .row-seta {
         font-size: 18px;
-        color: #7e88a6;
+        color: var(--app-muted-strong);
         flex-shrink: 0;
     }
 }
@@ -381,8 +411,8 @@ ion-tab-bar {
 }
 
 ion-tab-button {
-    --color: #7e88a6;
-    --color-selected: #3a6ff7;
+    --color: var(--app-muted-strong);
+    --color-selected: var(--app-accent);
     --ripple-color: transparent;
     --padding-top: 0;
     --padding-bottom: 0;
@@ -413,10 +443,12 @@ ion-tab-button {
 }
 
 .selecionado {
-    color: #3a79df;
+    // Era #3a79df: variação próxima de --app-accent, provavelmente cópia
+    // manual que divergiu com o tempo.
+    color: var(--app-accent);
 
     &::part(native) {
-        background: #16264a;
+        background: var(--app-accent-soft);
         padding: 10px 16px;
     }
 
