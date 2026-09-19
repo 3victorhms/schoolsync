@@ -50,8 +50,8 @@ ion-toolbar {
 
         &.badge-fora_caderno {
             background: transparent;
-            border: 1.5px dashed #4e5670;
-            color: #4e5670;
+            border: 1.5px dashed #7e88a6;
+            color: #7e88a6;
         }
     }
 }
@@ -127,7 +127,7 @@ ion-content {
 
     .criado-por {
         font-size: 13px;
-        color: #4e5670;
+        color: #7e88a6;
         margin: 0;
     }
 
@@ -314,7 +314,7 @@ ion-content {
             }
 
             span {
-                color: #4e5670;
+                color: #7e88a6;
                 font-size: 12px;
                 font-weight: 600;
             }
@@ -367,7 +367,7 @@ ion-content {
         border-radius: 14px;
         padding: 24px;
         text-align: center;
-        color: #4e5670;
+        color: #7e88a6;
         font-size: 14px;
     }
 
@@ -419,7 +419,7 @@ ion-content {
             outline: none;
 
             &::placeholder {
-                color: #4e5670;
+                color: #7e88a6;
             }
 
             &:focus {
