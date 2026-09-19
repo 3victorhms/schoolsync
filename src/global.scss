@@ -549,6 +549,16 @@ body.tema-claro app-notificacao .notificacao:focus-visible {
   border-color: var(--app-accent);
   background: var(--app-accent-soft);
 }
+body.tema-claro app-notificacao .icone {
+  background: var(--app-accent-soft);
+  color: var(--app-accent);
+}
+body.tema-claro app-notificacao .acoes a {
+  color: var(--app-muted);
+}
+body.tema-claro app-notificacao .estado-vazio ion-icon {
+  color: var(--app-accent);
+}
 
 /* Configurações de notificações no tema claro. */
 body.tema-claro app-notificacao-configuracoes .pagina-configuracoes {
