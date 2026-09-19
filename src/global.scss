@@ -689,11 +689,21 @@ body.tema-claro .switch.on {
   background: var(--app-accent) !important;
 }
 
-body.tema-claro app-inicio .row-icon {
+/* .row-icon acento-suave (navegacional, sem cor por status): usada em varias
+   telas de lista (inicio/salas/grupos/grupo). As variantes com cor solida por
+   status ou categoria (perfil, caderno, acao-icone dos grupos) ja funcionam
+   nos dois temas por conta propria e nao entram aqui. */
+body.tema-claro app-inicio .row-icon,
+body.tema-claro app-salas .row-icon,
+body.tema-claro app-grupos .row-icon,
+body.tema-claro app-grupo .row-icon {
   background: var(--app-accent-soft) !important;
 }
 
-body.tema-claro app-inicio .row-icon ion-icon {
+body.tema-claro app-inicio .row-icon ion-icon,
+body.tema-claro app-salas .row-icon ion-icon,
+body.tema-claro app-grupos .row-icon ion-icon,
+body.tema-claro app-grupo .row-icon ion-icon {
   color: var(--app-accent) !important;
 }
 

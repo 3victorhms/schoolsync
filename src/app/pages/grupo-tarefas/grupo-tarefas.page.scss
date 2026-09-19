@@ -29,133 +29,178 @@ ion-content {
   }
 }
 
-.nova-tarefa-card,
-.aviso,
-.tarefa-card {
-  background: #171c28;
-  border: 1px solid #252b3d;
-  border-radius: 16px;
+.secao-form,
+.secao-tarefas {
+  padding: 0 16px 24px;
+}
+
+.group-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7590;
+  margin: 0 4px 10px;
 }
 
 .nova-tarefa-card {
-  margin: 0 16px 28px;
+  background: #171c28;
+  border: 1px solid #252b3d;
+  border-radius: 16px;
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-
-  h2 {
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 700;
-    margin: 0 0 4px;
-  }
-
-  select,
-  input {
-    width: 100%;
-    min-height: 52px;
-    background: #1a1f2e;
-    border: 1px solid #252b3d;
-    border-radius: 14px;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 600;
-    padding: 0 16px;
-    outline: none;
-
-    &::placeholder {
-      color: #4e5670;
-      font-weight: 500;
-    }
-  }
-
-  select {
-    appearance: auto;
-  }
-
-  button {
-    min-height: 52px;
-    border: none;
-    border-radius: 14px;
-    background: #3a6ff7;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-
-    &:disabled {
-      background: #252b3d;
-      color: #4e5670;
-      cursor: default;
-    }
-  }
+  gap: 14px;
 }
 
-.aviso {
-  margin: 0 16px 28px;
-  padding: 16px;
-  color: #8891aa;
-  text-align: center;
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo-label {
   font-size: 14px;
   font-weight: 500;
+  color: #c8cfe0;
+  padding-left: 4px;
 }
 
-.tarefas-lista {
-  padding: 0 16px 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+select,
+input {
+  width: 100%;
+  min-height: 52px;
+  background: #1a1f2e;
+  border: 1px solid #252b3d;
+  border-radius: 14px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 0 16px;
+  outline: none;
+
+  &::placeholder {
+    color: #4e5670;
+    font-weight: 500;
+  }
 }
 
-.tarefa-card {
-  min-height: 76px;
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+select {
+  appearance: auto;
 }
 
-.status-icone {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #1e2540;
+button {
+  min-height: 52px;
   border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #3a6ff7;
-  flex-shrink: 0;
+  border-radius: 14px;
+  background: #3a6ff7;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
 
-  ion-icon {
-    font-size: 20px;
-  }
-
   &:disabled {
-    color: #6b7693;
+    background: #252b3d;
+    color: #4e5670;
     cursor: default;
   }
 }
 
-.tarefa-info {
+.aviso {
+  margin: 0 16px 24px;
+  padding: 16px;
+  background: #171c28;
+  border: 1px solid #252b3d;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #8891aa;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+
+  ion-icon {
+    font-size: 18px;
+    color: #6f8fc7 !important;
+    flex-shrink: 0;
+  }
+}
+
+.group {
+  background: #171c28;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  position: relative;
+}
+
+.row + .row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 56px;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.row-icon {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 10px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+
+  // Cor solida por status (como no app Lembretes do iOS), pra funcionar
+  // igual em qualquer tema sem precisar de ajuste.
+  ion-icon {
+    font-size: 17px;
+    color: #ffffff !important;
+  }
+
+  &.pendente { background: #8e8e93; }
+  &.em_andamento { background: #3a6ff7; }
+  &.concluido { background: #3abf7f; }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+}
+
+.row-body {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
 
-  h2 {
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0 0 4px;
-    overflow-wrap: anywhere;
-  }
+.row-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  overflow-wrap: anywhere;
+}
 
-  p {
-    color: #8891aa;
-    font-size: 13px;
-    margin: 0;
-  }
+.row-desc {
+  font-size: 13px;
+  color: #8891aa;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .status-tag {
@@ -166,6 +211,7 @@ ion-content {
   background: #252b3d;
   color: #8891aa;
   white-space: nowrap;
+  flex-shrink: 0;
 
   &.em_andamento {
     background: #16264a;
@@ -186,17 +232,25 @@ ion-content {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  flex-shrink: 0;
 
   ion-icon {
     font-size: 18px;
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
 }
 
-.tarefas-vazio {
-  color: #6f8fc7;
+.vazio-data {
+  background: #171c28;
+  border-radius: 16px;
+  padding: 28px 20px;
   text-align: center;
-  font-size: 15px;
-  padding: 28px 12px;
+  color: #4e5670;
+  font-size: 14px;
 }
 
 ion-tab-bar {
