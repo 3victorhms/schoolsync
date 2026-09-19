@@ -57,6 +57,19 @@ ion-content {
   overflow: hidden;
 }
 
+.vazio-data {
+  background: #171c28;
+  border-radius: 16px;
+  padding: 28px 20px;
+  text-align: center;
+
+  ion-spinner {
+    color: #3a6ff7;
+    width: 32px;
+    height: 32px;
+  }
+}
+
 .row,
 .membro-item {
   display: flex;

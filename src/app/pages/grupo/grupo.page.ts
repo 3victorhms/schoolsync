@@ -10,6 +10,9 @@ import {
   IonBackButton,
   IonIcon,
   IonButton,
+  IonRefresher,
+  IonRefresherContent,
+  IonSpinner,
   IonTabBar,
   IonTabButton,
   IonLabel
@@ -49,6 +52,9 @@ import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
     IonBackButton,
     IonIcon,
     IonButton,
+    IonRefresher,
+    IonRefresherContent,
+    IonSpinner,
     IonTabBar,
     IonTabButton,
     IonLabel,
@@ -61,6 +67,7 @@ export class GrupoPage implements OnInit {
   grupo: GrupoModel;
   usuario: UsuarioModel;
   excluindoGrupo = false;
+  carregando = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -98,8 +105,13 @@ export class GrupoPage implements OnInit {
     }
   }
 
-  carregarGrupo(idGrupo: string) {
-    this.grupoService.buscarPorId(idGrupo, this.usuario.id).subscribe({
+  carregarGrupo(idGrupo: string, event?: any) {
+    this.grupoService.buscarPorId(idGrupo, this.usuario.id).pipe(
+      finalize(() => {
+        this.carregando = false;
+        event?.target.complete();
+      })
+    ).subscribe({
       next: (res) => {
         this.grupo = res;
       },
@@ -108,6 +120,15 @@ export class GrupoPage implements OnInit {
         this.navController.navigateBack('/salas');
       }
     });
+  }
+
+  atualizar(event: any) {
+    const idGrupo = this.activatedRoute.snapshot.params['id'];
+    if (idGrupo && this.usuario.id) {
+      this.carregarGrupo(idGrupo, event);
+    } else {
+      event?.target.complete();
+    }
   }
 
   iniciais(nome: string): string {
