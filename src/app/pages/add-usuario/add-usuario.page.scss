@@ -128,6 +128,40 @@
     transform: scale(1.015);
 }
 
+.senha-container {
+    position: relative;
+
+    .senha-input {
+        --padding-end: 54px;
+    }
+}
+
+.olho-senha {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-65%);
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #8891aa;
+    cursor: pointer;
+
+    ion-icon {
+        font-size: 21px;
+    }
+}
+
+.olho-senha:focus-visible {
+    outline: 2px solid #3a6ff7;
+    outline-offset: 2px;
+}
+
 .login-button {
     margin-top: 10px;
 

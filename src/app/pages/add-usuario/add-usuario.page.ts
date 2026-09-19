@@ -8,7 +8,7 @@ import { UsuarioModel } from '../../model/usuario.model';
 import { UsuarioService } from '../../services/usuario.service';
 import { finalize } from 'rxjs';
 import { addIcons } from 'ionicons';
-import { schoolOutline, arrowForwardOutline } from 'ionicons/icons';
+import { schoolOutline, arrowForwardOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-add-usuario',
@@ -23,9 +23,10 @@ export class AddUsuarioPage implements OnInit {
   formGroup: FormGroup;
   loginExistente: boolean = false;
   salvando = false;
+  mostrarSenha = false;
 
   constructor(private formBuilder: FormBuilder, private toastController: ToastController, private navController: NavController, private usuarioService: UsuarioService) {
-    addIcons({ schoolOutline, arrowForwardOutline });
+    addIcons({ schoolOutline, arrowForwardOutline, eyeOutline, eyeOffOutline });
 
     this.usuario = new UsuarioModel();
     this.formGroup = this.formBuilder.group({
