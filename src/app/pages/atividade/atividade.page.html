@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/salas"></ion-back-button>
+      <ion-back-button defaultHref="/tabs/salas"></ion-back-button>
     </ion-buttons>
 
     <ion-buttons slot="end">
@@ -25,8 +25,11 @@
   </ion-refresher>
 
   @if (carregando) {
-  <div class="vazio-data">
-    <ion-spinner name="crescent"></ion-spinner>
+  <div class="atividade-card skeleton-row">
+    <div class="skeleton-line skeleton-line-title" style="width: 70%; height: 20px;"></div>
+    <div class="skeleton-line" style="width: 95%; margin-top: 14px;"></div>
+    <div class="skeleton-line" style="width: 85%;"></div>
+    <div class="skeleton-line skeleton-line-sub" style="margin-top: 14px;"></div>
   </div>
   } @else {
 
@@ -108,7 +111,7 @@
       Comentarios
     </h3>
 
-    <div class="comentarios-lista">
+    <div class="comentarios-lista stagger-list">
       @for (comentario of comentarios; track comentario.id) {
       <div class="comentario-card">
         <div class="comentario-avatar">

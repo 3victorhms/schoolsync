@@ -100,7 +100,7 @@ export class AddGrupoPage implements OnInit {
       },
       error: () => {
         this.exibirMensagem('Grupo nao encontrado.');
-        this.navController.navigateBack('/salas');
+        this.navController.navigateBack('/tabs/salas');
       }
     });
   }

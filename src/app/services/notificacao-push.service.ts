@@ -121,7 +121,7 @@ export class NotificacaoPushService {
       visibility: 1,
       vibration: true,
       lights: true,
-      lightColor: '#3A6FF7'
+      lightColor: '#4C86BE'
     });
 
     const token = await new Promise<string>((resolve, reject) => {

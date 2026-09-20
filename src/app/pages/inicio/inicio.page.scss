@@ -10,12 +10,15 @@
 // verde. Não faz parte da paleta semântica (accent/success/warning/danger)
 // porque precisa de 5 degraus distintos; candidata a virar tokens próprios
 // (--app-cal-*) se for reaproveitada em outra tela.
-$cal-concluida: #3670cd;
-$cal-atrasada: #d62f2f;
-$cal-atrasada-borda: #7f1720;
-$cal-proxima: #ee7d1a;
-$cal-semana: #f9ca32;
-$cal-mes: #299c32;
+// Valores vêm dos tokens globais --app-urgencia-* (src/global.scss), únicos
+// pros dois temas — assim o calendário e as listas de atividade (caderno,
+// sala) usam exatamente a mesma escala de cores.
+$cal-concluida: var(--app-urgencia-concluida);
+$cal-atrasada: var(--app-urgencia-atrasada);
+$cal-atrasada-borda: var(--app-urgencia-atrasada-borda);
+$cal-proxima: var(--app-urgencia-proxima);
+$cal-semana: var(--app-urgencia-semana);
+$cal-mes: var(--app-urgencia-mes);
 $cal-selo-texto: #2458a9;
 
 ion-toolbar {
@@ -337,6 +340,28 @@ ion-content {
                 border-radius: 6px;
                 white-space: nowrap;
             }
+
+            // Usados no card "Última sala" (contagem de membros/atividades e
+            // código de convite). Ficavam sem tamanho definido aqui (o
+            // .row-data "oficial" só existia dentro de .row-meta), herdando
+            // o tamanho de fonte padrão — daí ficarem grandes demais.
+            .row-data {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                font-size: 12px;
+                color: var(--app-muted);
+
+                ion-icon {
+                    font-size: 13px;
+                }
+            }
+
+            .tag-codigo {
+                color: var(--app-accent);
+                font-weight: 600;
+                font-size: 12px;
+            }
         }
 
         .row-meta {
@@ -370,6 +395,27 @@ ion-content {
                 ion-icon {
                     font-size: 13px;
                 }
+
+                // Mesma escala de urgência do calendário, aplicada ao rótulo
+                // de data: quanto mais perto do prazo, mais forte a cor.
+                &.urgencia-atrasada,
+                &.urgencia-hoje {
+                    color: $cal-atrasada;
+                    font-weight: 700;
+                }
+
+                &.urgencia-proxima {
+                    color: $cal-proxima;
+                    font-weight: 600;
+                }
+
+                &.urgencia-semana {
+                    color: $cal-semana;
+                }
+
+                &.urgencia-mes {
+                    color: $cal-mes;
+                }
             }
 
             .tag-codigo {
@@ -391,70 +437,6 @@ ion-content {
     padding: 0 16px 32px;
 }
 
-ion-tab-bar {
-    position: fixed;
-    left: 50%;
-    width: 280px;
-    transform: translateX(-50%);
-    bottom: calc(18px + env(safe-area-inset-bottom));
-    z-index: 10;
-    height: 60px;
-    padding: 6px 8px;
-    gap: 2px;
-    border-radius: 28px;
-    border-top: none;
-    --background: rgba(15, 17, 23, 0.78);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(58, 111, 247, 0.18);
-}
-
-ion-tab-button {
-    --color: var(--app-muted-strong);
-    --color-selected: var(--app-accent);
-    --ripple-color: transparent;
-    --padding-top: 0;
-    --padding-bottom: 0;
-    flex: 0 0 auto;
-    border-radius: 22px;
-
-    &::part(native) {
-        flex-direction: row;
-        gap: 6px;
-        padding: 10px 12px;
-        border-radius: 22px;
-    }
-
-    ion-icon {
-        font-size: 22px;
-    }
-
-    ion-label {
-        font-size: 12px;
-        font-weight: 600;
-        margin: 0;
-        white-space: nowrap;
-    }
-
-    &:not(.selecionado) ion-label {
-        display: none;
-    }
-}
-
-.selecionado {
-    // Era #3a79df: variação próxima de --app-accent, provavelmente cópia
-    // manual que divergiu com o tempo.
-    color: var(--app-accent);
-
-    &::part(native) {
-        background: var(--app-accent-soft);
-        padding: 10px 16px;
-    }
-
-    // Pequeno espaco entre o icone e o texto do item ativo (senao ficam colados).
-    ion-icon {
-        margin-inline-end: 6px;
-    }
-}
+// A barra de abas (ion-tab-bar) agora vive em app/pages/tabs/tabs.page.scss,
+// compartilhada pelas 4 telas principais.
 

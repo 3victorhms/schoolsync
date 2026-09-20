@@ -106,9 +106,9 @@ ion-content {
             }
 
             &.ativo {
-                background: #16264a;
+                background: #17273F;
                 border-color: transparent;
-                color: #3a6ff7;
+                color: #4C86BE;
             }
         }
     }
@@ -135,7 +135,7 @@ ion-content {
         color: #7e88a6;
 
         ion-spinner {
-            color: #3a6ff7;
+            color: #4C86BE;
             width: 32px;
             height: 32px;
         }
@@ -184,7 +184,7 @@ ion-content {
         }
 
         &.nao_iniciada { background: #8e8e93; }
-        &.em_andamento { background: #3a6ff7; }
+        &.em_andamento { background: #4C86BE; }
         &.concluido { background: #3abf7f; }
     }
 
@@ -257,6 +257,28 @@ ion-content {
                 ion-icon {
                     font-size: 13px;
                 }
+
+                // Escala de urgência (psicologia das cores), mesmo padrão do
+                // calendário em Início: quanto mais perto do prazo, mais
+                // forte/vermelha a cor da data.
+                &.urgencia-atrasada,
+                &.urgencia-hoje {
+                    color: var(--app-urgencia-atrasada);
+                    font-weight: 700;
+                }
+
+                &.urgencia-proxima {
+                    color: var(--app-urgencia-proxima);
+                    font-weight: 600;
+                }
+
+                &.urgencia-semana {
+                    color: var(--app-urgencia-semana);
+                }
+
+                &.urgencia-mes {
+                    color: var(--app-urgencia-mes);
+                }
             }
 
             .atividade-status {
@@ -265,7 +287,7 @@ ion-content {
                 color: #8891aa;
 
                 &.em_andamento {
-                    color: #3a6ff7;
+                    color: #4C86BE;
                 }
 
                 &.concluido {
@@ -282,67 +304,5 @@ ion-content {
     }
 }
 
-ion-tab-bar {
-    position: fixed;
-    left: 50%;
-    width: 280px;
-    transform: translateX(-50%);
-    bottom: calc(18px + env(safe-area-inset-bottom));
-    z-index: 10;
-    height: 60px;
-    padding: 6px 8px;
-    gap: 2px;
-    border-radius: 28px;
-    border-top: none;
-    --background: rgba(15, 17, 23, 0.78);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(58, 111, 247, 0.18);
-}
-
-ion-tab-button {
-    --color: #7e88a6;
-    --color-selected: #3a6ff7;
-    --ripple-color: transparent;
-    --padding-top: 0;
-    --padding-bottom: 0;
-    flex: 0 0 auto;
-    border-radius: 22px;
-
-    &::part(native) {
-        flex-direction: row;
-        gap: 6px;
-        padding: 10px 12px;
-        border-radius: 22px;
-    }
-
-    ion-icon {
-        font-size: 22px;
-    }
-
-    ion-label {
-        font-size: 12px;
-        font-weight: 600;
-        margin: 0;
-        white-space: nowrap;
-    }
-
-    &:not(.selecionado) ion-label {
-        display: none;
-    }
-}
-
-.selecionado {
-    color: #3a79df;
-
-    &::part(native) {
-        background: #16264a;
-        padding: 10px 16px;
-    }
-
-    // Pequeno espaco entre o icone e o texto do item ativo (senao ficam colados).
-    ion-icon {
-        margin-inline-end: 6px;
-    }
-}
+// A barra de abas (ion-tab-bar) agora vive em app/pages/tabs/tabs.page.scss,
+// compartilhada pelas 4 telas principais.

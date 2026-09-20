@@ -1,0 +1,74 @@
+// Barra de abas flutuante compartilhada por Início, Salas, Caderno e Perfil.
+// Antes esse bloco existia duplicado (4x, um por página) porque cada tela
+// desenhava sua própria <ion-tab-bar>; agora vive só aqui, dentro do
+// <ion-tabs> real, então a barra nunca é recriada ao trocar de aba.
+
+ion-tab-bar {
+    position: fixed;
+    left: 50%;
+    width: 280px;
+    transform: translateX(-50%);
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    z-index: 10;
+    height: 60px;
+    padding: 6px 8px;
+    gap: 2px;
+    border-radius: 28px;
+    border-top: none;
+    --background: rgba(15, 17, 23, 0.78);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(58, 111, 247, 0.18);
+}
+
+ion-tab-button {
+    --color: var(--app-muted-strong);
+    --color-selected: var(--app-accent);
+    --ripple-color: transparent;
+    --padding-top: 0;
+    --padding-bottom: 0;
+    flex: 0 0 auto;
+    border-radius: 22px;
+
+    &::part(native) {
+        flex-direction: row;
+        gap: 6px;
+        padding: 10px 12px;
+        border-radius: 22px;
+    }
+
+    ion-icon {
+        font-size: 22px;
+    }
+
+    ion-label {
+        font-size: 12px;
+        font-weight: 600;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    // O rótulo só aparece na aba ativa; nas outras fica só o ícone.
+    &:not(.tab-selected) ion-label {
+        display: none;
+    }
+}
+
+// Ionic marca a aba ativa com a classe .tab-selected (e aria-selected="true")
+// automaticamente com base na rota — não é mais preciso marcar isso à mão
+// em cada página.
+ion-tab-button.tab-selected,
+ion-tab-button[aria-selected='true'] {
+    color: var(--app-accent);
+
+    &::part(native) {
+        background: var(--app-accent-soft);
+        padding: 10px 16px;
+    }
+
+    // Pequeno espaco entre o icone e o texto do item ativo (senao ficam colados).
+    ion-icon {
+        margin-inline-end: 6px;
+    }
+}

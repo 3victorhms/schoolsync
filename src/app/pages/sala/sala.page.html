@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button defaultHref="/salas"></ion-back-button>
+            <ion-back-button defaultHref="/tabs/salas"></ion-back-button>
         </ion-buttons>
         <ion-title>
             {{ sala.nome }}
@@ -72,7 +72,7 @@
                     </div>
                     <div class="row-meta">
                         <span class="tag-disciplina">{{ atividade.disciplina }}</span>
-                        <span class="row-data">
+                        <span class="row-data" [ngClass]="classeUrgencia(atividade)">
                             <ion-icon name="calendar-outline"></ion-icon>
                             {{ atividade.dataEntrega }}
                         </span>

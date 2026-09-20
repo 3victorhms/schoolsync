@@ -12,7 +12,7 @@ ion-toolbar {
 }
 
 .editar-btn {
-    --color: #3a6ff7;
+    --color: #4C86BE;
     --background: transparent;
     font-size: 14px;
     font-weight: 600;
@@ -149,7 +149,7 @@ ion-content {
         }
 
         &.laranja { background: #ff9f43; }
-        &.azul { background: #3a6ff7; }
+        &.azul { background: #4C86BE; }
         &.cinza { background: #8e8e93; }
         &.vermelho { background: #ff3b30; }
     }
@@ -187,8 +187,8 @@ ion-content {
 .btn-pill {
     font-size: 12.5px;
     font-weight: 700;
-    color: #3a6ff7;
-    background: #16264a;
+    color: #4C86BE;
+    background: #17273F;
     padding: 5px 11px;
     border-radius: 10px;
     flex-shrink: 0;
@@ -202,7 +202,7 @@ ion-content {
     background: #1a1f2e;
     position: relative;
     flex-shrink: 0;
-    transition: background .2s ease;
+    transition: background var(--transition-fast);
 
     &::after {
         content: "";
@@ -214,11 +214,11 @@ ion-content {
         border-radius: 50%;
         background: #ffffff;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
-        transition: transform .2s ease;
+        transition: transform var(--transition-base);
     }
 
     &.on {
-        background: #3a6ff7;
+        background: #4C86BE;
 
         &::after {
             transform: translateX(19px);
@@ -226,67 +226,5 @@ ion-content {
     }
 }
 
-ion-tab-bar {
-    position: fixed;
-    left: 50%;
-    width: 280px;
-    transform: translateX(-50%);
-    bottom: calc(18px + env(safe-area-inset-bottom));
-    z-index: 10;
-    height: 60px;
-    padding: 6px 8px;
-    gap: 2px;
-    border-radius: 28px;
-    border-top: none;
-    --background: rgba(15, 17, 23, 0.78);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(58, 111, 247, 0.18);
-}
-
-ion-tab-button {
-    --color: #7e88a6;
-    --color-selected: #3a6ff7;
-    --ripple-color: transparent;
-    --padding-top: 0;
-    --padding-bottom: 0;
-    flex: 0 0 auto;
-    border-radius: 22px;
-
-    &::part(native) {
-        flex-direction: row;
-        gap: 6px;
-        padding: 10px 12px;
-        border-radius: 22px;
-    }
-
-    ion-icon {
-        font-size: 22px;
-    }
-
-    ion-label {
-        font-size: 12px;
-        font-weight: 600;
-        margin: 0;
-        white-space: nowrap;
-    }
-
-    &:not(.selecionado) ion-label {
-        display: none;
-    }
-}
-
-.selecionado {
-    color: #3a79df;
-
-    &::part(native) {
-        background: #16264a;
-        padding: 10px 16px;
-    }
-
-    // Pequeno espaco entre o icone e o texto do item ativo (senao ficam colados).
-    ion-icon {
-        margin-inline-end: 6px;
-    }
-}
+// A barra de abas (ion-tab-bar) agora vive em app/pages/tabs/tabs.page.scss,
+// compartilhada pelas 4 telas principais.

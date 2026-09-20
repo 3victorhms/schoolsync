@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonItem, IonButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonItem, IonButton, IonToggle } from '@ionic/angular/standalone';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ActivatedRoute } from '@angular/router';
@@ -17,7 +17,7 @@ import { finalize } from 'rxjs';
   templateUrl: './add-atividade.page.html',
   styleUrls: ['./add-atividade.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonItem, IonButton, CommonModule, FormsModule, ReactiveFormsModule]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonItem, IonButton, IonToggle, CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class AddAtividadePage implements OnInit {
   atividade: AtividadeModel;
@@ -47,8 +47,28 @@ export class AddAtividadePage implements OnInit {
       'titulo': ['', Validators.required],
       'descricao': ['', Validators.required],
       'disciplina': ['', Validators.required],
+      'valePontuacao': [true],
       'valor': ['', [Validators.required, Validators.min(0.01), Validators.max(15)]],
       'dataEntrega': ['', [Validators.required, this.dataMinima()]],
+    });
+
+    // Ligado por padrão (a maioria das atividades vale ponto). Ao desligar,
+    // dispensa o campo "Valor" (fica travado em 0 e sem as validações de
+    // obrigatório/mínimo).
+    this.formGroup.get('valePontuacao')?.valueChanges.subscribe(valePontuacao => {
+      const valorControl = this.formGroup.get('valor');
+      if (!valorControl) return;
+
+      if (valePontuacao) {
+        valorControl.enable();
+        valorControl.setValue('');
+        valorControl.setValidators([Validators.required, Validators.min(0.01), Validators.max(15)]);
+      } else {
+        valorControl.clearValidators();
+        valorControl.setValue(0);
+        valorControl.disable();
+      }
+      valorControl.updateValueAndValidity();
     });
   }
 
@@ -70,6 +90,7 @@ export class AddAtividadePage implements OnInit {
         this.formGroup.get('titulo')?.setValue(this.atividade.titulo);
         this.formGroup.get('descricao')?.setValue(this.atividade.descricao);
         this.formGroup.get('disciplina')?.setValue(this.atividade.disciplina);
+        this.formGroup.get('valePontuacao')?.setValue(!!this.atividade.valor);
         this.formGroup.get('valor')?.setValue(this.atividade.valor);
         this.formGroup.get('dataEntrega')?.setValue(this.atividade.dataEntrega);
         this.formGroup.get('dataEntrega')?.disable();
@@ -77,7 +98,17 @@ export class AddAtividadePage implements OnInit {
     } else {
       this.editando = false;
       this.atividade = new AtividadeModel();
-      this.formGroup.reset();
+      // FormGroup.reset() sem argumentos zera TUDO pra null (inclusive
+      // "valePontuacao", que precisa voltar pra true) — por isso os valores
+      // padrão são passados explicitamente aqui.
+      this.formGroup.reset({
+        titulo: '',
+        descricao: '',
+        disciplina: '',
+        valePontuacao: true,
+        valor: '',
+        dataEntrega: ''
+      });
       this.formGroup.get('dataEntrega')?.enable();
     }
 
@@ -87,7 +118,7 @@ export class AddAtividadePage implements OnInit {
       this.salaService.buscarPorId(idSala, this.usuario.id).subscribe(res => {
         if (!res) {
           this.exibirMensagem('Sala não encontrada');
-          this.navController.navigateBack('/salas');
+          this.navController.navigateBack('/tabs/salas');
           return;
         }
         this.sala = res;

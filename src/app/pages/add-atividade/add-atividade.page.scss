@@ -70,6 +70,29 @@ form {
             }
         }
 
+        .campo-toggle-item {
+            --min-height: 52px;
+
+            .campo-toggle-label {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                width: 100%;
+                padding: 10px 0;
+                color: #ffffff;
+                font-size: 15px;
+                font-weight: 500;
+                cursor: pointer;
+
+                ion-toggle {
+                    --track-background: #252b3d;
+                    --track-background-checked: #4C86BE;
+                    --handle-background: #ffffff;
+                }
+            }
+        }
+
         .campo-textarea {
             align-items: flex-start;
 
@@ -93,7 +116,7 @@ form {
     }
 
     .botao-criar {
-        --background: #3a6ff7;
+        --background: #4C86BE;
         --background-activated: #2d57b0;
         --border-radius: 14px;
         --color: #ffffff;

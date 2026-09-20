@@ -18,6 +18,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NavController, ToastController } from '@ionic/angular';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
+import { labelPontos } from 'src/app/utils/pontos.util';
 import { ComentarioModel } from 'src/app/model/comentario.model';
 import { ComentarioService } from 'src/app/services/comentario.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
@@ -141,7 +142,7 @@ export class AtividadePage implements OnInit {
       },
       error: () => {
         this.exibirMensagem('Atividade não encontrada');
-        this.navController.navigateBack('/salas');
+        this.navController.navigateBack('/tabs/salas');
       }
     });
   }
@@ -420,8 +421,7 @@ export class AtividadePage implements OnInit {
   }
 
   labelPontos(valor: number | string): string {
-    const pontos = Number(valor);
-    return `${valor} ${pontos === 1 ? 'ponto' : 'pontos'}`;
+    return labelPontos(valor);
   }
 
   async exibirMensagem(texto: string) {
