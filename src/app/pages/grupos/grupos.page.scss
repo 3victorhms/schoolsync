@@ -1,5 +1,5 @@
 ion-toolbar {
-  --background: #0f1117;
+  --background: var(--app-bg);
   --border-color: transparent;
 
   ion-back-button {
@@ -15,7 +15,7 @@ ion-toolbar {
 }
 
 ion-content {
-  --background: #0f1117;
+  --background: var(--app-bg);
   --padding-bottom: 96px;
 }
 
@@ -28,7 +28,7 @@ ion-content {
 
 .acao-card {
   min-height: 96px;
-  background: #171c28;
+  background: var(--app-surface);
   border: none;
   border-radius: 16px;
   color: #ffffff;
@@ -52,7 +52,7 @@ ion-content {
     justify-content: center;
 
     ion-icon {
-      color: #4C86BE !important;
+      color: var(--app-accent) !important;
       font-size: 24px;
     }
   }
@@ -67,12 +67,12 @@ ion-content {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #7c859e;
+  color: var(--app-muted-strong);
   margin: 0 4px 10px;
 }
 
 .group {
-  background: #171c28;
+  background: var(--app-surface);
   border-radius: 16px;
   overflow: hidden;
 }
@@ -107,7 +107,7 @@ ion-content {
 
     ion-icon {
       font-size: 20px;
-      color: #4C86BE;
+      color: var(--app-accent);
     }
   }
 
@@ -125,30 +125,30 @@ ion-content {
     .row-sub {
       .row-data {
         font-size: 13px;
-        color: #8891aa;
+        color: var(--app-muted);
       }
     }
   }
 
   .row-seta {
     font-size: 18px;
-    color: #7e88a6;
+    color: var(--app-muted-strong);
     flex-shrink: 0;
   }
 }
 
 .vazio-data {
-  background: #171c28;
+  background: var(--app-surface);
   border-radius: 16px;
   padding: 28px 20px;
   text-align: center;
 
   ion-spinner {
-    color: #4C86BE;
+    color: var(--app-accent);
     width: 32px;
     height: 32px;
   }
-  color: #7e88a6;
+  color: var(--app-muted-strong);
   font-size: 14px;
 }
 
@@ -172,8 +172,8 @@ ion-tab-bar {
 }
 
 ion-tab-button {
-  --color: #7e88a6;
-  --color-selected: #4C86BE;
+  --color: var(--app-muted-strong);
+  --color-selected: var(--app-accent);
   --ripple-color: transparent;
   --padding-top: 0;
   --padding-bottom: 0;
@@ -204,10 +204,10 @@ ion-tab-button {
 }
 
 .selecionado {
-  color: #4C86BE;
+  color: var(--app-accent);
 
   &::part(native) {
-    background: #17273F;
+    background: var(--app-accent-soft);
     padding: 10px 16px;
   }
 

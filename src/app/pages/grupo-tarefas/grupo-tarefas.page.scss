@@ -1,5 +1,5 @@
 ion-toolbar {
-  --background: #0f1117;
+  --background: var(--app-bg);
   --border-color: transparent;
 
   ion-back-button {
@@ -15,14 +15,14 @@ ion-toolbar {
     .subtitulo {
       font-size: 13px;
       font-weight: 400;
-      color: #8891aa;
+      color: var(--app-muted);
       margin: 2px 0 0;
     }
   }
 }
 
 ion-content {
-  --background: #0f1117;
+  --background: var(--app-bg);
   --padding-bottom: 96px;
 }
 
@@ -40,13 +40,13 @@ ion-content {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #7c859e;
+  color: var(--app-muted-strong);
   margin: 0 4px 10px;
 }
 
 .nova-tarefa-card {
-  background: #171c28;
-  border: 1px solid #252b3d;
+  background: var(--app-surface);
+  border: 1px solid var(--app-surface-strong);
   border-radius: 16px;
   padding: 16px;
   display: flex;
@@ -63,7 +63,7 @@ ion-content {
 .campo-label {
   font-size: 14px;
   font-weight: 500;
-  color: #c8cfe0;
+  color: var(--app-text-soft);
   padding-left: 4px;
 }
 
@@ -71,8 +71,8 @@ select,
 input {
   width: 100%;
   min-height: 52px;
-  background: #1a1f2e;
-  border: 1px solid #252b3d;
+  background: var(--app-bg-muted);
+  border: 1px solid var(--app-surface-strong);
   border-radius: 14px;
   color: #ffffff;
   font-size: 15px;
@@ -81,7 +81,7 @@ input {
   outline: none;
 
   &::placeholder {
-    color: #7e88a6;
+    color: var(--app-muted-strong);
     font-weight: 500;
   }
 }
@@ -94,15 +94,15 @@ button {
   min-height: 52px;
   border: none;
   border-radius: 14px;
-  background: #4C86BE;
+  background: var(--app-accent);
   color: #ffffff;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
 
   &:disabled {
-    background: #252b3d;
-    color: #7e88a6;
+    background: var(--app-surface-strong);
+    color: var(--app-muted-strong);
     cursor: default;
   }
 }
@@ -110,13 +110,13 @@ button {
 .aviso {
   margin: 20px 16px 24px;
   padding: 16px;
-  background: #171c28;
-  border: 1px solid #252b3d;
+  background: var(--app-surface);
+  border: 1px solid var(--app-surface-strong);
   border-radius: 16px;
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #8891aa;
+  color: var(--app-muted);
   text-align: left;
   font-size: 14px;
   font-weight: 500;
@@ -129,7 +129,7 @@ button {
 }
 
 .group {
-  background: #171c28;
+  background: var(--app-surface);
   border-radius: 16px;
   overflow: hidden;
 }
@@ -172,8 +172,8 @@ button {
   }
 
   &.pendente { background: #8e8e93; }
-  &.em_andamento { background: #4C86BE; }
-  &.concluido { background: #3abf7f; }
+  &.em_andamento { background: var(--app-accent); }
+  &.concluido { background: var(--app-success); }
 
   &:disabled {
     opacity: 0.55;
@@ -198,7 +198,7 @@ button {
 
 .row-desc {
   font-size: 13px;
-  color: #8891aa;
+  color: var(--app-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -209,26 +209,26 @@ button {
   padding: 6px 10px;
   font-size: 12px;
   font-weight: 700;
-  background: #252b3d;
-  color: #8891aa;
+  background: var(--app-surface-strong);
+  color: var(--app-muted);
   white-space: nowrap;
   flex-shrink: 0;
 
   &.em_andamento {
-    background: #17273F;
-    color: #4C86BE;
+    background: var(--app-accent-soft);
+    color: var(--app-accent);
   }
 
   &.concluido {
     background: #123626;
-    color: #3abf7f;
+    color: var(--app-success);
   }
 }
 
 .excluir-tarefa {
   background: transparent;
   border: none;
-  color: #ff5c6c;
+  color: var(--app-danger);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -246,15 +246,15 @@ button {
 }
 
 .vazio-data {
-  background: #171c28;
+  background: var(--app-surface);
   border-radius: 16px;
   padding: 28px 20px;
   text-align: center;
-  color: #7e88a6;
+  color: var(--app-muted-strong);
   font-size: 14px;
 
   ion-spinner {
-    color: #4C86BE;
+    color: var(--app-accent);
     width: 32px;
     height: 32px;
   }
@@ -280,8 +280,8 @@ ion-tab-bar {
 }
 
 ion-tab-button {
-  --color: #7e88a6;
-  --color-selected: #4C86BE;
+  --color: var(--app-muted-strong);
+  --color-selected: var(--app-accent);
   --ripple-color: transparent;
   --padding-top: 0;
   --padding-bottom: 0;
@@ -312,10 +312,10 @@ ion-tab-button {
 }
 
 .selecionado {
-  color: #4C86BE;
+  color: var(--app-accent);
 
   &::part(native) {
-    background: #17273F;
+    background: var(--app-accent-soft);
     padding: 10px 16px;
   }
 

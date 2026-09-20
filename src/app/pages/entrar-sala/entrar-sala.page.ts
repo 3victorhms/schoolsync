@@ -9,6 +9,7 @@ import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { HapticsService } from 'src/app/services/haptics.service';
 
 @Component({
   selector: 'app-entrar-sala',
@@ -27,7 +28,8 @@ export class EntrarSalaPage implements OnInit {
     private toastController: ToastController,
     private navController: NavController,
     private salaService: SalaService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private hapticsService: HapticsService
   ) {
     this.sala = new SalaModel();
     this.usuario = this.usuarioService.buscarAutenticacao();
@@ -56,6 +58,7 @@ export class EntrarSalaPage implements OnInit {
 
     this.salaService.entrar(codigo, this.usuario.id).subscribe({
       next: (sala) => {
+        this.hapticsService.sucesso();
         this.exibirMensagem('Voce entrou na sala com sucesso!');
 
         if (sala?.id) {

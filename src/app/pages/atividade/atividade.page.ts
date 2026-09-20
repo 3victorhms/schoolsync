@@ -18,6 +18,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NavController, ToastController } from '@ionic/angular';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
+import { HapticsService } from 'src/app/services/haptics.service';
 import { labelPontos } from 'src/app/utils/pontos.util';
 import { ComentarioModel } from 'src/app/model/comentario.model';
 import { ComentarioService } from 'src/app/services/comentario.service';
@@ -87,7 +88,8 @@ export class AtividadePage implements OnInit {
     private confirmacaoService: ConfirmacaoService,
     private atividadeService: AtividadeService,
     private usuarioService: UsuarioService,
-    private comentarioService: ComentarioService
+    private comentarioService: ComentarioService,
+    private hapticsService: HapticsService
   ) {
     this.atividade = new AtividadeModel();
     this.usuario = this.usuarioService.buscarAutenticacao();
@@ -216,20 +218,48 @@ export class AtividadePage implements OnInit {
 
     if (!confirmou) return;
 
-    this.comentarioExcluindoId = comentario.id;
-    this.exibirMensagem('Excluindo comentario...');
-    this.comentarioService.excluir(comentario.id, this.usuario.id).pipe(
-      finalize(() => this.comentarioExcluindoId = '')
-    ).subscribe({
-      next: () => {
-        this.carregarComentarios();
-        this.exibirMensagem('Comentario excluido.');
-      },
-      error: (erro) => {
-        console.error('Erro ao excluir comentario:', erro);
-        this.exibirMensagem(`Erro ao excluir comentario (${erro?.status || 'sem conexao'}).`);
-      }
+    const { lista, indice } = this.localizarComentario(comentario.id);
+    if (!lista || indice < 0) return;
+
+    const [removido] = lista.splice(indice, 1);
+    this.hapticsService.leve();
+
+    let desfeito = false;
+    const toast = await this.toastController.create({
+      message: 'Comentario excluido.',
+      duration: 4000,
+      position: 'bottom',
+      buttons: [{ text: 'Desfazer', role: 'cancel', handler: () => { desfeito = true; } }]
     });
+
+    toast.onDidDismiss().then(() => {
+      if (desfeito) {
+        lista.splice(indice, 0, removido);
+        return;
+      }
+
+      this.comentarioService.excluir(removido.id, this.usuario.id).subscribe({
+        error: (erro) => {
+          console.error('Erro ao excluir comentario:', erro);
+          lista.splice(indice, 0, removido);
+          this.exibirMensagem(`Erro ao excluir comentario (${erro?.status || 'sem conexao'}).`);
+        }
+      });
+    });
+
+    toast.present();
+  }
+
+  private localizarComentario(id: string): { lista: ComentarioModel[] | null; indice: number } {
+    const indiceTopo = this.comentarios.findIndex(c => c.id === id);
+    if (indiceTopo >= 0) return { lista: this.comentarios, indice: indiceTopo };
+
+    for (const comentario of this.comentarios) {
+      const indiceResposta = comentario.respostas.findIndex(r => r.id === id);
+      if (indiceResposta >= 0) return { lista: comentario.respostas, indice: indiceResposta };
+    }
+
+    return { lista: null, indice: -1 };
   }
 
   podeAlterarComentario(comentario: ComentarioModel): boolean {
@@ -367,6 +397,11 @@ export class AtividadePage implements OnInit {
     ).subscribe({
       next: () => {
         this.atividade.status = novoStatus;
+        if (novoStatus === 'concluido') {
+          this.hapticsService.sucesso();
+        } else {
+          this.hapticsService.leve();
+        }
         this.exibirMensagem('Status atualizado.');
       },
       error: () => {

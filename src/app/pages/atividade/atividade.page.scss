@@ -1,7 +1,7 @@
 // Estilos feitos com auxílio das I.As Lovable e Claude
 
 ion-toolbar {
-    --background: #0f1117;
+    --background: var(--app-bg);
     --border-color: transparent;
 
     ion-back-button {
@@ -35,47 +35,47 @@ ion-toolbar {
 
         &.badge-andamento {
             background: #1e2f5e;
-            color: #4C86BE;
+            color: var(--app-accent);
         }
 
         &.badge-concluido {
             background: #0f3d2a;
-            color: #3abf7f;
+            color: var(--app-success);
         }
 
         &.badge-naoiniciada {
-            background: #252b3d;
-            color: #8891aa;
+            background: var(--app-surface-strong);
+            color: var(--app-muted);
         }
 
         &.badge-fora_caderno {
             background: transparent;
-            border: 1.5px dashed #7e88a6;
-            color: #7e88a6;
+            border: 1.5px dashed var(--app-muted-strong);
+            color: var(--app-muted-strong);
         }
     }
 }
 
 ion-content {
-    --background: #0f1117;
+    --background: var(--app-bg);
 }
 
 .vazio-data {
-    background: #171c28;
+    background: var(--app-surface);
     border-radius: 20px;
     margin: 16px;
     padding: 28px 20px;
     text-align: center;
 
     ion-spinner {
-        color: #4C86BE;
+        color: var(--app-accent);
         width: 32px;
         height: 32px;
     }
 }
 
 .atividade-card {
-    background: #171c28;
+    background: var(--app-surface);
     border-radius: 20px;
     margin: 16px;
     padding: 20px;
@@ -86,7 +86,7 @@ ion-content {
     .atividade-descricao-titulo {
         font-size: 16px;
         font-weight: 500;
-        color: #c0c8e0;
+        color: var(--app-text-soft);
         margin: 0;
         line-height: 1.5;
     }
@@ -95,7 +95,7 @@ ion-content {
         display: flex;
         gap: 16px;
         font-size: 13px;
-        color: #8891aa;
+        color: var(--app-muted);
 
         span {
             display: flex;
@@ -114,7 +114,7 @@ ion-content {
         flex-wrap: wrap;
 
         .tag-disciplina {
-            background: #252b3d;
+            background: var(--app-surface-strong);
             color: #a0a8c0;
             font-size: 13px;
             font-weight: 600;
@@ -127,7 +127,7 @@ ion-content {
             align-items: center;
             gap: 4px;
             background: #1e2f5e;
-            color: #4C86BE;
+            color: var(--app-accent);
             font-size: 13px;
             font-weight: 700;
             padding: 6px 14px;
@@ -141,7 +141,7 @@ ion-content {
 
     .criado-por {
         font-size: 13px;
-        color: #7e88a6;
+        color: var(--app-muted-strong);
         margin: 0;
     }
 
@@ -172,7 +172,7 @@ ion-content {
     .secao-label {
         font-size: 14px;
         font-weight: 600;
-        color: #8891aa;
+        color: var(--app-muted);
         margin: 0;
     }
 
@@ -188,10 +188,10 @@ ion-content {
             align-items: center;
             justify-content: center;
             gap: 6px;
-            background: #171c28;
+            background: var(--app-surface);
             border: 2px solid transparent;
             border-radius: 14px;
-            color: #8891aa;
+            color: var(--app-muted);
             font-size: 12px;
             font-weight: 600;
             padding: 12px 4px;
@@ -204,8 +204,8 @@ ion-content {
             }
 
             &.ativo {
-                border-color: #4C86BE;
-                color: #4C86BE;
+                border-color: var(--app-accent);
+                color: var(--app-accent);
                 background: #1a2340;
             }
 
@@ -244,7 +244,7 @@ ion-content {
         background: #1a2340;
         border: none;
         border-radius: 14px;
-        color: #4C86BE;
+        color: var(--app-accent);
         font-size: 14px;
         font-weight: 600;
         padding: 14px;
@@ -273,7 +273,7 @@ ion-content {
         margin: 0 0 12px;
 
         ion-icon {
-            color: #4C86BE;
+            color: var(--app-accent);
             font-size: 20px;
         }
     }
@@ -287,8 +287,8 @@ ion-content {
     .comentario-card {
         display: flex;
         gap: 12px;
-        background: #171c28;
-        border: 1px solid #252b3d;
+        background: var(--app-surface);
+        border: 1px solid var(--app-surface-strong);
         border-radius: 18px;
         padding: 14px;
 
@@ -301,7 +301,7 @@ ion-content {
             width: 38px;
             height: 38px;
             border-radius: 50%;
-            background: #252b3d;
+            background: var(--app-surface-strong);
             color: #ffffff;
             display: flex;
             align-items: center;
@@ -309,6 +309,18 @@ ion-content {
             font-size: 12px;
             font-weight: 800;
             flex-shrink: 0;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                border-radius: inherit;
+                object-fit: cover;
+            }
+
+            &.tem-foto {
+                background: transparent;
+            }
         }
 
         .comentario-conteudo {
@@ -328,14 +340,14 @@ ion-content {
             }
 
             span {
-                color: #7e88a6;
+                color: var(--app-muted-strong);
                 font-size: 12px;
                 font-weight: 600;
             }
         }
 
         p {
-            color: #c0c8e0;
+            color: var(--app-text-soft);
             font-size: 14px;
             line-height: 1.4;
             margin: 6px 0 8px;
@@ -353,7 +365,7 @@ ion-content {
                 gap: 4px;
                 background: transparent;
                 border: none;
-                color: #4C86BE;
+                color: var(--app-accent);
                 font-size: 12px;
                 font-weight: 600;
                 padding: 0;
@@ -370,18 +382,18 @@ ion-content {
         }
 
         .comentario-respostas {
-            border-left: 2px solid #252b3d;
+            border-left: 2px solid var(--app-surface-strong);
             margin-top: 10px;
             padding-left: 10px;
         }
     }
 
     .comentarios-vazio {
-        background: #171c28;
+        background: var(--app-surface);
         border-radius: 14px;
         padding: 24px;
         text-align: center;
-        color: #7e88a6;
+        color: var(--app-muted-strong);
         font-size: 14px;
     }
 
@@ -423,8 +435,8 @@ ion-content {
             min-height: 48px;
             max-height: 120px;
             resize: vertical;
-            background: #171c28;
-            border: 1px solid #252b3d;
+            background: var(--app-surface);
+            border: 1px solid var(--app-surface-strong);
             border-radius: 18px;
             color: #ffffff;
             font-size: 14px;
@@ -433,11 +445,11 @@ ion-content {
             outline: none;
 
             &::placeholder {
-                color: #7e88a6;
+                color: var(--app-muted-strong);
             }
 
             &:focus {
-                border-color: #4C86BE;
+                border-color: var(--app-accent);
             }
         }
 
@@ -446,7 +458,7 @@ ion-content {
             height: 52px;
             border-radius: 50%;
             border: none;
-            background: #4C86BE;
+            background: var(--app-accent);
             color: #ffffff;
             display: flex;
             align-items: center;

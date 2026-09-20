@@ -1,7 +1,7 @@
 // Estilos feitos com auxílio das I.As Lovable e Claude
 
 ion-toolbar {
-    --background: #0f1117;
+    --background: var(--app-bg);
     --border-color: transparent;
 
     ion-title {
@@ -12,7 +12,7 @@ ion-toolbar {
 }
 
 .editar-btn {
-    --color: #4C86BE;
+    --color: var(--app-accent);
     --background: transparent;
     font-size: 14px;
     font-weight: 600;
@@ -25,7 +25,7 @@ ion-toolbar {
 }
 
 ion-content {
-    --background: #0f1117;
+    --background: var(--app-bg);
     --padding-bottom: 96px;
 }
 
@@ -33,7 +33,7 @@ ion-content {
     display: flex;
     align-items: center;
     gap: 14px;
-    background: #171c28;
+    background: var(--app-surface);
     border-radius: 18px;
     padding: 16px;
     margin: 8px 16px 24px;
@@ -44,7 +44,7 @@ ion-content {
     width: 58px;
     height: 58px;
     border-radius: 50%;
-    background: #252b3d;
+    background: var(--app-surface-strong);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -82,13 +82,13 @@ ion-content {
 
 .perfil-app {
     font-size: 13px;
-    color: #8891aa;
+    color: var(--app-muted);
     margin: 2px 0 0;
 }
 
 .hero-seta {
     font-size: 16px;
-    color: #7e88a6;
+    color: var(--app-muted-strong);
     flex-shrink: 0;
 }
 
@@ -97,12 +97,12 @@ ion-content {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #7c859e;
+    color: var(--app-muted-strong);
     margin: 0 16px 10px;
 }
 
 .group {
-    background: #171c28;
+    background: var(--app-surface);
     border-radius: 16px;
     margin: 0 16px 24px;
     overflow: hidden;
@@ -149,7 +149,7 @@ ion-content {
         }
 
         &.laranja { background: #ff9f43; }
-        &.azul { background: #4C86BE; }
+        &.azul { background: var(--app-accent); }
         &.cinza { background: #8e8e93; }
         &.vermelho { background: #ff3b30; }
     }
@@ -167,7 +167,7 @@ ion-content {
 
     .row-seta {
         font-size: 18px;
-        color: #7e88a6;
+        color: var(--app-muted-strong);
         flex-shrink: 0;
     }
 
@@ -180,15 +180,15 @@ ion-content {
     }
 
     &.destructive .row-label {
-        color: #ff5c6c;
+        color: var(--app-danger);
     }
 }
 
 .btn-pill {
     font-size: 12.5px;
     font-weight: 700;
-    color: #4C86BE;
-    background: #17273F;
+    color: var(--app-accent);
+    background: var(--app-accent-soft);
     padding: 5px 11px;
     border-radius: 10px;
     flex-shrink: 0;
@@ -199,7 +199,7 @@ ion-content {
     width: 46px;
     height: 27px;
     border-radius: 14px;
-    background: #1a1f2e;
+    background: var(--app-bg-muted);
     position: relative;
     flex-shrink: 0;
     transition: background var(--transition-fast);
@@ -218,7 +218,7 @@ ion-content {
     }
 
     &.on {
-        background: #4C86BE;
+        background: var(--app-accent);
 
         &::after {
             transform: translateX(19px);

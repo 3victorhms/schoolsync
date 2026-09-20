@@ -14,28 +14,28 @@ ion-toolbar {
 }
 
 ion-content {
-  --background: #0f1117;
+  --background: var(--app-bg);
 }
 
 form {
   padding: 24px 16px;
 
   .campo-grupo {
-    background: #171c28;
-    border: 1px solid #252b3d;
+    background: var(--app-surface);
+    border: 1px solid var(--app-surface-strong);
     border-radius: 16px;
     padding: 16px;
     margin-bottom: 24px;
 
     .campo-label {
       display: block;
-      color: #8891aa;
+      color: var(--app-muted);
       font-size: 0.85rem;
       margin-bottom: 10px;
     }
 
     .campo-item {
-      --background: #1a1f2e;
+      --background: var(--app-bg-muted);
       --border-radius: 10px;
       --padding-start: 14px;
       --padding-end: 14px;
@@ -51,14 +51,14 @@ form {
         padding: 10px 0;
 
         &::placeholder {
-          color: #7e88a6;
+          color: var(--app-muted-strong);
         }
       }
     }
   }
 
   .botao-criar {
-    --background: #4C86BE;
+    --background: var(--app-accent);
     --background-activated: #2f5fd9;
     --border-radius: 14px;
     --color: #ffffff;
@@ -71,8 +71,8 @@ form {
     }
 
     &[disabled] {
-      --background: #252b3d;
-      --color: #7e88a6;
+      --background: var(--app-surface-strong);
+      --color: var(--app-muted-strong);
       opacity: 1;
     }
   }

@@ -60,7 +60,21 @@
     <div class="atividades-data">
       @if (atividadesDoDia.length === 0) {
       <div class="vazio-data">
+        @if (proximaAtividadeSugerida; as sugestao) {
+        <span>Nenhuma atividade nesta data.</span>
+        <button type="button" class="sugestao-btn" (click)="irParaAtividade(sugestao)">
+          <div class="sugestao-icone">
+            <ion-icon name="book-outline"></ion-icon>
+          </div>
+          <div class="sugestao-corpo">
+            <span class="sugestao-label">Próxima atividade</span>
+            <span class="sugestao-titulo">{{ sugestao.titulo }}</span>
+          </div>
+          <span class="sugestao-data" [ngClass]="classeUrgencia(sugestao)">{{ formatarData(sugestao.dataEntrega) }}</span>
+        </button>
+        } @else {
         <span>Nenhuma atividade nesta data</span>
+        }
       </div>
       } @else {
       <div class="group stagger-list">

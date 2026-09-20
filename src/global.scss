@@ -550,6 +550,39 @@ ion-alert.app-confirmation-alert .alert-button[role='destructive'] {
   color: var(--app-danger);
 }
 
+/* Toasts: mesmo estilo "cartao" do resto do app (cantos arredondados, sem
+   sombra dura, cores dos tokens) em vez do visual padrao do Ionic. */
+ion-toast {
+  --border-radius: 14px;
+  --background: var(--app-surface-strong);
+  --color: var(--app-text);
+  --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  --button-color: var(--app-accent);
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 20000;
+}
+
+ion-toast::part(container) {
+  border: 1px solid var(--app-border);
+}
+
+ion-toast::part(message) {
+  padding: 12px 0;
+}
+
+ion-toast.ion-color-danger {
+  --background: #3d1515;
+  --color: var(--app-danger);
+  --button-color: var(--app-danger);
+}
+
+ion-toast.ion-color-success {
+  --background: #0f3d2a;
+  --color: var(--app-success);
+  --button-color: var(--app-success);
+}
+
 /* Notificações no tema claro precisam ficar globais porque os overlays e o body
    não recebem o atributo de encapsulamento do componente Angular. */
 body.tema-claro app-notificacao ion-content { --background: var(--app-bg); }

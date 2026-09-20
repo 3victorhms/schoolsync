@@ -13,6 +13,14 @@ const config: CapacitorConfig = {
     },
     PushNotifications: {
       presentationOptions: ['badge', 'sound', 'banner', 'list']
+    },
+    // Cor/estilo iniciais (tema escuro, igual o --app-bg padrão do app) —
+    // evita o flash com a cor default do sistema antes do TemaService
+    // assumir e sincronizar com o tema salvo do usuário.
+    StatusBar: {
+      style: 'LIGHT',
+      backgroundColor: '#0f1117',
+      overlaysWebView: false
     }
   }
 };
