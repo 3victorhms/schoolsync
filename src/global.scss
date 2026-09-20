@@ -47,11 +47,39 @@ body {
   --app-text-soft: #c8cfe0;
   --app-muted: #8891aa;
   --app-muted-strong: #7e88a6;
-  --app-accent: #3a6ff7;
-  --app-accent-soft: #16264a;
+  --app-accent: #4C86BE;
+  --app-accent-soft: #17273F;
   --app-success: #3abf7f;
   --app-warning: #f5a623;
   --app-danger: #ff5c6c;
+
+  // Escala de urgência (psicologia das cores): quanto mais perto do prazo,
+  // mais forte/vermelho. Usada no calendário (pontos dos dias) e nas listas
+  // de atividades (rótulo de data). Fica fora da paleta semântica porque
+  // precisa de 5 degraus distintos, e mantém o mesmo valor nos dois temas
+  // (claro/escuro) pra não perder contraste em nenhum dos dois.
+  --app-urgencia-atrasada: #d62f2f;
+  --app-urgencia-atrasada-borda: #7f1720;
+  --app-urgencia-proxima: #ee7d1a;
+  --app-urgencia-semana: #f9ca32;
+  --app-urgencia-mes: #299c32;
+  --app-urgencia-concluida: #3670cd;
+
+  // Tokens de transição/animação compartilhados por todo o app, pra usar a
+  // mesma curva em botões, cards, toggles etc. em vez de valores soltos.
+  --transition-fast: 150ms cubic-bezier(.4, 0, .2, 1);
+  --transition-base: 250ms cubic-bezier(.4, 0, .2, 1);
+
+  // No iOS/macOS, -apple-system e BlinkMacSystemFont resolvem para a San
+  // Francisco nativa (a mesma fonte dos apps da Apple). Em outras
+  // plataformas caem para a Inter (importada no index.html), que tem
+  // proporções bem parecidas, em vez da fonte generica do sistema.
+  --ion-font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+html,
+body {
+  font-family: var(--ion-font-family);
 }
 
 body.tema-claro {
@@ -65,7 +93,7 @@ body.tema-claro {
   --app-text-soft: #2f3a4f;
   --app-muted: #667085;
   --app-muted-strong: #9aa7ba;
-  --app-accent: #2f6df6;
+  --app-accent: #2E5F91;
   --app-accent-soft: #e4edff;
   --app-success: #158a55;
   --app-warning: #b7791f;
@@ -173,7 +201,6 @@ body.tema-claro .acao-card,
 body.tema-claro .barra-busca,
 body.tema-claro .campo-item,
 body.tema-claro .custom-input,
-body.tema-claro .logo-icon,
 body.tema-claro .filtro-btn,
 body.tema-claro .tema-btn {
   --background: var(--app-surface) !important;
@@ -217,7 +244,6 @@ body.tema-claro .membro-pos,
 body.tema-claro .sala-icone,
 body.tema-claro .grupo-icone,
 body.tema-claro .tarefa-icone,
-body.tema-claro .logo-icon,
 body.tema-claro .status-icone {
   background: var(--app-accent-soft) !important;
   color: var(--app-accent) !important;
@@ -245,7 +271,6 @@ body.tema-claro .acao-card ion-icon,
 body.tema-claro .sala-icone ion-icon,
 body.tema-claro .grupo-icone ion-icon,
 body.tema-claro .tarefa-icone ion-icon,
-body.tema-claro .logo-icon ion-icon,
 body.tema-claro .status-icone ion-icon,
 body.tema-claro .tema-btn ion-icon {
   color: var(--app-accent) !important;
@@ -371,7 +396,7 @@ body.tema-claro .entrar-btn ion-icon {
 
 body.tema-claro .criar-btn {
   --background: var(--app-accent) !important;
-  --background-activated: #245bd8 !important;
+  --background-activated: #234A73 !important;
   --color: #ffffff !important;
   --border-radius: 999px !important;
   border-radius: 999px !important;
@@ -784,5 +809,113 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
     left: 50%;
     transform: translateX(-50%) translateZ(0);
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 30px 70px rgba(0, 0, 0, 0.55);
+  }
+}
+
+/* ------------------------------------------------------------------------ *
+ * Feedback de toque global. Os cards/linhas clicaveis do app (as <div> com
+ * routerLink e o atributo "button") nao tinham nenhum retorno visual ao
+ * toque, entao o app parecia "travar" por uma fracao de segundo antes de
+ * navegar. Isso cobre tanto essas divs quanto os <button class="row"> do
+ * perfil e os botoes de filtro/acao espalhados pelas paginas.
+ * ------------------------------------------------------------------------ */
+.row[button],
+[button],
+button.row,
+.filtro-btn,
+.acao-btn,
+.acao-card {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+
+  &:active {
+    transform: scale(0.97);
+    opacity: 0.85;
+  }
+}
+
+/* ------------------------------------------------------------------------ *
+ * Skeleton loader (shimmer) para usar no lugar do ion-spinner central nas
+ * listas. Evita o "pulo" de layout quando o conteudo real chega: o
+ * placeholder ja ocupa o mesmo espaco/formato dos cards reais.
+ * ------------------------------------------------------------------------ */
+@keyframes skeleton-shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+
+.skeleton-row {
+  pointer-events: none;
+}
+
+.skeleton-block,
+.skeleton-line {
+  // !important porque .row-icon/.avatar-small etc. definem "background" (o
+  // shorthand, que reseta background-image) no proprio estilo do componente
+  // — precisa ganhar deles enquanto o placeholder estiver visivel.
+  background-image: linear-gradient(
+    90deg,
+    var(--app-surface-strong) 25%,
+    var(--app-bg-muted) 37%,
+    var(--app-surface-strong) 63%
+  ) !important;
+  background-size: 400px 100% !important;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+.skeleton-line {
+  height: 12px;
+  margin-bottom: 8px;
+
+  &.skeleton-line-title {
+    width: 60%;
+    height: 14px;
+  }
+
+  &.skeleton-line-sub {
+    width: 40%;
+    margin-bottom: 0;
+  }
+}
+
+/* ------------------------------------------------------------------------ *
+ * Entrada suave (fade + leve subida) para os itens de uma lista, com um
+ * pequeno atraso crescente por item ("stagger") para nao entrarem todos
+ * de uma vez. Aplicar a classe "stagger-list" no container (ex.: a <div
+ * class="group">) que envolve os itens.
+ * ------------------------------------------------------------------------ */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stagger-list > * {
+  animation: fadeUp 0.45s cubic-bezier(.4, 0, .2, 1) both;
+}
+
+.stagger-list > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-list > *:nth-child(2) { animation-delay: 40ms; }
+.stagger-list > *:nth-child(3) { animation-delay: 80ms; }
+.stagger-list > *:nth-child(4) { animation-delay: 120ms; }
+.stagger-list > *:nth-child(5) { animation-delay: 160ms; }
+.stagger-list > *:nth-child(6) { animation-delay: 200ms; }
+.stagger-list > *:nth-child(n+7) { animation-delay: 240ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .stagger-list > *,
+  .skeleton-block,
+  .skeleton-line,
+  .row[button],
+  [button],
+  button.row {
+    animation: none !important;
+    transition: none !important;
   }
 }

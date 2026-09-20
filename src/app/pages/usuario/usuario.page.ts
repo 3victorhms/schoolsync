@@ -226,7 +226,7 @@ export class UsuarioPage implements OnInit {
           next: (usuarioAtualizado) => {
             this.usuario = usuarioAtualizado;
             this.loginService.registrarAutenticacao(usuarioAtualizado);
-            this.navController.navigateForward('/perfil');
+            this.navController.navigateForward('/tabs/perfil');
           },
           error: (erro) => {
             console.error('[SchoolSync] Falha ao salvar perfil/foto - status:', erro?.status, 'corpo:', erro?.error);

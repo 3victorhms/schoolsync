@@ -59,7 +59,7 @@ ion-content {
 
             ion-icon {
                 font-size: 24px;
-                color: #3a6ff7 !important;
+                color: #4C86BE !important;
             }
 
             &.sair ion-icon {
@@ -137,7 +137,7 @@ ion-content {
     }
 
     &.nao_iniciada { background: #8e8e93; }
-    &.em_andamento { background: #3a6ff7; }
+    &.em_andamento { background: #4C86BE; }
     &.concluido { background: #3abf7f; }
     &.fora_caderno { background: #7e88a6; }
 }
@@ -191,7 +191,7 @@ ion-content {
 
     .tag-disciplina {
         background: #1e2f5e;
-        color: #3a6ff7;
+        color: #4C86BE;
         font-size: 11px;
         font-weight: 600;
         padding: 3px 9px;
@@ -209,6 +209,28 @@ ion-content {
         ion-icon {
             font-size: 13px;
         }
+
+        // Escala de urgência (psicologia das cores), mesmo padrão do
+        // calendário em Início: quanto mais perto do prazo, mais
+        // forte/vermelha a cor da data.
+        &.urgencia-atrasada,
+        &.urgencia-hoje {
+            color: var(--app-urgencia-atrasada);
+            font-weight: 700;
+        }
+
+        &.urgencia-proxima {
+            color: var(--app-urgencia-proxima);
+            font-weight: 600;
+        }
+
+        &.urgencia-semana {
+            color: var(--app-urgencia-semana);
+        }
+
+        &.urgencia-mes {
+            color: var(--app-urgencia-mes);
+        }
     }
 
     .atividade-status {
@@ -216,7 +238,7 @@ ion-content {
         font-weight: 700;
         color: #8891aa;
 
-        &.em_andamento { color: #3a6ff7; }
+        &.em_andamento { color: #4C86BE; }
         &.concluido { color: #3abf7f; }
         &.fora_caderno { color: #7e88a6; }
     }
@@ -238,7 +260,7 @@ ion-content {
     font-size: 14px;
 
     ion-spinner {
-        color: #3a6ff7;
+        color: #4C86BE;
         width: 32px;
         height: 32px;
     }
@@ -272,7 +294,7 @@ ion-content > .vazio-data {
     }
 
     .voce {
-        color: #3a6ff7;
+        color: #4C86BE;
         font-size: 13px;
         font-weight: 600;
         margin-left: 4px;

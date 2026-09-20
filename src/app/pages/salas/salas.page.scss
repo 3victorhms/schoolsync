@@ -10,22 +10,51 @@ ion-toolbar {
 }
 
 .entrar-btn {
-    --border-color: #2e3346;
-    --background: #1a1f2e;
-    --border-radius: 999px;
-    font-size: 14px;
-    font-weight: 600;
+    --border-width: 0;
+    --background: var(--app-surface);
+    --background-activated: var(--app-accent-soft);
+    --background-hover: var(--app-accent-soft);
+    --color: var(--app-text);
+    // Cantos arredondados "quadrado suave", no estilo iOS do resto do app
+    // (mesma ideia do .row-icon/.acao-btn), em vez de pill 999px.
+    --border-radius: 16px;
+    --padding-start: 14px;
+    --padding-end: 16px;
+    font-size: 13.5px;
+    font-weight: 700;
     height: 36px;
     margin-right: 6px;
+    transition: transform var(--transition-fast);
+
+    ion-icon {
+        font-size: 16px;
+        margin-right: 5px;
+        color: var(--app-accent);
+    }
+
+    &:active {
+        transform: scale(0.96);
+    }
 }
 
 .criar-btn {
-    --background: #3a6ff7;
+    --background: var(--app-accent);
+    --background-activated: var(--app-accent);
+    --background-hover: var(--app-accent);
     --color: #ffffff;
-    --border-radius: 999px;
-    width: 36px;
-    height: 36px;
+    --border-radius: 16px;
+    width: 38px;
+    height: 38px;
     margin-right: 4px;
+    transition: transform var(--transition-fast);
+
+    ion-icon {
+        font-size: 20px;
+    }
+
+    &:active {
+        transform: scale(0.92);
+    }
 }
 
 ion-content {
@@ -73,7 +102,7 @@ ion-content {
 
         ion-icon {
             font-size: 20px;
-            color: #3a6ff7;
+            color: #4C86BE;
         }
     }
 
@@ -109,7 +138,7 @@ ion-content {
             .tag-codigo {
                 font-size: 11px;
                 font-weight: 600;
-                color: #3a6ff7;
+                color: #4C86BE;
                 letter-spacing: 0.5px;
             }
         }
@@ -129,7 +158,7 @@ ion-content {
     text-align: center;
 
     ion-spinner {
-        color: #3a6ff7;
+        color: #4C86BE;
         width: 32px;
         height: 32px;
     }
@@ -149,67 +178,5 @@ ion-content {
     }
 }
 
-ion-tab-bar {
-    position: fixed;
-    left: 50%;
-    width: 280px;
-    transform: translateX(-50%);
-    bottom: calc(18px + env(safe-area-inset-bottom));
-    z-index: 10;
-    height: 60px;
-    padding: 6px 8px;
-    gap: 2px;
-    border-radius: 28px;
-    border-top: none;
-    --background: rgba(15, 17, 23, 0.78);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(58, 111, 247, 0.18);
-}
-
-ion-tab-button {
-    --color: #7e88a6;
-    --color-selected: #3a6ff7;
-    --ripple-color: transparent;
-    --padding-top: 0;
-    --padding-bottom: 0;
-    flex: 0 0 auto;
-    border-radius: 22px;
-
-    &::part(native) {
-        flex-direction: row;
-        gap: 6px;
-        padding: 10px 12px;
-        border-radius: 22px;
-    }
-
-    ion-icon {
-        font-size: 22px;
-    }
-
-    ion-label {
-        font-size: 12px;
-        font-weight: 600;
-        margin: 0;
-        white-space: nowrap;
-    }
-
-    &:not(.selecionado) ion-label {
-        display: none;
-    }
-}
-
-.selecionado {
-    color: #3a79df;
-
-    &::part(native) {
-        background: #16264a;
-        padding: 10px 16px;
-    }
-
-    // Pequeno espaco entre o icone e o texto do item ativo (senao ficam colados).
-    ion-icon {
-        margin-inline-end: 6px;
-    }
-}
+// A barra de abas (ion-tab-bar) agora vive em app/pages/tabs/tabs.page.scss,
+// compartilhada pelas 4 telas principais.

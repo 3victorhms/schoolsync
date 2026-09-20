@@ -20,12 +20,31 @@ const rotasDaAplicacao: Routes = [
     loadComponent: () => import('./pages/add-usuario/add-usuario.page').then(m => m.AddUsuarioPage)
   },
   {
-    path: 'inicio',
-    loadComponent: () => import('./pages/inicio/inicio.page').then(m => m.InicioPage)
-  },
-  {
-    path: 'perfil',
-    loadComponent: () => import('./pages/perfil/perfil.page').then(m => m.PerfilPage)
+    path: 'tabs',
+    loadComponent: () => import('./pages/tabs/tabs.page').then(m => m.TabsPage),
+    children: [
+      {
+        path: 'inicio',
+        loadComponent: () => import('./pages/inicio/inicio.page').then(m => m.InicioPage)
+      },
+      {
+        path: 'salas',
+        loadComponent: () => import('./pages/salas/salas.page').then(m => m.SalasPage)
+      },
+      {
+        path: 'caderno',
+        loadComponent: () => import('./pages/caderno/caderno.page').then(m => m.CadernoPage)
+      },
+      {
+        path: 'perfil',
+        loadComponent: () => import('./pages/perfil/perfil.page').then(m => m.PerfilPage)
+      },
+      {
+        path: '',
+        redirectTo: 'inicio',
+        pathMatch: 'full'
+      },
+    ],
   },
   {
     path: 'sala',
@@ -80,10 +99,6 @@ const rotasDaAplicacao: Routes = [
     loadComponent: () => import('./pages/add-tarefa/add-tarefa.page').then(m => m.AddTarefaPage)
   },
   {
-    path: 'salas',
-    loadComponent: () => import('./pages/salas/salas.page').then(m => m.SalasPage)
-  },
-  {
     path: 'entrar-sala',
     loadComponent: () => import('./pages/entrar-sala/entrar-sala.page').then(m => m.EntrarSalaPage)
   },
@@ -110,10 +125,6 @@ const rotasDaAplicacao: Routes = [
   {
     path: 'grupo/:id/tarefas',
     loadComponent: () => import('./pages/grupo-tarefas/grupo-tarefas.page').then(m => m.GrupoTarefasPage)
-  },
-  {
-    path: 'caderno',
-    loadComponent: () => import('./pages/caderno/caderno.page').then(m => m.CadernoPage)
   },
 ];
 

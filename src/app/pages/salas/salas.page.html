@@ -22,11 +22,19 @@
   <div class="salas-lista">
 
     @if (carregando) {
-    <div class="vazio-data">
-      <ion-spinner name="crescent"></ion-spinner>
+    <div class="group">
+      @for (i of [1, 2, 3]; track i) {
+      <div class="row skeleton-row">
+        <div class="row-icon skeleton-block"></div>
+        <div class="row-body">
+          <div class="skeleton-line skeleton-line-title"></div>
+          <div class="skeleton-line skeleton-line-sub"></div>
+        </div>
+      </div>
+      }
     </div>
     } @else if (salas.length > 0) {
-    <div class="group">
+    <div class="group stagger-list">
       @for (sala of salas; track sala.id) {
       <div class="row sala-row" [routerLink]="['/sala', sala.id]" button>
         <div class="row-icon">
@@ -60,27 +68,3 @@
   </div>
 
 </ion-content>
-
-<ion-tab-bar slot="bottom">
-
-  <ion-tab-button tab="inicio" routerLink="/inicio">
-    <ion-icon name="home-outline"></ion-icon>
-    <ion-label>Inicio</ion-label>
-  </ion-tab-button>
-
-  <ion-tab-button class="selecionado" tab="sala" routerLink="/salas">
-    <ion-icon name="people-outline"></ion-icon>
-    <ion-label>Salas</ion-label>
-  </ion-tab-button>
-
-  <ion-tab-button tab="caderno" routerLink="/caderno">
-    <ion-icon name="book-outline"></ion-icon>
-    <ion-label>Caderno</ion-label>
-  </ion-tab-button>
-
-  <ion-tab-button tab="perfil" routerLink="/perfil">
-    <ion-icon name="person-outline"></ion-icon>
-    <ion-label>Perfil</ion-label>
-  </ion-tab-button>
-
-</ion-tab-bar>

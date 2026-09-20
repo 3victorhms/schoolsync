@@ -88,7 +88,7 @@ export class LoginPage implements OnInit {
             this.loginService.registrarAutenticacao(this.usuario);
             void this.notificacaoPushService.sincronizarAposLogin();
             const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-            this.navController.navigateRoot(returnUrl?.startsWith('/') ? returnUrl : '/inicio');
+            this.navController.navigateRoot(returnUrl?.startsWith('/') ? returnUrl : '/tabs/inicio');
           }
         },
         error: () => {

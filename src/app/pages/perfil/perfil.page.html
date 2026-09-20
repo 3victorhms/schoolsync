@@ -3,7 +3,7 @@
     <ion-title>Perfil</ion-title>
     <ion-buttons slot="end">
       <ion-button class="editar-btn" (click)="editarPerfil()">
-        <ion-icon name="pencil-outline" slot="start"></ion-icon>
+        <ion-icon name="create-outline" slot="start"></ion-icon>
         Editar
       </ion-button>
     </ion-buttons>
@@ -72,27 +72,3 @@
   </div>
 
 </ion-content>
-
-<ion-tab-bar slot="bottom">
-
-  <ion-tab-button tab="inicio" routerLink="/inicio">
-    <ion-icon name="home-outline"></ion-icon>
-    <ion-label>Inicio</ion-label>
-  </ion-tab-button>
-
-  <ion-tab-button tab="salas" routerLink="/salas">
-    <ion-icon name="people-outline"></ion-icon>
-    <ion-label>Salas</ion-label>
-  </ion-tab-button>
-
-  <ion-tab-button tab="caderno" routerLink="/caderno">
-    <ion-icon name="book-outline"></ion-icon>
-    <ion-label>Caderno</ion-label>
-  </ion-tab-button>
-
-  <ion-tab-button class="selecionado" tab="perfil" routerLink="/perfil">
-    <ion-icon name="person-outline"></ion-icon>
-    <ion-label>Perfil</ion-label>
-  </ion-tab-button>
-
-</ion-tab-bar>

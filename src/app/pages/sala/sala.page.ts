@@ -14,6 +14,8 @@ import { AtividadeModel } from 'src/app/model/atividade.model';
 import { finalize, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
+import { classeUrgencia } from 'src/app/utils/urgencia.util';
+import { labelPontos } from 'src/app/utils/pontos.util';
 
 @Component({
     selector: 'app-sala',
@@ -86,7 +88,7 @@ export class SalaPage implements OnInit {
             },
             error: () => {
                 this.exibirMensagem('Sala não encontrada');
-                this.navController.navigateBack('/salas');
+                this.navController.navigateBack('/tabs/salas');
             }
         });
     }
@@ -220,8 +222,12 @@ export class SalaPage implements OnInit {
     }
 
     labelPontos(valor: number | string): string {
-        const pontos = Number(valor);
-        return `${valor} ${pontos === 1 ? 'ponto' : 'pontos'}`;
+        return labelPontos(valor);
+    }
+
+    /** Classe de urgência (psicologia das cores, mesmo padrão do calendário) pro rótulo de data. */
+    classeUrgencia(atividade: AtividadeModel): string {
+        return classeUrgencia(atividade.dataEntrega, atividade.status);
     }
 
     editar() {
@@ -241,7 +247,7 @@ export class SalaPage implements OnInit {
             next: () => {
                 localStorage.removeItem(`ultimaSala:${this.usuario.id}`);
                 this.exibirMensagem('Voce saiu da sala.');
-                this.navController.navigateBack('/salas');
+                this.navController.navigateBack('/tabs/salas');
             },
             error: (erro) => {
                 console.error('Erro ao sair da sala:', erro);
@@ -299,7 +305,7 @@ export class SalaPage implements OnInit {
         ).subscribe({
             next: () => {
                 this.exibirMensagem('Sala excluída.');
-                this.navController.navigateBack('/salas');
+                this.navController.navigateBack('/tabs/salas');
             },
             error: (erro) => {
                 console.error('Erro ao excluir sala:', erro);

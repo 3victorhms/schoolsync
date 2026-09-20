@@ -35,7 +35,7 @@ ion-toolbar {
 
         &.badge-andamento {
             background: #1e2f5e;
-            color: #3a6ff7;
+            color: #4C86BE;
         }
 
         &.badge-concluido {
@@ -68,7 +68,7 @@ ion-content {
     text-align: center;
 
     ion-spinner {
-        color: #3a6ff7;
+        color: #4C86BE;
         width: 32px;
         height: 32px;
     }
@@ -127,7 +127,7 @@ ion-content {
             align-items: center;
             gap: 4px;
             background: #1e2f5e;
-            color: #3a6ff7;
+            color: #4C86BE;
             font-size: 13px;
             font-weight: 700;
             padding: 6px 14px;
@@ -204,8 +204,8 @@ ion-content {
             }
 
             &.ativo {
-                border-color: #3a6ff7;
-                color: #3a6ff7;
+                border-color: #4C86BE;
+                color: #4C86BE;
                 background: #1a2340;
             }
 
@@ -244,7 +244,7 @@ ion-content {
         background: #1a2340;
         border: none;
         border-radius: 14px;
-        color: #3a6ff7;
+        color: #4C86BE;
         font-size: 14px;
         font-weight: 600;
         padding: 14px;
@@ -273,7 +273,7 @@ ion-content {
         margin: 0 0 12px;
 
         ion-icon {
-            color: #3a6ff7;
+            color: #4C86BE;
             font-size: 20px;
         }
     }
@@ -353,7 +353,7 @@ ion-content {
                 gap: 4px;
                 background: transparent;
                 border: none;
-                color: #3a6ff7;
+                color: #4C86BE;
                 font-size: 12px;
                 font-weight: 600;
                 padding: 0;
@@ -437,7 +437,7 @@ ion-content {
             }
 
             &:focus {
-                border-color: #3a6ff7;
+                border-color: #4C86BE;
             }
         }
 
@@ -446,7 +446,7 @@ ion-content {
             height: 52px;
             border-radius: 50%;
             border: none;
-            background: #3a6ff7;
+            background: #4C86BE;
             color: #ffffff;
             display: flex;
             align-items: center;

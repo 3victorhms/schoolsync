@@ -18,8 +18,16 @@
   <div class="caderno-secao">
 
     @if (carregando) {
-    <div class="vazio-data">
-      <ion-spinner name="crescent"></ion-spinner>
+    <div class="group">
+      @for (i of [1, 2, 3, 4]; track i) {
+      <div class="row skeleton-row">
+        <div class="row-icon skeleton-block"></div>
+        <div class="row-body">
+          <div class="skeleton-line skeleton-line-title"></div>
+          <div class="skeleton-line skeleton-line-sub"></div>
+        </div>
+      </div>
+      }
     </div>
     } @else {
 
@@ -62,7 +70,7 @@
 
     @if (atividadesFiltradas.length > 0) {
     <h3 class="group-title">Atividades salvas</h3>
-    <div class="group">
+    <div class="group stagger-list">
       @for (atividade of atividadesFiltradas; track atividade.id) {
       <div class="row atividade-item" [routerLink]="['/atividade', atividade.id]" button>
         <div class="row-icon" [ngClass]="classeStatus(atividade.status)">
@@ -76,7 +84,7 @@
           </div>
           <div class="row-meta">
             <span class="tag-disciplina">{{ atividade.disciplina }}</span>
-            <span class="row-data">
+            <span class="row-data" [ngClass]="classeUrgencia(atividade)">
               <ion-icon name="calendar-outline"></ion-icon>
               {{ formatarData(atividade.dataEntrega) }}
             </span>
@@ -91,7 +99,7 @@
 
     @if (tarefasFiltradas.length > 0) {
     <h3 class="group-title tarefas">Tarefas atribuídas</h3>
-    <div class="group">
+    <div class="group stagger-list">
       @for (tarefa of tarefasFiltradas; track tarefa.id) {
       <div class="row atividade-item" [routerLink]="['/grupo', tarefa.idGrupo, 'tarefas']" button>
         <div class="row-icon" [ngClass]="classeStatus(tarefa.status)">
@@ -131,27 +139,3 @@
 
   </div>
 </ion-content>
-
-<ion-tab-bar slot="bottom">
-
-  <ion-tab-button tab="inicio" routerLink="/inicio">
-    <ion-icon name="home-outline"></ion-icon>
-    <ion-label>Inicio</ion-label>
-  </ion-tab-button>
-
-  <ion-tab-button tab="salas" routerLink="/salas">
-    <ion-icon name="people-outline"></ion-icon>
-    <ion-label>Salas</ion-label>
-  </ion-tab-button>
-
-  <ion-tab-button class="selecionado" tab="caderno" routerLink="/caderno">
-    <ion-icon name="book-outline"></ion-icon>
-    <ion-label>Caderno</ion-label>
-  </ion-tab-button>
-
-  <ion-tab-button tab="perfil" routerLink="/perfil">
-    <ion-icon name="person-outline"></ion-icon>
-    <ion-label>Perfil</ion-label>
-  </ion-tab-button>
-
-</ion-tab-bar>

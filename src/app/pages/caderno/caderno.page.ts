@@ -10,10 +10,7 @@ import {
   IonIcon,
   IonRefresher,
   IonRefresherContent,
-  IonSpinner,
-  IonTabBar,
-  IonLabel,
-  IonTabButton
+  IonSpinner
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -36,6 +33,8 @@ import { TarefaService } from 'src/app/services/tarefa.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { finalize } from 'rxjs';
+import { classeUrgencia } from 'src/app/utils/urgencia.util';
+import { labelPontos } from 'src/app/utils/pontos.util';
 
 @Component({
   selector: 'app-caderno',
@@ -51,9 +50,6 @@ import { finalize } from 'rxjs';
     IonRefresher,
     IonRefresherContent,
     IonSpinner,
-    IonTabBar,
-    IonTabButton,
-    IonLabel,
     CommonModule,
     FormsModule,
     RouterLink
@@ -263,6 +259,11 @@ export class CadernoPage implements OnInit {
     return this.statusNormalizadoTarefa(status);
   }
 
+  /** Classe de urgência (psicologia das cores, mesmo padrão do calendário) pro rótulo de data. */
+  classeUrgencia(atividade: AtividadeModel): string {
+    return classeUrgencia(atividade.dataEntrega, atividade.status);
+  }
+
   formatarData(data: string): string {
     if (!data) return '';
 
@@ -275,7 +276,6 @@ export class CadernoPage implements OnInit {
   }
 
   labelPontos(valor: number | string): string {
-    const pontos = Number(valor);
-    return `${valor} ${pontos === 1 ? 'ponto' : 'pontos'}`;
+    return labelPontos(valor);
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonCard, IonCardContent, IonTabBar, IonLabel } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonCard, IonCardContent } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -12,6 +12,8 @@ import { NotificacaoService } from 'src/app/services/notificacao.service';
 import { addIcons } from 'ionicons';
 import { Subscription } from 'rxjs';
 import { notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, bookOutline, personOutline, pencilOutline } from 'ionicons/icons';
+import { calcularUrgencia, classeUrgencia, ordemUrgencia } from 'src/app/utils/urgencia.util';
+import { labelPontos } from 'src/app/utils/pontos.util';
 
 interface DiaCalendario {
   numero: number;
@@ -28,7 +30,7 @@ interface DiaCalendario {
   templateUrl: './inicio.page.html',
   styleUrls: ['./inicio.page.scss'],
   standalone: true,
-  imports: [IonIcon, IonCard, IonCardContent, IonContent, IonHeader, IonTitle, IonToolbar, IonTabBar, IonLabel, CommonModule, RouterLink]
+  imports: [IonIcon, IonCard, IonCardContent, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, RouterLink]
 })
 export class InicioPage implements OnInit {
 
@@ -188,25 +190,13 @@ export class InicioPage implements OnInit {
     const pendentes = atividades.filter(atividade => atividade.status !== 'concluido');
     if (!pendentes.length) return 'concluida';
 
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-    const domingo = new Date(hoje);
-    domingo.setDate(hoje.getDate() + ((7 - hoje.getDay()) % 7));
-    const fimMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
+    const tipos = pendentes.map(atividade => calcularUrgencia(atividade.dataEntrega, atividade.status));
+    return tipos.sort((a, b) => ordemUrgencia(a) - ordemUrgencia(b))[0];
+  }
 
-    const prioridades = pendentes.map(atividade => {
-      const [ano, mes, dia] = atividade.dataEntrega.split('-').map(Number);
-      const prazo = new Date(ano, mes - 1, dia);
-      const diferenca = Math.round((prazo.getTime() - hoje.getTime()) / 86400000);
-      if (diferenca < 0) return { ordem: 0, tipo: 'atrasada' as const };
-      if (diferenca === 0) return { ordem: 1, tipo: 'hoje' as const };
-      if (diferenca <= 3) return { ordem: 2, tipo: 'proxima' as const };
-      if (prazo <= domingo) return { ordem: 3, tipo: 'semana' as const };
-      if (prazo <= fimMes) return { ordem: 4, tipo: 'mes' as const };
-      return { ordem: 5, tipo: 'futuro' as const };
-    });
-
-    return prioridades.sort((a, b) => a.ordem - b.ordem)[0].tipo;
+  /** Classe de urgência (mesmo padrão do calendário) pra usar em listas de atividades. */
+  classeUrgencia(atividade: AtividadeModel): string {
+    return classeUrgencia(atividade.dataEntrega, atividade.status);
   }
 
   private dataParaChave(data: Date): string {
@@ -239,7 +229,6 @@ export class InicioPage implements OnInit {
   }
 
   labelPontos(valor: number | string): string {
-    const pontos = Number(valor);
-    return `${valor} ${pontos === 1 ? 'ponto' : 'pontos'}`;
+    return labelPontos(valor);
   }
 }

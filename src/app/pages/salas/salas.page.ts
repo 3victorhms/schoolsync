@@ -13,8 +13,7 @@ import {
   IonButton,
   IonRefresher,
   IonRefresherContent,
-  IonSpinner,
-  IonTabButton, IonTabBar, IonLabel
+  IonSpinner
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -45,7 +44,6 @@ import { finalize } from 'rxjs';
     IonRefresher,
     IonRefresherContent,
     IonSpinner,
-    IonTabButton, IonTabBar, IonLabel,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,

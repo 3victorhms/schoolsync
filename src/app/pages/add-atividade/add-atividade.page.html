@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/salas"></ion-back-button>
+      <ion-back-button defaultHref="/tabs/salas"></ion-back-button>
     </ion-buttons>
     <ion-title>
       {{ editando ? 'Editar Atividade' : 'Nova Atividade' }}
@@ -35,11 +35,22 @@
     </div>
 
     <div class="campo-grupo">
+      <ion-item class="campo-item campo-toggle-item" lines="none">
+        <label class="campo-toggle-label">
+          <span>Vale ponto</span>
+          <ion-toggle formControlName="valePontuacao" aria-label="Atividade vale ponto"></ion-toggle>
+        </label>
+      </ion-item>
+    </div>
+
+    @if (formGroup.get('valePontuacao')?.value) {
+    <div class="campo-grupo">
       <label class="campo-label">Valor (máximo: 15 pontos)</label>
       <ion-item class="campo-item" lines="none">
         <input type="number" placeholder="Ex: 10 pontos" formControlName="valor" min="0.01" max="15" step="0.01" />
       </ion-item>
     </div>
+    }
 
     <div class="campo-grupo">
       <label class="campo-label">Data de entrega</label>

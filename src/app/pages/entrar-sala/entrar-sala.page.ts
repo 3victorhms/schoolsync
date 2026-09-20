@@ -63,7 +63,7 @@ export class EntrarSalaPage implements OnInit {
           return;
         }
 
-        this.navController.navigateRoot('/salas');
+        this.navController.navigateRoot('/tabs/salas');
       },
       error: (err) => {
         this.exibirMensagem(err?.error?.message || 'Codigo invalido ou sala nao encontrada.');

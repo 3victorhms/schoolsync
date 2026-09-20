@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/salas"></ion-back-button>
+      <ion-back-button defaultHref="/tabs/salas"></ion-back-button>
     </ion-buttons>
     <ion-title>Grupos</ion-title>
   </ion-toolbar>
@@ -32,11 +32,19 @@
     <h3 class="group-title">Meus grupos</h3>
 
     @if (carregando) {
-    <div class="vazio-data">
-      <ion-spinner name="crescent"></ion-spinner>
+    <div class="group">
+      @for (i of [1, 2, 3]; track i) {
+      <div class="row skeleton-row">
+        <div class="row-icon skeleton-block"></div>
+        <div class="row-body">
+          <div class="skeleton-line skeleton-line-title"></div>
+          <div class="skeleton-line skeleton-line-sub"></div>
+        </div>
+      </div>
+      }
     </div>
     } @else if (grupos.length > 0) {
-    <div class="group">
+    <div class="group stagger-list">
       @for (grupo of grupos; track grupo.id) {
       <div class="row" [routerLink]="['/grupo', grupo.id]" button>
         <div class="row-icon">
@@ -61,22 +69,22 @@
 </ion-content>
 
 <ion-tab-bar slot="bottom">
-  <ion-tab-button tab="inicio" routerLink="/inicio">
+  <ion-tab-button tab="inicio" routerLink="/tabs/inicio">
     <ion-icon name="home-outline"></ion-icon>
     <ion-label>Inicio</ion-label>
   </ion-tab-button>
 
-  <ion-tab-button class="selecionado" tab="salas" routerLink="/salas">
+  <ion-tab-button class="selecionado" tab="salas" routerLink="/tabs/salas">
     <ion-icon name="people-outline"></ion-icon>
     <ion-label>Salas</ion-label>
   </ion-tab-button>
 
-  <ion-tab-button tab="caderno" routerLink="/caderno">
+  <ion-tab-button tab="caderno" routerLink="/tabs/caderno">
     <ion-icon name="book-outline"></ion-icon>
     <ion-label>Caderno</ion-label>
   </ion-tab-button>
 
-  <ion-tab-button tab="perfil" routerLink="/perfil">
+  <ion-tab-button tab="perfil" routerLink="/tabs/perfil">
     <ion-icon name="person-outline"></ion-icon>
     <ion-label>Perfil</ion-label>
   </ion-tab-button>
