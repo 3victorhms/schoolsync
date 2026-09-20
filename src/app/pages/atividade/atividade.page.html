@@ -114,8 +114,12 @@
     <div class="comentarios-lista stagger-list">
       @for (comentario of comentarios; track comentario.id) {
       <div class="comentario-card">
-        <div class="comentario-avatar">
-          {{ iniciaisComentario(comentario.nomeUsuario) }}
+        <div class="comentario-avatar" [class.tem-foto]="!!comentario.fotoUsuario">
+          @if (comentario.fotoUsuario) {
+          <img [src]="comentario.fotoUsuario" [alt]="'Foto de ' + comentario.nomeUsuario" />
+          } @else {
+          <span>{{ iniciaisComentario(comentario.nomeUsuario) }}</span>
+          }
         </div>
 
         <div class="comentario-conteudo">
@@ -144,8 +148,12 @@
           <div class="comentario-respostas">
             @for (resposta of comentario.respostas; track resposta.id) {
             <div class="comentario-card resposta">
-              <div class="comentario-avatar">
-                {{ iniciaisComentario(resposta.nomeUsuario) }}
+              <div class="comentario-avatar" [class.tem-foto]="!!resposta.fotoUsuario">
+                @if (resposta.fotoUsuario) {
+                <img [src]="resposta.fotoUsuario" [alt]="'Foto de ' + resposta.nomeUsuario" />
+                } @else {
+                <span>{{ iniciaisComentario(resposta.nomeUsuario) }}</span>
+                }
               </div>
 
               <div class="comentario-conteudo">

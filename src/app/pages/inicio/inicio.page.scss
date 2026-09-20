@@ -250,6 +250,91 @@ ion-content {
         text-align: center;
         color: var(--app-muted-strong);
         font-size: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .sugestao-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--app-accent-soft);
+        border: none;
+        border-radius: 14px;
+        padding: 12px 14px;
+        text-align: left;
+        cursor: pointer;
+        transition: transform var(--transition-fast);
+
+        &:active {
+            transform: scale(0.98);
+        }
+
+        .sugestao-icone {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: var(--app-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            ion-icon {
+                font-size: 17px;
+                color: #ffffff;
+            }
+        }
+
+        .sugestao-corpo {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+
+            .sugestao-label {
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.03em;
+                color: var(--app-accent);
+            }
+
+            .sugestao-titulo {
+                font-size: 14px;
+                font-weight: 700;
+                color: var(--app-text);
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+
+        .sugestao-data {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--app-muted);
+            flex-shrink: 0;
+
+            &.urgencia-atrasada,
+            &.urgencia-hoje {
+                color: var(--app-urgencia-atrasada);
+            }
+
+            &.urgencia-proxima {
+                color: var(--app-urgencia-proxima);
+            }
+
+            &.urgencia-semana {
+                color: var(--app-urgencia-semana);
+            }
+
+            &.urgencia-mes {
+                color: var(--app-urgencia-mes);
+            }
+        }
     }
 }
 
@@ -258,7 +343,7 @@ ion-content {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    // Era #7c859e: variação próxima de --app-muted-strong.
+    // Era var(--app-muted-strong): variação próxima de --app-muted-strong.
     color: var(--app-muted-strong);
     margin: 0 4px 10px;
 }

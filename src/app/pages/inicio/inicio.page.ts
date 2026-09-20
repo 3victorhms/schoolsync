@@ -231,4 +231,23 @@ export class InicioPage implements OnInit {
   labelPontos(valor: number | string): string {
     return labelPontos(valor);
   }
+
+  /** Próxima atividade pendente (data de hoje em diante), pra sugerir quando
+   * o dia selecionado no calendário não tem nada marcado. */
+  get proximaAtividadeSugerida(): AtividadeModel | null {
+    const hojeStr = this.dataParaChave(new Date());
+    const pendentes = this.atividadesCalendario
+      .filter(atividade => atividade.status !== 'concluido' && atividade.dataEntrega && atividade.dataEntrega >= hojeStr)
+      .sort((a, b) => a.dataEntrega.localeCompare(b.dataEntrega));
+
+    return pendentes[0] || null;
+  }
+
+  irParaAtividade(atividade: AtividadeModel) {
+    const [ano, mes, dia] = atividade.dataEntrega.split('-').map(Number);
+    this.dataSelecionada = new Date(ano, mes - 1, dia);
+    this.dataAtual = new Date(ano, mes - 1, 1);
+    this.gerarCalendario();
+    this.carregarAtividadesDoDia();
+  }
 }

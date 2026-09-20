@@ -1,36 +1,36 @@
 ion-toolbar {
-  --background: #0f1117;
+  --background: var(--app-bg);
   --border-color: transparent;
 
   ion-back-button { --color: #ffffff; }
   ion-title { font-size: 22px; font-weight: 700; color: #ffffff; padding: 0; }
 
   ion-buttons[slot="end"] ion-button {
-    --color: #8891aa;
+    --color: var(--app-muted);
     font-size: 20px;
   }
 
   // Continua destacado em azul (era o unico texto colorido do cabecalho
   // antigo), pra deixar claro que "marcar todas" e a acao principal.
   .marcar-lidas-btn {
-    --color: #4C86BE;
+    --color: var(--app-accent);
   }
 }
-ion-content { --background: #0f1117; }
+ion-content { --background: var(--app-bg); }
 .pagina-notificacoes { padding: 20px 20px 32px; min-height: 100%; }
 .lista { display: flex; flex-direction: column; gap: 10px; }
-.notificacao { width: 100%; min-height: 124px; padding: 20px 16px; display: flex; align-items: flex-start; gap: 16px; text-align: left; border-radius: 24px; border: 1px solid #252b3d; background: #171c28; color: #fff; cursor: pointer; }
-.icone { width: 40px; height: 40px; flex: 0 0 40px; display: grid; place-items: center; border-radius: 50%; background: #17273F; color: #4C86BE; font-size: 21px; }
+.notificacao { width: 100%; min-height: 124px; padding: 20px 16px; display: flex; align-items: flex-start; gap: 16px; text-align: left; border-radius: 24px; border: 1px solid var(--app-surface-strong); background: var(--app-surface); color: #fff; cursor: pointer; }
+.icone { width: 40px; height: 40px; flex: 0 0 40px; display: grid; place-items: center; border-radius: 50%; background: var(--app-accent-soft); color: var(--app-accent); font-size: 21px; }
 .conteudo { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 4px; }
 .conteudo strong { font-size: 18px; line-height: 1.2; }
-.mensagem { color: #8891aa; font-size: 15px; line-height: 1.35; }
-.conteudo small { color: #7e88a6; font-size: 13px; }
-.indicador { width: 10px; height: 10px; border-radius: 50%; background: #4C86BE; flex: 0 0 10px; margin-top: 6px; }
-.estado-vazio { text-align: center; padding: 80px 24px; color: #8891aa; }
-.estado-vazio ion-icon { font-size: 42px; color: #4C86BE; }
+.mensagem { color: var(--app-muted); font-size: 15px; line-height: 1.35; }
+.conteudo small { color: var(--app-muted-strong); font-size: 13px; }
+.indicador { width: 10px; height: 10px; border-radius: 50%; background: var(--app-accent); flex: 0 0 10px; margin-top: 6px; }
+.estado-vazio { text-align: center; padding: 80px 24px; color: var(--app-muted); }
+.estado-vazio ion-icon { font-size: 42px; color: var(--app-accent); }
 .estado-vazio h2 { color: #fff; font-size: 18px; }
 .estado-vazio p { font-size: 14px; }
-.estado-carregando, .estado-erro { padding: 18px; border-radius: 14px; text-align: center; color: #c8cfe0; background: #171c28; }
+.estado-carregando, .estado-erro { padding: 18px; border-radius: 14px; text-align: center; color: var(--app-text-soft); background: var(--app-surface); }
 .estado-erro { border: 1px solid #7d1f35; color: #ffadb7; }
-.notificacao:hover, .notificacao:focus-visible { border-color: #4C86BE; outline: none; background: #171c28; }
+.notificacao:hover, .notificacao:focus-visible { border-color: var(--app-accent); outline: none; background: var(--app-surface); }
 .notificacao:not(.nao-lida) { opacity: .78; }
