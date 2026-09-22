@@ -8,7 +8,7 @@ import {
 import { addIcons } from 'ionicons';
 import { homeOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline, chevronForwardOutline } from 'ionicons/icons';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { AlertController, ToastController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { AtividadeModel } from 'src/app/model/atividade.model';
@@ -64,7 +64,6 @@ export class PerfilPage implements OnInit {
     private loginService: LoginService,
     private confirmacaoService: ConfirmacaoService,
     private toastController: ToastController,
-    private alertController: AlertController,
     private notificacaoPushService: NotificacaoPushService
   ) {
     addIcons({
@@ -199,13 +198,10 @@ export class PerfilPage implements OnInit {
       error: async erro => {
         const mensagem = erro?.error?.message || erro?.error?.detail || 'Não foi possível inativar a conta.';
         if (erro?.status === 409) {
-          const alerta = await this.alertController.create({
-            header: 'Conta ainda possui vínculos',
-            message: `${mensagem}\n\nTransfira as lideranças das salas e dos grupos e reatribua todas as tarefas antes de tentar novamente.`,
-            cssClass: 'app-confirmation-alert',
-            buttons: ['Entendi']
-          });
-          await alerta.present();
+          await this.confirmacaoService.informar(
+            'Conta ainda possui vínculos',
+            `${mensagem}\n\nTransfira as lideranças das salas e dos grupos e reatribua todas as tarefas antes de tentar novamente.`
+          );
           return;
         }
         const toast = await this.toastController.create({ message: mensagem, duration: 5000, color: 'danger', position: 'top' });
