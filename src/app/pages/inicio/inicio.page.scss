@@ -520,42 +520,6 @@ ion-content {
 
 .ultima-sala-secao {
     padding: 0 16px 32px;
-
-    .sala-row-skeleton {
-        cursor: default;
-
-        .row-icon {
-            background: transparent;
-            padding: 0;
-        }
-
-        .skeleton-icone {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
-            margin: 0;
-        }
-
-        .row-body {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .skeleton-titulo {
-            width: 55%;
-            height: 15px;
-            border-radius: 4px;
-            margin: 0;
-        }
-
-        .skeleton-sub {
-            width: 35%;
-            height: 12px;
-            border-radius: 4px;
-            margin: 0;
-        }
-    }
 }
 
 // A barra de abas (ion-tab-bar) agora vive em app/pages/tabs/tabs.page.scss,
