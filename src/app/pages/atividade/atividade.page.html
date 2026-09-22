@@ -137,7 +137,7 @@
             </button>
 
             @if (podeAlterarComentario(comentario)) {
-            <button type="button" class="acao-excluir" [disabled]="comentarioExcluindoId === comentario.id" (click)="excluirComentario(comentario)">
+            <button type="button" class="acao-excluir" [disabled]="comentariosExcluindoIds.has(comentario.id)" (click)="excluirComentario(comentario)">
               <ion-icon name="trash-outline"></ion-icon>
               Excluir
             </button>
@@ -166,7 +166,7 @@
 
                 <div class="comentario-acoes">
                   @if (podeAlterarComentario(resposta)) {
-                  <button type="button" class="acao-excluir" [disabled]="comentarioExcluindoId === resposta.id" (click)="excluirComentario(resposta)">
+                  <button type="button" class="acao-excluir" [disabled]="comentariosExcluindoIds.has(resposta.id)" (click)="excluirComentario(resposta)">
                     <ion-icon name="trash-outline"></ion-icon>
                     Excluir
                   </button>

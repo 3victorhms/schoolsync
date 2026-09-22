@@ -77,7 +77,11 @@ export class AtividadePage implements OnInit {
   novoComentario: string = '';
   comentarioRespondendo: ComentarioModel | null = null;
   excluindo = false;
-  comentarioExcluindoId = '';
+  /** IDs de comentarios com exclusao em andamento (aguardando o "Desfazer"
+   * ou a resposta do servidor). Ficam escondidos mesmo que a lista seja
+   * recarregada antes da exclusao real terminar, senao eles "voltam"
+   * quando o usuario sai e entra na tela de novo. */
+  comentariosExcluindoIds = new Set<string>();
   enviandoComentario = false;
   carregando = true;
 
@@ -166,12 +170,24 @@ export class AtividadePage implements OnInit {
 
     this.comentarioService.listarPorAtividade(this.atividade.id).subscribe({
       next: (res) => {
-        this.comentarios = res || [];
+        this.comentarios = this.filtrarPendentesExclusao(res || []);
       },
       error: () => {
         this.comentarios = [];
       }
     });
+  }
+
+  /** Remove da lista recem-carregada os comentarios que ainda estao com
+   * exclusao pendente (dentro da janela do "Desfazer"), pra nao reaparecerem
+   * na tela por causa de um refresh antes da exclusao real acontecer. */
+  private filtrarPendentesExclusao(lista: ComentarioModel[]): ComentarioModel[] {
+    return lista
+      .filter(comentario => !this.comentariosExcluindoIds.has(comentario.id))
+      .map(comentario => ({
+        ...comentario,
+        respostas: comentario.respostas.filter(resposta => !this.comentariosExcluindoIds.has(resposta.id))
+      }));
   }
 
   enviarComentario() {
@@ -208,7 +224,7 @@ export class AtividadePage implements OnInit {
   }
 
   async excluirComentario(comentario: ComentarioModel) {
-    if (this.comentarioExcluindoId) return;
+    if (this.comentariosExcluindoIds.has(comentario.id)) return;
 
     const confirmou = await this.confirmacaoService.confirmar(
       'Excluir comentario',
@@ -222,6 +238,7 @@ export class AtividadePage implements OnInit {
     if (!lista || indice < 0) return;
 
     const [removido] = lista.splice(indice, 1);
+    this.comentariosExcluindoIds.add(removido.id);
     this.hapticsService.leve();
 
     let desfeito = false;
@@ -234,14 +251,19 @@ export class AtividadePage implements OnInit {
 
     toast.onDidDismiss().then(() => {
       if (desfeito) {
-        lista.splice(indice, 0, removido);
+        this.comentariosExcluindoIds.delete(removido.id);
+        this.reinserirComentario(removido, indice);
         return;
       }
 
       this.comentarioService.excluir(removido.id, this.usuario.id).subscribe({
+        next: () => {
+          this.comentariosExcluindoIds.delete(removido.id);
+        },
         error: (erro) => {
           console.error('Erro ao excluir comentario:', erro);
-          lista.splice(indice, 0, removido);
+          this.comentariosExcluindoIds.delete(removido.id);
+          this.reinserirComentario(removido, indice);
           this.exibirMensagem(`Erro ao excluir comentario (${erro?.status || 'sem conexao'}).`);
         }
       });
@@ -260,6 +282,22 @@ export class AtividadePage implements OnInit {
     }
 
     return { lista: null, indice: -1 };
+  }
+
+  /** Devolve um comentario removido otimisticamente pra lista atual (que
+   * pode ter sido substituida por um recarregamento enquanto a exclusao
+   * estava pendente, entao nao da pra confiar na referencia antiga). */
+  private reinserirComentario(comentario: ComentarioModel, indiceOriginal: number) {
+    if (comentario.idComentarioPai) {
+      const pai = this.comentarios.find(c => c.id === comentario.idComentarioPai);
+      if (!pai || pai.respostas.some(r => r.id === comentario.id)) return;
+
+      pai.respostas.splice(Math.min(indiceOriginal, pai.respostas.length), 0, comentario);
+      return;
+    }
+
+    if (this.comentarios.some(c => c.id === comentario.id)) return;
+    this.comentarios.splice(Math.min(indiceOriginal, this.comentarios.length), 0, comentario);
   }
 
   podeAlterarComentario(comentario: ComentarioModel): boolean {

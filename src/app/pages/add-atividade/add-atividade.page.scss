@@ -70,6 +70,26 @@ form {
             }
         }
 
+        .campo-item.campo-invalido {
+            border: 1px solid var(--app-danger, #e05c5c);
+        }
+
+        .erro-campo {
+            margin: 0;
+            padding-left: 4px;
+            color: var(--app-danger, #e05c5c);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .aviso-campo {
+            margin: 0;
+            padding-left: 4px;
+            color: var(--app-muted);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
         .campo-toggle-item {
             --min-height: 52px;
 

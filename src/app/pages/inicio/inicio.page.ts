@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonCard, IonCardContent } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonCard, IonCardContent, IonSkeletonText } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -30,12 +30,13 @@ interface DiaCalendario {
   templateUrl: './inicio.page.html',
   styleUrls: ['./inicio.page.scss'],
   standalone: true,
-  imports: [IonIcon, IonCard, IonCardContent, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, RouterLink]
+  imports: [IonIcon, IonCard, IonCardContent, IonSkeletonText, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, RouterLink]
 })
 export class InicioPage implements OnInit {
 
   usuario: UsuarioModel;
   ultimaSala: SalaModel | null = null;
+  carregandoUltimaSala = false;
   diasCalendario: DiaCalendario[] = [];
   atividadesDoDia: AtividadeModel[] = [];
   dataSelecionada: Date = new Date();
@@ -211,21 +212,28 @@ export class InicioPage implements OnInit {
     this.ultimaSala = null;
 
     if (!this.usuario.id) {
+      this.carregandoUltimaSala = false;
       return;
     }
 
     const id = localStorage.getItem(`ultimaSala:${this.usuario.id}`);
-    if (id) {
-      this.salaService.buscarPorId(id, this.usuario.id).subscribe({
-        next: (sala) => {
-          this.ultimaSala = sala || null;
-        },
-        error: () => {
-          localStorage.removeItem(`ultimaSala:${this.usuario.id}`);
-          this.ultimaSala = null;
-        }
-      });
+    if (!id) {
+      this.carregandoUltimaSala = false;
+      return;
     }
+
+    this.carregandoUltimaSala = true;
+    this.salaService.buscarPorId(id, this.usuario.id).subscribe({
+      next: (sala) => {
+        this.ultimaSala = sala || null;
+        this.carregandoUltimaSala = false;
+      },
+      error: () => {
+        localStorage.removeItem(`ultimaSala:${this.usuario.id}`);
+        this.ultimaSala = null;
+        this.carregandoUltimaSala = false;
+      }
+    });
   }
 
   labelPontos(valor: number | string): string {
