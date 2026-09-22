@@ -14,6 +14,7 @@ import { AtividadeModel } from 'src/app/model/atividade.model';
 import { finalize, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
+import { DesfazerService } from 'src/app/services/desfazer.service';
 import { classeUrgencia } from 'src/app/utils/urgencia.util';
 import { labelPontos } from 'src/app/utils/pontos.util';
 import { HapticsService } from 'src/app/services/haptics.service';
@@ -40,6 +41,7 @@ export class SalaPage implements OnInit {
         private activatedRoute: ActivatedRoute,
         private navController: NavController,
         private confirmacaoService: ConfirmacaoService,
+        private desfazerService: DesfazerService,
         private toastController: ToastController,
         private salaService: SalaService,
         private usuarioService: UsuarioService,
@@ -280,35 +282,29 @@ export class SalaPage implements OnInit {
         }
 
         this.hapticsService.aviso();
+        this.removendoMembroId = removido.id;
 
-        let desfeito = false;
-        const toast = await this.toastController.create({
-            message: 'Membro removido da sala.',
-            duration: 4000,
-            position: 'bottom',
-            buttons: [{ text: 'Desfazer', role: 'cancel', handler: () => { desfeito = true; } }]
-        });
-
-        toast.onDidDismiss().then(() => {
-            if (desfeito) {
+        // Chama a remocao no servidor imediatamente (sem esperar nenhum
+        // toast/desfazer) - do contrario, se o aviso de "Membro removido"
+        // depender do ion-toast do Ionic pra disparar a chamada, e esse
+        // componente nunca hidratar em producao, a remocao nunca acontece
+        // de verdade e o membro "volta" ao atualizar a pagina. Nao tem
+        // como desfazer isso automaticamente (reentrar na sala exige um
+        // convite), entao aqui e so um aviso informativo.
+        this.salaService.removerMembro(this.sala.id, removido.id, this.usuario.id).subscribe({
+            next: () => {
+                this.removendoMembroId = '';
+                this.desfazerService.mostrarMensagem('Membro removido da sala.');
+            },
+            error: (erro) => {
+                console.error('Erro ao remover membro:', erro);
+                this.removendoMembroId = '';
                 this.membros.splice(indice, 0, removido);
                 this.sala.membros = [...this.sala.membros, removido];
                 this.sala.quantidadeMembros = (this.sala.quantidadeMembros || 0) + 1;
-                return;
+                this.exibirMensagem(`Erro ao remover membro (${erro?.status || 'sem conexao'}).`);
             }
-
-            this.salaService.removerMembro(this.sala.id, removido.id, this.usuario.id).subscribe({
-                error: (erro) => {
-                    console.error('Erro ao remover membro:', erro);
-                    this.membros.splice(indice, 0, removido);
-                    this.sala.membros = [...this.sala.membros, removido];
-                    this.sala.quantidadeMembros = (this.sala.quantidadeMembros || 0) + 1;
-                    this.exibirMensagem(`Erro ao remover membro (${erro?.status || 'sem conexao'}).`);
-                }
-            });
         });
-
-        toast.present();
     }
 
     async excluir() {
