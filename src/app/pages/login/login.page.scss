@@ -117,6 +117,19 @@
     transform: scale(1.015);
 }
 
+.custom-input.campo-invalido {
+    border-color: var(--app-danger, #e05c5c);
+}
+
+.erro-campo {
+    margin: -12px 0 14px;
+
+    color: var(--app-danger, #e05c5c);
+
+    font-size: 13px;
+    line-height: 1.4;
+}
+
 .senha-container {
     position: relative;
 
@@ -130,7 +143,7 @@
     z-index: 2;
     top: 50%;
     right: 12px;
-    transform: translateY(-65%);
+    transform: translateY(-50%);
     width: 36px;
     height: 36px;
     display: grid;

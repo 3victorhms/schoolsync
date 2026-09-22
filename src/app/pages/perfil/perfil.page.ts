@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import {
   IonContent, IonHeader, IonTitle, IonToolbar,
-  IonButtons, IonButton, IonIcon
+  IonIcon
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { homeOutline, trophyOutline, personOutline, createOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline, chevronForwardOutline } from 'ionicons/icons';
+import { homeOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline, chevronForwardOutline } from 'ionicons/icons';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { AlertController, ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
@@ -25,7 +25,7 @@ import { finalize } from 'rxjs';
   standalone: true,
   imports: [
     IonContent, IonHeader, IonTitle, IonToolbar,
-    IonButtons, IonButton, IonIcon,
+    IonIcon,
     CommonModule,
     RouterModule,
   ],
@@ -68,7 +68,7 @@ export class PerfilPage implements OnInit {
     private notificacaoPushService: NotificacaoPushService
   ) {
     addIcons({
-      createOutline, homeOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline, chevronForwardOutline
+      homeOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline, chevronForwardOutline
     });
   }
 

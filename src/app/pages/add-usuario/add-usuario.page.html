@@ -20,21 +20,33 @@
 
       <form [formGroup]="formGroup" (ngSubmit)="salvar()">
 
-        <ion-input type="text" formControlName="nome" placeholder="Seu nome" class="custom-input">
+        <ion-input type="text" formControlName="nome" placeholder="Seu nome" class="custom-input"
+          [class.campo-invalido]="campoInvalido('nome')">
         </ion-input>
+        @if (campoInvalido('nome')) {
+        <p class="erro-campo">Informe seu nome.</p>
+        }
 
-        <ion-input type="email" formControlName="email" placeholder="Email" class="custom-input">
+        <ion-input type="email" formControlName="email" placeholder="Email" class="custom-input"
+          [class.campo-invalido]="campoInvalido('email')">
         </ion-input>
+        @if (campoInvalido('email')) {
+        <p class="erro-campo">Informe um email em um formato válido (ex.: nome&#64;exemplo.com).</p>
+        }
 
         <div class="senha-container">
           <ion-input [type]="mostrarSenha ? 'text' : 'password'" formControlName="senha" placeholder="Senha"
-            class="custom-input senha-input" autocomplete="new-password">
+            class="custom-input senha-input" [class.campo-invalido]="campoInvalido('senha')"
+            autocomplete="new-password">
           </ion-input>
           <button type="button" class="olho-senha" (click)="mostrarSenha = !mostrarSenha"
             [attr.aria-label]="mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'">
             <ion-icon [name]="mostrarSenha ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
           </button>
         </div>
+        @if (campoInvalido('senha')) {
+        <p class="erro-campo">A senha deve ter pelo menos 8 caracteres.</p>
+        }
 
         <ion-button expand="block" type="submit" class="login-button" [disabled]="formGroup.invalid || salvando">
 

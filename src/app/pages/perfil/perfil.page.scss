@@ -11,18 +11,6 @@ ion-toolbar {
     }
 }
 
-.editar-btn {
-    --color: var(--app-accent);
-    --background: transparent;
-    font-size: 14px;
-    font-weight: 600;
-    margin-right: 4px;
-
-    ion-icon {
-        font-size: 17px;
-        margin-right: 4px;
-    }
-}
 
 ion-content {
     --background: var(--app-bg);

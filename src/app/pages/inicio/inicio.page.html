@@ -105,7 +105,22 @@
     </div>
   </div>
 
-  @if (ultimaSala) {
+  @if (carregandoUltimaSala) {
+  <div class="ultima-sala-secao">
+    <h3 class="group-title">Última sala</h3>
+    <div class="group">
+      <div class="row sala-row-skeleton">
+        <div class="row-icon">
+          <ion-skeleton-text [animated]="true" class="skeleton-icone"></ion-skeleton-text>
+        </div>
+        <div class="row-body">
+          <ion-skeleton-text [animated]="true" class="skeleton-titulo"></ion-skeleton-text>
+          <ion-skeleton-text [animated]="true" class="skeleton-sub"></ion-skeleton-text>
+        </div>
+      </div>
+    </div>
+  </div>
+  } @else if (ultimaSala) {
   <div class="ultima-sala-secao">
     <h3 class="group-title">Última sala</h3>
     <div class="group">

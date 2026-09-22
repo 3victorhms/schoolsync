@@ -15,23 +15,32 @@
 
     <div class="campo-grupo">
       <label class="campo-label">Título</label>
-      <ion-item class="campo-item" lines="none">
+      <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('titulo')" lines="none">
         <input type="text" placeholder="Ex: Trabalho de Biologia" formControlName="titulo" />
       </ion-item>
+      @if (campoInvalido('titulo')) {
+      <p class="erro-campo">Informe um título para a atividade.</p>
+      }
     </div>
 
     <div class="campo-grupo">
       <label class="campo-label">Descrição</label>
-      <ion-item class="campo-item campo-textarea" lines="none">
+      <ion-item class="campo-item campo-textarea" [class.campo-invalido]="campoInvalido('descricao')" lines="none">
         <textarea placeholder="Descreva a atividade..." formControlName="descricao"></textarea>
       </ion-item>
+      @if (campoInvalido('descricao')) {
+      <p class="erro-campo">Informe uma descrição para a atividade.</p>
+      }
     </div>
 
     <div class="campo-grupo">
       <label class="campo-label">Disciplina</label>
-      <ion-item class="campo-item" lines="none">
+      <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('disciplina')" lines="none">
         <input type="text" placeholder="Ex: Biologia, Matemática..." formControlName="disciplina" />
       </ion-item>
+      @if (campoInvalido('disciplina')) {
+      <p class="erro-campo">Informe a disciplina da atividade.</p>
+      }
     </div>
 
     <div class="campo-grupo">
@@ -46,17 +55,25 @@
     @if (formGroup.get('valePontuacao')?.value) {
     <div class="campo-grupo">
       <label class="campo-label">Valor (máximo: 15 pontos)</label>
-      <ion-item class="campo-item" lines="none">
+      <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('valor')" lines="none">
         <input type="number" placeholder="Ex: 10 pontos" formControlName="valor" min="0.01" max="15" step="0.01" />
       </ion-item>
+      @if (campoInvalido('valor')) {
+      <p class="erro-campo">Informe um valor entre 0,01 e 15 pontos.</p>
+      }
     </div>
     }
 
     <div class="campo-grupo">
       <label class="campo-label">Data de entrega</label>
-      <ion-item class="campo-item" lines="none">
+      <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('dataEntrega')" lines="none">
         <input type="date" formControlName="dataEntrega" [min]="hoje" />
       </ion-item>
+      @if (editando) {
+      <p class="aviso-campo">A data de entrega não pode ser alterada depois que a atividade é criada.</p>
+      } @else if (campoInvalido('dataEntrega')) {
+      <p class="erro-campo">Escolha uma data de entrega válida, que não seja no passado.</p>
+      }
     </div>
 
     <ion-button type="submit" expand="block" class="botao-criar" [disabled]="formGroup.invalid || salvando">
