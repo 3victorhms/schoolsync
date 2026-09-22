@@ -25,6 +25,7 @@ import { ComentarioService } from 'src/app/services/comentario.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
+import { DesfazerService } from 'src/app/services/desfazer.service';
 import { addIcons } from 'ionicons';
 import { finalize } from 'rxjs';
 import {
@@ -90,6 +91,7 @@ export class AtividadePage implements OnInit {
     private navController: NavController,
     private toastController: ToastController,
     private confirmacaoService: ConfirmacaoService,
+    private desfazerService: DesfazerService,
     private atividadeService: AtividadeService,
     private usuarioService: UsuarioService,
     private comentarioService: ComentarioService,
@@ -241,35 +243,41 @@ export class AtividadePage implements OnInit {
     this.comentariosExcluindoIds.add(removido.id);
     this.hapticsService.leve();
 
-    let desfeito = false;
-    const toast = await this.toastController.create({
-      message: 'Comentario excluido.',
-      duration: 4000,
-      position: 'bottom',
-      buttons: [{ text: 'Desfazer', role: 'cancel', handler: () => { desfeito = true; } }]
-    });
+    // A exclusao de verdade acontece IMEDIATAMENTE, antes de qualquer
+    // aviso de "Desfazer" - assim, se a pessoa atualizar a pagina durante
+    // a janela de desfazer (ou o aviso nunca aparecer, por qualquer
+    // motivo), o comentario ja foi excluido no servidor e nao "volta"
+    // depois de um refresh. O "Desfazer" so recria o comentario.
+    this.comentarioService.excluir(removido.id, this.usuario.id).subscribe({
+      next: async () => {
+        this.comentariosExcluindoIds.delete(removido.id);
 
-    toast.onDidDismiss().then(() => {
-      if (desfeito) {
+        const desfazer = await this.desfazerService.mostrar('Comentario excluido.');
+        if (!desfazer) return;
+
+        this.comentarioService.criar(
+          this.atividade.id,
+          removido.texto,
+          this.usuario.id,
+          removido.idComentarioPai
+        ).subscribe({
+          next: (recriado) => {
+            recriado.respostas = recriado.respostas || [];
+            this.reinserirComentario(recriado, indice);
+          },
+          error: (erro) => {
+            console.error('Erro ao desfazer exclusao do comentario:', erro);
+            this.exibirMensagem(`Nao foi possivel desfazer a exclusao (${erro?.status || 'sem conexao'}).`);
+          }
+        });
+      },
+      error: (erro) => {
+        console.error('Erro ao excluir comentario:', erro);
         this.comentariosExcluindoIds.delete(removido.id);
         this.reinserirComentario(removido, indice);
-        return;
+        this.exibirMensagem(`Erro ao excluir comentario (${erro?.status || 'sem conexao'}).`);
       }
-
-      this.comentarioService.excluir(removido.id, this.usuario.id).subscribe({
-        next: () => {
-          this.comentariosExcluindoIds.delete(removido.id);
-        },
-        error: (erro) => {
-          console.error('Erro ao excluir comentario:', erro);
-          this.comentariosExcluindoIds.delete(removido.id);
-          this.reinserirComentario(removido, indice);
-          this.exibirMensagem(`Erro ao excluir comentario (${erro?.status || 'sem conexao'}).`);
-        }
-      });
     });
-
-    toast.present();
   }
 
   private localizarComentario(id: string): { lista: ComentarioModel[] | null; indice: number } {
