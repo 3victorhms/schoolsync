@@ -5,7 +5,12 @@
         </ion-buttons>
         <ion-title>
             {{ sala.nome }}
-            <p class="subtitulo">{{ sala.codigoConvite }}</p>
+            @if (sala.codigoConvite) {
+            <button type="button" class="subtitulo codigo-copiar" (click)="copiarCodigo()" aria-label="Copiar codigo da sala">
+                {{ sala.codigoConvite }}
+                <ion-icon name="copy-outline"></ion-icon>
+            </button>
+            }
         </ion-title>
         <ion-buttons slot="end">
             @if (usuario.id === sala.idLider) {

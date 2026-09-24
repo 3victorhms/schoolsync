@@ -9,7 +9,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { addIcons } from 'ionicons';
-import { addOutline, peopleOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline, logOutOutline, personRemoveOutline, chevronForwardOutline } from 'ionicons/icons';
+import { addOutline, peopleOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline, logOutOutline, personRemoveOutline, chevronForwardOutline, copyOutline } from 'ionicons/icons';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { finalize, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -18,6 +18,7 @@ import { DesfazerService } from 'src/app/services/desfazer.service';
 import { classeUrgencia } from 'src/app/utils/urgencia.util';
 import { labelPontos } from 'src/app/utils/pontos.util';
 import { HapticsService } from 'src/app/services/haptics.service';
+import { ClipboardService } from 'src/app/services/clipboard.service';
 
 @Component({
     selector: 'app-sala',
@@ -45,7 +46,8 @@ export class SalaPage implements OnInit {
         private toastController: ToastController,
         private salaService: SalaService,
         private usuarioService: UsuarioService,
-        private hapticsService: HapticsService
+        private hapticsService: HapticsService,
+        private clipboardService: ClipboardService
     ) {
         this.sala = new SalaModel();
         this.atividades = [];
@@ -58,7 +60,8 @@ export class SalaPage implements OnInit {
             calendarOutline, starOutline, timeOutline,
             checkmarkCircleOutline, bookmarkOutline,
             createOutline, trashOutline, logOutOutline,
-            personRemoveOutline, chevronForwardOutline
+            personRemoveOutline, chevronForwardOutline,
+            copyOutline
         });
     }
 
@@ -332,6 +335,20 @@ export class SalaPage implements OnInit {
                 this.exibirMensagem(`Erro ao excluir sala (${erro?.status || 'sem conexao'}).`);
             }
         });
+    }
+
+    async copiarCodigo() {
+        const copiou = await this.clipboardService.copiar(this.sala.codigoConvite);
+
+        if (!copiou) {
+            this.exibirMensagem('Nao foi possivel copiar o codigo.');
+            return;
+        }
+
+        this.hapticsService.leve();
+        if (!this.clipboardService.sistemaJaAvisaAoCopiar()) {
+            this.exibirMensagem('Codigo copiado.');
+        }
     }
 
     async exibirMensagem(texto: string) {
