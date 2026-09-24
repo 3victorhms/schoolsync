@@ -34,6 +34,7 @@ export class TemaService {
   }
 
   private aplicarTema(claro: boolean) {
+    // basicamente um "if tema === claro"
     document.body.classList.toggle(TEMA_CLARO_CLASS, claro);
     this.sincronizarStatusBar(claro);
   }
