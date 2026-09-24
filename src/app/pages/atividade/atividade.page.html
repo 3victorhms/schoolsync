@@ -105,10 +105,34 @@
     }
   </div>
 
+  @if (minhasTarefas.length) {
+  <div class="tarefas-secao">
+    <p class="secao-label">Sua parte neste trabalho</p>
+
+    <div class="tarefas-lista">
+      @for (tarefa of minhasTarefas; track tarefa.id) {
+      <button type="button" class="tarefa-item" [routerLink]="['/grupo', tarefa.idGrupo, 'tarefas']">
+        <span class="tarefa-status" [ngClass]="classeStatusTarefa(tarefa.status)">
+          <ion-icon [name]="iconeStatusTarefa(tarefa.status)"></ion-icon>
+        </span>
+        <span class="tarefa-corpo">
+          <strong>{{ tarefa.titulo }}</strong>
+          <small>
+            {{ labelStatusTarefa(tarefa.status) }}
+            @if (nomesGrupos[tarefa.idGrupo]) { · {{ nomesGrupos[tarefa.idGrupo] }} }
+          </small>
+        </span>
+        <ion-icon name="chevron-forward-outline" class="tarefa-seta" aria-hidden="true"></ion-icon>
+      </button>
+      }
+    </div>
+  </div>
+  }
+
   <div class="comentarios-secao">
     <h3 class="secao-titulo">
       <ion-icon name="chatbox-outline"></ion-icon>
-      Comentarios
+      Comentários
     </h3>
 
     <div class="comentarios-lista stagger-list">

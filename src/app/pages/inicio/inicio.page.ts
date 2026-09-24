@@ -10,11 +10,12 @@ import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { NotificacaoService } from 'src/app/services/notificacao.service';
 import { addIcons } from 'ionicons';
-import { Subscription } from 'rxjs';
-import { notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, bookOutline, personOutline, pencilOutline } from 'ionicons/icons';
-import { calcularUrgencia, classeUrgencia, ordemUrgencia } from 'src/app/utils/urgencia.util';
+import { Subscription, from, of } from 'rxjs';
+import { catchError, finalize, mergeMap } from 'rxjs/operators';
+import { notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, bookOutline, personOutline, pencilOutline, chevronDownOutline, chevronUpOutline, sunnyOutline, alertCircleOutline } from 'ionicons/icons';
+import { calcularUrgencia, classeUrgencia, compararPorEntrega, ordemUrgencia } from 'src/app/utils/urgencia.util';
 import { labelPontos } from 'src/app/utils/pontos.util';
-import { formatarDataCurta } from 'src/app/utils/data.util';
+import { formatarDataCurta, parsearData } from 'src/app/utils/data.util';
 import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
 
 interface DiaCalendario {
@@ -25,6 +26,16 @@ interface DiaCalendario {
   selecionado: boolean;
   indicador?: 'concluida' | 'atrasada' | 'hoje' | 'proxima' | 'semana' | 'mes' | 'futuro';
   resumoAtividades?: string;
+}
+
+/** "caderno": só o que o aluno adicionou ao caderno (1 chamada). "todas": atividades de todas as salas. */
+type FiltroAgenda = 'caderno' | 'todas';
+
+interface SecaoAgenda {
+  chave: string;
+  titulo: string;
+  atividades: AtividadeModel[];
+  alerta?: boolean;
 }
 
 @Component({
@@ -48,6 +59,22 @@ export class InicioPage implements OnInit {
   atividadesCalendario: AtividadeModel[] = [];
   private notificacoesSubscription?: Subscription;
 
+  // ---------------- Agenda ----------------
+  filtro: FiltroAgenda = 'caderno';
+  carregandoAgenda = true;
+  carregandoTodas = false;
+  secoes: SecaoAgenda[] = [];
+  atividadesDepois: AtividadeModel[] = [];
+  secoesExpandidas = new Set<string>();
+  nomesSalas: Record<string, string> = {};
+  quantidadeSalas = 0;
+  readonly LIMITE_POR_SECAO = 5;
+  /** Atrasadas há mais tempo que isso já estão nas "Arquivadas" de cada sala. */
+  private readonly DIAS_ATRASADAS = 7;
+  private atividadesCaderno: AtividadeModel[] = [];
+  /** null = ainda não carregadas (só carrega se o aluno escolher "Todas"). */
+  private atividadesTodas: AtividadeModel[] | null = null;
+
   private meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
     'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 
@@ -58,7 +85,7 @@ export class InicioPage implements OnInit {
     private notificacaoService: NotificacaoService
   ) {
     this.usuario = this.usuarioService.buscarAutenticacao();
-    addIcons({ notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, bookOutline, personOutline, pencilOutline });
+    addIcons({ notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, bookOutline, personOutline, pencilOutline, chevronDownOutline, chevronUpOutline, sunnyOutline, alertCircleOutline });
   }
 
   ngOnInit() { }
@@ -69,7 +96,7 @@ export class InicioPage implements OnInit {
 
   ionViewWillEnter() {
     this.carregarUltimaSala();
-    this.carregarAtividadesCalendario();
+    this.carregarAgenda();
     this.notificacaoService.listar().subscribe({ error: () => this.notificacoesNaoLidas = 0 });
     this.notificacaoService.conectar();
     this.notificacoesSubscription?.unsubscribe();
@@ -156,21 +183,205 @@ export class InicioPage implements OnInit {
     this.atividadesDoDia = this.atividadesCalendario.filter(a => a.dataEntrega === dataStr);
   }
 
-  private carregarAtividadesCalendario() {
-    if (!this.usuario.id) return;
+  // =====================================================================
+  // Agenda: começa no caderno (rápido); se o caderno estiver vazio e o
+  // aluno nunca escolheu um filtro, mostra "Todas". A escolha fica salva
+  // no aparelho, então o cálculo completo só roda para quem pediu.
+  // =====================================================================
 
-    this.atividadeService.listarPorUsuarioNoCaderno(this.usuario.id).subscribe({
+  private carregarAgenda() {
+    if (!this.usuario.id) {
+      this.carregandoAgenda = false;
+      return;
+    }
+
+    this.atividadesTodas = null;
+    // Desenha o calendário já (sem as marcações), em vez de deixar o cartão
+    // vazio até a API responder; as marcações entram quando os dados chegam.
+    if (!this.diasCalendario.length) this.gerarCalendario();
+    this.carregarNomesSalas();
+    const filtroSalvo = this.lerFiltroSalvo();
+    this.carregandoAgenda = true;
+
+    this.atividadeService.listarPorUsuarioNoCaderno(this.usuario.id).pipe(
+      finalize(() => this.carregandoAgenda = false)
+    ).subscribe({
       next: atividades => {
-        this.atividadesCalendario = atividades || [];
-        this.gerarCalendario();
-        this.carregarAtividadesDoDia();
+        this.atividadesCaderno = atividades || [];
+        this.filtro = filtroSalvo || (this.atividadesCaderno.length ? 'caderno' : 'todas');
+        this.aplicarFiltro();
       },
       error: () => {
-        this.atividadesCalendario = [];
-        this.gerarCalendario();
-        this.carregarAtividadesDoDia();
+        this.atividadesCaderno = [];
+        this.filtro = filtroSalvo || 'todas';
+        this.aplicarFiltro();
       }
     });
+  }
+
+  selecionarFiltro(filtro: FiltroAgenda) {
+    if (this.filtro === filtro) return;
+    this.filtro = filtro;
+    this.secoesExpandidas.clear();
+    this.salvarFiltro(filtro);
+    this.aplicarFiltro();
+  }
+
+  private aplicarFiltro() {
+    if (this.filtro === 'todas' && this.atividadesTodas === null) {
+      this.carregarTodas();
+      return;
+    }
+    this.montarAgenda();
+  }
+
+  private get atividadesAtuais(): AtividadeModel[] {
+    return this.filtro === 'caderno' ? this.atividadesCaderno : (this.atividadesTodas || []);
+  }
+
+  private carregarNomesSalas() {
+    this.salaService.listarPorUsuario(this.usuario.id).subscribe({
+      next: salas => {
+        this.quantidadeSalas = (salas || []).length;
+        (salas || []).forEach(sala => this.nomesSalas[sala.id] = sala.nome);
+      },
+      error: () => undefined
+    });
+  }
+
+  /** Busca cada sala do aluno (no máximo 4 ao mesmo tempo) e vai montando a agenda conforme chegam. */
+  private carregarTodas() {
+    if (this.carregandoTodas) return;
+
+    this.carregandoTodas = true;
+    this.atividadesTodas = [];
+    const acumuladas = new Map<string, AtividadeModel>();
+
+    this.salaService.listarPorUsuario(this.usuario.id).pipe(
+      mergeMap(salas => {
+        this.quantidadeSalas = (salas || []).length;
+        (salas || []).forEach(sala => this.nomesSalas[sala.id] = sala.nome);
+        return from(salas || []);
+      }),
+      mergeMap(sala => this.salaService.buscarPorId(sala.id, this.usuario.id).pipe(
+        catchError(() => of(null))
+      ), 4),
+      finalize(() => {
+        this.carregandoTodas = false;
+        if (this.filtro === 'todas') this.montarAgenda();
+      })
+    ).subscribe({
+      next: sala => {
+        if (!sala) return;
+        (sala.atividades || []).forEach(atividade => {
+          atividade.idSala = atividade.idSala || sala.id;
+          acumuladas.set(atividade.id, atividade);
+        });
+        this.atividadesTodas = [...acumuladas.values()];
+        if (this.filtro === 'todas') this.montarAgenda();
+      },
+      error: () => undefined
+    });
+  }
+
+  /** Separa as atividades pendentes em Atrasadas (últimos 7 dias), Hoje, Amanhã, Esta semana e Depois. */
+  private montarAgenda() {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const atrasadas: AtividadeModel[] = [];
+    const deHoje: AtividadeModel[] = [];
+    const amanha: AtividadeModel[] = [];
+    const semana: AtividadeModel[] = [];
+    const depois: AtividadeModel[] = [];
+
+    for (const atividade of this.atividadesAtuais) {
+      if (atividade.status === 'concluido') continue;
+      const prazo = parsearData(atividade.dataEntrega);
+      if (!prazo) continue;
+
+      const dias = Math.round((prazo.getTime() - hoje.getTime()) / 86400000);
+      if (dias < 0) {
+        if (dias >= -this.DIAS_ATRASADAS) atrasadas.push(atividade);
+      } else if (dias === 0) {
+        deHoje.push(atividade);
+      } else if (dias === 1) {
+        amanha.push(atividade);
+      } else if (dias <= 7) {
+        semana.push(atividade);
+      } else {
+        depois.push(atividade);
+      }
+    }
+
+    const ordenar = (lista: AtividadeModel[]) => lista.sort(compararPorEntrega);
+    this.secoes = [
+      { chave: 'atrasadas', titulo: 'Atrasadas', atividades: ordenar(atrasadas), alerta: true },
+      { chave: 'hoje', titulo: 'Hoje', atividades: ordenar(deHoje) },
+      { chave: 'amanha', titulo: 'Amanhã', atividades: ordenar(amanha) },
+      { chave: 'semana', titulo: 'Esta semana', atividades: ordenar(semana) }
+    ].filter(secao => secao.atividades.length);
+    this.atividadesDepois = ordenar(depois);
+
+    // O calendário mostra a mesma fonte escolhida no filtro.
+    this.atividadesCalendario = this.atividadesAtuais;
+    this.gerarCalendario();
+    this.carregarAtividadesDoDia();
+  }
+
+  atividadesVisiveis(secao: SecaoAgenda): AtividadeModel[] {
+    return this.secoesExpandidas.has(secao.chave)
+      ? secao.atividades
+      : secao.atividades.slice(0, this.LIMITE_POR_SECAO);
+  }
+
+  alternarSecao(chave: string) {
+    if (this.secoesExpandidas.has(chave)) {
+      this.secoesExpandidas.delete(chave);
+    } else {
+      this.secoesExpandidas.add(chave);
+    }
+  }
+
+  get depoisExpandido(): boolean {
+    return this.secoesExpandidas.has('depois');
+  }
+
+  get agendaCarregando(): boolean {
+    return this.carregandoAgenda || (this.filtro === 'todas' && this.carregandoTodas && !(this.atividadesTodas || []).length);
+  }
+
+  get cadernoVazio(): boolean {
+    return !this.atividadesCaderno.length;
+  }
+
+  modoItem(): 'caderno' | 'sala' {
+    return this.filtro === 'caderno' ? 'caderno' : 'sala';
+  }
+
+  nomeDaSala(atividade: AtividadeModel): string {
+    return this.nomesSalas[atividade.idSala] || '';
+  }
+
+  private chaveFiltro(): string {
+    return `inicioFiltroAgenda:${this.usuario.id}`;
+  }
+
+  private lerFiltroSalvo(): FiltroAgenda | null {
+    try {
+      const valor = localStorage.getItem(this.chaveFiltro());
+      return valor === 'caderno' || valor === 'todas' ? valor : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private salvarFiltro(filtro: FiltroAgenda) {
+    try {
+      localStorage.setItem(this.chaveFiltro(), filtro);
+    } catch {
+      // Sem armazenamento local: a escolha vale só nesta sessão.
+    }
   }
 
   private atualizarIndicadoresCalendario() {

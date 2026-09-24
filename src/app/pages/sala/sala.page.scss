@@ -384,3 +384,130 @@ ion-content > .vazio-data {
         line-height: 1;
     }
 }
+
+// ---------------------------------------------------------------------------
+// Abas da sala (Atividades | Grupos | Membros) — feito com auxílio do Claude
+// ---------------------------------------------------------------------------
+.abas {
+    display: flex;
+    gap: 4px;
+    margin: 16px 16px 0;
+    padding: 4px;
+    background: var(--app-surface);
+    border-radius: 14px;
+}
+
+.aba-btn {
+    flex: 1;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--app-muted);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--transition-fast, 0.15s), color var(--transition-fast, 0.15s);
+
+    .aba-contador {
+        min-width: 20px;
+        padding: 1px 6px;
+        border-radius: 10px;
+        background: var(--app-surface-strong);
+        font-size: 11.5px;
+        text-align: center;
+    }
+
+    &.ativa {
+        background: var(--app-accent-soft);
+        color: var(--app-accent);
+
+        .aba-contador {
+            background: var(--app-accent);
+            color: #ffffff;
+        }
+    }
+}
+
+// Botão de ação no topo de uma aba ("Nova atividade", "Criar grupo"...).
+.linhas-acao {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+
+    .linha-acao {
+        flex: 1;
+        margin-bottom: 0;
+    }
+}
+
+.linha-acao {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 48px;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 14px;
+    background: var(--app-surface);
+    color: var(--app-text);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+
+    .linha-acao-icone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
+        background: var(--app-accent-soft);
+        color: var(--app-accent);
+        flex-shrink: 0;
+
+        ion-icon {
+            font-size: 18px;
+        }
+    }
+
+    &.destrutiva {
+        margin: 12px 0 0;
+        color: var(--app-danger);
+
+        .linha-acao-icone {
+            background: transparent;
+            color: var(--app-danger);
+        }
+    }
+}
+
+// Ícone neutro (navegação) para linhas que não têm status, como grupos.
+.row-icon.neutro {
+    background: var(--app-accent-soft);
+
+    ion-icon {
+        color: var(--app-accent) !important;
+    }
+}
+
+.row-body > .row-desc {
+    display: block;
+    font-size: 13px;
+    color: var(--app-muted);
+}
+
+.ver-todas span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}

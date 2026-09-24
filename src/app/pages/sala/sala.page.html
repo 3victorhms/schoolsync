@@ -60,36 +60,35 @@
     </section>
     } @else {
 
-    <div class="acoes">
-        <button class="acao-btn" [routerLink]="['/add-atividade/', sala.id]">
-            <div class="acao-icone">
-                <ion-icon name="add-outline"></ion-icon>
-            </div>
-            <span>Nova Atividade</span>
+    <nav class="abas" role="tablist" aria-label="Seções da sala">
+        <button type="button" class="aba-btn" role="tab" [class.ativa]="aba === 'atividades'"
+            [attr.aria-selected]="aba === 'atividades'" (click)="selecionarAba('atividades')">
+            Atividades <span class="aba-contador">{{ proximasAtividades.length }}</span>
         </button>
-        <button type="button" class="acao-btn" (click)="abrirGrupos()">
-            <div class="acao-icone">
-                <ion-icon name="people-outline"></ion-icon>
-            </div>
-            <span>Grupos</span>
+        <button type="button" class="aba-btn" role="tab" [class.ativa]="aba === 'grupos'"
+            [attr.aria-selected]="aba === 'grupos'" (click)="selecionarAba('grupos')">
+            Grupos @if (!carregandoGrupos) { <span class="aba-contador">{{ grupos.length }}</span> }
         </button>
-        @if (!liderLogado) {
-        <button class="acao-btn sair-sala-btn" (click)="sairDaSala()">
-            <div class="acao-icone sair">
-                <ion-icon name="log-out-outline"></ion-icon>
-            </div>
-            <span>Sair da sala</span>
+        <button type="button" class="aba-btn" role="tab" [class.ativa]="aba === 'membros'"
+            [attr.aria-selected]="aba === 'membros'" (click)="selecionarAba('membros')">
+            Membros <span class="aba-contador">{{ membros.length }}</span>
         </button>
-        }
-    </div>
+    </nav>
 
-    <section class="secao">
-        <h3 class="group-title">Próximas atividades</h3>
+    @switch (aba) {
 
+    <!-- ===================== ATIVIDADES ===================== -->
+    @case ('atividades') {
+    <section class="secao" role="tabpanel">
         @if (sala.atividades.length) {
-        @if (previaAtividades.length) {
-        <div class="group">
-            @for (atividade of previaAtividades; track atividade.id) {
+        <button type="button" class="linha-acao" [routerLink]="['/add-atividade/', sala.id]">
+            <span class="linha-acao-icone"><ion-icon name="add-outline"></ion-icon></span>
+            Nova atividade
+        </button>
+
+        @if (proximasAtividades.length) {
+        <div class="group stagger-list">
+            @for (atividade of proximasAtividades; track atividade.id) {
             <app-atividade-item [atividade]="atividade" modo="sala"></app-atividade-item>
             }
         </div>
@@ -99,9 +98,9 @@
         </div>
         }
 
-        @if (temAtividadesOcultas) {
-        <button type="button" class="ver-todas" (click)="abrirAtividades()">
-            <span>Ver todas as atividades ({{ sala.atividades.length }})</span>
+        @if (quantidadeArquivadas > 0) {
+        <button type="button" class="ver-todas" (click)="abrirArquivadas()">
+            <span><ion-icon name="archive-outline" aria-hidden="true"></ion-icon> Arquivadas ({{ quantidadeArquivadas }})</span>
             <ion-icon name="chevron-forward-outline"></ion-icon>
         </button>
         }
@@ -130,10 +129,75 @@
         </div>
         }
     </section>
+    }
 
-    <section class="secao">
-        <h3 class="group-title">Membros</h3>
+    <!-- ===================== GRUPOS ===================== -->
+    @case ('grupos') {
+    <section class="secao" role="tabpanel">
+        @if (carregandoGrupos) {
+        <div class="group">
+            @for (i of [1, 2]; track i) {
+            <div class="row skeleton-row">
+                <div class="row-icon skeleton-block"></div>
+                <div class="row-body">
+                    <div class="skeleton-line skeleton-line-title"></div>
+                    <div class="skeleton-line skeleton-line-sub"></div>
+                </div>
+            </div>
+            }
+        </div>
+        } @else if (grupos.length) {
+        <div class="linhas-acao">
+            <button type="button" class="linha-acao" [routerLink]="['/add-grupo', sala.id]">
+                <span class="linha-acao-icone"><ion-icon name="add-outline"></ion-icon></span>
+                Criar grupo
+            </button>
+            <button type="button" class="linha-acao" [routerLink]="['/entrar-grupo', sala.id]">
+                <span class="linha-acao-icone"><ion-icon name="person-add-outline"></ion-icon></span>
+                Entrar com código
+            </button>
+        </div>
 
+        <h3 class="group-title">Meus grupos</h3>
+        <div class="group stagger-list">
+            @for (grupo of grupos; track grupo.id) {
+            <div class="row" [routerLink]="['/grupo', grupo.id]" button>
+                <div class="row-icon neutro">
+                    <ion-icon name="people-outline"></ion-icon>
+                </div>
+                <div class="row-body">
+                    <h4 class="row-label">{{ grupo.nome }}</h4>
+                    <span class="row-desc">{{ grupo.quantidadeMembros }} {{ grupo.quantidadeMembros === 1 ? 'membro' : 'membros' }}</span>
+                </div>
+                <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
+            </div>
+            }
+        </div>
+        } @else {
+        <div class="vazio-guia">
+            <div class="vazio-guia-icone">
+                <ion-icon name="people-outline"></ion-icon>
+            </div>
+            <span class="vazio-guia-titulo">Você ainda não está em nenhum grupo</span>
+            <span class="vazio-guia-sub">Crie um grupo para um trabalho em equipe ou entre com o código que o líder do grupo te passou.</span>
+            <div class="vazio-guia-botoes">
+                <button type="button" class="vazio-guia-btn primario" [routerLink]="['/add-grupo', sala.id]">
+                    <ion-icon name="add-outline"></ion-icon>
+                    Criar grupo
+                </button>
+                <button type="button" class="vazio-guia-btn" [routerLink]="['/entrar-grupo', sala.id]">
+                    <ion-icon name="person-add-outline"></ion-icon>
+                    Entrar com código
+                </button>
+            </div>
+        </div>
+        }
+    </section>
+    }
+
+    <!-- ===================== MEMBROS ===================== -->
+    @case ('membros') {
+    <section class="secao" role="tabpanel">
         <div class="group">
             @for (membro of membros; track membro.id) {
             <ion-item-sliding #slidingMembro [disabled]="!podeRemoverMembro(membro)">
@@ -170,7 +234,16 @@
             </ion-item-sliding>
             }
         </div>
+
+        @if (!liderLogado) {
+        <button type="button" class="linha-acao destrutiva" (click)="sairDaSala()">
+            <span class="linha-acao-icone"><ion-icon name="log-out-outline"></ion-icon></span>
+            Sair da sala
+        </button>
+        }
     </section>
+    }
+    }
 
     }
 </ion-content>

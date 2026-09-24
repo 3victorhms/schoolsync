@@ -9,7 +9,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { addIcons } from 'ionicons';
-import { addOutline, peopleOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline, logOutOutline, personRemoveOutline, chevronForwardOutline, copyOutline } from 'ionicons/icons';
+import { addOutline, peopleOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline, logOutOutline, personRemoveOutline, chevronForwardOutline, copyOutline, archiveOutline, personAddOutline } from 'ionicons/icons';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { finalize, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -19,6 +19,10 @@ import { compararPorEntrega, estaArquivada } from 'src/app/utils/urgencia.util';
 import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
 import { HapticsService } from 'src/app/services/haptics.service';
 import { ClipboardService } from 'src/app/services/clipboard.service';
+import { GrupoService } from 'src/app/services/grupo.service';
+import { GrupoModel } from 'src/app/model/grupo.model';
+
+type AbaSala = 'atividades' | 'grupos' | 'membros';
 
 @Component({
     selector: 'app-sala',
@@ -38,9 +42,16 @@ export class SalaPage implements OnInit {
     removendoMembroId = '';
     carregando = true;
 
-    /** Quantas atividades próximas aparecem direto na sala; o resto fica em /sala/:id/atividades. */
-    readonly LIMITE_PREVIA = 5;
-    previaAtividades: AtividadeModel[] = [];
+    /** Aba selecionada. Fica guardada ao abrir um grupo/atividade e voltar. */
+    aba: AbaSala = 'atividades';
+    private abaInicialAplicada = false;
+
+    /** Atividades cujo dia de entrega ainda não terminou, da mais urgente para a mais distante. */
+    proximasAtividades: AtividadeModel[] = [];
+    quantidadeArquivadas = 0;
+
+    grupos: GrupoModel[] = [];
+    carregandoGrupos = true;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -51,7 +62,8 @@ export class SalaPage implements OnInit {
         private salaService: SalaService,
         private usuarioService: UsuarioService,
         private hapticsService: HapticsService,
-        private clipboardService: ClipboardService
+        private clipboardService: ClipboardService,
+        private grupoService: GrupoService
     ) {
         this.sala = new SalaModel();
         this.atividades = [];
@@ -65,7 +77,7 @@ export class SalaPage implements OnInit {
             checkmarkCircleOutline, bookmarkOutline,
             createOutline, trashOutline, logOutOutline,
             personRemoveOutline, chevronForwardOutline,
-            copyOutline
+            copyOutline, archiveOutline, personAddOutline
         });
     }
 
@@ -74,6 +86,14 @@ export class SalaPage implements OnInit {
     ionViewWillEnter() {
         const id = this.activatedRoute.snapshot.params['id'];
         this.idSala = id || '';
+
+        // Permite abrir a sala direto numa aba (ex.: voltar de um grupo para "Grupos").
+        // Só na primeira entrada, para não desfazer a aba que o usuário escolheu depois.
+        const abaInicial = this.activatedRoute.snapshot.queryParams['aba'];
+        if (!this.abaInicialAplicada && (abaInicial === 'atividades' || abaInicial === 'grupos' || abaInicial === 'membros')) {
+            this.aba = abaInicial;
+        }
+        this.abaInicialAplicada = true;
 
         if (id) {
             this.carregarSala(id);
@@ -96,6 +116,7 @@ export class SalaPage implements OnInit {
                 this.sala.atividades = this.sala.atividades || [];
                 this.organizarAtividades();
                 this.carregarMembros(this.sala.membros);
+                this.carregarGrupos();
                 localStorage.setItem(`ultimaSala:${this.usuario.id}`, this.sala.id);
             },
             error: () => {
@@ -114,35 +135,41 @@ export class SalaPage implements OnInit {
         }
     }
 
-    /** Separa as próximas atividades (dia de entrega ainda não terminou) e pega as mais urgentes. */
+    selecionarAba(aba: AbaSala) {
+        this.aba = aba;
+        this.hapticsService.leve();
+    }
+
+    /** Separa as próximas atividades (o dia de entrega ainda não terminou) das arquivadas. */
     organizarAtividades() {
-        this.previaAtividades = this.sala.atividades
+        this.proximasAtividades = this.sala.atividades
             .filter(atividade => !estaArquivada(atividade.dataEntrega))
-            .sort(compararPorEntrega)
-            .slice(0, this.LIMITE_PREVIA);
+            .sort(compararPorEntrega);
+        this.quantidadeArquivadas = this.sala.atividades.length - this.proximasAtividades.length;
     }
 
-    /** Há atividades que não aparecem na prévia (arquivadas ou além do limite)? */
-    get temAtividadesOcultas(): boolean {
-        return this.sala.atividades.length > this.previaAtividades.length;
-    }
-
-    abrirAtividades() {
+    /** Grupos da sala dos quais o usuário participa. */
+    carregarGrupos() {
         const idSala = this.idSala || this.sala.id;
-        if (!idSala) return;
-
-        this.navController.navigateForward(['/sala', idSala, 'atividades']);
-    }
-
-    abrirGrupos() {
-        const idSala = this.idSala || this.sala.id;
-
-        if (!idSala) {
-            this.exibirMensagem('Sala ainda não carregada.');
+        if (!idSala || !this.usuario.id) {
+            this.grupos = [];
+            this.carregandoGrupos = false;
             return;
         }
 
-        this.navController.navigateForward('/grupos/' + idSala);
+        this.grupoService.listarPorSalaEUsuario(idSala, this.usuario.id).pipe(
+            finalize(() => this.carregandoGrupos = false)
+        ).subscribe({
+            next: (res) => this.grupos = res || [],
+            error: () => this.grupos = []
+        });
+    }
+
+    abrirArquivadas() {
+        const idSala = this.idSala || this.sala.id;
+        if (!idSala) return;
+
+        this.navController.navigateForward(['/sala', idSala, 'atividades'], { queryParams: { aba: 'arquivadas' } });
     }
 
     iniciais(nome: string): string {

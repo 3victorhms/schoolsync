@@ -9,6 +9,7 @@
             <span class="tag-pontos">{{ pontos }}</span>
         </div>
         <div class="row-meta">
+            @if (nomeSala) { <span class="tag-sala">{{ nomeSala }}</span> }
             @if (atividade.disciplina) { <span class="tag-disciplina">{{ atividade.disciplina }}</span> }
             <span class="row-data" [ngClass]="classeData">
                 <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>
