@@ -1,6 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Salas</ion-title>
+    @if (carregando || salas.length > 0) {
     <ion-buttons slot="end">
       <ion-button fill="outline" class="entrar-btn" routerLink="/entrar-sala">
         <ion-icon name="log-in-outline" slot="start"></ion-icon>
@@ -10,6 +11,7 @@
         <ion-icon name="add" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
+    }
   </ion-toolbar>
 </ion-header>
 
