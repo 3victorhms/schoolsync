@@ -44,6 +44,9 @@ export class SalaPage implements OnInit {
 
     /** Aba selecionada. Fica guardada ao abrir um grupo/atividade e voltar. */
     aba: AbaSala = 'atividades';
+
+    /** RN16: mesmo limite da API (MAXIMO_MEMBROS_POR_SALA em SalaService.java). */
+    readonly LIMITE_MEMBROS = 50;
     private abaInicialAplicada = false;
 
     /** Atividades cujo dia de entrega ainda não terminou, da mais urgente para a mais distante. */
@@ -133,6 +136,15 @@ export class SalaPage implements OnInit {
         } else {
             event?.target.complete();
         }
+    }
+
+    get vagasRestantes(): number {
+        return Math.max(this.LIMITE_MEMBROS - this.membros.length, 0);
+    }
+
+    /** Percentual de ocupação, para a barrinha da aba Membros. */
+    get ocupacaoPercentual(): number {
+        return Math.min(Math.round((this.membros.length / this.LIMITE_MEMBROS) * 100), 100);
     }
 
     selecionarAba(aba: AbaSala) {

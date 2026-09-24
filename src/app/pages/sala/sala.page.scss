@@ -511,3 +511,55 @@ ion-content > .vazio-data {
     align-items: center;
     gap: 8px;
 }
+
+// Ocupação da sala (RN16: máximo de 50 membros)
+.ocupacao {
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: var(--app-surface);
+
+    .ocupacao-texto {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 8px;
+        font-size: 13.5px;
+        color: var(--app-text-soft);
+
+        strong {
+            color: var(--app-text);
+        }
+    }
+
+    .ocupacao-vagas {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--app-muted);
+    }
+
+    .ocupacao-barra {
+        height: 6px;
+        border-radius: 3px;
+        background: var(--app-surface-strong);
+        overflow: hidden;
+    }
+
+    .ocupacao-preenchimento {
+        height: 100%;
+        border-radius: 3px;
+        background: var(--app-accent);
+        transition: width 0.3s ease;
+    }
+
+    &.quase-cheia {
+        .ocupacao-vagas { color: var(--app-urgencia-proxima); }
+        .ocupacao-preenchimento { background: var(--app-urgencia-proxima); }
+    }
+
+    &.cheia {
+        .ocupacao-vagas { color: var(--app-danger); }
+        .ocupacao-preenchimento { background: var(--app-danger); }
+    }
+}

@@ -135,6 +135,20 @@
       Comentários
     </h3>
 
+    @if (carregandoComentarios) {
+    <div class="comentarios-lista" aria-busy="true" aria-label="Carregando comentários">
+      @for (i of [1, 2]; track i) {
+      <div class="comentario-card skeleton-row">
+        <div class="comentario-avatar skeleton-block"></div>
+        <div class="skeleton-comentario-corpo">
+          <div class="skeleton-line skeleton-line-title"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line skeleton-line-sub"></div>
+        </div>
+      </div>
+      }
+    </div>
+    } @else {
     <div class="comentarios-lista stagger-list">
       @for (comentario of comentarios; track comentario.id) {
       <div class="comentario-card">
@@ -209,6 +223,7 @@
       </div>
       }
     </div>
+    }
 
     @if (comentarioRespondendo) {
     <div class="resposta-aviso">
