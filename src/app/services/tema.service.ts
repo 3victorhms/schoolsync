@@ -38,8 +38,7 @@ export class TemaService {
     this.sincronizarStatusBar(claro);
   }
 
-  // Fora do app nativo (navegador) o plugin não tem efeito nenhum — só
-  // sincroniza de verdade no build Android/iOS.
+  // fora do navegador o plugin não tem efeito nenhum, só sincroniza de verdade no build.
   private sincronizarStatusBar(claro: boolean) {
     if (!Capacitor.isNativePlatform()) return;
 

@@ -117,8 +117,27 @@
             }
         </div>
         } @else {
-        <div class="vazio-data">
-            <span>Nenhuma atividade ainda.</span>
+        <div class="vazio-guia">
+            <div class="vazio-guia-icone">
+                <ion-icon name="book-outline"></ion-icon>
+            </div>
+            <span class="vazio-guia-titulo">Nenhuma atividade ainda</span>
+            <span class="vazio-guia-sub">
+                Cadastre provas, trabalhos e prazos para toda a turma acompanhar.
+                @if (membros.length <= 1) { Chame seus colegas enviando o código da sala. }
+            </span>
+            <div class="vazio-guia-botoes">
+                <button type="button" class="vazio-guia-btn primario" [routerLink]="['/add-atividade/', sala.id]">
+                    <ion-icon name="add-outline"></ion-icon>
+                    Nova atividade
+                </button>
+                @if (membros.length <= 1) {
+                <button type="button" class="vazio-guia-btn" (click)="copiarCodigo()">
+                    <ion-icon name="copy-outline"></ion-icon>
+                    Copiar código
+                </button>
+                }
+            </div>
         </div>
         }
     </section>

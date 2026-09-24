@@ -28,7 +28,8 @@ import {
   bookOutline,
   peopleOutline,
   personOutline,
-  trashOutline
+  trashOutline,
+  addOutline
 } from 'ionicons/icons';
 import { GrupoModel } from 'src/app/model/grupo.model';
 import { TarefaModel } from 'src/app/model/tarefa.model';
@@ -105,7 +106,8 @@ export class GrupoTarefasPage implements OnInit {
       bookOutline,
       peopleOutline,
       personOutline,
-      trashOutline
+      trashOutline,
+      addOutline
     });
   }
 

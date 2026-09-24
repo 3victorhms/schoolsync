@@ -59,9 +59,22 @@
       }
     </div>
     } @else {
-    <div class="vazio-data">
-      <span class="vazio-titulo">Você não está em nenhuma sala ainda</span>
-      <span class="vazio-sub">Crie uma sala ou entre com um código</span>
+    <div class="vazio-guia">
+      <div class="vazio-guia-icone">
+        <ion-icon name="people-outline"></ion-icon>
+      </div>
+      <span class="vazio-guia-titulo">Você não está em nenhuma sala ainda</span>
+      <span class="vazio-guia-sub">Crie uma sala para a sua turma ou entre com o código que um colega te passou.</span>
+      <div class="vazio-guia-botoes">
+        <button type="button" class="vazio-guia-btn primario" routerLink="/add-sala">
+          <ion-icon name="add"></ion-icon>
+          Criar sala
+        </button>
+        <button type="button" class="vazio-guia-btn" routerLink="/entrar-sala">
+          <ion-icon name="log-in-outline"></ion-icon>
+          Entrar com código
+        </button>
+      </div>
     </div>
     }
 

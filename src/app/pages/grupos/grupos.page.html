@@ -61,8 +61,22 @@
       }
     </div>
     } @else {
-    <div class="vazio-data">
-      <span>Nenhum grupo encontrado.</span>
+    <div class="vazio-guia">
+      <div class="vazio-guia-icone">
+        <ion-icon name="people-outline"></ion-icon>
+      </div>
+      <span class="vazio-guia-titulo">Você ainda não está em nenhum grupo</span>
+      <span class="vazio-guia-sub">Crie um grupo para um trabalho em equipe ou entre com o código que o líder do grupo te passou.</span>
+      <div class="vazio-guia-botoes">
+        <button type="button" class="vazio-guia-btn primario" [routerLink]="['/add-grupo', idSala]">
+          <ion-icon name="add-outline"></ion-icon>
+          Criar grupo
+        </button>
+        <button type="button" class="vazio-guia-btn" [routerLink]="['/entrar-grupo', idSala]">
+          <ion-icon name="person-add-outline"></ion-icon>
+          Entrar com código
+        </button>
+      </div>
     </div>
     }
   </div>

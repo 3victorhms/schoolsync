@@ -1,9 +1,3 @@
-// feito com auxílio do Claude
-//
-// Copia texto para a área de transferência. No app nativo usa o
-// @capacitor/clipboard (ClipboardManager do Android); no navegador
-// (ionic serve) cai para navigator.clipboard.
-
 import { Injectable } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { Clipboard } from '@capacitor/clipboard';
