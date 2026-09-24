@@ -55,6 +55,14 @@ export class GrupoService {
     );
   }
 
+  /** Só o líder do grupo pode remover; as tarefas do membro removido passam para o líder. */
+  removerMembro(idGrupo: string, idUsuarioRemover: string, idUsuarioLogado: string): Observable<void> {
+    return this.apiDelete.excluir(
+      `${this.API_URL}/grupos/${idGrupo}/membros/${idUsuarioRemover}`,
+      { idUsuarioLogado }
+    );
+  }
+
   sair(idGrupo: string, idUsuario: string): Observable<void> {
     return this.apiDelete.excluir(
       `${this.API_URL}/grupos/${idGrupo}/sair`,

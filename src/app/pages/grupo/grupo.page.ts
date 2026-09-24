@@ -29,7 +29,8 @@ import {
   personOutline,
   logOutOutline,
   trashOutline,
-  createOutline
+  createOutline,
+  personRemoveOutline
 } from 'ionicons/icons';
 import { GrupoModel, MembroGrupoModel } from 'src/app/model/grupo.model';
 import { UsuarioModel } from 'src/app/model/usuario.model';
@@ -70,6 +71,7 @@ export class GrupoPage implements OnInit {
   grupo: GrupoModel;
   usuario: UsuarioModel;
   excluindoGrupo = false;
+  removendoMembroId = '';
   carregando = true;
 
   constructor(
@@ -96,7 +98,8 @@ export class GrupoPage implements OnInit {
       personOutline,
       logOutOutline,
       trashOutline,
-      createOutline
+      createOutline,
+      personRemoveOutline
     });
   }
 
@@ -152,6 +155,37 @@ export class GrupoPage implements OnInit {
 
   ehLiderGrupo(membro: MembroGrupoModel): boolean {
     return !!membro?.criador || membro?.idUsuario === this.grupo.idCriador;
+  }
+
+  /** Só o líder remove, e nunca a si mesmo. */
+  podeRemoverMembro(membro: MembroGrupoModel): boolean {
+    return this.grupo.criador && !this.ehLiderGrupo(membro) && membro.idUsuario !== this.usuario.id;
+  }
+
+  async removerMembro(membro: MembroGrupoModel) {
+    if (this.removendoMembroId || !this.grupo.id) return;
+
+    const nome = this.nomeMembro(membro);
+    const confirmou = await this.confirmacaoService.confirmar(
+      'Remover membro',
+      `Remover ${nome} do grupo? As tarefas atribuídas a ${nome} passam para você.`,
+      'Remover'
+    );
+    if (!confirmou) return;
+
+    this.removendoMembroId = membro.idUsuario;
+    this.grupoService.removerMembro(this.grupo.id, membro.idUsuario, this.usuario.id).pipe(
+      finalize(() => this.removendoMembroId = '')
+    ).subscribe({
+      next: () => {
+        this.hapticsService.aviso();
+        this.desfazerService.mostrarMensagem(`${nome} foi removido do grupo.`);
+        this.carregarGrupo(this.grupo.id);
+      },
+      error: (erro) => {
+        this.desfazerService.mostrarMensagem(erro?.error?.message || 'Não foi possível remover o membro.');
+      }
+    });
   }
 
   labelTarefasAtribuidas(): string {

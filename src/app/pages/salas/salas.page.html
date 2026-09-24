@@ -24,14 +24,20 @@
   <div class="salas-lista">
 
     @if (carregando) {
-    <div class="group">
-      @for (i of [1, 2, 3]; track i) {
+    <!-- Mesmo formato da linha real: ícone, nome, (membros · atividades · código) e seta -->
+    <div class="group" aria-busy="true" aria-label="Carregando salas">
+      @for (i of [1, 2, 3, 4]; track i) {
       <div class="row skeleton-row">
         <div class="row-icon skeleton-block"></div>
         <div class="row-body">
-          <div class="skeleton-line skeleton-line-title"></div>
-          <div class="skeleton-line skeleton-line-sub"></div>
+          <div class="skeleton-line skeleton-line-title" [style.width.%]="i % 2 ? 58 : 44"></div>
+          <div class="skeleton-sub">
+            <span class="skeleton-block skeleton-pilula"></span>
+            <span class="skeleton-block skeleton-pilula"></span>
+            <span class="skeleton-block skeleton-pilula larga"></span>
+          </div>
         </div>
+        <span class="skeleton-block skeleton-seta" aria-hidden="true"></span>
       </div>
       }
     </div>

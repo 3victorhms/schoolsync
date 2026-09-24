@@ -180,3 +180,39 @@ ion-content {
 
 // A barra de abas (ion-tab-bar) agora vive em app/pages/tabs/tabs.page.scss,
 // compartilhada pelas 4 telas principais.
+
+// Skeleton da lista de salas, no mesmo formato da linha real
+.skeleton-row {
+    .row-icon.skeleton-block {
+        border-radius: 12px;
+    }
+
+    .skeleton-line-title {
+        height: 15px;
+        margin-bottom: 10px;
+    }
+
+    .skeleton-sub {
+        display: flex;
+        gap: 10px;
+    }
+
+    .skeleton-pilula {
+        display: block;
+        width: 34px;
+        height: 14px;
+        border-radius: 7px;
+
+        &.larga {
+            width: 58px;
+        }
+    }
+
+    .skeleton-seta {
+        display: block;
+        width: 8px;
+        height: 14px;
+        border-radius: 3px;
+        flex-shrink: 0;
+    }
+}

@@ -109,6 +109,14 @@
           <span class="membro-tag-lider">Líder</span>
           }
         </div>
+
+        @if (podeRemoverMembro(membro)) {
+        <button type="button" class="remover-membro-btn" [disabled]="removendoMembroId === membro.idUsuario"
+          (click)="removerMembro(membro)" [attr.aria-label]="'Remover ' + nomeMembro(membro) + ' do grupo'">
+          @if (removendoMembroId === membro.idUsuario) { <span class="btn-spinner sozinho" aria-hidden="true"></span> }
+          @else { <ion-icon name="person-remove-outline"></ion-icon> }
+        </button>
+        }
       </div>
       }
     </div>
@@ -121,7 +129,7 @@
 <ion-tab-bar slot="bottom">
   <ion-tab-button tab="inicio" routerLink="/tabs/inicio">
     <ion-icon name="home-outline"></ion-icon>
-    <ion-label>Inicio</ion-label>
+    <ion-label>Início</ion-label>
   </ion-tab-button>
 
   <ion-tab-button class="selecionado" tab="salas" routerLink="/tabs/salas">
