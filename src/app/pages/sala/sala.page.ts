@@ -15,9 +15,8 @@ import { finalize, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
 import { DesfazerService } from 'src/app/services/desfazer.service';
-import { classeUrgencia, compararPorEntrega, estaArquivada } from 'src/app/utils/urgencia.util';
-import { classeStatus, iconeStatus, labelStatus } from 'src/app/utils/atividade-status.util';
-import { labelPontos } from 'src/app/utils/pontos.util';
+import { compararPorEntrega, estaArquivada } from 'src/app/utils/urgencia.util';
+import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
 import { HapticsService } from 'src/app/services/haptics.service';
 import { ClipboardService } from 'src/app/services/clipboard.service';
 
@@ -26,7 +25,7 @@ import { ClipboardService } from 'src/app/services/clipboard.service';
     templateUrl: './sala.page.html',
     styleUrls: ['./sala.page.scss'],
     standalone: true,
-    imports: [IonIcon, IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonRefresher, IonRefresherContent, IonSpinner, IonItemSliding, IonItem, IonItemOptions, IonItemOption, CommonModule, RouterLink]
+    imports: [IonIcon, IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonRefresher, IonRefresherContent, IonSpinner, IonItemSliding, IonItem, IonItemOptions, IonItemOption, CommonModule, RouterLink, AtividadeItemComponent]
 })
 export class SalaPage implements OnInit {
 
@@ -139,7 +138,7 @@ export class SalaPage implements OnInit {
         const idSala = this.idSala || this.sala.id;
 
         if (!idSala) {
-            this.exibirMensagem('Sala ainda nao carregada.');
+            this.exibirMensagem('Sala ainda não carregada.');
             return;
         }
 
@@ -223,27 +222,6 @@ export class SalaPage implements OnInit {
         return usuario;
     }
 
-    classeStatus(status: string | null): string {
-        return classeStatus(status);
-    }
-
-    iconeStatus(status: string | null): string {
-        return iconeStatus(status);
-    }
-
-    labelStatus(status: string | null): string {
-        return labelStatus(status);
-    }
-
-    labelPontos(valor: number | string): string {
-        return labelPontos(valor);
-    }
-
-    /** Classe de urgência (psicologia das cores, mesmo padrão do calendário) pro rótulo de data. */
-    classeUrgencia(atividade: AtividadeModel): string {
-        return classeUrgencia(atividade.dataEntrega, atividade.status);
-    }
-
     editar() {
         this.navController.navigateForward('/add-sala-editar/' + this.sala.id);
     }
@@ -260,12 +238,12 @@ export class SalaPage implements OnInit {
         this.salaService.sairDaSala(this.sala.id, this.usuario.id).subscribe({
             next: () => {
                 localStorage.removeItem(`ultimaSala:${this.usuario.id}`);
-                this.exibirMensagem('Voce saiu da sala.');
+                this.exibirMensagem('Você saiu da sala.');
                 this.navController.navigateBack('/tabs/salas');
             },
             error: (erro) => {
                 console.error('Erro ao sair da sala:', erro);
-                this.exibirMensagem(`Erro ao sair da sala (${erro?.status || 'sem conexao'}).`);
+                this.exibirMensagem(`Erro ao sair da sala (${erro?.status || 'sem conexão'}).`);
             }
         });
     }
@@ -312,7 +290,7 @@ export class SalaPage implements OnInit {
                 this.membros.splice(indice, 0, removido);
                 this.sala.membros = [...this.sala.membros, removido];
                 this.sala.quantidadeMembros = (this.sala.quantidadeMembros || 0) + 1;
-                this.exibirMensagem(`Erro ao remover membro (${erro?.status || 'sem conexao'}).`);
+                this.exibirMensagem(`Erro ao remover membro (${erro?.status || 'sem conexão'}).`);
             }
         });
     }
@@ -329,7 +307,6 @@ export class SalaPage implements OnInit {
         if (!confirmou) return;
 
         this.excluindoSala = true;
-        this.exibirMensagem('Excluindo sala...');
         this.salaService.excluir(this.sala.id).pipe(
             finalize(() => this.excluindoSala = false)
         ).subscribe({
@@ -339,7 +316,7 @@ export class SalaPage implements OnInit {
             },
             error: (erro) => {
                 console.error('Erro ao excluir sala:', erro);
-                this.exibirMensagem(`Erro ao excluir sala (${erro?.status || 'sem conexao'}).`);
+                this.exibirMensagem(`Erro ao excluir sala (${erro?.status || 'sem conexão'}).`);
             }
         });
     }

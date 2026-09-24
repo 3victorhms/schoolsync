@@ -5,11 +5,11 @@ ion-toolbar {
     ion-title {
         font-size: 20px;
         font-weight: 700;
-        color: #fff;
+        color: var(--app-text);
     }
 
     ion-back-button {
-        --color: #fff;
+        --color: var(--app-text);
     }
 }
 
@@ -38,7 +38,7 @@ form {
     span {
         font-size: 26px;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--app-text);
     }
 
     img {
@@ -118,7 +118,7 @@ form {
     border-radius: 14px;
 
     ion-input {
-        --color: #ffffff;
+        --color: var(--app-text);
         --placeholder-color: var(--app-muted-strong);
         --placeholder-opacity: 1;
         font-size: 15px;
@@ -129,6 +129,8 @@ form {
     --color: var(--app-muted-strong);
     --padding-end: 10px;
     margin: 0;
+    min-width: 44px;
+    min-height: 44px;
 
     ion-icon {
         font-size: 20px;

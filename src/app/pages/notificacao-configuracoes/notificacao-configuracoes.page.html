@@ -36,7 +36,7 @@
     </section>
 
     <button class="botao-salvar" type="button" [disabled]="salvando" (click)="salvar()">
-      {{ salvando ? 'Salvando...' : 'Salvar configurações' }}
+      @if (salvando) { <span class="btn-spinner" aria-hidden="true"></span> Salvando... } @else { Salvar configurações }
     </button>
   </main>
 </ion-content>

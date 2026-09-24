@@ -1,3 +1,4 @@
+import { finalize } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -22,6 +23,7 @@ export class EntrarGrupoPage implements OnInit {
   idSala: string;
   usuario: UsuarioModel;
   formGroup: FormGroup;
+  entrando = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -47,17 +49,26 @@ export class EntrarGrupoPage implements OnInit {
   entrar() {
     const codigo = (this.formGroup.get('codigoConvite')?.value || '').trim();
 
-    if (!codigo || !this.usuario.id) return;
+    if (!codigo || !this.usuario.id || this.entrando) return;
+    this.entrando = true;
 
-    this.grupoService.entrar(codigo, this.usuario.id).subscribe({
+    this.grupoService.entrar(codigo, this.usuario.id).pipe(
+      finalize(() => this.entrando = false)
+    ).subscribe({
       next: (grupo) => {
-        this.exibirMensagem('Voce entrou no grupo!');
+        this.exibirMensagem('Você entrou no grupo!');
         this.navController.navigateRoot('/grupo/' + grupo.id);
       },
       error: (err) => {
-        this.exibirMensagem(err?.error?.message || 'Codigo invalido ou grupo nao encontrado.');
+        this.exibirMensagem(err?.error?.message || 'Código inválido ou grupo não encontrado.');
       }
     });
+  }
+
+  /** O campo tem erro e o usuário já mexeu nele. */
+  campoInvalido(campo: string): boolean {
+    const controle = this.formGroup.get(campo);
+    return !!controle && controle.invalid && (controle.touched || controle.dirty);
   }
 
   async exibirMensagem(texto: string) {

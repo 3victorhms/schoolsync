@@ -212,7 +212,7 @@ export class AtividadePage implements OnInit {
         this.carregarComentarios();
       },
       error: () => {
-        this.exibirMensagem('Erro ao enviar comentario.');
+        this.exibirMensagem('Erro ao enviar comentário.');
       }
     });
   }
@@ -229,8 +229,8 @@ export class AtividadePage implements OnInit {
     if (this.comentariosExcluindoIds.has(comentario.id)) return;
 
     const confirmou = await this.confirmacaoService.confirmar(
-      'Excluir comentario',
-      'Tem certeza que deseja excluir este comentario?',
+      'Excluir comentário',
+      'Tem certeza que deseja excluir este comentário?',
       'Excluir'
     );
 
@@ -252,7 +252,7 @@ export class AtividadePage implements OnInit {
       next: async () => {
         this.comentariosExcluindoIds.delete(removido.id);
 
-        const desfazer = await this.desfazerService.mostrar('Comentario excluido.');
+        const desfazer = await this.desfazerService.mostrar('Comentário excluído.');
         if (!desfazer) return;
 
         this.comentarioService.criar(
@@ -267,7 +267,7 @@ export class AtividadePage implements OnInit {
           },
           error: (erro) => {
             console.error('Erro ao desfazer exclusao do comentario:', erro);
-            this.exibirMensagem(`Nao foi possivel desfazer a exclusao (${erro?.status || 'sem conexao'}).`);
+            this.exibirMensagem(`Não foi possível desfazer a exclusão (${erro?.status || 'sem conexão'}).`);
           }
         });
       },
@@ -275,7 +275,7 @@ export class AtividadePage implements OnInit {
         console.error('Erro ao excluir comentario:', erro);
         this.comentariosExcluindoIds.delete(removido.id);
         this.reinserirComentario(removido, indice);
-        this.exibirMensagem(`Erro ao excluir comentario (${erro?.status || 'sem conexao'}).`);
+        this.exibirMensagem(`Erro ao excluir comentário (${erro?.status || 'sem conexão'}).`);
       }
     });
   }
@@ -356,7 +356,6 @@ export class AtividadePage implements OnInit {
     if (this.excluindo || !this.atividade.id) return;
 
     this.excluindo = true;
-    this.exibirMensagem('Excluindo atividade...');
 
     this.atividadeService.excluir(this.atividade.id).pipe(
       finalize(() => this.excluindo = false)

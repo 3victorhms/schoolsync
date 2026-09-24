@@ -10,6 +10,7 @@ export function iconeStatus(status: string | null): string {
   switch (status) {
     case 'concluido':
       return 'checkmark-circle-outline';
+    case 'pendente':
     case 'nao_iniciada':
     case null:
     case undefined:
@@ -23,6 +24,7 @@ export function labelStatus(status: string | null): string {
   switch (status) {
     case 'concluido':
       return 'Concluído';
+    case 'pendente':
     case 'nao_iniciada':
     case null:
     case undefined:

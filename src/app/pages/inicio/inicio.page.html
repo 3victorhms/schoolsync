@@ -79,26 +79,7 @@
       } @else {
       <div class="group stagger-list">
         @for (atividade of atividadesDoDia; track atividade.id) {
-        <div class="row atividade-item" [routerLink]="['/atividade', atividade.id]" button>
-          <div class="row-icon">
-            <ion-icon name="book-outline"></ion-icon>
-          </div>
-          <div class="row-body">
-            <h4 class="row-label">{{ atividade.titulo }}</h4>
-            <div class="row-sub">
-              <span class="row-desc">{{ atividade.descricao }}</span>
-              <span class="tag-pontos">{{ labelPontos(atividade.valor) }}</span>
-            </div>
-            <div class="row-meta">
-              <span class="tag-disciplina">{{ atividade.disciplina }}</span>
-              <span class="row-data" [ngClass]="classeUrgencia(atividade)">
-                <ion-icon name="calendar-outline"></ion-icon>
-                {{ formatarData(atividade.dataEntrega) }}
-              </span>
-            </div>
-          </div>
-          <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
-        </div>
+        <app-atividade-item [atividade]="atividade" modo="simples"></app-atividade-item>
         }
       </div>
       }

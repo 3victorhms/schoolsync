@@ -63,7 +63,7 @@
 
       <button type="button" (click)="criarTarefa()"
         [disabled]="criandoTarefa || !idAtividadeSelecionada || !idUsuarioAtribuido || !tituloTarefa.trim()">
-        Criar tarefa
+        @if (criandoTarefa) { <span class="btn-spinner" aria-hidden="true"></span> Criando... } @else { Criar tarefa }
       </button>
     </div>
   </section>
@@ -96,7 +96,8 @@
         @if (grupo.criador) {
         <button type="button" class="excluir-tarefa" [disabled]="tarefaExcluindoId === tarefa.id"
           (click)="excluirTarefa(tarefa)" aria-label="Excluir tarefa">
-          <ion-icon name="trash-outline"></ion-icon>
+          @if (tarefaExcluindoId === tarefa.id) { <span class="btn-spinner sozinho" aria-hidden="true"></span> }
+          @else { <ion-icon name="trash-outline"></ion-icon> }
         </button>
         }
       </div>

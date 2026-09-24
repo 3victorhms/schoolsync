@@ -72,27 +72,7 @@
     <h3 class="group-title">Atividades salvas</h3>
     <div class="group stagger-list">
       @for (atividade of atividadesFiltradas; track atividade.id) {
-      <div class="row atividade-item" [routerLink]="['/atividade', atividade.id]" button>
-        <div class="row-icon" [ngClass]="classeStatus(atividade.status)">
-          <ion-icon [name]="iconeStatus(atividade.status)"></ion-icon>
-        </div>
-        <div class="row-body">
-          <h4 class="row-label">{{ atividade.titulo }}</h4>
-          <div class="row-sub">
-            <span class="row-desc">{{ atividade.descricao }}</span>
-            <span class="tag-pontos">{{ labelPontos(atividade.valor) }}</span>
-          </div>
-          <div class="row-meta">
-            <span class="tag-disciplina">{{ atividade.disciplina }}</span>
-            <span class="row-data" [ngClass]="classeUrgencia(atividade)">
-              <ion-icon name="calendar-outline"></ion-icon>
-              {{ formatarData(atividade.dataEntrega) }}
-            </span>
-            <span class="atividade-status" [ngClass]="classeStatus(atividade.status)">{{ labelStatus(atividade.status) }}</span>
-          </div>
-        </div>
-        <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
-      </div>
+      <app-atividade-item [atividade]="atividade" modo="caderno"></app-atividade-item>
       }
     </div>
     }

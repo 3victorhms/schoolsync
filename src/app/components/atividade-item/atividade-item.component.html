@@ -1,0 +1,24 @@
+<div class="row" [routerLink]="['/atividade', atividade.id]" button>
+    <div class="row-icon" [ngClass]="classeIcone">
+        <ion-icon [name]="nomeIcone"></ion-icon>
+    </div>
+    <div class="row-body">
+        <h4 class="row-label">{{ atividade.titulo }}</h4>
+        <div class="row-sub">
+            @if (atividade.descricao) { <span class="row-desc">{{ atividade.descricao }}</span> }
+            <span class="tag-pontos">{{ pontos }}</span>
+        </div>
+        <div class="row-meta">
+            @if (atividade.disciplina) { <span class="tag-disciplina">{{ atividade.disciplina }}</span> }
+            <span class="row-data" [ngClass]="classeData">
+                <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>
+                {{ dataFormatada }}
+                @if (rotulo) { <strong class="rotulo-urgencia">· {{ rotulo }}</strong> }
+            </span>
+            @if (mostraStatus) {
+            <span class="atividade-status" [ngClass]="classeIcone">{{ textoStatus }}</span>
+            }
+        </div>
+    </div>
+    <ion-icon name="chevron-forward-outline" class="row-seta" aria-hidden="true"></ion-icon>
+</div>

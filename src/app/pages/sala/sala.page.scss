@@ -5,13 +5,13 @@ ion-toolbar {
     --border-color: transparent;
 
     ion-back-button {
-        --color: #ffffff;
+        --color: var(--app-text);
     }
 
     ion-title {
         font-size: 22px;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--app-text);
         padding: 0;
 
         .subtitulo {
@@ -27,7 +27,9 @@ ion-toolbar {
             gap: 4px;
             background: none;
             border: none;
-            padding: 0;
+            // Área de toque maior sem mudar a posição do texto.
+            padding: 10px 8px;
+            margin: -10px -8px;
             font-family: inherit;
             cursor: pointer;
 
@@ -57,7 +59,7 @@ ion-content {
         border: none;
         border-radius: 16px;
         padding: 16px 10px;
-        color: #ffffff;
+        color: var(--app-text);
         font-size: 12.5px;
         font-weight: 600;
         cursor: pointer;
@@ -189,7 +191,7 @@ ion-item-sliding + ion-item-sliding .membro-item {
     display: block;
     font-size: 15px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--app-text);
     margin: 0 0 4px;
     overflow-wrap: anywhere;
 }
@@ -365,7 +367,7 @@ ion-content > .vazio-data {
     justify-content: center;
     font-size: 13px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--app-text);
     flex-shrink: 0;
     position: relative;
 

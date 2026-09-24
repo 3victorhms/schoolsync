@@ -66,7 +66,7 @@ export class AddUsuarioPage implements OnInit {
       finalize(() => this.salvando = false)
     ).subscribe({
       next: (resultado) => {
-        this.exibirMensagem('Registro salvo com sucesso!!!');
+        this.exibirMensagem('Cadastro realizado com sucesso!');
         this.navController.navigateBack('/login');
       },
       error: (erro) => {

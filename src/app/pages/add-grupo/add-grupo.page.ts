@@ -99,7 +99,7 @@ export class AddGrupoPage implements OnInit {
         });
       },
       error: () => {
-        this.exibirMensagem('Grupo nao encontrado.');
+        this.exibirMensagem('Grupo não encontrado.');
         this.navController.navigateBack('/tabs/salas');
       }
     });
@@ -131,6 +131,12 @@ export class AddGrupoPage implements OnInit {
 
   get modoEdicao(): boolean {
     return !!this.idGrupo;
+  }
+
+  /** O campo tem erro e o usuário já mexeu nele. */
+  campoInvalido(campo: string): boolean {
+    const controle = this.formGroup.get(campo);
+    return !!controle && controle.invalid && (controle.touched || controle.dirty);
   }
 
   async exibirMensagem(texto: string) {

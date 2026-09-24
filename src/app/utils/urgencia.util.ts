@@ -93,3 +93,25 @@ export function compararPorEntrega(
   const prazoB = parsearDataEntrega(b.dataEntrega)?.getTime() ?? Number.MAX_SAFE_INTEGER;
   return prazoA - prazoB;
 }
+
+/**
+ * Texto curto que acompanha a cor de urgência, para a informação não depender
+ * só da cor: "Atrasada", "Hoje", "Amanhã", "Em 3 dias". Vazio para concluídas
+ * e para prazos a mais de uma semana.
+ */
+export function rotuloUrgencia(dataEntrega: string | null | undefined, status: string | null | undefined): string {
+  if (status === 'concluido') return '';
+
+  const prazo = parsearDataEntrega(dataEntrega);
+  if (!prazo) return '';
+
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  const diferenca = Math.round((prazo.getTime() - hoje.getTime()) / 86400000);
+
+  if (diferenca < 0) return 'Atrasada';
+  if (diferenca === 0) return 'Hoje';
+  if (diferenca === 1) return 'Amanhã';
+  if (diferenca <= LIMITE_SEMANA_DIAS) return `Em ${diferenca} dias`;
+  return '';
+}

@@ -122,7 +122,7 @@ export class GrupoPage implements OnInit {
         this.grupo = res;
       },
       error: () => {
-        this.exibirMensagem('Grupo nao encontrado.');
+        this.exibirMensagem('Grupo não encontrado.');
         this.navController.navigateBack('/tabs/salas');
       }
     });
@@ -157,10 +157,10 @@ export class GrupoPage implements OnInit {
   labelTarefasAtribuidas(): string {
     const total = this.grupo.tarefas?.length || this.grupo.quantidadeTarefas || 0;
 
-    if (total === 0) return 'Nenhuma tarefa atribuida';
-    if (total === 1) return '1 tarefa atribuida';
+    if (total === 0) return 'Nenhuma tarefa atribuída';
+    if (total === 1) return '1 tarefa atribuída';
 
-    return `${total} tarefas atribuidas`;
+    return `${total} tarefas atribuídas`;
   }
 
   async copiarCodigo() {
@@ -192,12 +192,12 @@ export class GrupoPage implements OnInit {
 
     this.grupoService.sair(this.grupo.id, this.usuario.id).subscribe({
       next: () => {
-        this.exibirMensagem('Voce saiu do grupo.');
+        this.exibirMensagem('Você saiu do grupo.');
         this.navController.navigateRoot('/grupos/' + this.grupo.idSala);
       },
       error: (erro) => {
         console.error('Erro ao sair do grupo:', erro);
-        this.exibirMensagem(`Erro ao sair do grupo (${erro?.status || 'sem conexao'}).`);
+        this.exibirMensagem(`Erro ao sair do grupo (${erro?.status || 'sem conexão'}).`);
       }
     });
   }
@@ -214,17 +214,16 @@ export class GrupoPage implements OnInit {
     if (!confirmou) return;
 
     this.excluindoGrupo = true;
-    this.exibirMensagem('Excluindo grupo...');
     this.grupoService.excluir(this.grupo.id, this.usuario.id).pipe(
       finalize(() => this.excluindoGrupo = false)
     ).subscribe({
       next: () => {
-        this.exibirMensagem('Grupo excluido.');
+        this.exibirMensagem('Grupo excluído.');
         this.navController.navigateRoot('/grupos/' + this.grupo.idSala);
       },
       error: (erro) => {
         console.error('Erro ao excluir grupo:', erro);
-        this.exibirMensagem(`Erro ao excluir grupo (${erro?.status || 'sem conexao'}).`);
+        this.exibirMensagem(`Erro ao excluir grupo (${erro?.status || 'sem conexão'}).`);
       }
     });
   }

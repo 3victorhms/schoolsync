@@ -67,13 +67,19 @@ export class AddSalaPage implements OnInit {
       finalize(() => this.salvando = false)
     ).subscribe({
       next: (salaSalva) => {
-        this.exibirMensagem(this.editando ? 'Sala atualizada com sucesso!' : 'Sala criada com sucesso!!!');
+        this.exibirMensagem(this.editando ? 'Sala atualizada com sucesso!' : 'Sala criada com sucesso!');
         this.navController.navigateBack('/sala/' + salaSalva.id);
       },
       error: () => {
         this.exibirMensagem(this.editando ? 'Erro ao atualizar sala.' : 'Erro ao criar sala.');
       }
     });
+  }
+
+  /** O campo tem erro e o usuário já mexeu nele. */
+  campoInvalido(campo: string): boolean {
+    const controle = this.formGroup.get(campo);
+    return !!controle && controle.invalid && (controle.touched || controle.dirty);
   }
 
   async exibirMensagem(texto: string) {

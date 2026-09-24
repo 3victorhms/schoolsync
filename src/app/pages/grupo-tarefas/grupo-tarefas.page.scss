@@ -3,13 +3,13 @@ ion-toolbar {
   --border-color: transparent;
 
   ion-back-button {
-    --color: #ffffff;
+    --color: var(--app-text);
   }
 
   ion-title {
     font-size: 18px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--app-text);
     padding: 0;
 
     .subtitulo {
@@ -74,7 +74,7 @@ input {
   background: var(--app-bg-muted);
   border: 1px solid var(--app-surface-strong);
   border-radius: 14px;
-  color: #ffffff;
+  color: var(--app-text);
   font-size: 15px;
   font-weight: 600;
   padding: 0 16px;
@@ -156,6 +156,15 @@ button {
   width: 34px;
   height: 34px;
   padding: 0;
+  position: relative;
+
+  // Aumenta a área de toque para 44px sem mudar o visual.
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -5px;
+  }
+
   border-radius: 10px;
   border: none;
   display: flex;
@@ -192,7 +201,7 @@ button {
 .row-label {
   font-size: 15px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--app-text);
   overflow-wrap: anywhere;
 }
 
@@ -226,6 +235,8 @@ button {
 }
 
 .excluir-tarefa {
+  min-width: 44px;
+  min-height: 44px;
   background: transparent;
   border: none;
   color: var(--app-danger);

@@ -2,11 +2,11 @@ ion-toolbar {
   --background: var(--app-bg);
   --border-color: transparent;
 
-  ion-back-button { --color: #ffffff; }
-  ion-title { font-size: 22px; font-weight: 700; color: #ffffff; padding: 0; }
+  ion-back-button { --color: var(--app-text); }
+  ion-title { font-size: 22px; font-weight: 700; color: var(--app-text); padding: 0; }
 }
 ion-content { --background: var(--app-bg); }
-.pagina-configuracoes { min-height: 100%; padding: 20px 20px 36px; color: #fff; }
+.pagina-configuracoes { min-height: 100%; padding: 20px 20px 36px; color: var(--app-text); }
 section { margin-bottom: 26px; }
 section h2 { color: var(--app-text-soft); font-size: 18px; font-weight: 600; margin: 0 0 16px; }
 .opcao-canal { display: flex; align-items: center; gap: 16px; min-height: 92px; padding: 0 20px; margin-bottom: 14px; border: 1px solid var(--app-surface-strong); border-radius: 24px; background: var(--app-surface); }
@@ -18,7 +18,7 @@ ion-toggle { --track-background: var(--app-surface-strong); --track-background-c
 .lembretes h2 { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
 .lembretes h2 ion-icon { color: var(--app-accent); }
 .lembretes > p { color: var(--app-text-soft); margin: 0 0 16px; font-size: 15px; }
-.opcao-lembrete { width: 100%; height: 57px; padding: 0 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 10px; border: 1px solid var(--app-surface-strong); border-radius: 22px; background: var(--app-surface); color: #fff; cursor: pointer; }
+.opcao-lembrete { width: 100%; height: 57px; padding: 0 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 10px; border: 1px solid var(--app-surface-strong); border-radius: 22px; background: var(--app-surface); color: var(--app-text); cursor: pointer; }
 .radio { width: 25px; height: 25px; display: grid; place-items: center; border: 2px solid var(--app-muted-strong); border-radius: 50%; color: transparent; }
 .opcao-lembrete.ativa .radio { border-color: var(--app-accent); background: var(--app-accent); color: #fff; }
 .opcao-lembrete strong { flex: 1; text-align: left; font-size: 17px; }

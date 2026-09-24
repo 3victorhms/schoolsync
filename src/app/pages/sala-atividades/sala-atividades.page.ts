@@ -36,9 +36,8 @@ import { AtividadeModel } from 'src/app/model/atividade.model';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { classeUrgencia, compararPorEntrega, estaArquivada } from 'src/app/utils/urgencia.util';
-import { classeStatus, iconeStatus, labelStatus } from 'src/app/utils/atividade-status.util';
-import { labelPontos } from 'src/app/utils/pontos.util';
+import { compararPorEntrega, estaArquivada } from 'src/app/utils/urgencia.util';
+import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
 
 type Aba = 'proximas' | 'arquivadas';
 
@@ -59,7 +58,8 @@ type Aba = 'proximas' | 'arquivadas';
     IonRefresher,
     IonRefresherContent,
     CommonModule,
-    RouterLink
+    RouterLink,
+    AtividadeItemComponent
   ]
 })
 export class SalaAtividadesPage {
@@ -145,27 +145,6 @@ export class SalaAtividadesPage {
 
   get listaAtual(): AtividadeModel[] {
     return this.aba === 'proximas' ? this.proximas : this.arquivadas;
-  }
-
-  classeStatus(status: string | null): string {
-    return classeStatus(status);
-  }
-
-  iconeStatus(status: string | null): string {
-    return iconeStatus(status);
-  }
-
-  labelStatus(status: string | null): string {
-    return labelStatus(status);
-  }
-
-  labelPontos(valor: number | string): string {
-    return labelPontos(valor);
-  }
-
-  /** Nas arquivadas o prazo já passou, então a data fica neutra em vez de vermelha. */
-  classeUrgencia(atividade: AtividadeModel): string {
-    return this.aba === 'proximas' ? classeUrgencia(atividade.dataEntrega, atividade.status) : '';
   }
 
   async exibirMensagem(texto: string) {

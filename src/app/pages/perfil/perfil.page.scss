@@ -7,7 +7,7 @@ ion-toolbar {
     ion-title {
         font-size: 22px;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--app-text);
     }
 }
 
@@ -41,7 +41,7 @@ ion-content {
     span {
         font-size: 22px;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--app-text);
     }
 
     img {
@@ -64,7 +64,7 @@ ion-content {
 .perfil-nome {
     font-size: 17px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--app-text);
     margin: 0;
 }
 
@@ -149,7 +149,7 @@ ion-content {
         .row-label {
             font-size: 15px;
             font-weight: 500;
-            color: #ffffff;
+            color: var(--app-text);
         }
     }
 

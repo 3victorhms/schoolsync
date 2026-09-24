@@ -1,10 +1,10 @@
 ion-toolbar {
     --background: transparent;
-    --color: #ffffff;
+    --color: var(--app-text);
     --border-width: 0;
 
     ion-back-button {
-        --color: #ffffff;
+        --color: var(--app-text);
     }
 
     ion-title {
@@ -44,7 +44,7 @@ form {
                 background: transparent;
                 border: none;
                 outline: none;
-                color: #ffffff;
+                color: var(--app-text);
                 font-size: 1rem;
                 letter-spacing: 0.05em;
                 width: 100%;

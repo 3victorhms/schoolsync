@@ -7,7 +7,7 @@ ion-toolbar {
     ion-title {
         font-size: 18px;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--app-text);
 
         &[size="large"] {
             font-size: 28px;
@@ -46,7 +46,7 @@ ion-content {
             background: transparent;
             border: none;
             outline: none;
-            color: #ffffff;
+            color: var(--app-text);
             font-size: 15px;
             font-weight: 500;
 
@@ -195,7 +195,7 @@ ion-content {
         .row-label {
             font-size: 15px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--app-text);
             margin: 0 0 3px;
         }
 

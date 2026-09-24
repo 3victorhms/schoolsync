@@ -823,6 +823,25 @@ body.tema-claro .group-title {
   color: var(--app-muted) !important;
 }
 
+/* A regra acima apagava as cores de urgência das datas no tema claro. */
+body.tema-claro .row-data.urgencia-atrasada,
+body.tema-claro .row-data.urgencia-hoje {
+  color: var(--app-urgencia-atrasada) !important;
+}
+
+body.tema-claro .row-data.urgencia-proxima {
+  color: var(--app-urgencia-proxima) !important;
+}
+
+/* Amarelo mais escuro: o amarelo do tema escuro some no fundo claro. */
+body.tema-claro .row-data.urgencia-semana {
+  color: #a87c00 !important;
+}
+
+body.tema-claro .row-data.urgencia-mes {
+  color: var(--app-urgencia-mes) !important;
+}
+
 body.tema-claro .tag-pontos {
   background: var(--app-surface-strong) !important;
   color: var(--app-text-soft) !important;
@@ -1150,4 +1169,47 @@ button.row,
       font-size: 18px;
     }
   }
+}
+
+// feito com auxílio do Claude
+// Spinner leve para botões em andamento (salvar, criar, excluir...).
+// Usa a cor do texto do próprio botão, então funciona em qualquer tema.
+.btn-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  vertical-align: -3px;
+  animation: btn-spinner-girar 0.7s linear infinite;
+
+  &.sozinho {
+    margin-right: 0;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@keyframes btn-spinner-girar {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-spinner { animation-duration: 1.6s; }
+}
+
+// feito com auxílio do Claude
+// Erro de validação mostrado logo abaixo do campo.
+.campo-item.campo-invalido {
+  border: 1px solid var(--app-danger);
+}
+
+.erro-campo {
+  margin: 0;
+  padding-left: 4px;
+  color: var(--app-danger);
+  font-size: 13px;
+  line-height: 1.4;
 }
