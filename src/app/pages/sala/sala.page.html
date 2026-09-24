@@ -198,6 +198,18 @@
     <!-- ===================== MEMBROS ===================== -->
     @case ('membros') {
     <section class="secao" role="tabpanel">
+        <div class="ocupacao" [class.quase-cheia]="vagasRestantes > 0 && vagasRestantes <= 5" [class.cheia]="vagasRestantes === 0">
+            <div class="ocupacao-texto">
+                <span><strong>{{ membros.length }}</strong> de {{ LIMITE_MEMBROS }} membros</span>
+                <span class="ocupacao-vagas">
+                    {{ vagasRestantes === 0 ? 'Sala cheia' : vagasRestantes + (vagasRestantes === 1 ? ' vaga' : ' vagas') }}
+                </span>
+            </div>
+            <div class="ocupacao-barra" role="progressbar" [attr.aria-valuenow]="membros.length" aria-valuemin="0"
+                [attr.aria-valuemax]="LIMITE_MEMBROS" [attr.aria-label]="membros.length + ' de ' + LIMITE_MEMBROS + ' membros'">
+                <div class="ocupacao-preenchimento" [style.width.%]="ocupacaoPercentual"></div>
+            </div>
+        </div>
         <div class="group">
             @for (membro of membros; track membro.id) {
             <ion-item-sliding #slidingMembro [disabled]="!podeRemoverMembro(membro)">

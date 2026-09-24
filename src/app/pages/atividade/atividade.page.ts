@@ -81,6 +81,8 @@ export class AtividadePage implements OnInit {
   usuario: UsuarioModel;
   criadorNome: string = '';
   comentarios: ComentarioModel[] = [];
+  /** Só na primeira carga: no "puxar para atualizar" os comentários atuais continuam na tela. */
+  carregandoComentarios = true;
   novoComentario: string = '';
   comentarioRespondendo: ComentarioModel | null = null;
   excluindo = false;
@@ -218,10 +220,14 @@ export class AtividadePage implements OnInit {
   carregarComentarios() {
     if (!this.atividade.id) {
       this.comentarios = [];
+      this.carregandoComentarios = false;
       return;
     }
 
-    this.comentarioService.listarPorAtividade(this.atividade.id).subscribe({
+    this.carregandoComentarios = this.comentarios.length === 0;
+    this.comentarioService.listarPorAtividade(this.atividade.id).pipe(
+      finalize(() => this.carregandoComentarios = false)
+    ).subscribe({
       next: (res) => {
         this.comentarios = this.filtrarPendentesExclusao(res || []);
       },
