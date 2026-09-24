@@ -1,0 +1,45 @@
+// Abas "Próximas / Arquivadas" (mesmo visual dos filtros do caderno).
+.filtros {
+    display: flex;
+    gap: 10px;
+    padding: 0 0 16px;
+}
+
+.filtro-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--app-surface);
+    border: 2px solid transparent;
+    border-radius: 20px;
+    color: var(--app-muted);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    white-space: nowrap;
+    cursor: pointer;
+
+    ion-icon {
+        font-size: 14px;
+    }
+
+    .contador {
+        min-width: 20px;
+        padding: 1px 6px;
+        border-radius: 10px;
+        background: var(--app-surface-strong);
+        font-size: 12px;
+        text-align: center;
+    }
+
+    &.ativo {
+        background: var(--app-accent-soft);
+        color: var(--app-accent);
+
+        .contador {
+            background: var(--app-accent);
+            color: #ffffff;
+        }
+    }
+}

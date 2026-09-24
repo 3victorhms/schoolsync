@@ -15,7 +15,8 @@ import { finalize, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
 import { DesfazerService } from 'src/app/services/desfazer.service';
-import { classeUrgencia } from 'src/app/utils/urgencia.util';
+import { classeUrgencia, compararPorEntrega, estaArquivada } from 'src/app/utils/urgencia.util';
+import { classeStatus, iconeStatus, labelStatus } from 'src/app/utils/atividade-status.util';
 import { labelPontos } from 'src/app/utils/pontos.util';
 import { HapticsService } from 'src/app/services/haptics.service';
 import { ClipboardService } from 'src/app/services/clipboard.service';
@@ -37,6 +38,10 @@ export class SalaPage implements OnInit {
     excluindoSala = false;
     removendoMembroId = '';
     carregando = true;
+
+    /** Quantas atividades próximas aparecem direto na sala; o resto fica em /sala/:id/atividades. */
+    readonly LIMITE_PREVIA = 5;
+    previaAtividades: AtividadeModel[] = [];
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -90,6 +95,7 @@ export class SalaPage implements OnInit {
                 this.sala.id = this.sala.id || id;
                 this.sala.membros = this.sala.membros || [];
                 this.sala.atividades = this.sala.atividades || [];
+                this.organizarAtividades();
                 this.carregarMembros(this.sala.membros);
                 localStorage.setItem(`ultimaSala:${this.usuario.id}`, this.sala.id);
             },
@@ -107,6 +113,26 @@ export class SalaPage implements OnInit {
         } else {
             event?.target.complete();
         }
+    }
+
+    /** Separa as próximas atividades (dia de entrega ainda não terminou) e pega as mais urgentes. */
+    organizarAtividades() {
+        this.previaAtividades = this.sala.atividades
+            .filter(atividade => !estaArquivada(atividade.dataEntrega))
+            .sort(compararPorEntrega)
+            .slice(0, this.LIMITE_PREVIA);
+    }
+
+    /** Há atividades que não aparecem na prévia (arquivadas ou além do limite)? */
+    get temAtividadesOcultas(): boolean {
+        return this.sala.atividades.length > this.previaAtividades.length;
+    }
+
+    abrirAtividades() {
+        const idSala = this.idSala || this.sala.id;
+        if (!idSala) return;
+
+        this.navController.navigateForward(['/sala', idSala, 'atividades']);
     }
 
     abrirGrupos() {
@@ -198,34 +224,15 @@ export class SalaPage implements OnInit {
     }
 
     classeStatus(status: string | null): string {
-        if (!status || status === 'pendente') return 'nao_iniciada';
-        return status;
+        return classeStatus(status);
     }
 
     iconeStatus(status: string | null): string {
-        switch (status) {
-            case 'concluido':
-                return 'checkmark-circle-outline';
-            case 'nao_iniciada':
-            case null:
-            case undefined:
-                return 'ellipse-outline';
-            default:
-                return 'time-outline';
-        }
+        return iconeStatus(status);
     }
 
     labelStatus(status: string | null): string {
-        switch (status) {
-            case 'concluido':
-                return 'Concluído';
-            case 'nao_iniciada':
-            case null:
-            case undefined:
-                return 'Não iniciada';
-            default:
-                return 'Em andamento';
-        }
+        return labelStatus(status);
     }
 
     labelPontos(valor: number | string): string {
@@ -341,14 +348,12 @@ export class SalaPage implements OnInit {
         const copiou = await this.clipboardService.copiar(this.sala.codigoConvite);
 
         if (!copiou) {
-            this.exibirMensagem('Nao foi possivel copiar o codigo.');
+            this.exibirMensagem('Não foi possível copiar o código.');
             return;
         }
 
         this.hapticsService.leve();
-        if (!this.clipboardService.sistemaJaAvisaAoCopiar()) {
-            this.exibirMensagem('Codigo copiado.');
-        }
+        this.exibirMensagem(`Código ${this.sala.codigoConvite} copiado! Envie para seus colegas entrarem na sala.`);
     }
 
     async exibirMensagem(texto: string) {

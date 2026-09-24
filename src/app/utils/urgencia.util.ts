@@ -59,3 +59,37 @@ export function calcularUrgencia(dataEntrega: string | null | undefined, status:
 export function classeUrgencia(dataEntrega: string | null | undefined, status: string | null | undefined): string {
   return `urgencia-${calcularUrgencia(dataEntrega, status)}`;
 }
+
+/** Converte "AAAA-MM-DD" (ou ISO com hora) na meia-noite local desse dia. */
+function parsearDataEntrega(dataEntrega: string | null | undefined): Date | null {
+  if (!dataEntrega) return null;
+
+  const dataBase = dataEntrega.includes('T') ? dataEntrega.split('T')[0] : dataEntrega;
+  const [ano, mes, dia] = dataBase.split('-').map(Number);
+  if (!ano || !mes || !dia) return null;
+
+  return new Date(ano, mes - 1, dia);
+}
+
+/**
+ * Uma atividade é "arquivada" quando o dia de entrega já terminou, ou seja,
+ * a partir da meia-noite do dia seguinte ao prazo. Sem data, nunca arquiva.
+ */
+export function estaArquivada(dataEntrega: string | null | undefined): boolean {
+  const prazo = parsearDataEntrega(dataEntrega);
+  if (!prazo) return false;
+
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  return prazo.getTime() < hoje.getTime();
+}
+
+/** Ordena pela data de entrega, da mais próxima para a mais distante (sem data vai pro fim). */
+export function compararPorEntrega(
+  a: { dataEntrega?: string | null },
+  b: { dataEntrega?: string | null }
+): number {
+  const prazoA = parsearDataEntrega(a.dataEntrega)?.getTime() ?? Number.MAX_SAFE_INTEGER;
+  const prazoB = parsearDataEntrega(b.dataEntrega)?.getTime() ?? Number.MAX_SAFE_INTEGER;
+  return prazoA - prazoB;
+}
