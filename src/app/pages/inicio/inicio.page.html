@@ -19,6 +19,102 @@
 
 <ion-content [fullscreen]="true">
 
+  <!-- ===================== AGENDA ===================== -->
+  <section class="agenda" aria-labelledby="agenda-titulo">
+    <div class="agenda-topo">
+      <h2 class="agenda-titulo" id="agenda-titulo">Sua agenda</h2>
+      <div class="filtro-agenda" role="tablist" aria-label="O que mostrar na agenda">
+        <button type="button" role="tab" [class.ativo]="filtro === 'caderno'" [attr.aria-selected]="filtro === 'caderno'"
+          (click)="selecionarFiltro('caderno')">Meu caderno</button>
+        <button type="button" role="tab" [class.ativo]="filtro === 'todas'" [attr.aria-selected]="filtro === 'todas'"
+          (click)="selecionarFiltro('todas')">Todas</button>
+      </div>
+    </div>
+
+    @if (agendaCarregando) {
+    <div class="group">
+      @for (i of [1, 2, 3]; track i) {
+      <div class="row skeleton-row">
+        <div class="row-icon skeleton-block"></div>
+        <div class="row-body">
+          <div class="skeleton-line skeleton-line-title"></div>
+          <div class="skeleton-line skeleton-line-sub"></div>
+        </div>
+      </div>
+      }
+    </div>
+    } @else {
+
+    @for (secao of secoes; track secao.chave) {
+    <div class="secao-agenda">
+      <h3 class="secao-agenda-titulo" [class.alerta]="secao.alerta">
+        @if (secao.alerta) { <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon> }
+        {{ secao.titulo }} <span class="secao-agenda-contador">{{ secao.atividades.length }}</span>
+      </h3>
+      <div class="group">
+        @for (atividade of atividadesVisiveis(secao); track atividade.id) {
+        <app-atividade-item [atividade]="atividade" [modo]="modoItem()" [nomeSala]="nomeDaSala(atividade)"></app-atividade-item>
+        }
+      </div>
+      @if (secao.atividades.length > LIMITE_POR_SECAO) {
+      <button type="button" class="ver-mais" (click)="alternarSecao(secao.chave)">
+        {{ secoesExpandidas.has(secao.chave) ? 'Mostrar menos' : 'Ver mais ' + (secao.atividades.length - LIMITE_POR_SECAO) }}
+      </button>
+      }
+    </div>
+    }
+
+    @if (!secoes.length) {
+    @if (filtro === 'caderno' && cadernoVazio) {
+    <div class="vazio-guia">
+      <div class="vazio-guia-icone"><ion-icon name="book-outline"></ion-icon></div>
+      <span class="vazio-guia-titulo">Seu caderno está vazio</span>
+      <span class="vazio-guia-sub">Veja as atividades de todas as suas salas ou adicione as que quiser acompanhar ao caderno.</span>
+      <div class="vazio-guia-botoes">
+        <button type="button" class="vazio-guia-btn primario" (click)="selecionarFiltro('todas')">Ver todas as atividades</button>
+      </div>
+    </div>
+    } @else if (filtro === 'todas' && quantidadeSalas === 0 && !carregandoTodas) {
+    <div class="vazio-guia">
+      <div class="vazio-guia-icone"><ion-icon name="people-outline"></ion-icon></div>
+      <span class="vazio-guia-titulo">Você ainda não está em nenhuma sala</span>
+      <span class="vazio-guia-sub">Entre na sala da sua turma para ver as atividades aqui.</span>
+      <div class="vazio-guia-botoes">
+        <button type="button" class="vazio-guia-btn primario" routerLink="/tabs/salas">Ir para salas</button>
+      </div>
+    </div>
+    } @else {
+    <div class="agenda-livre">
+      <ion-icon name="sunny-outline" aria-hidden="true"></ion-icon>
+      <div>
+        <strong>Nada pendente para os próximos 7 dias</strong>
+        <span>Aproveite para adiantar o que vem depois.</span>
+      </div>
+    </div>
+    }
+    }
+
+    @if (atividadesDepois.length) {
+    <button type="button" class="depois-btn" (click)="alternarSecao('depois')" [attr.aria-expanded]="depoisExpandido">
+      <span>{{ depoisExpandido ? 'Depois desta semana' : 'Mais ' + atividadesDepois.length + (atividadesDepois.length === 1 ? ' atividade' : ' atividades') + ' depois desta semana' }}</span>
+      <ion-icon [name]="depoisExpandido ? 'chevron-up-outline' : 'chevron-down-outline'" aria-hidden="true"></ion-icon>
+    </button>
+    @if (depoisExpandido) {
+    <div class="group">
+      @for (atividade of atividadesDepois; track atividade.id) {
+      <app-atividade-item [atividade]="atividade" [modo]="modoItem()" [nomeSala]="nomeDaSala(atividade)"></app-atividade-item>
+      }
+    </div>
+    }
+    }
+
+    @if (filtro === 'todas' && carregandoTodas) {
+    <p class="agenda-carregando-mais" aria-live="polite"><span class="btn-spinner" aria-hidden="true"></span>Carregando mais salas...</p>
+    }
+    }
+  </section>
+
+  <h2 class="agenda-titulo calendario-titulo">Calendário</h2>
   <div class="calendario-card">
     <div class="calendario-header">
       <button class="cal-nav" (click)="mesAnterior()" aria-label="Mês anterior">

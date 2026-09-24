@@ -193,7 +193,7 @@ export class GrupoPage implements OnInit {
     this.grupoService.sair(this.grupo.id, this.usuario.id).subscribe({
       next: () => {
         this.exibirMensagem('Você saiu do grupo.');
-        this.navController.navigateRoot('/grupos/' + this.grupo.idSala);
+        this.navController.navigateRoot(['/sala', this.grupo.idSala], { queryParams: { aba: 'grupos' } });
       },
       error: (erro) => {
         console.error('Erro ao sair do grupo:', erro);
@@ -219,7 +219,7 @@ export class GrupoPage implements OnInit {
     ).subscribe({
       next: () => {
         this.exibirMensagem('Grupo excluído.');
-        this.navController.navigateRoot('/grupos/' + this.grupo.idSala);
+        this.navController.navigateRoot(['/sala', this.grupo.idSala], { queryParams: { aba: 'grupos' } });
       },
       error: (erro) => {
         console.error('Erro ao excluir grupo:', erro);

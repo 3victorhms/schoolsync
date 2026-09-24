@@ -43,6 +43,8 @@ export class AtividadeItemComponent {
   @Input() modo: ModoAtividadeItem = 'sala';
   /** Desligue em listas de prazos já encerrados (arquivadas). */
   @Input() mostrarUrgencia = true;
+  /** Nome da sala, para listas que juntam atividades de várias salas (ex.: agenda do Início). */
+  @Input() nomeSala = '';
 
   constructor() {
     addIcons({

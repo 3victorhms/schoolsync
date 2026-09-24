@@ -14,7 +14,7 @@ import {
   IonRefresherContent,
   IonSpinner
 } from '@ionic/angular/standalone';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NavController, ToastController } from '@ionic/angular';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
@@ -28,6 +28,10 @@ import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
 import { DesfazerService } from 'src/app/services/desfazer.service';
 import { addIcons } from 'ionicons';
 import { finalize } from 'rxjs';
+import { TarefaModel } from 'src/app/model/tarefa.model';
+import { TarefaService } from 'src/app/services/tarefa.service';
+import { GrupoService } from 'src/app/services/grupo.service';
+import { classeStatus, iconeStatus, labelStatus } from 'src/app/utils/atividade-status.util';
 import {
   createOutline,
   calendarOutline,
@@ -45,7 +49,8 @@ import {
   triangleOutline,
   sendOutline,
   returnDownBackOutline,
-  closeOutline
+  closeOutline,
+  chevronForwardOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -66,7 +71,8 @@ import {
     IonRefresherContent,
     IonSpinner,
     CommonModule,
-    FormsModule
+    FormsModule,
+    RouterLink
   ]
 })
 export class AtividadePage implements OnInit {
@@ -86,6 +92,11 @@ export class AtividadePage implements OnInit {
   enviandoComentario = false;
   carregando = true;
 
+  /** Tarefas de grupo atribuídas ao usuário logado para esta atividade. */
+  minhasTarefas: TarefaModel[] = [];
+  /** Nome de cada grupo do usuário na sala, por id (a tarefa só traz o id do grupo). */
+  nomesGrupos: Record<string, string> = {};
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private navController: NavController,
@@ -95,7 +106,9 @@ export class AtividadePage implements OnInit {
     private atividadeService: AtividadeService,
     private usuarioService: UsuarioService,
     private comentarioService: ComentarioService,
-    private hapticsService: HapticsService
+    private hapticsService: HapticsService,
+    private tarefaService: TarefaService,
+    private grupoService: GrupoService
   ) {
     this.atividade = new AtividadeModel();
     this.usuario = this.usuarioService.buscarAutenticacao();
@@ -147,12 +160,50 @@ export class AtividadePage implements OnInit {
         this.comentarioRespondendo = null;
         this.carregarCriador();
         this.carregarComentarios();
+        this.carregarMinhasTarefas();
       },
       error: () => {
         this.exibirMensagem('Atividade não encontrada');
         this.navController.navigateBack('/tabs/salas');
       }
     });
+  }
+
+  /** Busca as tarefas do usuário e fica só com as desta atividade. */
+  carregarMinhasTarefas() {
+    if (!this.usuario.id || !this.atividade.id) return;
+
+    this.tarefaService.listarPorUsuario(this.usuario.id).subscribe({
+      next: (tarefas) => {
+        this.minhasTarefas = (tarefas || []).filter(tarefa => tarefa.idAtividade === this.atividade.id);
+        if (this.minhasTarefas.length && this.atividade.idSala) {
+          this.carregarNomesGrupos();
+        }
+      },
+      error: () => this.minhasTarefas = []
+    });
+  }
+
+  private carregarNomesGrupos() {
+    this.grupoService.listarPorSalaEUsuario(this.atividade.idSala, this.usuario.id).subscribe({
+      next: (grupos) => {
+        this.nomesGrupos = {};
+        (grupos || []).forEach(grupo => this.nomesGrupos[grupo.id] = grupo.nome);
+      },
+      error: () => undefined
+    });
+  }
+
+  classeStatusTarefa(status: string): string {
+    return classeStatus(status);
+  }
+
+  iconeStatusTarefa(status: string): string {
+    return iconeStatus(status);
+  }
+
+  labelStatusTarefa(status: string): string {
+    return labelStatus(status);
   }
 
   atualizar(event: any) {

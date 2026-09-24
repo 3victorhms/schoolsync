@@ -97,6 +97,10 @@ export class SalaAtividadesPage {
 
   ionViewWillEnter() {
     this.idSala = this.activatedRoute.snapshot.params['id'] || '';
+    // A aba "Arquivadas" da sala abre esta página já na aba certa.
+    if (this.activatedRoute.snapshot.queryParams['aba'] === 'arquivadas') {
+      this.aba = 'arquivadas';
+    }
 
     if (this.idSala) {
       this.carregar();
