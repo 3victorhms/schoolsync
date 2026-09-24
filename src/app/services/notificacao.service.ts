@@ -55,7 +55,9 @@ export class NotificacaoService {
     const usuarioId = this.usuarioId;
     if (!usuarioId || this.eventSource || this.reconexaoTimer) return;
 
-    this.eventSource = new EventSource(`${this.API_URL}/usuario/${usuarioId}/stream`);
+    // O EventSource não envia cabeçalhos, então o token vai na URL (a API confere se é do mesmo usuário).
+    const token = encodeURIComponent(this.tokenService.buscar() || '');
+    this.eventSource = new EventSource(`${this.API_URL}/usuario/${usuarioId}/stream?token=${token}`);
     this.eventSource.onopen = () => {
       this.listar().subscribe({ error: () => undefined });
     };

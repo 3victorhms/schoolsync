@@ -247,3 +247,28 @@ ion-tab-button {
     margin-inline-end: 6px;
   }
 }
+
+// Botão do líder para remover um membro do grupo
+.remover-membro-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  margin: -8px -8px -8px auto;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--app-danger);
+  cursor: pointer;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 20px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
