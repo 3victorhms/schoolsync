@@ -84,11 +84,12 @@
     </div>
 
     <section class="secao">
-        <h3 class="group-title">Atividades</h3>
+        <h3 class="group-title">Próximas atividades</h3>
 
         @if (sala.atividades.length) {
+        @if (previaAtividades.length) {
         <div class="group">
-            @for (atividade of sala.atividades; track atividade.id) {
+            @for (atividade of previaAtividades; track atividade.id) {
             <div class="row" [routerLink]="['/atividade', atividade.id]" button>
                 <div class="row-icon" [ngClass]="atividade.estaNoCaderno ? classeStatus(atividade.status) : 'fora_caderno'">
                     <ion-icon
@@ -116,6 +117,18 @@
             </div>
             }
         </div>
+        } @else {
+        <div class="vazio-data">
+            <span>Nenhuma entrega pendente nesta sala.</span>
+        </div>
+        }
+
+        @if (temAtividadesOcultas) {
+        <button type="button" class="ver-todas" (click)="abrirAtividades()">
+            <span>Ver todas as atividades ({{ sala.atividades.length }})</span>
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+        </button>
+        }
         } @else {
         <div class="vazio-guia">
             <div class="vazio-guia-icone">

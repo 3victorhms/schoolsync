@@ -165,14 +165,12 @@ export class GrupoPage implements OnInit {
     const copiou = await this.clipboardService.copiar(this.grupo.codigoConvite);
 
     if (!copiou) {
-      this.exibirMensagem('Nao foi possivel copiar o codigo.');
+      this.exibirMensagem('Não foi possível copiar o código.');
       return;
     }
 
     this.hapticsService.leve();
-    if (!this.clipboardService.sistemaJaAvisaAoCopiar()) {
-      this.exibirMensagem('Codigo copiado.');
-    }
+    this.exibirMensagem(`Código ${this.grupo.codigoConvite} copiado! Envie para quem vai entrar no grupo.`);
   }
 
   editar() {

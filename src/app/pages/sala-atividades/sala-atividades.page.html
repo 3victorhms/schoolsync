@@ -1,0 +1,106 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button [defaultHref]="'/sala/' + idSala"></ion-back-button>
+        </ion-buttons>
+        <ion-title>
+            Atividades
+            @if (sala.nome) {
+            <p class="subtitulo">{{ sala.nome }}</p>
+            }
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+    <ion-refresher slot="fixed" (ionRefresh)="atualizar($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <section class="secao">
+
+        <div class="filtros" role="tablist">
+            <button type="button" class="filtro-btn" role="tab" [class.ativo]="aba === 'proximas'"
+                [attr.aria-selected]="aba === 'proximas'" (click)="selecionarAba('proximas')">
+                <ion-icon name="time-outline"></ion-icon>
+                Próximas
+                @if (!carregando) { <span class="contador">{{ proximas.length }}</span> }
+            </button>
+            <button type="button" class="filtro-btn" role="tab" [class.ativo]="aba === 'arquivadas'"
+                [attr.aria-selected]="aba === 'arquivadas'" (click)="selecionarAba('arquivadas')">
+                <ion-icon name="archive-outline"></ion-icon>
+                Arquivadas
+                @if (!carregando) { <span class="contador">{{ arquivadas.length }}</span> }
+            </button>
+        </div>
+
+        @if (carregando) {
+        <div class="group">
+            @for (i of [1, 2, 3, 4]; track i) {
+            <div class="row skeleton-row">
+                <div class="row-icon skeleton-block"></div>
+                <div class="row-body">
+                    <div class="skeleton-line skeleton-line-title"></div>
+                    <div class="skeleton-line skeleton-line-sub"></div>
+                </div>
+            </div>
+            }
+        </div>
+        } @else if (listaAtual.length) {
+        <div class="group stagger-list">
+            @for (atividade of listaAtual; track atividade.id) {
+            <div class="row" [routerLink]="['/atividade', atividade.id]" button>
+                <div class="row-icon" [ngClass]="atividade.estaNoCaderno ? classeStatus(atividade.status) : 'fora_caderno'">
+                    <ion-icon
+                        [name]="atividade.estaNoCaderno ? iconeStatus(atividade.status) : 'bookmark-outline'"></ion-icon>
+                </div>
+                <div class="row-body">
+                    <h4 class="row-label">{{ atividade.titulo }}</h4>
+                    <div class="row-sub">
+                        <span class="row-desc">{{ atividade.descricao }}</span>
+                        <span class="tag-pontos">{{ labelPontos(atividade.valor) }}</span>
+                    </div>
+                    <div class="row-meta">
+                        <span class="tag-disciplina">{{ atividade.disciplina }}</span>
+                        <span class="row-data" [ngClass]="classeUrgencia(atividade)">
+                            <ion-icon name="calendar-outline"></ion-icon>
+                            {{ atividade.dataEntrega }}
+                        </span>
+                        <span class="atividade-status"
+                            [ngClass]="atividade.estaNoCaderno ? classeStatus(atividade.status) : 'fora_caderno'">
+                            {{ atividade.estaNoCaderno ? labelStatus(atividade.status) : 'Não está no caderno' }}
+                        </span>
+                    </div>
+                </div>
+                <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
+            </div>
+            }
+        </div>
+        } @else if (aba === 'proximas') {
+        <div class="vazio-guia">
+            <div class="vazio-guia-icone">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+            </div>
+            <span class="vazio-guia-titulo">Nenhuma entrega pendente</span>
+            <span class="vazio-guia-sub">Todas as atividades desta sala já passaram do prazo. Elas estão em "Arquivadas".</span>
+            <div class="vazio-guia-botoes">
+                <button type="button" class="vazio-guia-btn primario" [routerLink]="['/add-atividade/', idSala]">
+                    <ion-icon name="add-outline"></ion-icon>
+                    Nova atividade
+                </button>
+            </div>
+        </div>
+        } @else {
+        <div class="vazio-guia">
+            <div class="vazio-guia-icone">
+                <ion-icon name="archive-outline"></ion-icon>
+            </div>
+            <span class="vazio-guia-titulo">Nenhuma atividade arquivada</span>
+            <span class="vazio-guia-sub">Quando o dia de entrega de uma atividade terminar, ela aparece aqui.</span>
+        </div>
+        }
+
+    </section>
+
+</ion-content>

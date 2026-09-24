@@ -304,6 +304,28 @@ ion-item-sliding + ion-item-sliding .membro-item {
     }
 }
 
+// Link "Ver todas as atividades" abaixo da prévia de próximas atividades.
+.ver-todas {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 8px;
+    padding: 14px;
+    border: none;
+    border-radius: 16px;
+    background: var(--app-surface);
+    color: var(--app-accent);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+
+    ion-icon {
+        font-size: 18px;
+    }
+}
+
 // Quando usado direto dentro do ion-content (estado de carregamento
 // inicial), fora de uma secao com padding proprio.
 ion-content > .vazio-data {

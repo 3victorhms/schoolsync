@@ -55,6 +55,10 @@ const rotasDaAplicacao: Routes = [
     loadComponent: () => import('./pages/sala/sala.page').then(m => m.SalaPage)
   },
   {
+    path: 'sala/:id/atividades',
+    loadComponent: () => import('./pages/sala-atividades/sala-atividades.page').then(m => m.SalaAtividadesPage)
+  },
+  {
     path: 'atividade',
     loadComponent: () => import('./pages/atividade/atividade.page').then(m => m.AtividadePage)
   },
