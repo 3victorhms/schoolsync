@@ -1,3 +1,4 @@
+import { finalize } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -22,6 +23,7 @@ export class EntrarSalaPage implements OnInit {
   sala: SalaModel;
   usuario: UsuarioModel;
   formGroup: FormGroup;
+  entrando = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -49,17 +51,21 @@ export class EntrarSalaPage implements OnInit {
     this.usuario = this.usuarioService.buscarAutenticacao();
 
     if (!this.usuario.id) {
-      this.exibirMensagem('Faca login para entrar em uma sala.');
+      this.exibirMensagem('Faça login para entrar em uma sala.');
       this.navController.navigateRoot('/login');
       return;
     }
 
     const codigo: string = (this.formGroup.get('codigoConvite')?.value || '').trim();
+    if (this.entrando) return;
+    this.entrando = true;
 
-    this.salaService.entrar(codigo, this.usuario.id).subscribe({
+    this.salaService.entrar(codigo, this.usuario.id).pipe(
+      finalize(() => this.entrando = false)
+    ).subscribe({
       next: (sala) => {
         this.hapticsService.sucesso();
-        this.exibirMensagem('Voce entrou na sala com sucesso!');
+        this.exibirMensagem('Você entrou na sala!');
 
         if (sala?.id) {
           this.navController.navigateRoot('/sala/' + sala.id);
@@ -69,9 +75,15 @@ export class EntrarSalaPage implements OnInit {
         this.navController.navigateRoot('/tabs/salas');
       },
       error: (err) => {
-        this.exibirMensagem(err?.error?.message || 'Codigo invalido ou sala nao encontrada.');
+        this.exibirMensagem(err?.error?.message || 'Código inválido ou sala não encontrada.');
       }
     });
+  }
+
+  /** O campo tem erro e o usuário já mexeu nele. */
+  campoInvalido(campo: string): boolean {
+    const controle = this.formGroup.get(campo);
+    return !!controle && controle.invalid && (controle.touched || controle.dirty);
   }
 
   async exibirMensagem(texto: string) {

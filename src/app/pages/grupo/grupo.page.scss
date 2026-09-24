@@ -3,13 +3,13 @@ ion-toolbar {
   --border-color: transparent;
 
   ion-back-button {
-    --color: #ffffff;
+    --color: var(--app-text);
   }
 
   ion-title {
     font-size: 22px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--app-text);
     padding: 0;
 
     .subtitulo {
@@ -26,7 +26,7 @@ ion-toolbar {
 }
 
 .editar-btn {
-  --color: #ffffff;
+  --color: var(--app-text);
 }
 
 .excluir-btn {
@@ -121,7 +121,7 @@ ion-content {
 .row-label {
   font-size: 15px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--app-text);
 }
 
 .row-data {
@@ -152,7 +152,7 @@ ion-content {
   justify-content: center;
   font-size: 13px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--app-text);
   flex-shrink: 0;
   position: relative;
 

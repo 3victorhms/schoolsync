@@ -50,31 +50,7 @@
         } @else if (listaAtual.length) {
         <div class="group stagger-list">
             @for (atividade of listaAtual; track atividade.id) {
-            <div class="row" [routerLink]="['/atividade', atividade.id]" button>
-                <div class="row-icon" [ngClass]="atividade.estaNoCaderno ? classeStatus(atividade.status) : 'fora_caderno'">
-                    <ion-icon
-                        [name]="atividade.estaNoCaderno ? iconeStatus(atividade.status) : 'bookmark-outline'"></ion-icon>
-                </div>
-                <div class="row-body">
-                    <h4 class="row-label">{{ atividade.titulo }}</h4>
-                    <div class="row-sub">
-                        <span class="row-desc">{{ atividade.descricao }}</span>
-                        <span class="tag-pontos">{{ labelPontos(atividade.valor) }}</span>
-                    </div>
-                    <div class="row-meta">
-                        <span class="tag-disciplina">{{ atividade.disciplina }}</span>
-                        <span class="row-data" [ngClass]="classeUrgencia(atividade)">
-                            <ion-icon name="calendar-outline"></ion-icon>
-                            {{ atividade.dataEntrega }}
-                        </span>
-                        <span class="atividade-status"
-                            [ngClass]="atividade.estaNoCaderno ? classeStatus(atividade.status) : 'fora_caderno'">
-                            {{ atividade.estaNoCaderno ? labelStatus(atividade.status) : 'Não está no caderno' }}
-                        </span>
-                    </div>
-                </div>
-                <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
-            </div>
+            <app-atividade-item [atividade]="atividade" modo="sala" [mostrarUrgencia]="aba === 'proximas'"></app-atividade-item>
             }
         </div>
         } @else if (aba === 'proximas') {

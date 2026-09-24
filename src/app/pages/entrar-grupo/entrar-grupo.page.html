@@ -10,15 +10,18 @@
 <ion-content [fullscreen]="true">
   <form [formGroup]="formGroup" (ngSubmit)="entrar()">
     <div class="campo-grupo">
-      <label class="campo-label">Codigo do grupo</label>
-      <ion-item class="campo-item" lines="none">
+      <label class="campo-label">Código do grupo</label>
+      <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('codigoConvite')" lines="none">
         <input type="text" placeholder="Ex: ALPHA01" formControlName="codigoConvite" maxlength="20" />
       </ion-item>
+      @if (campoInvalido('codigoConvite')) {
+      <p class="erro-campo">Digite o código de convite que você recebeu.</p>
+      }
     </div>
 
-    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="formGroup.invalid">
-      <ion-icon name="person-add-outline" slot="start"></ion-icon>
-      Entrar no grupo
+    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="formGroup.invalid || entrando">
+      @if (entrando) { <span class="btn-spinner" aria-hidden="true"></span> Entrando... }
+      @else { <ion-icon name="person-add-outline" slot="start"></ion-icon> Entrar no grupo }
     </ion-button>
   </form>
 </ion-content>

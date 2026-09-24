@@ -5,13 +5,13 @@ ion-toolbar {
     --border-color: transparent;
 
     ion-back-button {
-        --color: #ffffff;
+        --color: var(--app-text);
     }
 
     ion-title {
         font-size: 18px;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--app-text);
     }
 
     .status-badge {
@@ -269,7 +269,7 @@ ion-content {
         gap: 8px;
         font-size: 18px;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--app-text);
         margin: 0 0 12px;
 
         ion-icon {
@@ -302,7 +302,7 @@ ion-content {
             height: 38px;
             border-radius: 50%;
             background: var(--app-surface-strong);
-            color: #ffffff;
+            color: var(--app-text);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -335,7 +335,7 @@ ion-content {
             flex-wrap: wrap;
 
             strong {
-                color: #ffffff;
+                color: var(--app-text);
                 font-size: 14px;
             }
 
@@ -368,7 +368,9 @@ ion-content {
                 color: var(--app-accent);
                 font-size: 12px;
                 font-weight: 600;
-                padding: 0;
+                // Área de toque maior sem mudar o espaçamento visual.
+                padding: 12px 6px;
+                margin: -12px -6px;
                 cursor: pointer;
 
                 ion-icon {
@@ -438,7 +440,7 @@ ion-content {
             background: var(--app-surface);
             border: 1px solid var(--app-surface-strong);
             border-radius: 18px;
-            color: #ffffff;
+            color: var(--app-text);
             font-size: 14px;
             line-height: 1.4;
             padding: 14px 16px;

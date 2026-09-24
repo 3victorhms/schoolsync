@@ -1,0 +1,166 @@
+// Mesmo visual das linhas de atividade que antes ficavam copiadas em cada página.
+
+:host {
+    display: block;
+}
+
+// Divisória entre itens vizinhos (cada linha está no seu próprio componente).
+:host + :host .row::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 60px;
+    right: 0;
+    height: 1px;
+    background: var(--app-border);
+}
+
+.row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    position: relative;
+    cursor: pointer;
+    min-height: 44px;
+}
+
+.row-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+
+    ion-icon {
+        font-size: 17px;
+        color: #ffffff;
+    }
+
+    &.nao_iniciada { background: #8e8e93; }
+    &.em_andamento { background: var(--app-accent); }
+    &.concluido { background: var(--app-success); }
+    &.fora_caderno { background: var(--app-muted-strong); }
+
+    &.livro {
+        background: var(--app-accent-soft);
+
+        ion-icon { color: var(--app-accent); }
+    }
+}
+
+.row-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.row-label {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--app-text);
+    margin: 0 0 4px;
+    overflow-wrap: anywhere;
+}
+
+.row-sub {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    min-width: 0;
+
+    .row-desc {
+        font-size: 13px;
+        color: var(--app-muted);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        min-width: 0;
+    }
+
+    .tag-pontos {
+        background: var(--app-bg-muted);
+        color: var(--app-text-soft);
+        font-size: 10.5px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 6px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+}
+
+.row-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px 10px;
+    flex-wrap: wrap;
+
+    .tag-disciplina {
+        background: var(--app-accent-soft);
+        color: var(--app-accent);
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 9px;
+        border-radius: 20px;
+        white-space: nowrap;
+    }
+
+    .row-data {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        color: var(--app-muted);
+        white-space: nowrap;
+
+        ion-icon {
+            font-size: 13px;
+        }
+
+        .rotulo-urgencia {
+            font-weight: 700;
+        }
+
+        // Escala de urgência, mesmo padrão do calendário em Início.
+        &.urgencia-atrasada,
+        &.urgencia-hoje {
+            color: var(--app-urgencia-atrasada);
+            font-weight: 700;
+        }
+
+        &.urgencia-proxima {
+            color: var(--app-urgencia-proxima);
+            font-weight: 600;
+        }
+
+        &.urgencia-semana {
+            color: var(--app-urgencia-semana);
+        }
+
+        &.urgencia-mes {
+            color: var(--app-urgencia-mes);
+        }
+    }
+
+    .atividade-status {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: var(--app-muted);
+
+        &.em_andamento { color: var(--app-accent); }
+        &.concluido { color: var(--app-success); }
+        &.fora_caderno { color: var(--app-muted-strong); }
+    }
+}
+
+.row-seta {
+    font-size: 18px;
+    color: var(--app-muted-strong);
+    flex-shrink: 0;
+    margin-top: 8px;
+}

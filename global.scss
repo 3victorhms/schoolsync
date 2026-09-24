@@ -1,0 +1,8 @@
+
+// feito com auxílio do Claude
+// Botões de ícone nos cabeçalhos com área de toque mínima de 44px.
+ion-toolbar ion-buttons ion-button,
+ion-toolbar ion-back-button {
+  min-width: 44px;
+  min-height: 44px;
+}

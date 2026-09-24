@@ -254,17 +254,16 @@ export class GrupoTarefasPage implements OnInit {
     if (!confirmou) return;
 
     this.tarefaExcluindoId = tarefa.id;
-    this.exibirMensagem('Excluindo tarefa...');
     this.tarefaService.excluir(tarefa.id, this.usuario.id).pipe(
       finalize(() => this.tarefaExcluindoId = '')
     ).subscribe({
       next: () => {
         this.tarefas = this.tarefas.filter(item => item.id !== tarefa.id);
-        this.exibirMensagem('Tarefa excluida.');
+        this.exibirMensagem('Tarefa excluída.');
       },
       error: (erro) => {
         console.error('Erro ao excluir tarefa:', erro);
-        this.exibirMensagem(`Erro ao excluir tarefa (${erro?.status || 'sem conexao'}).`);
+        this.exibirMensagem(`Erro ao excluir tarefa (${erro?.status || 'sem conexão'}).`);
       }
     });
   }

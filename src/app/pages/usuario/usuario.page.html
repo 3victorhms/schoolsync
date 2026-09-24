@@ -29,16 +29,22 @@
 
     <div class="campo-grupo">
       <label class="campo-label">Nome</label>
-      <ion-item class="campo-item" lines="none">
+      <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('nome')" lines="none">
         <ion-input type="text" placeholder="Seu nome completo" formControlName="nome" autocomplete="off"></ion-input>
       </ion-item>
+      @if (campoInvalido('nome')) {
+      <p class="campo-erro">Informe seu nome.</p>
+      }
     </div>
 
     <div class="campo-grupo">
       <label class="campo-label">E-mail</label>
-      <ion-item class="campo-item" lines="none">
+      <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('email')" lines="none">
         <ion-input type="email" placeholder="seu@email.com" formControlName="email" autocomplete="off"></ion-input>
       </ion-item>
+      @if (campoInvalido('email')) {
+      <p class="campo-erro">{{ formGroup.get('email')?.hasError('required') ? 'Informe seu e-mail.' : 'Informe um e-mail válido (ex.: nome@exemplo.com).' }}</p>
+      }
     </div>
 
     <div class="secao-titulo">Alterar senha</div>
@@ -71,6 +77,9 @@
           <ion-icon [name]="mostrarNovaSenha ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
         </ion-button>
       </ion-item>
+      @if (novaSenhaCurta) {
+      <p class="campo-erro">A nova senha deve ter pelo menos 8 caracteres.</p>
+      }
     </div>
 
     <div class="campo-grupo">
@@ -87,7 +96,7 @@
     </div>
 
     <ion-button type="submit" expand="block" class="botao-salvar"
-      [disabled]="!formGroup.valid || senhasDiferentes || semAlteracoes || senhaAtualObrigatoria || processandoFoto || salvando">
+      [disabled]="!formGroup.valid || senhasDiferentes || semAlteracoes || senhaAtualObrigatoria || novaSenhaCurta || processandoFoto || salvando">
       {{ salvando ? 'Salvando...' : 'Salvar alterações' }}
     </ion-button>
 

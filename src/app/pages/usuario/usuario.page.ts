@@ -69,6 +69,18 @@ export class UsuarioPage implements OnInit {
     return novaPreenchida && !senhaAtualPreenchida;
   }
 
+  /** Mesmo mínimo do cadastro: 8 caracteres. */
+  get novaSenhaCurta(): boolean {
+    const novaSenha: string = this.formGroup.get('novaSenha')?.value || '';
+    return novaSenha.length > 0 && novaSenha.length < 8;
+  }
+
+  /** O campo tem erro e o usuário já mexeu nele. */
+  campoInvalido(campo: string): boolean {
+    const controle = this.formGroup.get(campo);
+    return !!controle && controle.invalid && (controle.touched || controle.dirty);
+  }
+
   constructor(
     private formBuilder: FormBuilder,
     private usuarioService: UsuarioService,

@@ -43,7 +43,7 @@
 
         <ion-button expand="block" type="submit" class="login-button" [disabled]="formGroup.invalid || autenticando">
 
-          {{ autenticando ? 'Entrando...' : 'Entrar' }}
+          @if (autenticando) { <span class="btn-spinner" aria-hidden="true"></span> Entrando... } @else { Entrar }
 
           <ion-icon slot="end" name="arrow-forward-outline">
           </ion-icon>

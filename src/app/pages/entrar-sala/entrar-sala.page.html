@@ -12,14 +12,17 @@
 
     <div class="campo-grupo">
       <label class="campo-label">Código da sala</label>
-      <ion-item class="campo-item" lines="none">
+      <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('codigoConvite')" lines="none">
         <input type="text" placeholder="Ex: 3A2026" formControlName="codigoConvite" maxlength="20" />
       </ion-item>
+      @if (campoInvalido('codigoConvite')) {
+      <p class="erro-campo">Digite o código de convite que você recebeu.</p>
+      }
     </div>
 
-    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="!formGroup.valid">
-      <ion-icon name="log-in-outline" slot="start"></ion-icon>
-      Entrar na Sala
+    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="!formGroup.valid || entrando">
+      @if (entrando) { <span class="btn-spinner" aria-hidden="true"></span> Entrando... }
+      @else { <ion-icon name="log-in-outline" slot="start"></ion-icon> Entrar na sala }
     </ion-button>
 
   </form>

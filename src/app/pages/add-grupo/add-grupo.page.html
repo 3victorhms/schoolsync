@@ -13,13 +13,16 @@
   <form [formGroup]="formGroup" (ngSubmit)="salvar()">
     <div class="campo-grupo">
       <label class="campo-label">Nome do grupo</label>
-      <ion-item class="campo-item" lines="none">
+      <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('nome')" lines="none">
         <ion-input type="text" placeholder="Ex: Equipe Alpha" formControlName="nome"></ion-input>
       </ion-item>
+      @if (campoInvalido('nome')) {
+      <p class="erro-campo">Dê um nome para o grupo.</p>
+      }
     </div>
 
     <ion-button type="submit" expand="block" class="botao-criar" [disabled]="formGroup.invalid || salvando">
-      {{ modoEdicao ? 'Salvar alterações' : 'Criar grupo' }}
+      @if (salvando) { <span class="btn-spinner" aria-hidden="true"></span> Salvando... } @else { {{ modoEdicao ? 'Salvar alterações' : 'Criar grupo' }} }
     </ion-button>
   </form>
 </ion-content>

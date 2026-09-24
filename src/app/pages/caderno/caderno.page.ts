@@ -34,6 +34,8 @@ import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { finalize } from 'rxjs';
 import { classeUrgencia } from 'src/app/utils/urgencia.util';
+import { formatarDataCurta } from 'src/app/utils/data.util';
+import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
 import { labelPontos } from 'src/app/utils/pontos.util';
 
 @Component({
@@ -52,7 +54,8 @@ import { labelPontos } from 'src/app/utils/pontos.util';
     IonSpinner,
     CommonModule,
     FormsModule,
-    RouterLink
+    RouterLink,
+    AtividadeItemComponent
   ]
 })
 export class CadernoPage implements OnInit {
@@ -267,12 +270,7 @@ export class CadernoPage implements OnInit {
   formatarData(data: string): string {
     if (!data) return '';
 
-    const dataBase = data.includes('T') ? data.split('T')[0] : data;
-    const [ano, mes, dia] = dataBase.split('-');
-
-    if (!ano || !mes || !dia) return dataBase;
-
-    return `${dia}/${mes}/${ano}`;
+    return formatarDataCurta(data);
   }
 
   labelPontos(valor: number | string): string {

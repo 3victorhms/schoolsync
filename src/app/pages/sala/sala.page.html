@@ -6,7 +6,7 @@
         <ion-title>
             {{ sala.nome }}
             @if (sala.codigoConvite) {
-            <button type="button" class="subtitulo codigo-copiar" (click)="copiarCodigo()" aria-label="Copiar codigo da sala">
+            <button type="button" class="subtitulo codigo-copiar" (click)="copiarCodigo()" aria-label="Copiar código da sala">
                 {{ sala.codigoConvite }}
                 <ion-icon name="copy-outline"></ion-icon>
             </button>
@@ -18,7 +18,7 @@
                 <ion-icon name="create-outline" slot="icon-only"></ion-icon>
             </ion-button>
             <ion-button fill="clear" class="excluir-btn" [disabled]="excluindoSala" (click)="excluir()" aria-label="Excluir sala">
-                <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+                @if (excluindoSala) { <span class="btn-spinner sozinho" slot="icon-only" aria-hidden="true"></span> } @else { <ion-icon name="trash-outline" slot="icon-only"></ion-icon> }
             </ion-button>
             }
         </ion-buttons>
@@ -90,31 +90,7 @@
         @if (previaAtividades.length) {
         <div class="group">
             @for (atividade of previaAtividades; track atividade.id) {
-            <div class="row" [routerLink]="['/atividade', atividade.id]" button>
-                <div class="row-icon" [ngClass]="atividade.estaNoCaderno ? classeStatus(atividade.status) : 'fora_caderno'">
-                    <ion-icon
-                        [name]="atividade.estaNoCaderno ? iconeStatus(atividade.status) : 'bookmark-outline'"></ion-icon>
-                </div>
-                <div class="row-body">
-                    <h4 class="row-label">{{ atividade.titulo }}</h4>
-                    <div class="row-sub">
-                        <span class="row-desc">{{ atividade.descricao }}</span>
-                        <span class="tag-pontos">{{ labelPontos(atividade.valor) }}</span>
-                    </div>
-                    <div class="row-meta">
-                        <span class="tag-disciplina">{{ atividade.disciplina }}</span>
-                        <span class="row-data" [ngClass]="classeUrgencia(atividade)">
-                            <ion-icon name="calendar-outline"></ion-icon>
-                            {{ atividade.dataEntrega }}
-                        </span>
-                        <span class="atividade-status"
-                            [ngClass]="atividade.estaNoCaderno ? classeStatus(atividade.status) : 'fora_caderno'">
-                            {{ atividade.estaNoCaderno ? labelStatus(atividade.status) : 'Não está no caderno' }}
-                        </span>
-                    </div>
-                </div>
-                <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
-            </div>
+            <app-atividade-item [atividade]="atividade" modo="sala"></app-atividade-item>
             }
         </div>
         } @else {

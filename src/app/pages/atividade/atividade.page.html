@@ -11,7 +11,7 @@
       </ion-button>
 
       <ion-button fill="clear" class="excluir-btn" [disabled]="excluindo" (click)="excluir()" aria-label="Excluir atividade">
-        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+        @if (excluindo) { <span class="btn-spinner sozinho" slot="icon-only" aria-hidden="true"></span> } @else { <ion-icon name="trash-outline" slot="icon-only"></ion-icon> }
       </ion-button>
       }
     </ion-buttons>
@@ -181,7 +181,7 @@
       </div>
       } @empty {
       <div class="comentarios-vazio">
-        <p>Nenhum comentario ainda.</p>
+        <p>Nenhum comentário ainda.</p>
       </div>
       }
     </div>

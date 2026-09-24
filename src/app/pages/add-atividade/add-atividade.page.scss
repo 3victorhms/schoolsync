@@ -3,13 +3,13 @@ ion-toolbar {
     --border-color: transparent;
 
     ion-back-button {
-        --color: #ffffff;
+        --color: var(--app-text);
     }
 
     ion-title {
         font-size: 22px;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--app-text);
         padding: 0;
 
         .subtitulo {
@@ -55,7 +55,7 @@ form {
                 background: transparent;
                 border: none;
                 outline: none;
-                color: #ffffff;
+                color: var(--app-text);
                 font-size: 15px;
                 width: 100%;
                 padding: 14px 0;
@@ -100,7 +100,7 @@ form {
                 gap: 16px;
                 width: 100%;
                 padding: 10px 0;
-                color: #ffffff;
+                color: var(--app-text);
                 font-size: 15px;
                 font-weight: 500;
                 cursor: pointer;
@@ -120,7 +120,7 @@ form {
                 background: transparent;
                 border: none;
                 outline: none;
-                color: #ffffff;
+                color: var(--app-text);
                 font-size: 15px;
                 width: 100%;
                 min-height: 100px;

@@ -142,10 +142,11 @@
     position: absolute;
     z-index: 2;
     top: 50%;
-    right: 12px;
+    right: 8px;
     transform: translateY(-50%);
-    width: 36px;
-    height: 36px;
+    // 44px: tamanho mínimo recomendado para toque.
+    width: 44px;
+    height: 44px;
     display: grid;
     place-items: center;
     border: 0;

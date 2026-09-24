@@ -5,7 +5,7 @@ ion-toolbar {
     ion-title {
         font-size: 22px;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--app-text);
     }
 }
 
@@ -113,7 +113,7 @@ ion-content {
         .row-label {
             font-size: 15px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--app-text);
             margin: 0 0 6px;
         }
 
@@ -165,7 +165,7 @@ ion-content {
 
     .vazio-titulo {
         display: block;
-        color: #ffffff;
+        color: var(--app-text);
         font-size: 15px;
         font-weight: 700;
         margin: 0 0 6px;

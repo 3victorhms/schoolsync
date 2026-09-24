@@ -50,7 +50,7 @@
 
         <ion-button expand="block" type="submit" class="login-button" [disabled]="formGroup.invalid || salvando">
 
-          {{ salvando ? 'Cadastrando...' : 'Cadastrar' }}
+          @if (salvando) { <span class="btn-spinner" aria-hidden="true"></span> Cadastrando... } @else { Cadastrar }
 
           <ion-icon slot="end" name="arrow-forward-outline">
           </ion-icon>

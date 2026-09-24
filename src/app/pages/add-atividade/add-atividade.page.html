@@ -77,7 +77,7 @@
     </div>
 
     <ion-button type="submit" expand="block" class="botao-criar" [disabled]="formGroup.invalid || salvando">
-      {{ editando ? 'Salvar alterações' : 'Criar atividade' }}
+      @if (salvando) { <span class="btn-spinner" aria-hidden="true"></span> Salvando... } @else { {{ editando ? 'Salvar alterações' : 'Criar atividade' }} }
     </ion-button>
 
   </form>

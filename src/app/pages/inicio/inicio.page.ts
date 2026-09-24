@@ -14,6 +14,8 @@ import { Subscription } from 'rxjs';
 import { notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, bookOutline, personOutline, pencilOutline } from 'ionicons/icons';
 import { calcularUrgencia, classeUrgencia, ordemUrgencia } from 'src/app/utils/urgencia.util';
 import { labelPontos } from 'src/app/utils/pontos.util';
+import { formatarDataCurta } from 'src/app/utils/data.util';
+import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
 
 interface DiaCalendario {
   numero: number;
@@ -30,7 +32,7 @@ interface DiaCalendario {
   templateUrl: './inicio.page.html',
   styleUrls: ['./inicio.page.scss'],
   standalone: true,
-  imports: [IonIcon, IonCard, IonCardContent, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, RouterLink]
+  imports: [IonIcon, IonCard, IonCardContent, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, RouterLink, AtividadeItemComponent]
 })
 export class InicioPage implements OnInit {
 
@@ -117,11 +119,7 @@ export class InicioPage implements OnInit {
   }
 
   formatarData(data: string): string {
-    if (!data) return '';
-    const [ano, mes, dia] = data.split('-');
-    const meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun',
-      'jul', 'ago', 'set', 'out', 'nov', 'dez'];
-    return `${dia} ${meses[parseInt(mes) - 1]}`;
+    return formatarDataCurta(data);
   }
 
   selecionarDia(dia: DiaCalendario) {

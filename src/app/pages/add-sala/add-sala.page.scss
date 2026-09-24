@@ -5,7 +5,7 @@ ion-toolbar {
     ion-title {
         font-size: 20px;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--app-text);
         display: flex;
         align-items: center;
         gap: 8px;
@@ -17,7 +17,7 @@ ion-toolbar {
     }
 
     ion-back-button {
-        --color: #ffffff;
+        --color: var(--app-text);
     }
 }
 
@@ -57,7 +57,7 @@ form {
     transition: border-color 0.2s;
 
     ion-input {
-        --color: #ffffff;
+        --color: var(--app-text);
         --placeholder-color: var(--app-muted-strong);
         --placeholder-opacity: 1;
         font-size: 15px;
