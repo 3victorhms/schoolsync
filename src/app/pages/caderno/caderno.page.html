@@ -130,8 +130,44 @@
     }
 
     @if (!temResultados) {
-    <div class="vazio-data">
-      <span>Nenhuma atividade ou tarefa encontrada.</span>
+    <div class="vazio-guia">
+      @if (atividades.length === 0 && tarefas.length === 0) {
+      <div class="vazio-guia-icone">
+        <ion-icon name="book-outline"></ion-icon>
+      </div>
+      <span class="vazio-guia-titulo">Seu caderno está vazio</span>
+      <span class="vazio-guia-sub">Abra uma atividade em uma das suas salas e toque em "Adicionar no caderno" para acompanhar o seu progresso aqui.</span>
+      <div class="vazio-guia-botoes">
+        <button type="button" class="vazio-guia-btn primario" routerLink="/tabs/salas">
+          <ion-icon name="people-outline"></ion-icon>
+          Ver minhas salas
+        </button>
+      </div>
+      } @else if (termoBusca) {
+      <div class="vazio-guia-icone">
+        <ion-icon name="search-outline"></ion-icon>
+      </div>
+      <span class="vazio-guia-titulo">Nada encontrado para "{{ termoBusca }}"</span>
+      <span class="vazio-guia-sub">Confira a digitação ou tente buscar pelo nome da disciplina.</span>
+      <div class="vazio-guia-botoes">
+        <button type="button" class="vazio-guia-btn" (click)="limparBusca()">
+          <ion-icon name="close-outline"></ion-icon>
+          Limpar busca
+        </button>
+      </div>
+      } @else {
+      <div class="vazio-guia-icone">
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+      </div>
+      <span class="vazio-guia-titulo">Nada com esse status</span>
+      <span class="vazio-guia-sub">Nenhuma atividade ou tarefa do seu caderno está nesse filtro agora.</span>
+      <div class="vazio-guia-botoes">
+        <button type="button" class="vazio-guia-btn" (click)="filtrar('todas')">
+          <ion-icon name="book-outline"></ion-icon>
+          Ver todas
+        </button>
+      </div>
+      }
     </div>
     }
 

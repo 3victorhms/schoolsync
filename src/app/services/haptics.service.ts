@@ -1,8 +1,7 @@
 // feito com auxílio do Claude
 //
-// Wrapper fino sobre @capacitor/haptics: no navegador o plugin não faz nada
-// (por isso o guard isNativePlatform), então é seguro chamar em qualquer
-// lugar sem checar a plataforma manualmente antes.
+// no navegador o plugin não faz nada (por isso o guard isNativePlatform), 
+// então é seguro chamar em qualquer lugar sem checar a plataforma manualmente antes.
 
 import { Injectable } from '@angular/core';
 import { Capacitor } from '@capacitor/core';

@@ -23,6 +23,7 @@
     "@angular/router": "^20.0.0",
     "@capacitor/android": "^8.4.1",
     "@capacitor/app": "8.1.0",
+    "@capacitor/clipboard": "^8.0.1",
     "@capacitor/core": "^8.3.4",
     "@capacitor/haptics": "8.0.2",
     "@capacitor/keyboard": "8.0.3",

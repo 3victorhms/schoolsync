@@ -103,8 +103,28 @@
       }
     </div>
     } @else {
-    <div class="vazio-data">
-      <span>Nenhuma tarefa criada</span>
+    <div class="vazio-guia">
+      <div class="vazio-guia-icone">
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+      </div>
+      @if (grupo.criador && atividades.length === 0) {
+      <span class="vazio-guia-titulo">A sala ainda não tem atividades</span>
+      <span class="vazio-guia-sub">Para dividir tarefas, primeiro cadastre a atividade do trabalho na sala.</span>
+      @if (grupo.idSala) {
+      <div class="vazio-guia-botoes">
+        <button type="button" class="vazio-guia-btn primario" [routerLink]="['/add-atividade', grupo.idSala]">
+          <ion-icon name="add-outline"></ion-icon>
+          Cadastrar atividade
+        </button>
+      </div>
+      }
+      } @else if (grupo.criador) {
+      <span class="vazio-guia-titulo">Nenhuma tarefa atribuída</span>
+      <span class="vazio-guia-sub">Escolha uma atividade e um membro no formulário acima para dividir o trabalho.</span>
+      } @else {
+      <span class="vazio-guia-titulo">O líder ainda não dividiu as tarefas</span>
+      <span class="vazio-guia-sub">Quando as tarefas forem atribuídas, elas aparecem aqui e no seu caderno.</span>
+      }
     </div>
     }
   </section>

@@ -1065,3 +1065,89 @@ button.row,
     transition: none !important;
   }
 }
+
+// feito com auxílio do Claude
+// Estado vazio com orientação: ícone, título, explicação e botões de ação.
+// Usa as variáveis de tema, então funciona no tema claro e no escuro.
+.vazio-guia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  background: var(--app-surface);
+  border-radius: 16px;
+  padding: 32px 20px 24px;
+
+  .vazio-guia-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--app-accent-soft);
+    color: var(--app-accent);
+    margin-bottom: 8px;
+
+    ion-icon {
+      font-size: 28px;
+    }
+  }
+
+  .vazio-guia-titulo {
+    color: var(--app-text);
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .vazio-guia-sub {
+    color: var(--app-muted);
+    font-size: 13px;
+    line-height: 1.45;
+    max-width: 300px;
+  }
+
+  .vazio-guia-botoes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 14px;
+    width: 100%;
+  }
+
+  .vazio-guia-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex: 1 1 140px;
+    max-width: 220px;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 12px;
+    border: 1px solid var(--app-border);
+    background: transparent;
+    color: var(--app-text);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform var(--transition-fast, 0.15s);
+
+    &:active {
+      transform: scale(0.97);
+    }
+
+    &.primario {
+      background: var(--app-accent);
+      border-color: var(--app-accent);
+      color: #ffffff;
+    }
+
+    ion-icon {
+      font-size: 18px;
+    }
+  }
+}
