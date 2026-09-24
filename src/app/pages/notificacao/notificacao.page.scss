@@ -7,7 +7,17 @@ ion-toolbar {
 
   ion-buttons[slot="end"] ion-button {
     --color: var(--app-muted);
-    font-size: 20px;
+    --padding-start: 6px;
+    --padding-end: 6px;
+    width: 38px;
+    height: 38px;
+    margin: 0 2px;
+
+    // O Ionic escala o ícone "icon-only" pelo font-size do botão (~1.8em),
+    // o que deixava os ícones enormes; fixa um tamanho próximo aos outros cabeçalhos.
+    ion-icon {
+      font-size: 22px;
+    }
   }
 
   // Continua destacado em azul (era o unico texto colorido do cabecalho

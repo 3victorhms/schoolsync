@@ -39,6 +39,7 @@ import { finalize } from 'rxjs';
 import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
 import { ClipboardService } from 'src/app/services/clipboard.service';
 import { HapticsService } from 'src/app/services/haptics.service';
+import { DesfazerService } from 'src/app/services/desfazer.service';
 
 @Component({
   selector: 'app-grupo',
@@ -79,7 +80,8 @@ export class GrupoPage implements OnInit {
     private confirmacaoService: ConfirmacaoService,
     private navController: NavController,
     private clipboardService: ClipboardService,
-    private hapticsService: HapticsService
+    private hapticsService: HapticsService,
+    private desfazerService: DesfazerService
   ) {
     this.grupo = new GrupoModel();
     this.usuario = this.usuarioService.buscarAutenticacao();
@@ -165,12 +167,14 @@ export class GrupoPage implements OnInit {
     const copiou = await this.clipboardService.copiar(this.grupo.codigoConvite);
 
     if (!copiou) {
-      this.exibirMensagem('Não foi possível copiar o código.');
+      this.desfazerService.mostrarMensagem('Não foi possível copiar o código.');
       return;
     }
 
+    // Aviso em HTML puro (DesfazerService) em vez do ion-toast, que não
+    // aparece de forma confiável no navegador.
     this.hapticsService.leve();
-    this.exibirMensagem(`Código ${this.grupo.codigoConvite} copiado! Envie para quem vai entrar no grupo.`);
+    this.desfazerService.mostrarMensagem(`Código ${this.grupo.codigoConvite} copiado! Envie para quem vai entrar no grupo.`, 3000);
   }
 
   editar() {
