@@ -37,6 +37,8 @@ import { GrupoService } from 'src/app/services/grupo.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { finalize } from 'rxjs';
 import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
+import { ClipboardService } from 'src/app/services/clipboard.service';
+import { HapticsService } from 'src/app/services/haptics.service';
 
 @Component({
   selector: 'app-grupo',
@@ -75,7 +77,9 @@ export class GrupoPage implements OnInit {
     private usuarioService: UsuarioService,
     private toastController: ToastController,
     private confirmacaoService: ConfirmacaoService,
-    private navController: NavController
+    private navController: NavController,
+    private clipboardService: ClipboardService,
+    private hapticsService: HapticsService
   ) {
     this.grupo = new GrupoModel();
     this.usuario = this.usuarioService.buscarAutenticacao();
@@ -157,9 +161,18 @@ export class GrupoPage implements OnInit {
     return `${total} tarefas atribuidas`;
   }
 
-  copiarCodigo() {
-    navigator.clipboard?.writeText(this.grupo.codigoConvite);
-    this.exibirMensagem('Codigo copiado.');
+  async copiarCodigo() {
+    const copiou = await this.clipboardService.copiar(this.grupo.codigoConvite);
+
+    if (!copiou) {
+      this.exibirMensagem('Nao foi possivel copiar o codigo.');
+      return;
+    }
+
+    this.hapticsService.leve();
+    if (!this.clipboardService.sistemaJaAvisaAoCopiar()) {
+      this.exibirMensagem('Codigo copiado.');
+    }
   }
 
   editar() {
