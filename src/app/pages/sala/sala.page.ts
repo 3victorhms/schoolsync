@@ -348,12 +348,14 @@ export class SalaPage implements OnInit {
         const copiou = await this.clipboardService.copiar(this.sala.codigoConvite);
 
         if (!copiou) {
-            this.exibirMensagem('Não foi possível copiar o código.');
+            this.desfazerService.mostrarMensagem('Não foi possível copiar o código.');
             return;
         }
 
+        // Aviso em HTML puro (DesfazerService) em vez do ion-toast, que não
+        // aparece de forma confiável no navegador.
         this.hapticsService.leve();
-        this.exibirMensagem(`Código ${this.sala.codigoConvite} copiado! Envie para seus colegas entrarem na sala.`);
+        this.desfazerService.mostrarMensagem(`Código ${this.sala.codigoConvite} copiado! Envie para seus colegas entrarem na sala.`, 3000);
     }
 
     async exibirMensagem(texto: string) {

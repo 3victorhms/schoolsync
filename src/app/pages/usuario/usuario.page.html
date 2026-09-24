@@ -41,18 +41,24 @@
       </ion-item>
     </div>
 
-    <div class="secao-titulo">Segurança</div>
+    <div class="secao-titulo">Alterar senha</div>
+    <p class="secao-ajuda">Só preencha se quiser trocar de senha. Para confirmar que é você, informe primeiro a senha que você usa hoje.</p>
 
     <div class="campo-grupo">
-      <label class="campo-label">Senha atual</label>
+      <label class="campo-label" for="senha-atual">Senha atual</label>
       <ion-item class="campo-item" lines="none">
-        <ion-input [type]="mostrarSenhaAtual ? 'text' : 'password'" placeholder="••••••••" formControlName="senhaAtual"
-          autocomplete="new-password"></ion-input>
+        <ion-input id="senha-atual" [type]="mostrarSenhaAtual ? 'text' : 'password'" placeholder="Digite sua senha de hoje"
+          formControlName="senhaAtual" autocomplete="current-password" aria-describedby="senha-atual-ajuda"></ion-input>
         <ion-button fill="clear" slot="end" class="olho-btn" (click)="mostrarSenhaAtual = !mostrarSenhaAtual"
           [attr.aria-label]="mostrarSenhaAtual ? 'Ocultar senha' : 'Mostrar senha'">
           <ion-icon [name]="mostrarSenhaAtual ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
         </ion-button>
       </ion-item>
+      @if (senhaAtualObrigatoria) {
+      <p class="campo-erro" id="senha-atual-ajuda">Informe sua senha atual para poder salvar a nova senha.</p>
+      } @else {
+      <p class="campo-ajuda" id="senha-atual-ajuda">Necessária apenas para trocar a senha.</p>
+      }
     </div>
 
     <div class="campo-grupo">
