@@ -397,12 +397,25 @@ export class AtividadePage implements OnInit {
     this.navController.navigateForward('/add-atividade-editar/' + this.atividade.id);
   }
 
+  /** Quem criou a atividade ou o líder da sala (moderação). */
+  get podeGerenciar(): boolean {
+    return !!this.usuario.id
+      && (this.usuario.id === this.atividade.idCriador || this.usuario.id === this.atividade.idLiderSala);
+  }
+
+  /** O líder mexendo na atividade de outro colega. */
+  get moderando(): boolean {
+    return this.podeGerenciar && this.usuario.id !== this.atividade.idCriador;
+  }
+
   async excluir() {
     if (this.excluindo || !this.atividade.id) return;
 
     const confirmou = await this.confirmacaoService.confirmar(
       'Excluir atividade',
-      'Tem certeza que deseja excluir esta atividade?',
+      this.moderando
+        ? `Esta atividade foi criada por ${this.criadorNome || 'outro colega'}. Como líder da sala, você pode excluí-la para toda a turma. Continuar?`
+        : 'Tem certeza que deseja excluir esta atividade?',
       'Excluir'
     );
 

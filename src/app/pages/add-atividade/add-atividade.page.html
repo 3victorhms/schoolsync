@@ -13,6 +13,10 @@
 <ion-content [fullscreen]="true">
   <form [formGroup]="formGroup" (ngSubmit)="salvar()">
 
+    @if (editandoComoLider) {
+    <p class="aviso-moderacao">Você está editando como líder da sala. A atividade continua em nome de quem a criou.</p>
+    }
+
     <div class="campo-grupo">
       <label class="campo-label">Título</label>
       <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('titulo')" lines="none">

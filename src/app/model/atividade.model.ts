@@ -9,6 +9,8 @@ export class AtividadeModel {
 
     idSala: string;
     idCriador: string;
+    /** Líder da sala: pode editar e excluir qualquer atividade dela. */
+    idLiderSala: string;
 
     estaNoCaderno: boolean;
     status: string | null;
@@ -23,6 +25,7 @@ export class AtividadeModel {
 
         this.idSala = '';
         this.idCriador = '';
+        this.idLiderSala = '';
 
         this.estaNoCaderno = false;
         this.status = null;

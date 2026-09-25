@@ -45,7 +45,7 @@
           </button>
         </div>
         @if (campoInvalido('senha')) {
-        <p class="erro-campo">A senha deve ter pelo menos 8 caracteres.</p>
+        <p class="erro-campo">A senha deve ter entre 8 e 72 caracteres.</p>
         }
 
         <ion-button expand="block" type="submit" class="login-button" [disabled]="formGroup.invalid || salvando">
