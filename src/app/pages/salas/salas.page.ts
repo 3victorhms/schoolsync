@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import {
   IonContent,
   IonHeader,
@@ -26,6 +26,7 @@ import {
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { finalize } from 'rxjs';
+import { criarRecarregadorDeAba } from 'src/app/utils/recarregar-aba.util';
 
 @Component({
   selector: 'app-salas',
@@ -72,8 +73,15 @@ export class SalasPage implements OnInit {
 
   ngOnInit() { }
 
+  /** Recarrega a lista ao voltar para a aba (inclusive vindo de uma sala excluída/renomeada). */
+  private recarregador = criarRecarregadorDeAba(inject(Router), '/tabs/salas', () => this.carregarSalas());
+
   ionViewWillEnter() {
-    this.carregarSalas();
+    this.recarregador.executar();
+  }
+
+  ngOnDestroy() {
+    this.recarregador.encerrar();
   }
 
   carregarSalas(event?: any) {

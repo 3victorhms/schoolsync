@@ -15,6 +15,7 @@ import { NavController } from '@ionic/angular';
 import { LoginService } from 'src/app/services/login.service';
 import { TokenService } from 'src/app/services/token.service';
 import { finalize, switchMap } from 'rxjs';
+import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 @Component({
   selector: 'app-usuario',
@@ -173,14 +174,8 @@ export class UsuarioPage implements OnInit {
     this.usuario.foto = '';
   }
 
-  private async exibirToast(mensagem: string, cor: 'success' | 'danger' = 'danger') {
-    const toast = await this.toastController.create({
-      message: mensagem,
-      duration: 3000,
-      color: cor,
-      position: 'top',
-    });
-    await toast.present();
+  private exibirToast(mensagem: string, _cor: 'success' | 'danger' = 'danger'): void {
+    mostrarAviso(mensagem, 3000);
   }
 
   salvar() {

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   IonContent,
   IonHeader,
@@ -37,6 +37,7 @@ import { classeUrgencia } from 'src/app/utils/urgencia.util';
 import { formatarDataCurta } from 'src/app/utils/data.util';
 import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
 import { labelPontos } from 'src/app/utils/pontos.util';
+import { criarRecarregadorDeAba } from 'src/app/utils/recarregar-aba.util';
 
 @Component({
   selector: 'app-caderno',
@@ -100,9 +101,18 @@ export class CadernoPage implements OnInit {
 
   ngOnInit() { }
 
-  ionViewWillEnter() {
+  /** Recarrega o caderno ao voltar para a aba (ex.: depois de mudar o status de uma atividade). */
+  private recarregador = criarRecarregadorDeAba(inject(Router), '/tabs/caderno', () => {
     this.usuario = this.usuarioService.buscarAutenticacao();
     this.carregarCaderno();
+  });
+
+  ionViewWillEnter() {
+    this.recarregador.executar();
+  }
+
+  ngOnDestroy() {
+    this.recarregador.encerrar();
   }
 
   carregarCaderno(event?: any) {

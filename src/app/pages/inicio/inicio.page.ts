@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonCard, IonCardContent } from '@ionic/angular/standalone';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { SalaModel } from 'src/app/model/sala.model';
@@ -17,6 +17,7 @@ import { calcularUrgencia, classeUrgencia, compararPorEntrega, ordemUrgencia } f
 import { labelPontos } from 'src/app/utils/pontos.util';
 import { formatarDataCurta, parsearData } from 'src/app/utils/data.util';
 import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
+import { criarRecarregadorDeAba } from 'src/app/utils/recarregar-aba.util';
 
 interface DiaCalendario {
   numero: number;
@@ -94,15 +95,24 @@ export class InicioPage implements OnInit {
     return (this.usuario.nome || '').trim().split(/\s+/)[0] || 'Estudante';
   }
 
-  ionViewWillEnter() {
+  /** Recarrega agenda e última sala ao voltar para a aba (as abas internas não recebem ionViewWillEnter). */
+  private recarregador = criarRecarregadorDeAba(inject(Router), '/tabs/inicio', () => {
     this.carregarUltimaSala();
     this.carregarAgenda();
+  });
+
+  ionViewWillEnter() {
+    this.recarregador.executar();
     this.notificacaoService.listar().subscribe({ error: () => this.notificacoesNaoLidas = 0 });
     this.notificacaoService.conectar();
     this.notificacoesSubscription?.unsubscribe();
     this.notificacoesSubscription = this.notificacaoService.notificacoes$.subscribe(notificacoes => {
       this.notificacoesNaoLidas = notificacoes.filter(notificacao => !notificacao.lido).length;
     });
+  }
+
+  ngOnDestroy() {
+    this.recarregador.encerrar();
   }
 
   ionViewWillLeave() {

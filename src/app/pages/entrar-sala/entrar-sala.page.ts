@@ -11,6 +11,7 @@ import { SalaService } from 'src/app/services/sala.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { HapticsService } from 'src/app/services/haptics.service';
+import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 @Component({
   selector: 'app-entrar-sala',
@@ -86,11 +87,7 @@ export class EntrarSalaPage implements OnInit {
     return !!controle && controle.invalid && (controle.touched || controle.dirty);
   }
 
-  async exibirMensagem(texto: string) {
-    const toast = await this.toastController.create({
-      message: texto,
-      duration: 1500
-    });
-    toast.present();
+  exibirMensagem(texto: string): void {
+    mostrarAviso(texto);
   }
 }

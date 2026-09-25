@@ -21,6 +21,7 @@ import { HapticsService } from 'src/app/services/haptics.service';
 import { ClipboardService } from 'src/app/services/clipboard.service';
 import { GrupoService } from 'src/app/services/grupo.service';
 import { GrupoModel } from 'src/app/model/grupo.model';
+import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 type AbaSala = 'atividades' | 'grupos' | 'membros';
 
@@ -374,12 +375,7 @@ export class SalaPage implements OnInit {
         this.desfazerService.mostrarMensagem(`Código ${this.sala.codigoConvite} copiado! Envie para seus colegas entrarem na sala.`, 3000);
     }
 
-    async exibirMensagem(texto: string) {
-        const toast = await this.toastController.create({
-            message: texto,
-            duration: 1500
-        });
-
-        toast.present();
+    exibirMensagem(texto: string): void {
+        mostrarAviso(texto);
     }
 }

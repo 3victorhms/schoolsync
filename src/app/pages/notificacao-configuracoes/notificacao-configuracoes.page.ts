@@ -7,6 +7,7 @@ import { checkmarkOutline, notificationsOutline, phonePortraitOutline, timeOutli
 import { ConfiguracaoNotificacao, NotificacaoService } from '../../services/notificacao.service';
 import { NotificacaoPushService } from '../../services/notificacao-push.service';
 import { firstValueFrom } from 'rxjs';
+import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 @Component({
   selector: 'app-notificacao-configuracoes',
@@ -54,8 +55,7 @@ export class NotificacaoConfiguracoesPage {
     }
   }
 
-  private async exibirMensagem(message: string): Promise<void> {
-    const toast = await this.toastController.create({ message, duration: 1800, position: 'top' });
-    await toast.present();
+  private exibirMensagem(message: string): void {
+    mostrarAviso(message);
   }
 }

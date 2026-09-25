@@ -17,6 +17,7 @@ import { LoginService } from 'src/app/services/login.service';
 import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
 import { NotificacaoPushService } from 'src/app/services/notificacao-push.service';
 import { finalize } from 'rxjs';
+import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 @Component({
   selector: 'app-perfil',
@@ -157,21 +158,9 @@ export class PerfilPage implements OnInit {
 
     try {
       await this.notificacaoPushService.testar();
-      const toast = await this.toastController.create({
-        message: 'Notificação push solicitada ao servidor. Ela deve chegar em instantes.',
-        duration: 5000,
-        color: 'success',
-        position: 'top'
-      });
-      await toast.present();
+      mostrarAviso('Notificação push solicitada ao servidor. Ela deve chegar em instantes.', 5000);
     } catch (erro: any) {
-      const toast = await this.toastController.create({
-        message: erro?.message || 'Não foi possível solicitar a notificação push de teste.',
-        duration: 6000,
-        color: 'danger',
-        position: 'top'
-      });
-      await toast.present();
+      mostrarAviso(erro?.message || 'Não foi possível solicitar a notificação push de teste.', 6000);
     } finally {
       this.testandoNotificacaoPush = false;
     }
@@ -204,8 +193,7 @@ export class PerfilPage implements OnInit {
           );
           return;
         }
-        const toast = await this.toastController.create({ message: mensagem, duration: 5000, color: 'danger', position: 'top' });
-        await toast.present();
+        mostrarAviso(mensagem, 5000);
         console.error('Erro ao inativar conta:', erro);
       }
     });

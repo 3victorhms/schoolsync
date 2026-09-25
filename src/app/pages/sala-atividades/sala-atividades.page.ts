@@ -38,6 +38,7 @@ import { SalaService } from 'src/app/services/sala.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { compararPorEntrega, estaArquivada } from 'src/app/utils/urgencia.util';
 import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
+import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 type Aba = 'proximas' | 'arquivadas';
 
@@ -151,12 +152,7 @@ export class SalaAtividadesPage {
     return this.aba === 'proximas' ? this.proximas : this.arquivadas;
   }
 
-  async exibirMensagem(texto: string) {
-    const toast = await this.toastController.create({
-      message: texto,
-      duration: 1500
-    });
-
-    toast.present();
+  exibirMensagem(texto: string): void {
+    mostrarAviso(texto);
   }
 }

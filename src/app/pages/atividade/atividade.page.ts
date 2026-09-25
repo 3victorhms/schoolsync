@@ -52,6 +52,7 @@ import {
   closeOutline,
   chevronForwardOutline
 } from 'ionicons/icons';
+import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 @Component({
   selector: 'app-atividade',
@@ -574,12 +575,7 @@ export class AtividadePage implements OnInit {
     return labelPontos(valor);
   }
 
-  async exibirMensagem(texto: string) {
-    const toast = await this.toastController.create({
-      message: texto,
-      duration: 1500
-    });
-
-    toast.present();
+  exibirMensagem(texto: string): void {
+    mostrarAviso(texto);
   }
 }
