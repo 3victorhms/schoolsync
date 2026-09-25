@@ -31,7 +31,7 @@ export class AddUsuarioPage implements OnInit {
     this.usuario = new UsuarioModel();
     this.formGroup = this.formBuilder.group({
       'email': [this.usuario.email, Validators.compose([Validators.required, Validators.email])],
-      'senha': [this.usuario.senha, Validators.compose([Validators.required, Validators.minLength(8)])],
+      'senha': [this.usuario.senha, Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(72)])],
       'nome': [this.usuario.nome, Validators.compose([Validators.required])]
     });
   }

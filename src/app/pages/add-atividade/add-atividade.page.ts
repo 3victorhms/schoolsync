@@ -73,6 +73,11 @@ export class AddAtividadePage implements OnInit {
   }
 
 
+  /** O líder da sala editando a atividade de outro colega (moderação). */
+  get editandoComoLider(): boolean {
+    return this.editando && !!this.atividade.idCriador && this.atividade.idCriador !== this.usuario.id;
+  }
+
   ngOnInit() { }
 
   ionViewWillEnter() {
