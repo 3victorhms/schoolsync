@@ -11,6 +11,7 @@ import { UsuarioModel } from 'src/app/model/usuario.model';
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { finalize } from 'rxjs';
+import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 @Component({
   selector: 'app-add-atividade',
@@ -190,12 +191,8 @@ export class AddAtividadePage implements OnInit {
     }
   }
 
-  async exibirMensagem(texto: string) {
-    const toast = await this.toastController.create({
-      message: texto,
-      duration: 1500
-    });
-    toast.present();
+  exibirMensagem(texto: string): void {
+    mostrarAviso(texto);
   }
 
   private mensagemErroAcademico(erro: any, padrao: string): string {

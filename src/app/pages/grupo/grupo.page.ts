@@ -41,6 +41,7 @@ import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
 import { ClipboardService } from 'src/app/services/clipboard.service';
 import { HapticsService } from 'src/app/services/haptics.service';
 import { DesfazerService } from 'src/app/services/desfazer.service';
+import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 @Component({
   selector: 'app-grupo',
@@ -262,11 +263,7 @@ export class GrupoPage implements OnInit {
     });
   }
 
-  async exibirMensagem(texto: string) {
-    const toast = await this.toastController.create({
-      message: texto,
-      duration: 1500
-    });
-    toast.present();
+  exibirMensagem(texto: string): void {
+    mostrarAviso(texto);
   }
 }

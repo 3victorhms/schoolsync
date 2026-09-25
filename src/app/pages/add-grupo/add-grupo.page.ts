@@ -9,6 +9,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { GrupoModel } from 'src/app/model/grupo.model';
 import { finalize } from 'rxjs';
+import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 @Component({
   selector: 'app-add-grupo',
@@ -139,11 +140,7 @@ export class AddGrupoPage implements OnInit {
     return !!controle && controle.invalid && (controle.touched || controle.dirty);
   }
 
-  async exibirMensagem(texto: string) {
-    const toast = await this.toastController.create({
-      message: texto,
-      duration: 1500
-    });
-    toast.present();
+  exibirMensagem(texto: string): void {
+    mostrarAviso(texto);
   }
 }

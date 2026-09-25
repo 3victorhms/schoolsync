@@ -9,6 +9,7 @@ import { UsuarioService } from '../../services/usuario.service';
 import { finalize } from 'rxjs';
 import { addIcons } from 'ionicons';
 import { schoolOutline, arrowForwardOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
+import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 @Component({
   selector: 'app-add-usuario',
@@ -91,12 +92,8 @@ export class AddUsuarioPage implements OnInit {
     this.navController.navigateForward('/login');
   }
 
-  async exibirMensagem(texto: string) {
-    const toast = await this.toastController.create({
-      message: texto,
-      duration: 1500
-    });
-    toast.present()
+  exibirMensagem(texto: string): void {
+    mostrarAviso(texto);
   }
 
 }

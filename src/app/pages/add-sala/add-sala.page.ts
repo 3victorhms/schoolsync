@@ -9,6 +9,7 @@ import { ToastController, NavController } from '@ionic/angular';
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { finalize } from 'rxjs';
+import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 @Component({
   selector: 'app-add-sala',
@@ -82,11 +83,7 @@ export class AddSalaPage implements OnInit {
     return !!controle && controle.invalid && (controle.touched || controle.dirty);
   }
 
-  async exibirMensagem(texto: string) {
-    const toast = await this.toastController.create({
-      message: texto,
-      duration: 1500
-    });
-    toast.present();
+  exibirMensagem(texto: string): void {
+    mostrarAviso(texto);
   }
 }

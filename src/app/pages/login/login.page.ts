@@ -11,6 +11,7 @@ import { schoolOutline, arrowForwardOutline, eyeOutline, eyeOffOutline } from 'i
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NotificacaoPushService } from '../../services/notificacao-push.service';
 import { finalize } from 'rxjs';
+import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 @Component({
   selector: 'app-login',
@@ -57,13 +58,7 @@ export class LoginPage implements OnInit {
       ? 'Sua sessão expirou. Entre novamente para continuar.'
       : 'Faça login para acessar esta página.';
 
-    const toast = await this.toastController.create({
-      message: mensagem,
-      duration: 2500,
-      position: 'top',
-      color: 'warning'
-    });
-    await toast.present();
+    mostrarAviso(mensagem, 3500);
   }
 
   /** Verdadeiro quando o campo é inválido e já foi "tocado" (perdeu o foco
@@ -116,11 +111,7 @@ export class LoginPage implements OnInit {
     this.navController.navigateForward('/add-usuario');
   }
 
-  async exibirMensagem(texto: string) {
-    const toast = await this.toastController.create({
-      message: texto,
-      duration: 1500
-    });
-    toast.present()
+  exibirMensagem(texto: string): void {
+    mostrarAviso(texto);
   }
 }

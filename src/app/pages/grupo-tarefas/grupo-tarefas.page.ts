@@ -41,6 +41,7 @@ import { AtividadeService } from 'src/app/services/atividade.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { finalize } from 'rxjs';
 import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
+import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 @Component({
   selector: 'app-grupo-tarefas',
@@ -284,11 +285,7 @@ export class GrupoTarefasPage implements OnInit {
     return tarefa.idUsuarioAtribuido === this.usuario.id;
   }
 
-  async exibirMensagem(texto: string) {
-    const toast = await this.toastController.create({
-      message: texto,
-      duration: 1500
-    });
-    toast.present();
+  exibirMensagem(texto: string): void {
+    mostrarAviso(texto);
   }
 }
