@@ -13,7 +13,6 @@
     </div>
     <div class="hero-info">
       <h2 class="perfil-nome">{{ usuario.nome }}</h2>
-      <!-- <p class="perfil-app">EscolaSync</p> -->
     </div>
     <ion-icon name="chevron-forward-outline" class="hero-seta"></ion-icon>
   </div>
@@ -33,7 +32,8 @@
 
   <h3 class="group-title">Notificações</h3>
   <div class="group">
-    <button type="button" class="row" [class.loading]="testandoNotificacaoPush" [disabled]="testandoNotificacaoPush" (click)="testarNotificacao()">
+    <button type="button" class="row" [class.loading]="testandoNotificacaoPush" [disabled]="testandoNotificacaoPush"
+      (click)="testarNotificacao()">
       <div class="row-icon azul">
         <ion-icon name="notifications-outline"></ion-icon>
       </div>
@@ -55,7 +55,8 @@
       </div>
       <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
     </button>
-    <button type="button" class="row destructive" [class.loading]="inativando" [disabled]="inativando" (click)="inativarConta()">
+    <button type="button" class="row destructive" [class.loading]="inativando" [disabled]="inativando"
+      (click)="inativarConta()">
       <div class="row-icon vermelho">
         <ion-icon name="trash-outline"></ion-icon>
       </div>
