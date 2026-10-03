@@ -94,7 +94,7 @@
           <div class="row-meta">
             <span class="row-data">
               <ion-icon name="book-outline"></ion-icon>
-              {{ tarefa.disciplinaAtividade || 'Sem disciplina' }}
+              {{ tarefa.materiaAtividade || 'Sem matéria' }}
             </span>
             <span class="row-data">
               <ion-icon name="calendar-outline"></ion-icon>
@@ -128,7 +128,7 @@
         <ion-icon name="search-outline"></ion-icon>
       </div>
       <span class="vazio-guia-titulo">Nada encontrado para "{{ termoBusca }}"</span>
-      <span class="vazio-guia-sub">Confira a digitação ou tente buscar pelo nome da disciplina.</span>
+      <span class="vazio-guia-sub">Confira a digitação ou tente buscar pelo nome da matéria.</span>
       <div class="vazio-guia-botoes">
         <button type="button" class="vazio-guia-btn" (click)="limparBusca()">
           <ion-icon name="close-outline"></ion-icon>

@@ -6,7 +6,7 @@ export class TarefaModel {
     idGrupo: string;
     idAtividade: string;
     tituloAtividade: string;
-    disciplinaAtividade: string;
+    materiaAtividade: string;
     idUsuarioAtribuido: string;
     nomeUsuarioAtribuido: string;
     idCriador: string;
@@ -20,7 +20,7 @@ export class TarefaModel {
         this.idGrupo = "";
         this.idAtividade = "";
         this.tituloAtividade = "";
-        this.disciplinaAtividade = "";
+        this.materiaAtividade = "";
         this.idUsuarioAtribuido = "";
         this.nomeUsuarioAtribuido = "";
         this.idCriador = "";
