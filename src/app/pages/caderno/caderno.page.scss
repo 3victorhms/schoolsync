@@ -306,3 +306,13 @@ ion-content {
 
 // A barra de abas (ion-tab-bar) agora vive em app/pages/tabs/tabs.page.scss,
 // compartilhada pelas 4 telas principais.
+
+// v2: segunda linha de filtros, por matéria (toque de novo para desmarcar)
+.filtros.filtros-materia {
+    margin-top: -10px;
+
+    .filtro-btn {
+        padding: 6px 12px;
+        font-size: 12.5px;
+    }
+}

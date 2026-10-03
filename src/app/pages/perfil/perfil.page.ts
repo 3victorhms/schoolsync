@@ -94,7 +94,7 @@ export class PerfilPage implements OnInit {
       return;
     }
 
-    this.atividadeService.listarPorUsuarioNoCaderno(usuario.id).subscribe({
+    this.atividadeService.listarMeuCaderno().subscribe({
       next: (res) => {
         this.atividades = res;
         this.filtrar(this.filtroAtivo);
@@ -176,7 +176,7 @@ export class PerfilPage implements OnInit {
     if (!confirmou) return;
 
     this.inativando = true;
-    this.usuarioService.excluir(this.usuario.id).pipe(
+    this.usuarioService.excluirMinhaConta().pipe(
       finalize(() => this.inativando = false)
     ).subscribe({
       next: () => {

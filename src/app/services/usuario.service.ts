@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UsuarioModel } from '../model/usuario.model';
@@ -11,7 +12,7 @@ import { TokenService } from './token.service';
 })
 export class UsuarioService {
 
-  private API_URL_USUARIOS = 'https://schoolsync-api-kvfx.onrender.com/usuarios';
+  private readonly API_URL_USUARIOS = `${environment.apiUrl}/usuarios`;
 
   constructor(
     private http: HttpClient,
@@ -24,37 +25,35 @@ export class UsuarioService {
     if (usuario.id === "") {
       return this.cadastrar(usuario);
     }
-    return this.atualizar(usuario.id, usuario);
+    return this.atualizar(usuario);
   }
 
   cadastrar(usuario: UsuarioModel): Observable<UsuarioModel> {
     return this.http.post<UsuarioModel>(this.API_URL_USUARIOS, usuario);
   }
 
-  atualizar(id: string, usuario: UsuarioModel): Observable<UsuarioModel> {
-    return this.http.put<UsuarioModel>(`${this.API_URL_USUARIOS}/${id}`, usuario, {
+  /** Atualiza a conta do usuário logado. */
+  atualizar(usuario: UsuarioModel): Observable<UsuarioModel> {
+    return this.http.put<UsuarioModel>(`${this.API_URL_USUARIOS}/me`, usuario, {
       headers: this.tokenService.gerarCabecalhoAutenticacao()
     });
   }
 
-  atualizarImagem(id: string, imagemBase64: string): Observable<UsuarioModel> {
+  atualizarImagem(imagemBase64: string): Observable<UsuarioModel> {
     return this.http.patch<UsuarioModel>(
-      `${this.API_URL_USUARIOS}/${id}/imagem`,
+      `${this.API_URL_USUARIOS}/me/imagem`,
       { imagemBase64 },
       { headers: this.tokenService.gerarCabecalhoAutenticacao() }
     );
-  }
-
-  listar(): Observable<UsuarioModel[]> {
-    return this.http.get<UsuarioModel[]>(this.API_URL_USUARIOS);
   }
 
   buscarPorId(id: string): Observable<UsuarioModel> {
     return this.http.get<UsuarioModel>(`${this.API_URL_USUARIOS}/${id}`);
   }
 
-  excluir(id: string): Observable<void> {
-    return this.apiDelete.excluir(`${this.API_URL_USUARIOS}/${id}`);
+  /** Desativa a conta do usuário logado. */
+  excluirMinhaConta(): Observable<void> {
+    return this.apiDelete.excluir(`${this.API_URL_USUARIOS}/me`);
   }
 
   verificarLogin(login: string): Observable<boolean> {

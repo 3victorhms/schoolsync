@@ -68,6 +68,17 @@
       </button>
     </div>
 
+    @if (materiasDoCaderno.length > 1) {
+    <div class="filtros filtros-materia" aria-label="Filtrar por matéria">
+      @for (materia of materiasDoCaderno; track materia) {
+      <button class="filtro-btn" [class.ativo]="filtroMateria === materia" (click)="filtrarMateria(materia)"
+        [attr.aria-pressed]="filtroMateria === materia">
+        {{ materia }}
+      </button>
+      }
+    </div>
+    }
+
     @if (atividadesFiltradas.length > 0) {
     <h3 class="group-title">Atividades salvas</h3>
     <div class="group stagger-list">

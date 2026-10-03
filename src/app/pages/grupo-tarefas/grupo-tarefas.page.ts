@@ -147,7 +147,7 @@ export class GrupoTarefasPage implements OnInit {
   }
 
   carregarGrupo(idGrupo: string, event?: any) {
-    this.grupoService.buscarPorId(idGrupo, this.usuario.id).pipe(
+    this.grupoService.buscarPorId(idGrupo).pipe(
       finalize(() => this.finalizarCarregamento(event))
     ).subscribe({
       next: (res) => {
@@ -161,7 +161,7 @@ export class GrupoTarefasPage implements OnInit {
   }
 
   carregarTarefas(idGrupo: string, event?: any) {
-    this.tarefaService.listarPorGrupo(idGrupo, this.usuario.id).pipe(
+    this.tarefaService.listarPorGrupo(idGrupo).pipe(
       finalize(() => this.finalizarCarregamento(event))
     ).subscribe({
       next: (res) => {
@@ -199,8 +199,7 @@ export class GrupoTarefasPage implements OnInit {
       this.grupo.id,
       this.tituloTarefa.trim(),
       this.idAtividadeSelecionada,
-      this.idUsuarioAtribuido,
-      this.usuario.id
+      this.idUsuarioAtribuido
     ).pipe(
       finalize(() => this.criandoTarefa = false)
     ).subscribe({
@@ -233,7 +232,7 @@ export class GrupoTarefasPage implements OnInit {
   }
 
   salvarStatus(tarefa: TarefaModel, status: string) {
-    this.tarefaService.alterarStatus(tarefa.id, status, this.usuario.id).subscribe({
+    this.tarefaService.alterarStatus(tarefa.id, status).subscribe({
       next: (res) => {
         tarefa.status = res.status;
       },
@@ -255,7 +254,7 @@ export class GrupoTarefasPage implements OnInit {
     if (!confirmou) return;
 
     this.tarefaExcluindoId = tarefa.id;
-    this.tarefaService.excluir(tarefa.id, this.usuario.id).pipe(
+    this.tarefaService.excluir(tarefa.id).pipe(
       finalize(() => this.tarefaExcluindoId = '')
     ).subscribe({
       next: () => {

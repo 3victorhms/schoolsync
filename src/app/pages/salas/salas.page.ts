@@ -94,7 +94,7 @@ export class SalasPage implements OnInit {
       return;
     }
 
-    this.salaService.listarPorUsuario(usuario.id).pipe(
+    this.salaService.listarMinhas().pipe(
       finalize(() => {
         this.carregando = false;
         event?.target.complete();

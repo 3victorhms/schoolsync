@@ -210,6 +210,9 @@
             <span class="row-data"><ion-icon name="documents-outline"></ion-icon>{{ ultimaSala.atividades.length }}</span>
             <span class="tag-codigo">{{ ultimaSala.codigoConvite }}</span>
           </div>
+          @if (periodoUltimaSala) {
+          <span class="row-periodo"><ion-icon name="calendar-outline"></ion-icon>{{ periodoUltimaSala }}</span>
+          }
         </div>
         <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
       </div>

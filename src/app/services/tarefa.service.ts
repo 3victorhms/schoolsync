@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -9,41 +10,34 @@ import { ApiDeleteService } from './api-delete.service';
 })
 export class TarefaService {
 
-  private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com';
+  private readonly API_URL = environment.apiUrl;
 
   constructor(private http: HttpClient, private apiDelete: ApiDeleteService) { }
 
-  listarPorGrupo(idGrupo: string, idUsuarioLogado: string): Observable<TarefaModel[]> {
-    return this.http.get<TarefaModel[]>(
-      `${this.API_URL}/grupos/${idGrupo}/tarefas`,
-      { params: { idUsuarioLogado } }
-    );
+  listarPorGrupo(idGrupo: string): Observable<TarefaModel[]> {
+    return this.http.get<TarefaModel[]>(`${this.API_URL}/grupos/${idGrupo}/tarefas`);
   }
 
-  listarPorUsuario(idUsuario: string): Observable<TarefaModel[]> {
-    return this.http.get<TarefaModel[]>(
-      `${this.API_URL}/tarefas/usuario/${idUsuario}`
-    );
+  /** Tarefas atribuídas ao usuário logado. */
+  listarMinhas(): Observable<TarefaModel[]> {
+    return this.http.get<TarefaModel[]>(`${this.API_URL}/tarefas`);
   }
 
-  criar(idGrupo: string, titulo: string, idAtividade: string, idUsuarioAtribuido: string, idUsuarioLogado: string): Observable<TarefaModel> {
+  criar(idGrupo: string, titulo: string, idAtividade: string, idUsuarioAtribuido: string): Observable<TarefaModel> {
     return this.http.post<TarefaModel>(
       `${this.API_URL}/grupos/${idGrupo}/tarefas`,
-      { titulo, idAtividade, idUsuarioAtribuido, idUsuarioLogado }
+      { titulo, idAtividade, idUsuarioAtribuido }
     );
   }
 
-  alterarStatus(idTarefa: string, status: string, idUsuarioLogado: string): Observable<TarefaModel> {
+  alterarStatus(idTarefa: string, status: string): Observable<TarefaModel> {
     return this.http.put<TarefaModel>(
       `${this.API_URL}/tarefas/${idTarefa}/status`,
-      { status, idUsuarioLogado }
+      { status }
     );
   }
 
-  excluir(idTarefa: string, idUsuarioLogado: string): Observable<void> {
-    return this.apiDelete.excluir(
-      `${this.API_URL}/tarefas/${idTarefa}`,
-      { idUsuarioLogado }
-    );
+  excluir(idTarefa: string): Observable<void> {
+    return this.apiDelete.excluir(`${this.API_URL}/tarefas/${idTarefa}`);
   }
 }

@@ -75,8 +75,7 @@ export class AddGrupoPage implements OnInit {
 
     this.grupoService.criar(
       this.formGroup.get('nome')?.value,
-      this.idSala,
-      this.usuario.id
+      this.idSala
     ).pipe(
       finalize(() => this.salvando = false)
     ).subscribe({
@@ -91,7 +90,7 @@ export class AddGrupoPage implements OnInit {
   }
 
   carregarGrupo() {
-    this.grupoService.buscarPorId(this.idGrupo, this.usuario.id).subscribe({
+    this.grupoService.buscarPorId(this.idGrupo).subscribe({
       next: (grupo) => {
         this.grupo = grupo;
         this.idSala = grupo.idSala;
@@ -115,8 +114,7 @@ export class AddGrupoPage implements OnInit {
     this.grupoService.atualizar(
       this.idGrupo,
       this.formGroup.get('nome')?.value,
-      this.idSala,
-      this.grupo.idCriador || this.usuario.id
+      this.idSala
     ).pipe(
       finalize(() => this.salvando = false)
     ).subscribe({

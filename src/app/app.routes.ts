@@ -59,6 +59,22 @@ const rotasDaAplicacao: Routes = [
     loadComponent: () => import('./pages/sala-atividades/sala-atividades.page').then(m => m.SalaAtividadesPage)
   },
   {
+    path: 'sala/:id/pontos',
+    loadComponent: () => import('./pages/sala-pontos/sala-pontos.page').then(m => m.SalaPontosPage)
+  },
+  {
+    path: 'sala/:id/boletim',
+    loadComponent: () => import('./pages/boletim/boletim.page').then(m => m.BoletimPage)
+  },
+  {
+    path: 'sala/:idSala/nota',
+    loadComponent: () => import('./pages/add-nota/add-nota.page').then(m => m.AddNotaPage)
+  },
+  {
+    path: 'sala/:idSala/nota/:idNota',
+    loadComponent: () => import('./pages/add-nota/add-nota.page').then(m => m.AddNotaPage)
+  },
+  {
     path: 'atividade',
     loadComponent: () => import('./pages/atividade/atividade.page').then(m => m.AtividadePage)
   },

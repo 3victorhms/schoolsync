@@ -3,9 +3,11 @@
 // Lista completa de atividades de uma sala, separada em "Próximas" (o dia de
 // entrega ainda não terminou) e "Arquivadas" (o dia de entrega já passou).
 // A página da sala mostra só uma prévia com as próximas mais urgentes.
+// v2: dá pra filtrar por matéria e por período (a tela de pontos abre já filtrada).
 
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   IonContent,
@@ -24,6 +26,8 @@ import {
   addOutline,
   archiveOutline,
   bookmarkOutline,
+  layersOutline,
+  funnelOutline,
   calendarOutline,
   checkmarkCircleOutline,
   chevronForwardOutline,
@@ -40,7 +44,7 @@ import { compararPorEntrega, estaArquivada } from 'src/app/utils/urgencia.util';
 import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
 
-type Aba = 'proximas' | 'arquivadas';
+type Aba = 'proximas' | 'arquivadas' | 'todas';
 
 @Component({
   selector: 'app-sala-atividades',
@@ -59,6 +63,7 @@ type Aba = 'proximas' | 'arquivadas';
     IonRefresher,
     IonRefresherContent,
     CommonModule,
+    FormsModule,
     RouterLink,
     AtividadeItemComponent
   ]
@@ -73,6 +78,11 @@ export class SalaAtividadesPage {
   aba: Aba = 'proximas';
   proximas: AtividadeModel[] = [];
   arquivadas: AtividadeModel[] = [];
+  todas: AtividadeModel[] = [];
+
+  /** Filtros v2 (vazio = sem filtro). */
+  filtroMateria = '';
+  filtroPeriodo = '';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -88,6 +98,8 @@ export class SalaAtividadesPage {
       addOutline,
       archiveOutline,
       bookmarkOutline,
+      layersOutline,
+      funnelOutline,
       calendarOutline,
       checkmarkCircleOutline,
       chevronForwardOutline,
@@ -99,9 +111,13 @@ export class SalaAtividadesPage {
   ionViewWillEnter() {
     this.idSala = this.activatedRoute.snapshot.params['id'] || '';
     // A aba "Arquivadas" da sala abre esta página já na aba certa.
-    if (this.activatedRoute.snapshot.queryParams['aba'] === 'arquivadas') {
-      this.aba = 'arquivadas';
+    const query = this.activatedRoute.snapshot.queryParams;
+    if (query['aba'] === 'arquivadas' || query['aba'] === 'todas') {
+      this.aba = query['aba'];
     }
+    // Vindo da tela de pontos: já abre filtrado pela matéria/período
+    if (query['materia']) this.filtroMateria = query['materia'];
+    if (query['periodo']) this.filtroPeriodo = query['periodo'];
 
     if (this.idSala) {
       this.carregar();
@@ -111,7 +127,7 @@ export class SalaAtividadesPage {
   }
 
   carregar(event?: any) {
-    this.salaService.buscarPorId(this.idSala, this.usuario.id).pipe(
+    this.salaService.buscarPorId(this.idSala).pipe(
       finalize(() => {
         this.carregando = false;
         event?.target.complete();
@@ -120,7 +136,7 @@ export class SalaAtividadesPage {
       next: (res) => {
         this.sala = res;
         this.sala.id = this.sala.id || this.idSala;
-        this.organizar(this.sala.atividades || []);
+        this.organizar();
       },
       error: () => {
         this.exibirMensagem('Não foi possível carregar as atividades.');
@@ -134,7 +150,12 @@ export class SalaAtividadesPage {
   }
 
   /** Próximas: da entrega mais perto para a mais longe. Arquivadas: da mais recente para a mais antiga. */
-  organizar(atividades: AtividadeModel[]) {
+  organizar() {
+    const atividades = (this.sala.atividades || []).filter(atividade =>
+      (!this.filtroMateria || atividade.idMateria === this.filtroMateria) &&
+      (!this.filtroPeriodo || atividade.idPeriodo === this.filtroPeriodo)
+    );
+
     this.proximas = atividades
       .filter(atividade => !estaArquivada(atividade.dataEntrega))
       .sort(compararPorEntrega);
@@ -142,6 +163,19 @@ export class SalaAtividadesPage {
     this.arquivadas = atividades
       .filter(atividade => estaArquivada(atividade.dataEntrega))
       .sort((a, b) => compararPorEntrega(b, a));
+
+    // "Todas": ordem do calendário (da primeira entrega para a última)
+    this.todas = [...atividades].sort(compararPorEntrega);
+  }
+
+  get temFiltro(): boolean {
+    return !!this.filtroMateria || !!this.filtroPeriodo;
+  }
+
+  limparFiltros() {
+    this.filtroMateria = '';
+    this.filtroPeriodo = '';
+    this.organizar();
   }
 
   selecionarAba(aba: Aba) {
@@ -149,6 +183,7 @@ export class SalaAtividadesPage {
   }
 
   get listaAtual(): AtividadeModel[] {
+    if (this.aba === 'todas') return this.todas;
     return this.aba === 'proximas' ? this.proximas : this.arquivadas;
   }
 

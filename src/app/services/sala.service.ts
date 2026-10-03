@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -9,20 +10,18 @@ import { ApiDeleteService } from './api-delete.service';
 })
 export class SalaService {
 
-  private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com/salas';
+  private readonly API_URL = `${environment.apiUrl}/salas`;
 
   constructor(private http: HttpClient, private apiDelete: ApiDeleteService) { }
 
   /** Cria a sala (sem idSala) ou edita nome, matérias e períodos de uma existente. */
-  salvar(dados: SalaRequest, idLider: string, idSala?: string): Observable<SalaModel> {
+  salvar(dados: SalaRequest, idSala?: string): Observable<SalaModel> {
     if (idSala) {
       return this.atualizar(idSala, dados);
     }
 
-    return this.http.post<SalaModel>(
-      `${this.API_URL}?idLider=${idLider}`,
-      dados
-    );
+    // O usuário logado (dono do token) vira o líder da sala
+    return this.http.post<SalaModel>(this.API_URL, dados);
   }
 
   atualizar(id: string, dados: SalaRequest): Observable<SalaModel> {
@@ -32,38 +31,32 @@ export class SalaService {
     );
   }
 
-  entrar(codigoConvite: string, idUsuario: string): Observable<SalaModel> {
+  entrar(codigoConvite: string): Observable<SalaModel> {
     return this.http.post<SalaModel>(
       `${this.API_URL}/entrar`,
       null,
-      { params: { codigoConvite, idUsuario } }
+      { params: { codigoConvite } }
     );
   }
 
-  listarPorUsuario(idUsuario: string): Observable<SalaModel[]> {
-    return this.http.get<SalaModel[]>(
-      `${this.API_URL}/usuario/${idUsuario}`
-    );
+  /** Salas do usuário logado. */
+  listarMinhas(): Observable<SalaModel[]> {
+    return this.http.get<SalaModel[]>(this.API_URL);
   }
 
-  buscarPorId(id: string, idUsuarioLogado: string): Observable<SalaModel> {
-    return this.http.get<SalaModel>(
-      `${this.API_URL}/${id}?idUsuarioLogado=${idUsuarioLogado}`
-    );
+  buscarPorId(id: string): Observable<SalaModel> {
+    return this.http.get<SalaModel>(`${this.API_URL}/${id}`);
   }
 
   excluir(id: string): Observable<void> {
     return this.apiDelete.excluir(`${this.API_URL}/${id}`);
   }
 
-  sairDaSala(idSala: string, idUsuario: string): Observable<void> {
-    return this.apiDelete.excluir(`${this.API_URL}/${idSala}/sair`, { idUsuario });
+  sairDaSala(idSala: string): Observable<void> {
+    return this.apiDelete.excluir(`${this.API_URL}/${idSala}/sair`);
   }
 
-  removerMembro(idSala: string, idUsuarioRemover: string, idUsuarioLogado: string): Observable<void> {
-    return this.apiDelete.excluir(
-      `${this.API_URL}/${idSala}/membros/${idUsuarioRemover}`,
-      { idUsuarioLogado }
-    );
+  removerMembro(idSala: string, idUsuarioRemover: string): Observable<void> {
+    return this.apiDelete.excluir(`${this.API_URL}/${idSala}/membros/${idUsuarioRemover}`);
   }
 }

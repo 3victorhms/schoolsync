@@ -213,7 +213,7 @@ export class UsuarioPage implements OnInit {
 
       const salvarDadosUsuario = () => this.usuarioService.salvar(this.usuario);
       const atualizarFoto = this.imagemBase64Selecionada
-        ? this.usuarioService.atualizarImagem(this.usuario.id, this.imagemBase64Selecionada)
+        ? this.usuarioService.atualizarImagem(this.imagemBase64Selecionada)
         : null;
 
       (atualizarFoto

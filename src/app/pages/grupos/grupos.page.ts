@@ -98,7 +98,7 @@ export class GruposPage implements OnInit {
       return;
     }
 
-    this.grupoService.listarPorSalaEUsuario(this.idSala, this.usuario.id).pipe(
+    this.grupoService.listarMeusGruposDaSala(this.idSala).pipe(
       finalize(() => {
         this.carregando = false;
         event?.target.complete();

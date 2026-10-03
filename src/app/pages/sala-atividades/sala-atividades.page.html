@@ -33,7 +33,36 @@
                 Arquivadas
                 @if (!carregando) { <span class="contador">{{ arquivadas.length }}</span> }
             </button>
+            <button type="button" class="filtro-btn" role="tab" [class.ativo]="aba === 'todas'"
+                [attr.aria-selected]="aba === 'todas'" (click)="selecionarAba('todas')">
+                <ion-icon name="layers-outline"></ion-icon>
+                Todas
+                @if (!carregando) { <span class="contador">{{ todas.length }}</span> }
+            </button>
         </div>
+
+        @if (!carregando && (sala.materias.length || sala.periodos.length)) {
+        <div class="filtros-v2">
+            <label class="filtro-select" [class.ativo]="filtroMateria">
+                <span class="sr-only">Matéria</span>
+                <select [(ngModel)]="filtroMateria" (ngModelChange)="organizar()" aria-label="Filtrar por matéria">
+                    <option value="">Todas as matérias</option>
+                    @for (materia of sala.materias; track materia.id) {
+                    <option [value]="materia.id">{{ materia.nome }}</option>
+                    }
+                </select>
+            </label>
+            <label class="filtro-select" [class.ativo]="filtroPeriodo">
+                <span class="sr-only">Período</span>
+                <select [(ngModel)]="filtroPeriodo" (ngModelChange)="organizar()" aria-label="Filtrar por período">
+                    <option value="">Todos os períodos</option>
+                    @for (periodo of sala.periodos; track periodo.id) {
+                    <option [value]="periodo.id">{{ periodo.nome }}</option>
+                    }
+                </select>
+            </label>
+        </div>
+        }
 
         @if (carregando) {
         <div class="group">
@@ -52,6 +81,17 @@
             @for (atividade of listaAtual; track atividade.id) {
             <app-atividade-item [atividade]="atividade" modo="sala" [mostrarUrgencia]="aba === 'proximas'"></app-atividade-item>
             }
+        </div>
+        } @else if (temFiltro) {
+        <div class="vazio-guia">
+            <div class="vazio-guia-icone">
+                <ion-icon name="funnel-outline"></ion-icon>
+            </div>
+            <span class="vazio-guia-titulo">Nada com esses filtros</span>
+            <span class="vazio-guia-sub">Não há atividades {{ aba === 'proximas' ? 'pendentes' : aba === 'arquivadas' ? 'arquivadas' : '' }} para a matéria e o período escolhidos.</span>
+            <div class="vazio-guia-botoes">
+                <button type="button" class="vazio-guia-btn" (click)="limparFiltros()">Limpar filtros</button>
+            </div>
         </div>
         } @else if (aba === 'proximas') {
         <div class="vazio-guia">

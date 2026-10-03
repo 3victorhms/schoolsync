@@ -95,7 +95,7 @@ export class AddAtividadePage implements OnInit {
 
     if (id) {
       this.editando = true;
-      this.atividadeService.buscarPorId(id, this.usuario.id).subscribe(res => {
+      this.atividadeService.buscarPorId(id).subscribe(res => {
         if (!res) {
           this.exibirMensagem('Atividade não encontrada');
           return;
@@ -139,7 +139,7 @@ export class AddAtividadePage implements OnInit {
   }
 
   private carregarSala(idSala: string): void {
-    this.salaService.buscarPorId(idSala, this.usuario.id).subscribe(res => {
+    this.salaService.buscarPorId(idSala).subscribe(res => {
       if (!res) {
         this.exibirMensagem('Sala não encontrada');
         this.navController.navigateBack('/tabs/salas');

@@ -574,3 +574,37 @@ ion-content {
     gap: 8px;
     padding-top: 2px;
 }
+
+// v2: nota do aluno no boletim
+.nota-lancada {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 14px;
+    background: var(--app-surface);
+    color: var(--app-text);
+    font-family: inherit;
+    cursor: pointer;
+
+    .nota-lancada-valor {
+        color: var(--app-muted);
+        font-size: 14px;
+
+        strong {
+            color: var(--app-text);
+            font-size: 20px;
+        }
+    }
+
+    .nota-lancada-acao {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        color: var(--app-accent);
+        font-size: 14px;
+        font-weight: 600;
+    }
+}

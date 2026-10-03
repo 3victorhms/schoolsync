@@ -3,7 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  /**
+   * Endereço da API usado por todos os services e pelo interceptor do token.
+   * Para testar com a API rodando na sua máquina, troque por 'http://localhost:8080'.
+   */
+  apiUrl: 'https://schoolsync-api-kvfx.onrender.com'
 };
 
 /*

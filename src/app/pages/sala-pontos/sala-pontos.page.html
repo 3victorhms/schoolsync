@@ -1,0 +1,106 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/sala/' + idSala"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Pontos por matéria
+      @if (sala.nome) {
+      <p class="subtitulo">{{ sala.nome }}</p>
+      }
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-refresher slot="fixed" (ionRefresh)="atualizar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <section class="secao">
+
+    @if (carregando) {
+    <div class="group">
+      @for (i of [1, 2, 3]; track i) {
+      <div class="row skeleton-row">
+        <div class="row-body">
+          <div class="skeleton-line skeleton-line-title"></div>
+          <div class="skeleton-line skeleton-line-sub"></div>
+        </div>
+      </div>
+      }
+    </div>
+    } @else if (!sala.periodos.length) {
+    <div class="vazio-guia">
+      <div class="vazio-guia-icone"><ion-icon name="calendar-outline"></ion-icon></div>
+      <span class="vazio-guia-titulo">A sala ainda não tem períodos</span>
+      <span class="vazio-guia-sub">O líder define bimestres, trimestres ou semestres ao editar a sala.</span>
+    </div>
+    } @else {
+
+    <div class="filtros filtros-rolagem" role="tablist" aria-label="Período">
+      @for (periodo of sala.periodos; track periodo.id) {
+      <button type="button" class="filtro-btn" role="tab" [class.ativo]="periodo.id === periodoSelecionado?.id"
+        [attr.aria-selected]="periodo.id === periodoSelecionado?.id" (click)="selecionarPeriodo(periodo)">
+        {{ periodo.nome }}
+        @if (periodo.id === idPeriodoAtual) { <span class="ponto-atual" aria-label="período atual"></span> }
+      </button>
+      }
+    </div>
+
+    @if (periodoSelecionado) {
+    <div class="periodo-resumo">
+      <div class="periodo-resumo-topo">
+        <span class="periodo-datas">
+          <ion-icon name="calendar-outline"></ion-icon>
+          {{ formatarDataBr(periodoSelecionado.dataInicio) }} a {{ formatarDataBr(periodoSelecionado.dataFim) }}
+        </span>
+        <span class="periodo-situacao">{{ situacao }}</span>
+      </div>
+      <p class="periodo-total">
+        <strong>{{ totalDistribuido }}</strong> de {{ totalPossivel }} pontos distribuídos
+        <span class="periodo-maximo">· até {{ periodoSelecionado.pontuacaoMaxima }} por matéria</span>
+      </p>
+    </div>
+
+    <div class="group stagger-list">
+      @for (linha of linhas; track linha.idMateria) {
+      <button type="button" class="row materia-linha" (click)="abrirAtividades(linha)"
+        [attr.aria-label]="linha.nomeMateria + ': ' + linha.distribuidos + ' de ' + linha.maximo + ' pontos'">
+        <div class="row-body">
+          <div class="materia-topo">
+            <span class="row-label">{{ linha.nomeMateria }}</span>
+            <span class="materia-pontos" [class.completo]="linha.restantes === 0">
+              {{ linha.distribuidos }}<span class="materia-max">/{{ linha.maximo }}</span>
+            </span>
+          </div>
+          <div class="barra" role="presentation">
+            <div class="barra-preenchida" [class.completo]="linha.restantes === 0" [style.width.%]="percentual(linha)"></div>
+          </div>
+          <span class="row-desc">
+            @if (linha.quantidadeAtividades === 0) {
+            Nenhuma atividade neste período
+            } @else {
+            {{ linha.quantidadeAtividades }} {{ linha.quantidadeAtividades === 1 ? 'atividade' : 'atividades' }}
+            · {{ linha.restantes === 0 ? 'pontuação completa' : 'restam ' + linha.restantes + ' pontos' }}
+            }
+          </span>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
+      </button>
+      }
+    </div>
+    }
+
+    @if (liderLogado) {
+    <button type="button" class="linha-acao editar-periodos" (click)="editarPeriodos()">
+      <span class="linha-acao-icone"><ion-icon name="create-outline"></ion-icon></span>
+      Editar matérias e períodos
+    </button>
+    }
+    }
+
+  </section>
+
+</ion-content>

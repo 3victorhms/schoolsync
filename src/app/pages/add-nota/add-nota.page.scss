@@ -1,0 +1,57 @@
+.carregando-form {
+    padding: 32px 16px;
+    color: var(--app-muted);
+    text-align: center;
+}
+
+.atividade-resumo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px;
+    border-radius: 14px;
+    background: var(--app-surface);
+}
+
+.atividade-resumo-titulo {
+    color: var(--app-text);
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.atividade-resumo-info {
+    color: var(--app-muted);
+    font-size: 13px;
+}
+
+.atividade-resumo-valor {
+    margin-top: 4px;
+    color: var(--app-accent);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+form .campo-grupo .campo-nota {
+    input {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .nota-de {
+        flex-shrink: 0;
+        color: var(--app-muted);
+        font-size: 15px;
+        font-weight: 600;
+    }
+}
+
+.excluir-nota-btn {
+    --color: var(--app-danger);
+}
+
+.aviso-privado {
+    margin: 0;
+    color: var(--app-muted);
+    font-size: 12.5px;
+    text-align: center;
+}

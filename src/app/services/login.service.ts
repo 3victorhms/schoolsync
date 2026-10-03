@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { UsuarioModel } from '../model/usuario.model';
@@ -16,7 +17,7 @@ export interface RespostaLogin {
 
 @Injectable({ providedIn: 'root' })
 export class LoginService {
-  private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com/usuarios';
+  private readonly API_URL = `${environment.apiUrl}/usuarios`;
   private readonly USUARIO_AUTENTICADO = 'usuarioAutenticado';
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }

@@ -50,8 +50,11 @@ import {
   sendOutline,
   returnDownBackOutline,
   closeOutline,
-  chevronForwardOutline
+  chevronForwardOutline,
+  schoolOutline
 } from 'ionicons/icons';
+import { NotaModel } from 'src/app/model/nota.model';
+import { NotaService } from 'src/app/services/nota.service';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 @Component({
@@ -97,6 +100,9 @@ export class AtividadePage implements OnInit {
 
   /** Tarefas de grupo atribuídas ao usuário logado para esta atividade. */
   minhasTarefas: TarefaModel[] = [];
+
+  /** v2: nota que o aluno lançou no boletim para esta atividade (se houver). */
+  minhaNota: NotaModel | null = null;
   /** Nome de cada grupo do usuário na sala, por id (a tarefa só traz o id do grupo). */
   nomesGrupos: Record<string, string> = {};
 
@@ -111,7 +117,8 @@ export class AtividadePage implements OnInit {
     private comentarioService: ComentarioService,
     private hapticsService: HapticsService,
     private tarefaService: TarefaService,
-    private grupoService: GrupoService
+    private grupoService: GrupoService,
+    private notaService: NotaService
   ) {
     this.atividade = new AtividadeModel();
     this.usuario = this.usuarioService.buscarAutenticacao();
@@ -133,7 +140,7 @@ export class AtividadePage implements OnInit {
       triangleOutline,
       sendOutline,
       returnDownBackOutline,
-      closeOutline
+      closeOutline, schoolOutline
     });
   }
 
@@ -151,7 +158,7 @@ export class AtividadePage implements OnInit {
   }
 
   carregarAtividade(id: string, event?: any) {
-    this.atividadeService.buscarPorId(id, this.usuario.id).pipe(
+    this.atividadeService.buscarPorId(id).pipe(
       finalize(() => {
         this.carregando = false;
         event?.target.complete();
@@ -164,6 +171,7 @@ export class AtividadePage implements OnInit {
         this.carregarCriador();
         this.carregarComentarios();
         this.carregarMinhasTarefas();
+        this.carregarMinhaNota();
       },
       error: () => {
         this.exibirMensagem('Atividade não encontrada');
@@ -172,11 +180,29 @@ export class AtividadePage implements OnInit {
     });
   }
 
+  /** Boletim: busca as notas do aluno na sala e fica com a desta atividade. */
+  carregarMinhaNota() {
+    this.minhaNota = null;
+    if (!this.atividade.idSala || !(Number(this.atividade.valor) > 0)) return;
+
+    this.notaService.listarDaSala(this.atividade.idSala).subscribe({
+      next: (notas) => this.minhaNota = (notas || []).find(nota => nota.idAtividade === this.atividade.id) ?? null,
+      error: () => this.minhaNota = null
+    });
+  }
+
+  /** Abre o lançamento (ou a edição, se já existir) da nota desta atividade. */
+  abrirMinhaNota() {
+    this.navController.navigateForward(['/sala', this.atividade.idSala, 'nota'], {
+      queryParams: { atividade: this.atividade.id, origem: 'atividade' }
+    });
+  }
+
   /** Busca as tarefas do usuário e fica só com as desta atividade. */
   carregarMinhasTarefas() {
     if (!this.usuario.id || !this.atividade.id) return;
 
-    this.tarefaService.listarPorUsuario(this.usuario.id).subscribe({
+    this.tarefaService.listarMinhas().subscribe({
       next: (tarefas) => {
         this.minhasTarefas = (tarefas || []).filter(tarefa => tarefa.idAtividade === this.atividade.id);
         if (this.minhasTarefas.length && this.atividade.idSala) {
@@ -188,7 +214,7 @@ export class AtividadePage implements OnInit {
   }
 
   private carregarNomesGrupos() {
-    this.grupoService.listarPorSalaEUsuario(this.atividade.idSala, this.usuario.id).subscribe({
+    this.grupoService.listarMeusGruposDaSala(this.atividade.idSala).subscribe({
       next: (grupos) => {
         this.nomesGrupos = {};
         (grupos || []).forEach(grupo => this.nomesGrupos[grupo.id] = grupo.nome);
@@ -259,7 +285,6 @@ export class AtividadePage implements OnInit {
     this.comentarioService.criar(
       this.atividade.id,
       texto,
-      this.usuario.id,
       this.comentarioRespondendo?.id
     ).pipe(
       finalize(() => this.enviandoComentario = false)
@@ -306,7 +331,7 @@ export class AtividadePage implements OnInit {
     // a janela de desfazer (ou o aviso nunca aparecer, por qualquer
     // motivo), o comentario ja foi excluido no servidor e nao "volta"
     // depois de um refresh. O "Desfazer" so recria o comentario.
-    this.comentarioService.excluir(removido.id, this.usuario.id).subscribe({
+    this.comentarioService.excluir(removido.id).subscribe({
       next: async () => {
         this.comentariosExcluindoIds.delete(removido.id);
 
@@ -316,7 +341,6 @@ export class AtividadePage implements OnInit {
         this.comentarioService.criar(
           this.atividade.id,
           removido.texto,
-          this.usuario.id,
           removido.idComentarioPai
         ).subscribe({
           next: (recriado) => {
@@ -508,7 +532,6 @@ export class AtividadePage implements OnInit {
 
     this.atividadeService.alterarStatus(
       this.atividade.id,
-      this.usuario.id,
       novoStatus
     ).subscribe({
       next: () => {
@@ -527,10 +550,7 @@ export class AtividadePage implements OnInit {
   }
 
   adicionarNoCaderno() {
-    this.atividadeService.adicionarNoCaderno(
-      this.atividade.id,
-      this.usuario.id
-    ).subscribe({
+    this.atividadeService.adicionarNoCaderno(this.atividade.id).subscribe({
       next: () => {
         this.atividade.estaNoCaderno = true;
         this.atividade.status = 'nao_iniciada';
@@ -543,10 +563,7 @@ export class AtividadePage implements OnInit {
   }
 
   removerDoCaderno() {
-    this.atividadeService.removerDoCaderno(
-      this.atividade.id,
-      this.usuario.id
-    ).subscribe({
+    this.atividadeService.removerDoCaderno(this.atividade.id).subscribe({
       next: () => {
         this.atividade.estaNoCaderno = false;
         this.atividade.status = null;
