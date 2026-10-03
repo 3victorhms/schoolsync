@@ -1,0 +1,189 @@
+.exportar-btn {
+    --color: var(--app-accent);
+}
+
+.resumo-boletim {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
+    padding: 16px;
+    border-radius: 16px;
+    background: var(--app-surface);
+}
+
+.resumo-numero {
+    display: flex;
+    flex-direction: column;
+    min-width: 72px;
+
+    strong {
+        color: var(--app-text);
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 1.1;
+        font-variant-numeric: tabular-nums;
+    }
+
+    span {
+        color: var(--app-muted);
+        font-size: 12px;
+    }
+}
+
+.resumo-detalhe {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.resumo-aproveitamento {
+    color: var(--app-success);
+    font-size: 14px;
+    font-weight: 700;
+
+    &.vazio {
+        color: var(--app-muted);
+    }
+}
+
+.resumo-maximo {
+    color: var(--app-muted);
+    font-size: 12.5px;
+}
+
+.materia-bloco + .materia-bloco {
+    border-top: 1px solid var(--app-border);
+}
+
+.barra-dupla {
+    position: relative;
+
+    .barra-avaliada,
+    .barra-preenchida {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        border-radius: 3px;
+    }
+
+    .barra-avaliada {
+        background: var(--app-accent-soft);
+    }
+
+    .barra-preenchida {
+        background: var(--app-accent);
+    }
+}
+
+.notas-lista {
+    display: flex;
+    flex-direction: column;
+    padding: 0 14px 12px;
+}
+
+.nota-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 12px;
+    background: var(--app-bg-muted);
+    color: var(--app-text);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    & + .nota-item {
+        margin-top: 6px;
+    }
+}
+
+.nota-corpo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.nota-titulo {
+    font-size: 14px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tag-avulsa {
+    margin-left: 4px;
+    padding: 1px 7px;
+    border-radius: 8px;
+    background: var(--app-surface-strong);
+    color: var(--app-text-soft);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.nota-data {
+    color: var(--app-muted);
+    font-size: 12px;
+}
+
+.nota-valor {
+    font-size: 16px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+
+    small {
+        color: var(--app-muted);
+        font-size: 12px;
+        font-weight: 600;
+    }
+}
+
+.notas-vazio {
+    margin: 0;
+    padding: 4px 2px;
+    color: var(--app-muted);
+    font-size: 13px;
+}
+
+.titulo-pendentes {
+    margin-top: 20px;
+}
+
+.pendente-linha {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    text-align: left;
+    align-items: center;
+}
+
+.lancar-chip {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    border-radius: 14px;
+    background: var(--app-accent-soft);
+    color: var(--app-accent);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.nova-avulsa {
+    margin-top: 20px;
+    margin-bottom: 6px;
+}
+
+.ajuda-avulsa {
+    margin: 0 4px 24px;
+    color: var(--app-muted);
+    font-size: 12.5px;
+    line-height: 1.4;
+}

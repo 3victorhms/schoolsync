@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { NotificacaoModel } from '../model/notificacao.model';
@@ -12,7 +13,7 @@ export interface ConfiguracaoNotificacao {
 
 @Injectable({ providedIn: 'root' })
 export class NotificacaoService {
-  private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com/notificacoes';
+  private readonly API_URL = `${environment.apiUrl}/notificacoes`;
   private eventSource: EventSource | null = null;
   private reconexaoTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly notificacoesSubject = new BehaviorSubject<NotificacaoModel[]>([]);
@@ -22,7 +23,7 @@ export class NotificacaoService {
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   listar(): Observable<NotificacaoModel[]> {
-    return this.http.get<NotificacaoModel[]>(`${this.API_URL}/usuario/${this.usuarioId}`).pipe(
+    return this.http.get<NotificacaoModel[]>(this.API_URL).pipe(
       tap(notificacoes => this.notificacoesSubject.next(notificacoes))
     );
   }
@@ -34,7 +35,7 @@ export class NotificacaoService {
   }
 
   marcarTodasComoLidas(): Observable<void> {
-    return this.http.put<void>(`${this.API_URL}/usuario/${this.usuarioId}/lidas`, null).pipe(
+    return this.http.put<void>(`${this.API_URL}/lidas`, null).pipe(
       tap(() => this.notificacoesSubject.next(
         this.notificacoesSubject.value.map(notificacao => ({ ...notificacao, lido: true }))
       ))
@@ -42,12 +43,12 @@ export class NotificacaoService {
   }
 
   buscarConfiguracao(): Observable<ConfiguracaoNotificacao> {
-    return this.http.get<ConfiguracaoNotificacao>(`${this.API_URL}/usuario/${this.usuarioId}/configuracoes`);
+    return this.http.get<ConfiguracaoNotificacao>(`${this.API_URL}/configuracoes`);
   }
 
   salvarConfiguracao(configuracao: ConfiguracaoNotificacao): Observable<ConfiguracaoNotificacao> {
     return this.http.put<ConfiguracaoNotificacao>(
-      `${this.API_URL}/usuario/${this.usuarioId}/configuracoes`, configuracao
+      `${this.API_URL}/configuracoes`, configuracao
     );
   }
 
@@ -55,9 +56,9 @@ export class NotificacaoService {
     const usuarioId = this.usuarioId;
     if (!usuarioId || this.eventSource || this.reconexaoTimer) return;
 
-    // O EventSource não envia cabeçalhos, então o token vai na URL (a API confere se é do mesmo usuário).
+    // O EventSource não envia cabeçalhos, então o token vai na URL e a API identifica o usuário por ele.
     const token = encodeURIComponent(this.tokenService.buscar() || '');
-    this.eventSource = new EventSource(`${this.API_URL}/usuario/${usuarioId}/stream?token=${token}`);
+    this.eventSource = new EventSource(`${this.API_URL}/stream?token=${token}`);
     this.eventSource.onopen = () => {
       this.listar().subscribe({ error: () => undefined });
     };

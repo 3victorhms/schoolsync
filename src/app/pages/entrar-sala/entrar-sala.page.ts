@@ -61,7 +61,7 @@ export class EntrarSalaPage implements OnInit {
     if (this.entrando) return;
     this.entrando = true;
 
-    this.salaService.entrar(codigo, this.usuario.id).pipe(
+    this.salaService.entrar(codigo).pipe(
       finalize(() => this.entrando = false)
     ).subscribe({
       next: (sala) => {

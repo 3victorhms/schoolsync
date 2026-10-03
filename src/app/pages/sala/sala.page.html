@@ -80,6 +80,27 @@
     <!-- ===================== ATIVIDADES ===================== -->
     @case ('atividades') {
     <section class="secao" role="tabpanel">
+        @if (periodoDaVez) {
+        <button type="button" class="periodo-banner" [routerLink]="['/sala', sala.id, 'pontos']"
+            aria-label="Ver pontos por matéria">
+            <span class="linha-acao-icone"><ion-icon name="stats-chart-outline"></ion-icon></span>
+            <span class="periodo-banner-texto">
+                <strong>{{ periodoDaVez.nome }}</strong>
+                <span>{{ situacaoPeriodoDaVez }} · pontos por matéria</span>
+            </span>
+            <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
+        </button>
+        <button type="button" class="periodo-banner" [routerLink]="['/sala', sala.id, 'boletim']"
+            aria-label="Abrir meu boletim">
+            <span class="linha-acao-icone"><ion-icon name="school-outline"></ion-icon></span>
+            <span class="periodo-banner-texto">
+                <strong>Meu boletim</strong>
+                <span>suas notas nesta sala · exportar em PDF</span>
+            </span>
+            <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
+        </button>
+        }
+
         @if (sala.atividades.length) {
         <button type="button" class="linha-acao" [routerLink]="['/add-atividade/', sala.id]">
             <span class="linha-acao-icone"><ion-icon name="add-outline"></ion-icon></span>

@@ -116,7 +116,7 @@ export class GrupoPage implements OnInit {
   }
 
   carregarGrupo(idGrupo: string, event?: any) {
-    this.grupoService.buscarPorId(idGrupo, this.usuario.id).pipe(
+    this.grupoService.buscarPorId(idGrupo).pipe(
       finalize(() => {
         this.carregando = false;
         event?.target.complete();
@@ -175,7 +175,7 @@ export class GrupoPage implements OnInit {
     if (!confirmou) return;
 
     this.removendoMembroId = membro.idUsuario;
-    this.grupoService.removerMembro(this.grupo.id, membro.idUsuario, this.usuario.id).pipe(
+    this.grupoService.removerMembro(this.grupo.id, membro.idUsuario).pipe(
       finalize(() => this.removendoMembroId = '')
     ).subscribe({
       next: () => {
@@ -225,7 +225,7 @@ export class GrupoPage implements OnInit {
 
     if (!confirmou) return;
 
-    this.grupoService.sair(this.grupo.id, this.usuario.id).subscribe({
+    this.grupoService.sair(this.grupo.id).subscribe({
       next: () => {
         this.exibirMensagem('Você saiu do grupo.');
         this.navController.navigateRoot(['/sala', this.grupo.idSala], { queryParams: { aba: 'grupos' } });
@@ -249,7 +249,7 @@ export class GrupoPage implements OnInit {
     if (!confirmou) return;
 
     this.excluindoGrupo = true;
-    this.grupoService.excluir(this.grupo.id, this.usuario.id).pipe(
+    this.grupoService.excluir(this.grupo.id).pipe(
       finalize(() => this.excluindoGrupo = false)
     ).subscribe({
       next: () => {

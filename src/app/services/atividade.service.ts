@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -9,7 +10,7 @@ import { ApiDeleteService } from './api-delete.service';
 })
 export class AtividadeService {
 
-  private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com/atividades';
+  private readonly API_URL = `${environment.apiUrl}/atividades`;
 
   constructor(private http: HttpClient, private apiDelete: ApiDeleteService) { }
 
@@ -31,10 +32,8 @@ export class AtividadeService {
     );
   }
 
-  buscarPorId(id: string, idUsuarioLogado: string): Observable<AtividadeModel> {
-    return this.http.get<AtividadeModel>(
-      `${this.API_URL}/${id}?idUsuarioLogado=${idUsuarioLogado}`
-    );
+  buscarPorId(id: string): Observable<AtividadeModel> {
+    return this.http.get<AtividadeModel>(`${this.API_URL}/${id}`);
   }
 
   listarPorSala(idSala: string): Observable<AtividadeModel[]> {
@@ -43,10 +42,9 @@ export class AtividadeService {
     );
   }
 
-  listarPorUsuarioNoCaderno(idUsuario: string): Observable<AtividadeModel[]> {
-    return this.http.get<AtividadeModel[]>(
-      `${this.API_URL}/caderno/usuario/${idUsuario}`
-    );
+  /** Atividades no caderno do usuário logado (o usuário vem do token). */
+  listarMeuCaderno(): Observable<AtividadeModel[]> {
+    return this.http.get<AtividadeModel[]>(`${this.API_URL}/caderno`);
   }
 
   excluir(id: string): Observable<void> {
@@ -57,24 +55,19 @@ export class AtividadeService {
     return this.apiDelete.excluir(`${this.API_URL}/sala/${idSala}`);
   }
 
-  adicionarNoCaderno(idAtividade: string, idUsuario: string): Observable<void> {
-    return this.http.post<void>(
-      `${this.API_URL}/${idAtividade}/caderno?idUsuario=${idUsuario}`,
-      null
-    );
+  adicionarNoCaderno(idAtividade: string): Observable<void> {
+    return this.http.post<void>(`${this.API_URL}/${idAtividade}/caderno`, null);
   }
 
-  removerDoCaderno(idAtividade: string, idUsuario: string): Observable<void> {
-    return this.apiDelete.excluir(
-      `${this.API_URL}/${idAtividade}/caderno`,
-      { idUsuario }
-    );
+  removerDoCaderno(idAtividade: string): Observable<void> {
+    return this.apiDelete.excluir(`${this.API_URL}/${idAtividade}/caderno`);
   }
 
-  alterarStatus(idAtividade: string, idUsuario: string, status: string): Observable<void> {
+  alterarStatus(idAtividade: string, status: string): Observable<void> {
     return this.http.put<void>(
-      `${this.API_URL}/${idAtividade}/status?idUsuario=${idUsuario}&status=${status}`,
-      null
+      `${this.API_URL}/${idAtividade}/status`,
+      null,
+      { params: { status } }
     );
   }
 }

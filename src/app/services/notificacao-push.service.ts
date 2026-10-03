@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
@@ -8,8 +9,8 @@ import { TokenService } from './token.service';
 
 @Injectable({ providedIn: 'root' })
 export class NotificacaoPushService {
-  private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com/notificacoes/push/dispositivo';
-  private readonly API_TESTE_URL = 'https://schoolsync-api-kvfx.onrender.com/notificacoes/push/teste';
+  private readonly API_URL = `${environment.apiUrl}/notificacoes/push/dispositivo`;
+  private readonly API_TESTE_URL = `${environment.apiUrl}/notificacoes/push/teste`;
   private readonly TOKEN_STORAGE = 'schoolsyncPushToken';
   private listenersProntos?: Promise<void>;
   private registroPendente?: {

@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -9,7 +10,7 @@ import { ApiDeleteService } from './api-delete.service';
 })
 export class ComentarioService {
 
-  private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com';
+  private readonly API_URL = environment.apiUrl;
 
   constructor(private http: HttpClient, private apiDelete: ApiDeleteService) { }
 
@@ -19,24 +20,21 @@ export class ComentarioService {
     );
   }
 
-  criar(idAtividade: string, texto: string, idUsuario: string, idComentarioPai?: string | null): Observable<ComentarioModel> {
+  criar(idAtividade: string, texto: string, idComentarioPai?: string | null): Observable<ComentarioModel> {
     return this.http.post<ComentarioModel>(
       `${this.API_URL}/atividades/${idAtividade}/comentarios`,
-      { texto, idUsuario, idComentarioPai }
+      { texto, idComentarioPai }
     );
   }
 
-  atualizar(idComentario: string, texto: string, idUsuario: string): Observable<ComentarioModel> {
+  atualizar(idComentario: string, texto: string): Observable<ComentarioModel> {
     return this.http.put<ComentarioModel>(
       `${this.API_URL}/comentarios/${idComentario}`,
-      { texto, idUsuario }
+      { texto }
     );
   }
 
-  excluir(idComentario: string, idUsuario: string): Observable<void> {
-    return this.apiDelete.excluir(
-      `${this.API_URL}/comentarios/${idComentario}`,
-      { idUsuario }
-    );
+  excluir(idComentario: string): Observable<void> {
+    return this.apiDelete.excluir(`${this.API_URL}/comentarios/${idComentario}`);
   }
 }

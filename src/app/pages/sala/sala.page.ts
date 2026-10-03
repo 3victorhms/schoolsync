@@ -9,7 +9,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { addIcons } from 'ionicons';
-import { addOutline, peopleOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline, logOutOutline, personRemoveOutline, chevronForwardOutline, copyOutline, archiveOutline, personAddOutline } from 'ionicons/icons';
+import { addOutline, peopleOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline, logOutOutline, personRemoveOutline, chevronForwardOutline, copyOutline, archiveOutline, personAddOutline, statsChartOutline, schoolOutline } from 'ionicons/icons';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { finalize, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -22,6 +22,8 @@ import { ClipboardService } from 'src/app/services/clipboard.service';
 import { GrupoService } from 'src/app/services/grupo.service';
 import { GrupoModel } from 'src/app/model/grupo.model';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
+import { PeriodoModel } from 'src/app/model/periodo.model';
+import { periodoAtual, situacaoPeriodo } from 'src/app/utils/periodo.util';
 
 type AbaSala = 'atividades' | 'grupos' | 'membros';
 
@@ -57,6 +59,16 @@ export class SalaPage implements OnInit {
     grupos: GrupoModel[] = [];
     carregandoGrupos = true;
 
+    /** v2: período em andamento (ou o próximo, no recesso) e quanto falta para acabar. */
+    get periodoDaVez(): PeriodoModel | null {
+        return periodoAtual(this.sala.periodos || []);
+    }
+
+    get situacaoPeriodoDaVez(): string {
+        const periodo = this.periodoDaVez;
+        return periodo ? situacaoPeriodo(periodo) : '';
+    }
+
     constructor(
         private activatedRoute: ActivatedRoute,
         private navController: NavController,
@@ -81,7 +93,7 @@ export class SalaPage implements OnInit {
             checkmarkCircleOutline, bookmarkOutline,
             createOutline, trashOutline, logOutOutline,
             personRemoveOutline, chevronForwardOutline,
-            copyOutline, archiveOutline, personAddOutline
+            copyOutline, archiveOutline, personAddOutline, statsChartOutline, schoolOutline
         });
     }
 
@@ -107,7 +119,7 @@ export class SalaPage implements OnInit {
     }
 
     carregarSala(id: string, event?: any) {
-        this.salaService.buscarPorId(id, this.usuario.id).pipe(
+        this.salaService.buscarPorId(id).pipe(
             finalize(() => {
                 this.carregando = false;
                 event?.target.complete();
@@ -170,7 +182,7 @@ export class SalaPage implements OnInit {
             return;
         }
 
-        this.grupoService.listarPorSalaEUsuario(idSala, this.usuario.id).pipe(
+        this.grupoService.listarMeusGruposDaSala(idSala).pipe(
             finalize(() => this.carregandoGrupos = false)
         ).subscribe({
             next: (res) => this.grupos = res || [],
@@ -275,7 +287,7 @@ export class SalaPage implements OnInit {
 
         if (!confirmou) return;
 
-        this.salaService.sairDaSala(this.sala.id, this.usuario.id).subscribe({
+        this.salaService.sairDaSala(this.sala.id).subscribe({
             next: () => {
                 localStorage.removeItem(`ultimaSala:${this.usuario.id}`);
                 this.exibirMensagem('Você saiu da sala.');
@@ -319,7 +331,7 @@ export class SalaPage implements OnInit {
         // de verdade e o membro "volta" ao atualizar a pagina. Nao tem
         // como desfazer isso automaticamente (reentrar na sala exige um
         // convite), entao aqui e so um aviso informativo.
-        this.salaService.removerMembro(this.sala.id, removido.id, this.usuario.id).subscribe({
+        this.salaService.removerMembro(this.sala.id, removido.id).subscribe({
             next: () => {
                 this.removendoMembroId = '';
                 this.desfazerService.mostrarMensagem('Membro removido da sala.');

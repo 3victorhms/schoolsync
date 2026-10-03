@@ -563,3 +563,57 @@ ion-content > .vazio-data {
         .ocupacao-preenchimento { background: var(--app-danger); }
     }
 }
+
+// v2: período atual no topo da aba de atividades (abre a tela de pontos)
+.periodo-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 14px;
+    background: var(--app-surface);
+    color: var(--app-text);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    .linha-acao-icone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
+        background: var(--app-accent-soft);
+        color: var(--app-accent);
+        flex-shrink: 0;
+
+        ion-icon {
+            font-size: 18px;
+        }
+    }
+
+    .periodo-banner-texto {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+
+        strong {
+            font-size: 14px;
+        }
+
+        span {
+            color: var(--app-muted);
+            font-size: 12.5px;
+        }
+    }
+
+    .row-seta {
+        margin-top: 0;
+    }
+}

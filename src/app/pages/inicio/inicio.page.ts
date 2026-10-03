@@ -18,6 +18,7 @@ import { labelPontos } from 'src/app/utils/pontos.util';
 import { formatarDataCurta, parsearData } from 'src/app/utils/data.util';
 import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
 import { criarRecarregadorDeAba } from 'src/app/utils/recarregar-aba.util';
+import { periodoAtual, situacaoPeriodo } from 'src/app/utils/periodo.util';
 
 interface DiaCalendario {
   numero: number;
@@ -50,6 +51,12 @@ export class InicioPage implements OnInit {
 
   usuario: UsuarioModel;
   ultimaSala: SalaModel | null = null;
+
+  /** v2: "2º Bimestre · termina em 12 dias" no cartão da última sala. */
+  get periodoUltimaSala(): string {
+    const periodo = periodoAtual(this.ultimaSala?.periodos || []);
+    return periodo ? `${periodo.nome} · ${situacaoPeriodo(periodo)}` : '';
+  }
   carregandoUltimaSala = false;
   diasCalendario: DiaCalendario[] = [];
   atividadesDoDia: AtividadeModel[] = [];
@@ -213,7 +220,7 @@ export class InicioPage implements OnInit {
     const filtroSalvo = this.lerFiltroSalvo();
     this.carregandoAgenda = true;
 
-    this.atividadeService.listarPorUsuarioNoCaderno(this.usuario.id).pipe(
+    this.atividadeService.listarMeuCaderno().pipe(
       finalize(() => this.carregandoAgenda = false)
     ).subscribe({
       next: atividades => {
@@ -250,7 +257,7 @@ export class InicioPage implements OnInit {
   }
 
   private carregarNomesSalas() {
-    this.salaService.listarPorUsuario(this.usuario.id).subscribe({
+    this.salaService.listarMinhas().subscribe({
       next: salas => {
         this.quantidadeSalas = (salas || []).length;
         (salas || []).forEach(sala => this.nomesSalas[sala.id] = sala.nome);
@@ -267,13 +274,13 @@ export class InicioPage implements OnInit {
     this.atividadesTodas = [];
     const acumuladas = new Map<string, AtividadeModel>();
 
-    this.salaService.listarPorUsuario(this.usuario.id).pipe(
+    this.salaService.listarMinhas().pipe(
       mergeMap(salas => {
         this.quantidadeSalas = (salas || []).length;
         (salas || []).forEach(sala => this.nomesSalas[sala.id] = sala.nome);
         return from(salas || []);
       }),
-      mergeMap(sala => this.salaService.buscarPorId(sala.id, this.usuario.id).pipe(
+      mergeMap(sala => this.salaService.buscarPorId(sala.id).pipe(
         catchError(() => of(null))
       ), 4),
       finalize(() => {
@@ -442,7 +449,7 @@ export class InicioPage implements OnInit {
     }
 
     this.carregandoUltimaSala = true;
-    this.salaService.buscarPorId(id, this.usuario.id).subscribe({
+    this.salaService.buscarPorId(id).subscribe({
       next: (sala) => {
         this.ultimaSala = sala || null;
         this.carregandoUltimaSala = false;

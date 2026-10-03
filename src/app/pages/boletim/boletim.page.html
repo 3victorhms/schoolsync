@@ -1,0 +1,158 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/sala/' + idSala"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Meu boletim
+      @if (sala.nome) {
+      <p class="subtitulo">{{ sala.nome }}</p>
+      }
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" class="exportar-btn" [disabled]="carregando || exportando || !boletim"
+        (click)="exportar()" aria-label="Exportar boletim em PDF">
+        @if (exportando) { <span class="btn-spinner sozinho" slot="icon-only" aria-hidden="true"></span> }
+        @else { <ion-icon name="download-outline" slot="icon-only"></ion-icon> }
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-refresher slot="fixed" (ionRefresh)="atualizar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <section class="secao">
+
+    @if (carregando) {
+    <div class="group">
+      @for (i of [1, 2, 3]; track i) {
+      <div class="row skeleton-row">
+        <div class="row-body">
+          <div class="skeleton-line skeleton-line-title"></div>
+          <div class="skeleton-line skeleton-line-sub"></div>
+        </div>
+      </div>
+      }
+    </div>
+    } @else if (!sala.periodos.length || !sala.materias.length) {
+    <div class="vazio-guia">
+      <div class="vazio-guia-icone"><ion-icon name="school-outline"></ion-icon></div>
+      <span class="vazio-guia-titulo">Boletim indisponível</span>
+      <span class="vazio-guia-sub">A sala precisa ter matérias e períodos cadastrados pelo líder.</span>
+    </div>
+    } @else if (boletim) {
+
+    <div class="filtros filtros-rolagem" role="tablist" aria-label="Período do boletim">
+      @for (periodo of sala.periodos; track periodo.id) {
+      <button type="button" class="filtro-btn" role="tab" [class.ativo]="visao === periodo.id"
+        [attr.aria-selected]="visao === periodo.id" (click)="selecionarVisao(periodo.id)">
+        {{ periodo.nome }}
+        @if (periodo.id === idPeriodoAtual) { <span class="ponto-atual" aria-label="período atual"></span> }
+      </button>
+      }
+      <button type="button" class="filtro-btn" role="tab" [class.ativo]="visao === 'ano'"
+        [attr.aria-selected]="visao === 'ano'" (click)="selecionarVisao('ano')">
+        Ano
+      </button>
+    </div>
+
+    <!-- Resumo -->
+    <div class="resumo-boletim">
+      <div class="resumo-numero">
+        <strong>{{ totalObtido }}</strong>
+        <span>de {{ totalAvaliado }} avaliados</span>
+      </div>
+      <div class="resumo-detalhe">
+        @if (aproveitamento(totalObtido, totalAvaliado) !== null) {
+        <span class="resumo-aproveitamento">{{ aproveitamento(totalObtido, totalAvaliado) }}% de aproveitamento</span>
+        } @else {
+        <span class="resumo-aproveitamento vazio">Nenhuma nota lançada</span>
+        }
+        <span class="resumo-maximo">máximo possível: {{ totalMaximo }} pontos</span>
+      </div>
+    </div>
+
+    <!-- Matérias -->
+    <div class="group stagger-list">
+      @for (linha of linhas; track linha.idMateria) {
+      <div class="materia-bloco">
+        <button type="button" class="row materia-linha" (click)="alternar(linha.idMateria)"
+          [attr.aria-expanded]="abertas.has(linha.idMateria)">
+          <div class="row-body">
+            <div class="materia-topo">
+              <span class="row-label">{{ linha.nomeMateria }}</span>
+              <span class="materia-pontos">
+                {{ linha.obtido }}<span class="materia-max">/{{ linha.avaliado }}</span>
+              </span>
+            </div>
+            <div class="barra barra-dupla" role="presentation">
+              <div class="barra-avaliada" [style.width.%]="largura(linha.avaliado, linha.maximo)"></div>
+              <div class="barra-preenchida" [style.width.%]="largura(linha.obtido, linha.maximo)"></div>
+            </div>
+            <span class="row-desc">
+              @if (linha.notas.length) {
+              {{ linha.notas.length }} {{ linha.notas.length === 1 ? 'nota' : 'notas' }}
+              @if (aproveitamento(linha.obtido, linha.avaliado) !== null) { · {{ aproveitamento(linha.obtido, linha.avaliado) }}% }
+              · máx. {{ linha.maximo }}
+              } @else {
+              Sem notas · máx. {{ linha.maximo }}
+              }
+            </span>
+          </div>
+          <ion-icon [name]="abertas.has(linha.idMateria) ? 'chevron-up-outline' : 'chevron-down-outline'" class="row-seta"></ion-icon>
+        </button>
+
+        @if (abertas.has(linha.idMateria)) {
+        <div class="notas-lista">
+          @for (nota of linha.notas; track nota.id) {
+          <button type="button" class="nota-item" (click)="editarNota(nota)">
+            <span class="nota-corpo">
+              <span class="nota-titulo">
+                {{ nota.descricao }}
+                @if (nota.avulsa) { <span class="tag-avulsa">avulsa</span> }
+              </span>
+              <span class="nota-data">
+                {{ formatarDataBr(nota.data) }}@if (visao === 'ano') { · {{ nota.nomePeriodo }} }
+              </span>
+            </span>
+            <span class="nota-valor">{{ nota.valorObtido }}<small>/{{ nota.valorMaximo }}</small></span>
+          </button>
+          } @empty {
+          <p class="notas-vazio">Nenhuma nota nesta matéria{{ visao === 'ano' ? '' : ' neste período' }}.</p>
+          }
+        </div>
+        }
+      </div>
+      }
+    </div>
+
+    <!-- Atividades que já podem receber nota -->
+    @if (pendentes.length) {
+    <h3 class="group-title titulo-pendentes">Atividades sem nota</h3>
+    <div class="group">
+      @for (atividade of pendentes; track atividade.id) {
+      <button type="button" class="row pendente-linha" (click)="lancarDaAtividade(atividade)">
+        <div class="row-body">
+          <span class="row-label">{{ atividade.titulo }}</span>
+          <span class="row-desc">{{ atividade.nomeMateria }} · {{ formatarDataBr(atividade.dataEntrega) }} · vale {{ atividade.valor }}</span>
+        </div>
+        <span class="lancar-chip">Lançar</span>
+      </button>
+      }
+    </div>
+    }
+
+    <button type="button" class="linha-acao nova-avulsa" (click)="novaAvulsa()">
+      <span class="linha-acao-icone"><ion-icon name="add-outline"></ion-icon></span>
+      Adicionar nota avulsa
+    </button>
+    <p class="ajuda-avulsa">Para avaliações que não estão cadastradas como atividade da sala (ex.: uma prova antiga).</p>
+    }
+
+  </section>
+
+</ion-content>

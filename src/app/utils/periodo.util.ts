@@ -71,3 +71,72 @@ export function gerarPeriodosPadrao(tipo: TipoPeriodo, hoje: Date = new Date()):
     };
   });
 }
+
+/** Hoje em "AAAA-MM-DD" no fuso do aparelho (toISOString usaria UTC e erraria à noite). */
+export function hojeIso(hoje: Date = new Date()): string {
+  return paraIso(hoje);
+}
+
+/**
+ * Período "da vez": o que contém hoje; antes do ano letivo, o primeiro;
+ * no recesso entre dois períodos, o próximo; depois do fim, o último.
+ */
+export function periodoAtual(periodos: PeriodoModel[], hoje: Date = new Date()): PeriodoModel | null {
+  if (!periodos?.length) return null;
+  const dia = paraIso(hoje);
+  return periodoDaData(periodos, dia)
+    ?? periodos.find(p => p.dataInicio > dia)
+    ?? periodos[periodos.length - 1];
+}
+
+/** Dias corridos de hoje até a data (negativo se já passou). */
+export function diasAte(data: string, hoje: Date = new Date()): number {
+  const [ano, mes, dia] = data.split('T')[0].split('-').map(Number);
+  const alvo = new Date(ano, mes - 1, dia);
+  const base = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+  return Math.round((alvo.getTime() - base.getTime()) / 86400000);
+}
+
+/** Texto curto sobre o período: "termina em 12 dias", "começa em 3 dias", "encerrado". */
+export function situacaoPeriodo(periodo: PeriodoModel, hoje: Date = new Date()): string {
+  const ateInicio = diasAte(periodo.dataInicio, hoje);
+  if (ateInicio > 0) return ateInicio === 1 ? 'começa amanhã' : `começa em ${ateInicio} dias`;
+
+  const ateFim = diasAte(periodo.dataFim, hoje);
+  if (ateFim < 0) return 'encerrado';
+  if (ateFim === 0) return 'termina hoje';
+  return ateFim === 1 ? 'termina amanhã' : `termina em ${ateFim} dias`;
+}
+
+/** Pontos distribuídos em uma matéria dentro de um período, a partir das atividades da sala. */
+export interface PontosDaMateria {
+  idMateria: string;
+  nomeMateria: string;
+  distribuidos: number;
+  maximo: number;
+  restantes: number;
+  quantidadeAtividades: number;
+}
+
+export function pontosPorMateria(
+  materias: { id: string; nome: string }[],
+  atividades: { idMateria: string; idPeriodo: string; valor: number }[],
+  periodo: PeriodoModel
+): PontosDaMateria[] {
+  return materias.map(materia => {
+    const daMateria = atividades.filter(a => a.idMateria === materia.id && a.idPeriodo === periodo.id);
+    const distribuidos = arredondar(daMateria.reduce((soma, a) => soma + (Number(a.valor) || 0), 0));
+    return {
+      idMateria: materia.id,
+      nomeMateria: materia.nome,
+      distribuidos,
+      maximo: periodo.pontuacaoMaxima,
+      restantes: arredondar(Math.max(0, periodo.pontuacaoMaxima - distribuidos)),
+      quantidadeAtividades: daMateria.length,
+    };
+  });
+}
+
+function arredondar(valor: number): number {
+  return Math.round(valor * 100) / 100;
+}

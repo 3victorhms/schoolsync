@@ -74,7 +74,7 @@ export class AddSalaPage implements OnInit {
     if (id) {
       this.editando = true;
 
-      this.salaService.buscarPorId(id, this.usuario.id).subscribe(res => {
+      this.salaService.buscarPorId(id).subscribe(res => {
         if (!res) {
           this.exibirMensagem('Sala não encontrada');
           return;
@@ -254,7 +254,7 @@ export class AddSalaPage implements OnInit {
       })),
     };
 
-    this.salaService.salvar(dados, this.usuario.id, this.editando ? this.sala.id : undefined).pipe(
+    this.salaService.salvar(dados, this.editando ? this.sala.id : undefined).pipe(
       finalize(() => this.salvando = false)
     ).subscribe({
       next: (salaSalva) => {

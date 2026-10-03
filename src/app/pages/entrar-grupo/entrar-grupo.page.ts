@@ -53,7 +53,7 @@ export class EntrarGrupoPage implements OnInit {
     if (!codigo || !this.usuario.id || this.entrando) return;
     this.entrando = true;
 
-    this.grupoService.entrar(codigo, this.usuario.id).pipe(
+    this.grupoService.entrar(codigo).pipe(
       finalize(() => this.entrando = false)
     ).subscribe({
       next: (grupo) => {

@@ -1,0 +1,117 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/sala/' + idSala + '/boletim'"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      {{ editando ? 'Editar nota' : (avulsa ? 'Nota avulsa' : 'Lançar nota') }}
+      @if (sala.nome) { <p class="subtitulo">{{ sala.nome }}</p> }
+    </ion-title>
+    @if (editando) {
+    <ion-buttons slot="end">
+      <ion-button fill="clear" class="excluir-nota-btn" [disabled]="excluindo" (click)="excluir()" aria-label="Excluir nota">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    }
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (carregando) {
+  <div class="carregando-form">Carregando...</div>
+  } @else {
+  <form [formGroup]="formGroup" (ngSubmit)="salvar()">
+
+    @if (!avulsa && atividade) {
+    <!-- Nota de atividade: dados vêm da atividade -->
+    <div class="atividade-resumo">
+      <span class="atividade-resumo-titulo">{{ atividade.titulo }}</span>
+      <span class="atividade-resumo-info">
+        {{ atividade.nomeMateria }} · {{ atividade.nomePeriodo }} · entrega {{ formatarDataBr(atividade.dataEntrega) }}
+      </span>
+      <span class="atividade-resumo-valor">Vale {{ atividade.valor }} pontos</span>
+    </div>
+    } @else {
+
+    <div class="campo-grupo">
+      <label class="campo-label" for="campo-descricao">Avaliação</label>
+      <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('descricao')" lines="none">
+        <input id="campo-descricao" type="text" maxlength="150" placeholder="Ex: Prova de recuperação de março" formControlName="descricao" />
+      </ion-item>
+      @if (campoInvalido('descricao')) {
+      <p class="erro-campo">Descreva a avaliação.</p>
+      }
+    </div>
+
+    <div class="campo-grupo">
+      <label class="campo-label" for="campo-materia">Matéria</label>
+      <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('idMateria')" lines="none">
+        <select id="campo-materia" formControlName="idMateria">
+          <option value="" disabled>Escolha a matéria</option>
+          @for (materia of sala.materias; track materia.id) {
+          <option [value]="materia.id">{{ materia.nome }}</option>
+          }
+        </select>
+      </ion-item>
+      @if (campoInvalido('idMateria')) {
+      <p class="erro-campo">Escolha a matéria.</p>
+      }
+    </div>
+
+    <div class="campo-grupo">
+      <label class="campo-label" for="campo-data">Data da avaliação</label>
+      <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('data')" lines="none">
+        <input id="campo-data" type="date" formControlName="data" [min]="primeiroDiaLetivo" [max]="ultimoDiaPermitido" />
+      </ion-item>
+      @if (campoInvalido('data') && formGroup.get('data')?.hasError('futura')) {
+      <p class="erro-campo">A nota avulsa é para avaliações que já aconteceram.</p>
+      } @else if (campoInvalido('data') && formGroup.get('data')?.hasError('foraDosPeriodos')) {
+      <p class="erro-campo">A data está fora dos períodos letivos da sala.</p>
+      } @else if (campoInvalido('data')) {
+      <p class="erro-campo">Informe a data da avaliação.</p>
+      } @else if (periodoSelecionado) {
+      <p class="aviso-campo">Conta para o <strong>{{ periodoSelecionado.nome }}</strong>.</p>
+      }
+    </div>
+
+    <div class="campo-grupo">
+      <label class="campo-label" for="campo-maximo">Valor da avaliação</label>
+      <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('valorMaximo')" lines="none">
+        <input id="campo-maximo" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="Ex: 10" formControlName="valorMaximo" />
+      </ion-item>
+      @if (campoInvalido('valorMaximo') && formGroup.get('valorMaximo')?.hasError('acimaDoDisponivel')) {
+      <p class="erro-campo">Só restam {{ disponivel }} pontos em {{ nomeMateriaSelecionada }} no {{ periodoSelecionado?.nome }}.</p>
+      } @else if (campoInvalido('valorMaximo')) {
+      <p class="erro-campo">Informe quanto a avaliação valia.</p>
+      } @else if (disponivel !== null) {
+      <p class="aviso-campo">
+        Ainda cabem <strong>{{ disponivel }} pontos</strong> em {{ nomeMateriaSelecionada }} no {{ periodoSelecionado?.nome }}
+        (contando as atividades da sala e suas outras notas avulsas).
+      </p>
+      }
+    </div>
+    }
+
+    <div class="campo-grupo">
+      <label class="campo-label" for="campo-obtido">Sua nota</label>
+      <ion-item class="campo-item campo-nota" [class.campo-invalido]="campoInvalido('valorObtido') || obtidoAcimaDoMaximo" lines="none">
+        <input id="campo-obtido" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 8,5" formControlName="valorObtido" />
+        @if (valorMaximoAtual) { <span class="nota-de">de {{ valorMaximoAtual }}</span> }
+      </ion-item>
+      @if (obtidoAcimaDoMaximo) {
+      <p class="erro-campo">A nota não pode passar do valor da avaliação ({{ valorMaximoAtual }}).</p>
+      } @else if (campoInvalido('valorObtido')) {
+      <p class="erro-campo">Informe a nota que você tirou.</p>
+      }
+    </div>
+
+    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="salvando">
+      @if (salvando) { <span class="btn-spinner" aria-hidden="true"></span> Salvando... }
+      @else { {{ editando ? 'Salvar alterações' : 'Lançar no boletim' }} }
+    </ion-button>
+
+    <p class="aviso-privado">Só você vê as suas notas.</p>
+  </form>
+  }
+</ion-content>

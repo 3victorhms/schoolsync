@@ -67,6 +67,8 @@ export class CadernoPage implements OnInit {
   tarefas: TarefaModel[];
   tarefasFiltradas: TarefaModel[];
   filtroAtivo: string;
+  /** v2: nome da matéria escolhida (vazio = todas). Por nome porque o caderno junta várias salas. */
+  filtroMateria = '';
   termoBusca: string;
   carregando = true;
   private pendentesCarregamento = 0;
@@ -136,7 +138,7 @@ export class CadernoPage implements OnInit {
       }
     };
 
-    this.atividadeService.listarPorUsuarioNoCaderno(this.usuario.id).pipe(
+    this.atividadeService.listarMeuCaderno().pipe(
       finalize(finalizarUma)
     ).subscribe({
       next: (res) => {
@@ -149,7 +151,7 @@ export class CadernoPage implements OnInit {
       }
     });
 
-    this.tarefaService.listarPorUsuario(this.usuario.id).pipe(
+    this.tarefaService.listarMinhas().pipe(
       finalize(finalizarUma)
     ).subscribe({
       next: (res) => {
@@ -176,6 +178,19 @@ export class CadernoPage implements OnInit {
     this.aplicarFiltros();
   }
 
+  filtrarMateria(nome: string) {
+    this.filtroMateria = this.filtroMateria === nome ? '' : nome;
+    this.aplicarFiltros();
+  }
+
+  /** Matérias que aparecem no caderno (atividades e tarefas), em ordem alfabética. */
+  get materiasDoCaderno(): string[] {
+    const nomes = new Set<string>();
+    this.atividades.forEach(a => a.nomeMateria && nomes.add(a.nomeMateria));
+    this.tarefas.forEach(t => t.materiaAtividade && nomes.add(t.materiaAtividade));
+    return [...nomes].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  }
+
   limparBusca() {
     this.termoBusca = '';
     this.aplicarFiltros();
@@ -187,15 +202,17 @@ export class CadernoPage implements OnInit {
     this.atividadesFiltradas = this.atividades.filter(atividade => {
       const bateStatus = this.filtroAtivo === 'todas' || atividade.status === this.filtroAtivo;
       const bateBusca = !termo || this.textoBuscaAtividade(atividade).includes(termo);
+      const bateMateria = !this.filtroMateria || atividade.nomeMateria === this.filtroMateria;
 
-      return bateStatus && bateBusca;
+      return bateStatus && bateBusca && bateMateria;
     });
 
     this.tarefasFiltradas = this.tarefas.filter(tarefa => {
       const bateStatus = this.filtroAtivo === 'todas' || this.statusNormalizadoTarefa(tarefa.status) === this.filtroAtivo;
       const bateBusca = !termo || this.textoBuscaTarefa(tarefa).includes(termo);
+      const bateMateria = !this.filtroMateria || tarefa.materiaAtividade === this.filtroMateria;
 
-      return bateStatus && bateBusca;
+      return bateStatus && bateBusca && bateMateria;
     });
   }
 

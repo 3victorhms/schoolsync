@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -9,64 +10,51 @@ import { ApiDeleteService } from './api-delete.service';
 })
 export class GrupoService {
 
-  private readonly API_URL = 'https://schoolsync-api-kvfx.onrender.com';
+  private readonly API_URL = environment.apiUrl;
 
   constructor(private http: HttpClient, private apiDelete: ApiDeleteService) { }
 
-  criar(nome: string, idSala: string, idCriador: string): Observable<GrupoModel> {
+  criar(nome: string, idSala: string): Observable<GrupoModel> {
     return this.http.post<GrupoModel>(
       `${this.API_URL}/grupos`,
-      { nome, idSala, idCriador }
+      { nome, idSala }
     );
   }
 
-  entrar(codigoConvite: string, idUsuario: string): Observable<GrupoModel> {
+  entrar(codigoConvite: string): Observable<GrupoModel> {
     return this.http.post<GrupoModel>(
       `${this.API_URL}/grupos/entrar`,
       null,
-      { params: { codigoConvite, idUsuario } }
+      { params: { codigoConvite } }
     );
   }
 
-  buscarPorId(idGrupo: string, idUsuarioLogado: string): Observable<GrupoModel> {
-    return this.http.get<GrupoModel>(
-      `${this.API_URL}/grupos/${idGrupo}`,
-      { params: { idUsuarioLogado } }
-    );
+  buscarPorId(idGrupo: string): Observable<GrupoModel> {
+    return this.http.get<GrupoModel>(`${this.API_URL}/grupos/${idGrupo}`);
   }
 
-  listarPorSalaEUsuario(idSala: string, idUsuario: string): Observable<GrupoModel[]> {
-    return this.http.get<GrupoModel[]>(
-      `${this.API_URL}/salas/${idSala}/grupos/usuario/${idUsuario}`
-    );
+  /** Grupos do usuário logado dentro da sala. */
+  listarMeusGruposDaSala(idSala: string): Observable<GrupoModel[]> {
+    return this.http.get<GrupoModel[]>(`${this.API_URL}/salas/${idSala}/grupos`);
   }
 
-  atualizar(idGrupo: string, nome: string, idSala: string, idCriador: string): Observable<GrupoModel> {
+  atualizar(idGrupo: string, nome: string, idSala: string): Observable<GrupoModel> {
     return this.http.put<GrupoModel>(
       `${this.API_URL}/grupos/${idGrupo}`,
-      { nome, idSala, idCriador }
+      { nome, idSala }
     );
   }
 
-  excluir(idGrupo: string, idUsuarioLogado: string): Observable<void> {
-    return this.apiDelete.excluir(
-      `${this.API_URL}/grupos/${idGrupo}`,
-      { idUsuarioLogado }
-    );
+  excluir(idGrupo: string): Observable<void> {
+    return this.apiDelete.excluir(`${this.API_URL}/grupos/${idGrupo}`);
   }
 
   /** Só o líder do grupo pode remover; as tarefas do membro removido passam para o líder. */
-  removerMembro(idGrupo: string, idUsuarioRemover: string, idUsuarioLogado: string): Observable<void> {
-    return this.apiDelete.excluir(
-      `${this.API_URL}/grupos/${idGrupo}/membros/${idUsuarioRemover}`,
-      { idUsuarioLogado }
-    );
+  removerMembro(idGrupo: string, idUsuarioRemover: string): Observable<void> {
+    return this.apiDelete.excluir(`${this.API_URL}/grupos/${idGrupo}/membros/${idUsuarioRemover}`);
   }
 
-  sair(idGrupo: string, idUsuario: string): Observable<void> {
-    return this.apiDelete.excluir(
-      `${this.API_URL}/grupos/${idGrupo}/sair`,
-      { idUsuario }
-    );
+  sair(idGrupo: string): Observable<void> {
+    return this.apiDelete.excluir(`${this.API_URL}/grupos/${idGrupo}/sair`);
   }
 }
