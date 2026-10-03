@@ -3,7 +3,12 @@ export class AtividadeModel {
     id: string;
     titulo: string;
     descricao: string;
-    disciplina: string;
+    /** v2: matéria cadastrada na sala (antes era o texto livre "disciplina"). */
+    idMateria: string;
+    nomeMateria: string;
+    /** Período da sala em que a data de entrega cai, ex.: "2º Bimestre". */
+    idPeriodo: string;
+    nomePeriodo: string;
     dataEntrega: string;
     valor: number;
 
@@ -19,7 +24,10 @@ export class AtividadeModel {
         this.id = '';
         this.titulo = '';
         this.descricao = '';
-        this.disciplina = '';
+        this.idMateria = '';
+        this.nomeMateria = '';
+        this.idPeriodo = '';
+        this.nomePeriodo = '';
         this.dataEntrega = '';
         this.valor = 0;
 

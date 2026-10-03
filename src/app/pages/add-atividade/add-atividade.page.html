@@ -38,12 +38,17 @@
     </div>
 
     <div class="campo-grupo">
-      <label class="campo-label">Disciplina</label>
-      <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('disciplina')" lines="none">
-        <input type="text" placeholder="Ex: Biologia, Matemática..." formControlName="disciplina" />
+      <label class="campo-label" for="campo-materia">Matéria</label>
+      <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('idMateria')" lines="none">
+        <select id="campo-materia" formControlName="idMateria">
+          <option value="" disabled>Escolha a matéria</option>
+          @for (materia of materias; track materia.id) {
+          <option [value]="materia.id">{{ materia.nome }}</option>
+          }
+        </select>
       </ion-item>
-      @if (campoInvalido('disciplina')) {
-      <p class="erro-campo">Informe a disciplina da atividade.</p>
+      @if (campoInvalido('idMateria')) {
+      <p class="erro-campo">Escolha a matéria da atividade.</p>
       }
     </div>
 
@@ -58,12 +63,21 @@
 
     @if (formGroup.get('valePontuacao')?.value) {
     <div class="campo-grupo">
-      <label class="campo-label">Valor (máximo: 15 pontos)</label>
+      <label class="campo-label">Valor (máximo: 15 pontos por atividade)</label>
       <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('valor')" lines="none">
         <input type="number" placeholder="Ex: 10 pontos" formControlName="valor" min="0.01" max="15" step="0.01" />
       </ion-item>
-      @if (campoInvalido('valor')) {
+      @if (campoInvalido('valor') && formGroup.get('valor')?.hasError('acimaDoDisponivel')) {
+      <p class="erro-campo">
+        Só restam {{ pontosDisponiveis }} pontos em {{ materiaSelecionada?.nome }} no {{ periodoSelecionado?.nome }}.
+      </p>
+      } @else if (campoInvalido('valor')) {
       <p class="erro-campo">Informe um valor entre 0,01 e 15 pontos.</p>
+      } @else if (pontosDisponiveis !== null) {
+      <p class="aviso-campo">
+        Disponível em {{ materiaSelecionada?.nome }} no {{ periodoSelecionado?.nome }}:
+        <strong>{{ pontosDisponiveis }} de {{ periodoSelecionado?.pontuacaoMaxima }} pontos</strong>
+      </p>
       }
     </div>
     }
@@ -71,12 +85,19 @@
     <div class="campo-grupo">
       <label class="campo-label">Data de entrega</label>
       <ion-item class="campo-item" [class.campo-invalido]="campoInvalido('dataEntrega')" lines="none">
-        <input type="date" formControlName="dataEntrega" [min]="hoje" />
+        <input type="date" formControlName="dataEntrega" [min]="dataMinimaPermitida" [max]="dataMaxima" />
       </ion-item>
       @if (editando) {
-      <p class="aviso-campo">A data de entrega não pode ser alterada depois que a atividade é criada.</p>
+      <p class="aviso-campo">
+        A data de entrega não pode ser alterada depois que a atividade é criada.
+        @if (periodoSelecionado) { Ela fica no {{ periodoSelecionado.nome }}. }
+      </p>
+      } @else if (campoInvalido('dataEntrega') && formGroup.get('dataEntrega')?.hasError('foraDosPeriodos')) {
+      <p class="erro-campo">A data está fora do ano letivo da sala ({{ descricaoAnoLetivo }}).</p>
       } @else if (campoInvalido('dataEntrega')) {
       <p class="erro-campo">Escolha uma data de entrega válida, que não seja no passado.</p>
+      } @else if (periodoSelecionado) {
+      <p class="aviso-campo">Essa entrega conta para o <strong>{{ periodoSelecionado.nome }}</strong>.</p>
       }
     </div>
 

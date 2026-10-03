@@ -50,7 +50,7 @@ export class TarefaGrupoModel {
     idGrupo: string;
     idAtividade: string;
     tituloAtividade: string;
-    disciplinaAtividade: string;
+    materiaAtividade: string;
     idUsuarioAtribuido: string;
     nomeUsuarioAtribuido: string;
     idCriador: string;
@@ -64,7 +64,7 @@ export class TarefaGrupoModel {
         this.idGrupo = "";
         this.idAtividade = "";
         this.tituloAtividade = "";
-        this.disciplinaAtividade = "";
+        this.materiaAtividade = "";
         this.idUsuarioAtribuido = "";
         this.nomeUsuarioAtribuido = "";
         this.idCriador = "";

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { SalaModel } from '../model/sala.model';
+import { SalaModel, SalaRequest } from '../model/sala.model';
 import { ApiDeleteService } from './api-delete.service';
 
 @Injectable({
@@ -13,21 +13,22 @@ export class SalaService {
 
   constructor(private http: HttpClient, private apiDelete: ApiDeleteService) { }
 
-  salvar(sala: SalaModel, idLider: string): Observable<SalaModel> {
-    if (sala.id) {
-      return this.atualizar(sala.id, sala);
+  /** Cria a sala (sem idSala) ou edita nome, matérias e períodos de uma existente. */
+  salvar(dados: SalaRequest, idLider: string, idSala?: string): Observable<SalaModel> {
+    if (idSala) {
+      return this.atualizar(idSala, dados);
     }
 
     return this.http.post<SalaModel>(
       `${this.API_URL}?idLider=${idLider}`,
-      sala
+      dados
     );
   }
 
-  atualizar(id: string, sala: SalaModel): Observable<SalaModel> {
+  atualizar(id: string, dados: SalaRequest): Observable<SalaModel> {
     return this.http.put<SalaModel>(
       `${this.API_URL}/${id}`,
-      sala
+      dados
     );
   }
 

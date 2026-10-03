@@ -45,7 +45,8 @@
     </div>
 
     <div class="atividade-tags">
-      <span class="tag-disciplina">{{ atividade.disciplina }}</span>
+      <span class="tag-disciplina">{{ atividade.nomeMateria }}</span>
+      @if (atividade.nomePeriodo) { <span class="tag-disciplina tag-periodo">{{ atividade.nomePeriodo }}</span> }
 
       <span class="tag-valor">
         <ion-icon name="star-outline"></ion-icon>

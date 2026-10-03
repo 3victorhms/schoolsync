@@ -203,7 +203,8 @@ export class CadernoPage implements OnInit {
     return this.normalizarTexto([
       atividade.titulo,
       atividade.descricao,
-      atividade.disciplina,
+      atividade.nomeMateria,
+      atividade.nomePeriodo,
       atividade.valor?.toString(),
       this.formatarData(atividade.dataEntrega),
       atividade.dataEntrega
@@ -215,7 +216,7 @@ export class CadernoPage implements OnInit {
       tarefa.titulo,
       tarefa.status,
       tarefa.tituloAtividade,
-      tarefa.disciplinaAtividade,
+      tarefa.materiaAtividade,
       tarefa.nomeUsuarioAtribuido,
       tarefa.nomeCriador,
       this.formatarData(tarefa.dataCriacao),

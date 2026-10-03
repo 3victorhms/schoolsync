@@ -22,7 +22,122 @@
       }
     </div>
 
-    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="formGroup.invalid || salvando">
+    <!-- ===================== MATÉRIAS ===================== -->
+    <section class="secao-form">
+      <div class="secao-cabecalho">
+        <h3 class="secao-titulo">Matérias</h3>
+        <span class="secao-contador">{{ materias.length }}</span>
+      </div>
+      <p class="secao-ajuda">As atividades da sala vão ser cadastradas em uma dessas matérias.</p>
+
+      <div class="nova-materia">
+        <ion-item class="campo-item" [class.campo-invalido]="tentouSalvar && !materias.length" lines="none">
+          <input type="text" placeholder="Ex: Matemática" maxlength="100" [(ngModel)]="novaMateria"
+            [ngModelOptions]="{ standalone: true }" (keydown.enter)="adicionarMateria(novaMateria, $event)"
+            aria-label="Nome da nova matéria" />
+        </ion-item>
+        <button type="button" class="botao-adicionar" (click)="adicionarMateria()" [disabled]="!novaMateria.trim()"
+          aria-label="Adicionar matéria">
+          <ion-icon name="add-outline"></ion-icon>
+        </button>
+      </div>
+      @if (erroMateria) {
+      <p class="erro-campo">{{ erroMateria }}</p>
+      } @else if (tentouSalvar && !materias.length) {
+      <p class="erro-campo">Cadastre pelo menos uma matéria.</p>
+      }
+
+      @if (materias.length) {
+      <ul class="lista-chips" aria-label="Matérias da sala">
+        @for (materia of materias; track materia.id || materia.nome) {
+        <li class="chip" [class.travado]="materiaEmUso(materia)">
+          <span>{{ materia.nome }}</span>
+          @if (materiaEmUso(materia)) {
+          <ion-icon name="lock-closed-outline" class="chip-icone" aria-label="Tem atividades cadastradas"
+            title="Tem atividades cadastradas"></ion-icon>
+          } @else {
+          <button type="button" class="chip-remover" (click)="removerMateria(materia)"
+            [attr.aria-label]="'Remover ' + materia.nome">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+          }
+        </li>
+        }
+      </ul>
+      }
+
+      @if (sugestoesDisponiveis.length && materias.length < 8) {
+      <div class="sugestoes">
+        <span class="sugestoes-rotulo">Sugestões</span>
+        <div class="lista-chips">
+          @for (sugestao of sugestoesDisponiveis; track sugestao) {
+          <button type="button" class="chip chip-sugestao" (click)="adicionarMateria(sugestao)">
+            <ion-icon name="add-outline" class="chip-icone"></ion-icon>
+            {{ sugestao }}
+          </button>
+          }
+        </div>
+      </div>
+      }
+    </section>
+
+    <!-- ===================== PERÍODOS ===================== -->
+    <section class="secao-form">
+      <div class="secao-cabecalho">
+        <h3 class="secao-titulo">Divisão do ano</h3>
+      </div>
+      <p class="secao-ajuda">
+        A soma dos pontos das atividades de cada matéria não pode passar do máximo do período.
+      </p>
+
+      <div class="segmentos" role="radiogroup" aria-label="Como o ano é dividido">
+        @for (tipo of tiposPeriodo; track tipo.valor) {
+        <button type="button" class="segmento" role="radio" [class.ativo]="tipoPeriodo === tipo.valor"
+          [attr.aria-checked]="tipoPeriodo === tipo.valor" [disabled]="tipoTravado && tipoPeriodo !== tipo.valor"
+          (click)="selecionarTipo(tipo.valor)">
+          {{ tipo.rotulo }}
+        </button>
+        }
+      </div>
+      @if (tipoTravado) {
+      <p class="aviso-campo">A divisão do ano não pode mudar depois que a sala tem atividades. Datas e pontos ainda podem ser ajustados.</p>
+      }
+
+      <div formArrayName="periodos" class="lista-periodos">
+        @for (periodo of periodos.controls; track $index; let i = $index) {
+        <div class="periodo-card" [formGroupName]="i" [class.com-erro]="erroPeriodo(i)">
+          <div class="periodo-topo">
+            <span class="periodo-nome">{{ nomeDoPeriodo(i) }}</span>
+          </div>
+
+          <div class="periodo-campos">
+            <label class="periodo-campo">
+              <span>Início</span>
+              <input type="date" formControlName="dataInicio" />
+            </label>
+            <label class="periodo-campo">
+              <span>Fim</span>
+              <input type="date" formControlName="dataFim" />
+            </label>
+            <label class="periodo-campo periodo-pontos">
+              <span>Pontos</span>
+              <input type="number" inputmode="decimal" min="0.01" max="100" step="0.5" formControlName="pontuacaoMaxima" />
+            </label>
+          </div>
+
+          @if (erroPeriodo(i)) {
+          <p class="erro-campo">{{ erroPeriodo(i) }}</p>
+          }
+        </div>
+        }
+      </div>
+
+      <p class="total-pontos" [class.diferente]="totalPontos !== 100">
+        Total do ano: <strong>{{ totalPontos }} pontos</strong>
+      </p>
+    </section>
+
+    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="salvando">
       @if (salvando) { <span class="btn-spinner" aria-hidden="true"></span> Salvando... } @else { {{ editando ? 'Salvar alterações' : 'Criar sala' }} }
     </ion-button>
 
