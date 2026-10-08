@@ -48,6 +48,8 @@ export class AddSalaPage implements OnInit {
   // ===== v2: períodos =====
   readonly tiposPeriodo = TIPOS_PERIODO;
   tipoPeriodo: TipoPeriodo = 'BIMESTRE';
+  /** Edição de uma sala que veio da API sem períodos: o formulário mostra a sugestão padrão. */
+  semDivisaoSalva = false;
 
   constructor(
     private formBuilder: FormBuilder, private toastController: ToastController,
@@ -86,7 +88,13 @@ export class AddSalaPage implements OnInit {
 
         if (res.tipoPeriodo && res.periodos?.length) {
           this.tipoPeriodo = res.tipoPeriodo;
-          this.montarPeriodos(res.periodos);
+          this.montarPeriodos([...res.periodos].sort((a, b) => a.ordem - b.ordem));
+          this.semDivisaoSalva = false;
+        } else {
+          // Sala sem divisão salva: mantém a sugestão padrão, mas avisa em vez de fingir que é a real
+          this.tipoPeriodo = res.tipoPeriodo ?? this.tipoPeriodo;
+          this.montarPeriodos(gerarPeriodosPadrao(this.tipoPeriodo));
+          this.semDivisaoSalva = true;
         }
       });
     }
@@ -165,17 +173,27 @@ export class AddSalaPage implements OnInit {
     if (this.tipoTravado || tipo === this.tipoPeriodo) return;
     this.tipoPeriodo = tipo;
     this.montarPeriodos(gerarPeriodosPadrao(tipo));
+    this.semDivisaoSalva = false;
   }
 
+  /**
+   * Troca a lista inteira de períodos por uma nova (setControl), em vez de clear() + push():
+   * o FormArray aninhado não avisa o formulário quando muda por dentro, e a tela continuava
+   * mostrando os valores antigos (a sugestão padrão) mesmo depois de carregar a sala.
+   */
   private montarPeriodos(periodos: Pick<PeriodoModel, 'dataInicio' | 'dataFim' | 'pontuacaoMaxima'>[]): void {
-    this.periodos.clear();
-    periodos.forEach(periodo => {
-      this.periodos.push(this.formBuilder.group({
-        'dataInicio': [periodo.dataInicio, Validators.required],
-        'dataFim': [periodo.dataFim, Validators.required],
-        'pontuacaoMaxima': [periodo.pontuacaoMaxima, [Validators.required, Validators.min(0.01), Validators.max(100)]],
-      }, { validators: this.fimDepoisDoInicio() }));
-    });
+    const grupos = periodos.map(periodo => this.formBuilder.group({
+      'dataInicio': [this.somenteData(periodo.dataInicio), Validators.required],
+      'dataFim': [this.somenteData(periodo.dataFim), Validators.required],
+      'pontuacaoMaxima': [periodo.pontuacaoMaxima, [Validators.required, Validators.min(0.01), Validators.max(100)]],
+    }, { validators: this.fimDepoisDoInicio() }));
+
+    this.formGroup.setControl('periodos', this.formBuilder.array(grupos, { validators: this.periodosEmOrdem() }));
+  }
+
+  /** O input type="date" só aceita "AAAA-MM-DD"; corta hora/fuso se vierem junto. */
+  private somenteData(valor: string): string {
+    return (valor ?? '').substring(0, 10);
   }
 
   private fimDepoisDoInicio() {
