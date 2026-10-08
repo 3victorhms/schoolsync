@@ -99,12 +99,17 @@
         </button>
         }
       </div>
+      @if (semDivisaoSalva) {
+      <p class="aviso-campo">Esta sala ainda não tinha a divisão do ano salva. Mostramos uma sugestão: confira as datas e os pontos e salve.</p>
+      }
       @if (tipoTravado) {
       <p class="aviso-campo">A divisão do ano não pode mudar depois que a sala tem atividades. Datas e pontos ainda podem ser ajustados.</p>
       }
 
       <div formArrayName="periodos" class="lista-periodos">
-        @for (periodo of periodos.controls; track $index; let i = $index) {
+        <!-- track pelo próprio controle: quando a lista é remontada (carregar a sala, trocar o tipo),
+             o Angular recria as linhas e os campos passam a apontar para os controles novos -->
+        @for (periodo of periodos.controls; track periodo; let i = $index) {
         <div class="periodo-card" [formGroupName]="i" [class.com-erro]="erroPeriodo(i)">
           <div class="periodo-topo">
             <span class="periodo-nome">{{ nomeDoPeriodo(i) }}</span>
