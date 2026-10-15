@@ -1,0 +1,88 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/perfil"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Administração</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="carregar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <main class="pagina-admin" aria-live="polite">
+    @if (carregando) {
+    <div class="estado-carregando">Carregando usuários...</div>
+    }
+
+    @if (semPermissao) {
+    <section class="acesso-negado" role="alert">
+      <ion-icon name="lock-closed-outline"></ion-icon>
+      <h2>Acesso negado</h2>
+      <p>Esta área é só para administradores. A API recusou o pedido com <strong>403 (Forbidden)</strong>, porque o seu perfil é <strong>USUARIO</strong>.</p>
+    </section>
+    }
+
+    @if (erro) {
+    <div class="estado-erro" role="alert">{{ erro }}</div>
+    }
+
+    @if (!carregando && !semPermissao && !erro) {
+    <section class="resumo" aria-label="Resumo das contas">
+      <div class="resumo-item">
+        <span class="resumo-numero">{{ usuarios.length }}</span>
+        <span class="resumo-rotulo">Usuários</span>
+      </div>
+      <div class="resumo-item">
+        <span class="resumo-numero">{{ totalAtivos }}</span>
+        <span class="resumo-rotulo">Ativos</span>
+      </div>
+      <div class="resumo-item">
+        <span class="resumo-numero">{{ totalDesativados }}</span>
+        <span class="resumo-rotulo">Desativados</span>
+      </div>
+      <div class="resumo-item destaque">
+        <span class="resumo-numero">{{ totalAdmins }}</span>
+        <span class="resumo-rotulo">Admins</span>
+      </div>
+    </section>
+
+    <ion-searchbar class="busca" placeholder="Buscar por nome ou e-mail" [debounce]="150"
+      (ionInput)="busca = $any($event).detail.value || ''"></ion-searchbar>
+
+    <section class="lista">
+      @for (usuario of usuariosFiltrados; track usuario.id) {
+      <div class="usuario" [class.desativado]="usuario.ativo === false">
+        <div class="avatar" [class.tem-foto]="!!usuario.foto">
+          @if (usuario.foto) {
+          <img [src]="usuario.foto" [alt]="'Foto de ' + usuario.nome">
+          } @else {
+          {{ iniciais(usuario.nome) }}
+          }
+        </div>
+        <div class="dados">
+          <span class="nome">
+            {{ usuario.nome }}
+            @if (usuario.id === idUsuarioLogado) { <span class="voce">(você)</span> }
+          </span>
+          <span class="email">{{ usuario.email }}</span>
+        </div>
+        <div class="selos">
+          <span class="selo" [class.admin]="usuario.perfil === 'ADMIN'">{{ usuario.perfil || 'USUARIO' }}</span>
+          @if (usuario.ativo === false) { <span class="selo inativo">Desativada</span> }
+        </div>
+      </div>
+      } @empty {
+      <div class="estado-vazio">
+        <ion-icon name="people-outline"></ion-icon>
+        <p>Nenhum usuário encontrado.</p>
+      </div>
+      }
+    </section>
+
+    <p class="rodape">Lista de <code>GET /admin/usuarios</code>, liberada só para o perfil ADMIN.</p>
+    }
+  </main>
+</ion-content>

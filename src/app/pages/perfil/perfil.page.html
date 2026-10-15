@@ -44,6 +44,21 @@
     </button>
   </div>
 
+  @if (usuario.perfil === 'ADMIN') {
+  <h3 class="group-title">Administração</h3>
+  <div class="group">
+    <button type="button" class="row" routerLink="/admin">
+      <div class="row-icon roxo">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+      </div>
+      <div class="row-body">
+        <span class="row-label">Painel do administrador</span>
+      </div>
+      <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
+    </button>
+  </div>
+  }
+
   <h3 class="group-title">Conta</h3>
   <div class="group">
     <button type="button" class="row" (click)="logout()">
