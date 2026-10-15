@@ -47,6 +47,10 @@ export class UsuarioService {
     );
   }
 
+  removerFoto(): Observable<UsuarioModel> {
+    return this.http.delete<UsuarioModel>(`${this.API_URL_USUARIOS}/me/foto`);
+  }
+
   buscarPorId(id: string): Observable<UsuarioModel> {
     return this.http.get<UsuarioModel>(`${this.API_URL_USUARIOS}/${id}`);
   }

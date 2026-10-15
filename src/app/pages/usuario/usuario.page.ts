@@ -14,7 +14,7 @@ import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import { LoginService } from 'src/app/services/login.service';
 import { TokenService } from 'src/app/services/token.service';
-import { finalize, switchMap } from 'rxjs';
+import { finalize, map, of, switchMap } from 'rxjs';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
 
 @Component({
@@ -64,10 +64,16 @@ export class UsuarioPage implements OnInit {
     return nova !== confirmar;
   }
 
-  get senhaAtualObrigatoria(): boolean {
+  /** Trocar o e-mail ou a senha exige confirmar a senha atual (a API confere). */
+  get trocandoCredenciais(): boolean {
     const novaPreenchida = !!this.formGroup.get('novaSenha')?.value;
+    const email: string = this.formGroup.get('email')?.value || '';
+    return novaPreenchida || email.trim().toLowerCase() !== (this.usuarioOriginal.email || '').toLowerCase();
+  }
+
+  get senhaAtualObrigatoria(): boolean {
     const senhaAtualPreenchida = !!this.formGroup.get('senhaAtual')?.value;
-    return novaPreenchida && !senhaAtualPreenchida;
+    return this.trocandoCredenciais && !senhaAtualPreenchida;
   }
 
   /** Mesmo mínimo do cadastro: 8 caracteres. */
@@ -211,10 +217,24 @@ export class UsuarioPage implements OnInit {
         this.usuario.senha = novaSenha;
       }
 
-      const salvarDadosUsuario = () => this.usuarioService.salvar(this.usuario);
+      const trocouCredenciais = this.trocandoCredenciais;
+      this.usuario.senhaAtual = trocouCredenciais ? senhaAtual : undefined;
+
+      // com e-mail ou senha novos, a API invalida os tokens antigos (inclusive o deste aparelho),
+      // ent entra de novo com os dados novos pra continuar logado
+      const salvarDadosUsuario = () => this.usuarioService.salvar(this.usuario).pipe(
+        switchMap(usuarioAtualizado => trocouCredenciais
+          ? this.loginService.autenticar({ email, senha: novaSenha || senhaAtual }).pipe(map(() => usuarioAtualizado))
+          : of(usuarioAtualizado))
+      );
+
+      // a foto só muda pelas rotas próprias: upload da nova ou remoção da atual
+      const removeuFoto = !this.imagemBase64Selecionada && !!this.usuarioOriginal.foto && !this.usuario.foto;
       const atualizarFoto = this.imagemBase64Selecionada
         ? this.usuarioService.atualizarImagem(this.imagemBase64Selecionada)
-        : null;
+        : removeuFoto
+          ? this.usuarioService.removerFoto()
+          : null;
 
       (atualizarFoto
         ? atualizarFoto.pipe(
@@ -249,19 +269,7 @@ export class UsuarioPage implements OnInit {
         });
     };
 
-    if (novaSenha) {
-      this.loginService.autenticar({ email: this.usuario.email, senha: senhaAtual })
-        .subscribe({
-          next: () => {
-            atualizar();
-          },
-          error: () => {
-            this.salvando = false;
-            this.exibirToast('Senha atual incorreta.');
-          }
-        });
-    } else {
-      atualizar();
-    }
+    // a senha atual é conferida pela própria API (antes era só aqui no app)
+    atualizar();
   }
 }
