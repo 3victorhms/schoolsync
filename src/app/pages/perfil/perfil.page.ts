@@ -6,7 +6,7 @@ import {
   IonIcon
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { homeOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline, chevronForwardOutline } from 'ionicons/icons';
+import { homeOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline, chevronForwardOutline, shieldCheckmarkOutline } from 'ionicons/icons';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
@@ -44,6 +44,7 @@ export class PerfilPage implements OnInit {
     id: this.usuarioService.buscarAutenticacao().id,
     nome: this.usuarioService.buscarAutenticacao().nome,
     foto: this.usuarioService.buscarAutenticacao().foto,
+    perfil: this.usuarioService.buscarAutenticacao().perfil,
   };
 
   get iniciais(): string {
@@ -68,7 +69,7 @@ export class PerfilPage implements OnInit {
     private notificacaoPushService: NotificacaoPushService
   ) {
     addIcons({
-      homeOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline, chevronForwardOutline
+      homeOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline, chevronForwardOutline, shieldCheckmarkOutline
     });
   }
 
@@ -80,6 +81,7 @@ export class PerfilPage implements OnInit {
       id: this.usuarioService.buscarAutenticacao().id,
       nome: this.usuarioService.buscarAutenticacao().nome,
       foto: this.usuarioService.buscarAutenticacao().foto,
+      perfil: this.usuarioService.buscarAutenticacao().perfil,
     };
     this.temaClaro = this.temaService.temaClaroAtivo();
     this.carregarCaderno();

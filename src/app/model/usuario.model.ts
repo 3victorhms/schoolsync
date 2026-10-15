@@ -5,6 +5,8 @@ export class UsuarioModel {
     senha: string;
     foto: string;
     ativo: boolean;
+    /** USUARIO ou ADMIN (vem da API no login). */
+    perfil?: string;
     /** Só vai na edição do perfil, quando o e-mail ou a senha mudam. */
     senhaAtual?: string;
 

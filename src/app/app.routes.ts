@@ -146,6 +146,10 @@ const rotasDaAplicacao: Routes = [
     path: 'grupo/:id/tarefas',
     loadComponent: () => import('./pages/grupo-tarefas/grupo-tarefas.page').then(m => m.GrupoTarefasPage)
   },
+  {
+    path: 'admin',
+    loadComponent: () => import('./pages/admin/admin.page').then(m => m.AdminPage)
+  },
 ];
 
 const rotasPublicas = new Set(['', 'login', 'add-usuario']);
