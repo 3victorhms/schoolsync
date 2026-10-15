@@ -59,4 +59,8 @@ export class SalaService {
   removerMembro(idSala: string, idUsuarioRemover: string): Observable<void> {
     return this.apiDelete.excluir(`${this.API_URL}/${idSala}/membros/${idUsuarioRemover}`);
   }
+
+  transferirLideranca(idSala: string, idNovoLider: string): Observable<SalaModel> {
+    return this.http.put<SalaModel>(`${this.API_URL}/${idSala}/lider`, null, { params: { idNovoLider } });
+  }
 }

@@ -54,6 +54,10 @@ export class GrupoService {
     return this.apiDelete.excluir(`${this.API_URL}/grupos/${idGrupo}/membros/${idUsuarioRemover}`);
   }
 
+  transferirLideranca(idGrupo: string, idNovoLider: string): Observable<GrupoModel> {
+    return this.http.put<GrupoModel>(`${this.API_URL}/grupos/${idGrupo}/lider`, null, { params: { idNovoLider } });
+  }
+
   sair(idGrupo: string): Observable<void> {
     return this.apiDelete.excluir(`${this.API_URL}/grupos/${idGrupo}/sair`);
   }

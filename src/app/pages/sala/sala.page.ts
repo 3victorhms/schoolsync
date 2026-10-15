@@ -9,7 +9,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { addIcons } from 'ionicons';
-import { addOutline, peopleOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline, logOutOutline, personRemoveOutline, chevronForwardOutline, copyOutline, archiveOutline, personAddOutline, statsChartOutline, schoolOutline } from 'ionicons/icons';
+import { addOutline, peopleOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline, logOutOutline, personRemoveOutline, chevronForwardOutline, copyOutline, archiveOutline, personAddOutline, statsChartOutline, schoolOutline, ribbonOutline } from 'ionicons/icons';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { finalize, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -43,6 +43,7 @@ export class SalaPage implements OnInit {
     idSala: string;
     excluindoSala = false;
     removendoMembroId = '';
+    transferindoLiderId = '';
     carregando = true;
 
     /** Aba selecionada. Fica guardada ao abrir um grupo/atividade e voltar. */
@@ -93,7 +94,7 @@ export class SalaPage implements OnInit {
             checkmarkCircleOutline, bookmarkOutline,
             createOutline, trashOutline, logOutOutline,
             personRemoveOutline, chevronForwardOutline,
-            copyOutline, archiveOutline, personAddOutline, statsChartOutline, schoolOutline
+            copyOutline, archiveOutline, personAddOutline, statsChartOutline, schoolOutline, ribbonOutline
         });
     }
 
@@ -296,6 +297,33 @@ export class SalaPage implements OnInit {
             error: (erro) => {
                 console.error('Erro ao sair da sala:', erro);
                 this.exibirMensagem(`Erro ao sair da sala (${erro?.status || 'sem conexão'}).`);
+            }
+        });
+    }
+
+    // o líder passa a liderança pra outro membro e vira um membro comum (aí pode sair da sala ou desativar a conta)
+    async tornarLider(membro: UsuarioModel) {
+        if (this.transferindoLiderId || !this.sala.id) return;
+
+        const nome = this.nomeMembro(membro);
+        const confirmou = await this.confirmacaoService.confirmar(
+            'Transferir liderança',
+            `Tornar ${nome} líder da sala? Você deixa de ser o líder e não poderá mais editar a sala, as matérias e os períodos.`,
+            'Transferir'
+        );
+        if (!confirmou) return;
+
+        this.transferindoLiderId = membro.id;
+        this.salaService.transferirLideranca(this.sala.id, membro.id).pipe(
+            finalize(() => this.transferindoLiderId = '')
+        ).subscribe({
+            next: () => {
+                this.hapticsService.sucesso();
+                this.exibirMensagem(`${nome} agora é o líder da sala.`);
+                this.carregarSala(this.sala.id);
+            },
+            error: (erro) => {
+                this.exibirMensagem(erro?.error?.message || 'Não foi possível transferir a liderança.');
             }
         });
     }

@@ -111,6 +111,11 @@
         </div>
 
         @if (podeRemoverMembro(membro)) {
+        <button type="button" class="tornar-lider-btn" [disabled]="transferindoLiderId === membro.idUsuario"
+          (click)="tornarLider(membro)" [attr.aria-label]="'Tornar ' + nomeMembro(membro) + ' líder do grupo'">
+          @if (transferindoLiderId === membro.idUsuario) { <span class="btn-spinner sozinho" aria-hidden="true"></span> }
+          @else { <ion-icon name="ribbon-outline"></ion-icon> }
+        </button>
         <button type="button" class="remover-membro-btn" [disabled]="removendoMembroId === membro.idUsuario"
           (click)="removerMembro(membro)" [attr.aria-label]="'Remover ' + nomeMembro(membro) + ' do grupo'">
           @if (removendoMembroId === membro.idUsuario) { <span class="btn-spinner sozinho" aria-hidden="true"></span> }

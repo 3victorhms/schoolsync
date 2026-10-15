@@ -68,7 +68,7 @@ export class NotificacaoPage {
 
   icone(tipo: string): string {
     const valor = tipo?.toUpperCase();
-    if (valor.includes('GRUPO') || valor.includes('CONVITE')) return 'people-outline';
+    if (valor.includes('GRUPO') || valor.includes('CONVITE') || valor.includes('SALA')) return 'people-outline';
     if (valor.includes('CONCLUID')) return 'checkmark-circle-outline';
     return 'book-outline';
   }
@@ -86,7 +86,9 @@ export class NotificacaoPage {
     if (!notificacao.targetId) return null;
     const tipo = notificacao.tipo?.toUpperCase();
     if (tipo.includes('GRUPO') || tipo.includes('CONVITE')) return ['/grupo', notificacao.targetId];
-    if (tipo.includes('ATIVIDADE')) return ['/atividade', notificacao.targetId];
+    if (tipo.includes('SALA')) return ['/sala', notificacao.targetId];
+    // o lembrete usa "idAtividade:data:dias" como alvo, ent a atividade é só a primeira parte
+    if (tipo.includes('ATIVIDADE')) return ['/atividade', notificacao.targetId.split(':')[0]];
     if (tipo.includes('TAREFA')) return ['/tarefa'];
     return null;
   }

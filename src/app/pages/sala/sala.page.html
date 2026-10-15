@@ -257,6 +257,11 @@
                 </ion-item>
                 @if (podeRemoverMembro(membro)) {
                 <ion-item-options side="end">
+                    <ion-item-option color="primary" [disabled]="transferindoLiderId === membro.id"
+                        (click)="tornarLider(membro); slidingMembro.close()"
+                        [attr.aria-label]="'Tornar ' + nomeMembro(membro) + ' líder da sala'">
+                        <ion-icon slot="icon-only" name="ribbon-outline"></ion-icon>
+                    </ion-item-option>
                     <ion-item-option color="danger" [disabled]="removendoMembroId === membro.id"
                         (click)="removerMembro(membro); slidingMembro.close()"
                         [attr.aria-label]="'Remover ' + nomeMembro(membro)">
