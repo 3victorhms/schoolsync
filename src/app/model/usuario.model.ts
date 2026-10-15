@@ -5,6 +5,8 @@ export class UsuarioModel {
     senha: string;
     foto: string;
     ativo: boolean;
+    /** Só vai na edição do perfil, quando o e-mail ou a senha mudam. */
+    senhaAtual?: string;
 
     constructor() {
         this.id = "";
