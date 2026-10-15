@@ -30,7 +30,8 @@ import {
   logOutOutline,
   trashOutline,
   createOutline,
-  personRemoveOutline
+  personRemoveOutline,
+  ribbonOutline
 } from 'ionicons/icons';
 import { GrupoModel, MembroGrupoModel } from 'src/app/model/grupo.model';
 import { UsuarioModel } from 'src/app/model/usuario.model';
@@ -73,6 +74,7 @@ export class GrupoPage implements OnInit {
   usuario: UsuarioModel;
   excluindoGrupo = false;
   removendoMembroId = '';
+  transferindoLiderId = '';
   carregando = true;
 
   constructor(
@@ -100,7 +102,8 @@ export class GrupoPage implements OnInit {
       logOutOutline,
       trashOutline,
       createOutline,
-      personRemoveOutline
+      personRemoveOutline,
+      ribbonOutline
     });
   }
 
@@ -161,6 +164,33 @@ export class GrupoPage implements OnInit {
   /** Só o líder remove, e nunca a si mesmo. */
   podeRemoverMembro(membro: MembroGrupoModel): boolean {
     return this.grupo.criador && !this.ehLiderGrupo(membro) && membro.idUsuario !== this.usuario.id;
+  }
+
+  // passa a liderança do grupo pra outro membro. quem recebe passa a gerenciar as tarefas
+  async tornarLider(membro: MembroGrupoModel) {
+    if (this.transferindoLiderId || !this.grupo.id) return;
+
+    const nome = this.nomeMembro(membro);
+    const confirmou = await this.confirmacaoService.confirmar(
+      'Transferir liderança',
+      `Tornar ${nome} líder do grupo? Você deixa de poder criar, atribuir e excluir as tarefas do grupo.`,
+      'Transferir'
+    );
+    if (!confirmou) return;
+
+    this.transferindoLiderId = membro.idUsuario;
+    this.grupoService.transferirLideranca(this.grupo.id, membro.idUsuario).pipe(
+      finalize(() => this.transferindoLiderId = '')
+    ).subscribe({
+      next: () => {
+        this.hapticsService.sucesso();
+        this.desfazerService.mostrarMensagem(`${nome} agora é o líder do grupo.`);
+        this.carregarGrupo(this.grupo.id);
+      },
+      error: (erro) => {
+        this.desfazerService.mostrarMensagem(erro?.error?.message || 'Não foi possível transferir a liderança.');
+      }
+    });
   }
 
   async removerMembro(membro: MembroGrupoModel) {
