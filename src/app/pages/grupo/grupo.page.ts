@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { ProgressoTarefasComponent, calcularProgresso } from 'src/app/components/progresso-tarefas/progresso-tarefas.component';
 import { TituloPaginaService } from 'src/app/services/titulo-pagina.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -51,6 +52,7 @@ import { mostrarAviso } from 'src/app/utils/aviso.util';
   styleUrls: ['./grupo.page.scss'],
   standalone: true,
   imports: [
+    ProgressoTarefasComponent,
     IonContent,
     IonHeader,
     IonToolbar,
@@ -222,6 +224,11 @@ export class GrupoPage implements OnInit {
         this.desfazerService.mostrarMensagem(erro?.error?.message || 'Não foi possível remover o membro.');
       }
     });
+  }
+
+  /** Quantas tarefas do grupo já foram concluídas, no total e por membro. */
+  get progresso() {
+    return calcularProgresso(this.grupo.tarefas || []);
   }
 
   labelTarefasAtribuidas(): string {

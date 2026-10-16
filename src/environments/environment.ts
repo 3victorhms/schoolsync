@@ -8,7 +8,9 @@ export const environment = {
    * Endereço da API usado por todos os services e pelo interceptor do token.
    * Para testar com a API rodando na sua máquina, troque por 'http://localhost:8080'.
    */
-  apiUrl: 'https://schoolsync-api-kvfx.onrender.com'
+  apiUrl: 'https://schoolsync-api-kvfx.onrender.com',
+  /** Endereço da versão web, usado no link de convite das salas. */
+  webUrl: 'https://ppschoolsync.netlify.app'
 };
 
 /*

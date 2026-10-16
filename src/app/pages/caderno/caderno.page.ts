@@ -27,7 +27,8 @@ import {
   chevronForwardOutline,
   archiveOutline,
   chevronDownOutline,
-  chevronUpOutline
+  chevronUpOutline,
+  alertCircleOutline
 } from 'ionicons/icons';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
@@ -36,7 +37,16 @@ import { TarefaService } from 'src/app/services/tarefa.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { finalize } from 'rxjs';
-import { DIAS_ATE_ARQUIVAR, classeUrgencia, deveArquivar } from 'src/app/utils/urgencia.util';
+import { DIAS_ATE_ARQUIVAR, classeUrgencia, compararPorEntrega, deveArquivar } from 'src/app/utils/urgencia.util';
+import { parsearData } from 'src/app/utils/data.util';
+
+/** Bloco da lista do caderno ("Atrasadas", "Hoje"...). */
+interface SecaoCaderno {
+  chave: string;
+  titulo: string;
+  atividades: AtividadeModel[];
+  alerta?: boolean;
+}
 import { formatarDataCurta } from 'src/app/utils/data.util';
 import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
 import { labelPontos } from 'src/app/utils/pontos.util';
@@ -67,6 +77,8 @@ export class CadernoPage implements OnInit {
   usuario: UsuarioModel;
   atividades: AtividadeModel[];
   atividadesFiltradas: AtividadeModel[];
+  /** As atividades à vista, em ordem de prazo e separadas por quando vencem. */
+  secoesAtividades: SecaoCaderno[] = [];
   /** Concluídas com prazo vencido ou atrasadas há mais de 3 dias (regra em deveArquivar). Ficam recolhidas no fim. */
   atividadesArquivadas: AtividadeModel[] = [];
   /** null = automático (abre sozinha com busca ou filtro); true/false = o aluno abriu ou fechou na mão. */
@@ -108,7 +120,8 @@ export class CadernoPage implements OnInit {
       chevronForwardOutline,
       archiveOutline,
       chevronDownOutline,
-      chevronUpOutline
+      chevronUpOutline,
+      alertCircleOutline
     });
   }
 
@@ -221,8 +234,10 @@ export class CadernoPage implements OnInit {
     });
 
     // as arquivadas saem da lista principal e vão para a seção recolhida no fim
-    this.atividadesFiltradas = atividadesQueBatem.filter(atividade => !deveArquivar(atividade));
-    this.atividadesArquivadas = atividadesQueBatem.filter(atividade => deveArquivar(atividade));
+    this.atividadesFiltradas = atividadesQueBatem.filter(atividade => !deveArquivar(atividade)).sort(compararPorEntrega);
+    this.atividadesArquivadas = atividadesQueBatem.filter(atividade => deveArquivar(atividade))
+      .sort((a, b) => compararPorEntrega(b, a));
+    this.secoesAtividades = this.montarSecoes(this.atividadesFiltradas);
 
     this.tarefasFiltradas = this.tarefas.filter(tarefa => {
       const bateStatus = this.filtroAtivo === 'todas' || this.statusNormalizadoTarefa(tarefa.status) === this.filtroAtivo;
@@ -265,6 +280,40 @@ export class CadernoPage implements OnInit {
 
   get temResultados(): boolean {
     return this.atividadesFiltradas.length > 0 || this.atividadesArquivadas.length > 0 || this.tarefasFiltradas.length > 0;
+  }
+
+  /**
+   * Separa as atividades (já em ordem de prazo) pelo que fazer primeiro, igual à agenda do Início.
+   * As concluídas que ainda não venceram ficam num bloco próprio no fim, pra não misturar com o que falta fazer.
+   */
+  private montarSecoes(atividades: AtividadeModel[]): SecaoCaderno[] {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const secoes: SecaoCaderno[] = [
+      { chave: 'atrasadas', titulo: 'Atrasadas', atividades: [], alerta: true },
+      { chave: 'hoje', titulo: 'Hoje', atividades: [] },
+      { chave: 'semana', titulo: 'Próximos 7 dias', atividades: [] },
+      { chave: 'depois', titulo: 'Mais para frente', atividades: [] },
+      { chave: 'concluidas', titulo: 'Concluídas', atividades: [] },
+    ];
+    const [atrasadas, deHoje, semana, depois, concluidas] = secoes;
+
+    for (const atividade of atividades) {
+      if (atividade.status === 'concluido') {
+        concluidas.atividades.push(atividade);
+        continue;
+      }
+
+      const prazo = parsearData(atividade.dataEntrega);
+      const dias = prazo ? Math.round((prazo.getTime() - hoje.getTime()) / 86400000) : Number.MAX_SAFE_INTEGER;
+      if (dias < 0) atrasadas.atividades.push(atividade);
+      else if (dias === 0) deHoje.atividades.push(atividade);
+      else if (dias <= 7) semana.atividades.push(atividade);
+      else depois.atividades.push(atividade);
+    }
+
+    return secoes.filter(secao => secao.atividades.length > 0);
   }
 
   /** Com busca ou filtro ativo, as arquivadas aparecem abertas (senão o resultado ficaria escondido). */
