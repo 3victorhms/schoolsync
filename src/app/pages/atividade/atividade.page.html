@@ -33,6 +33,9 @@
   </div>
   } @else {
 
+  <!-- no computador: detalhes à esquerda e comentários à direita; no celular fica tudo empilhado -->
+  <div class="atividade-layout">
+  <div class="atividade-principal">
   <div class="atividade-card">
     <h2 class="atividade-titulo">{{ atividade.titulo }}</h2>
     <p class="atividade-descricao-titulo">{{ atividade.descricao }}</p>
@@ -147,6 +150,9 @@
   </div>
   }
 
+  </div>
+
+  <aside class="atividade-lateral">
   <div class="comentarios-secao">
     <h3 class="secao-titulo">
       <ion-icon name="chatbox-outline"></ion-icon>
@@ -264,6 +270,8 @@
         <ion-icon name="send-outline"></ion-icon>
       </button>
     </div>
+  </div>
+  </aside>
   </div>
 
   }

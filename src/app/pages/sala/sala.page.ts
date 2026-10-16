@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { TituloPaginaService } from 'src/app/services/titulo-pagina.service';
 import { CommonModule } from '@angular/common';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonIcon, IonButton, IonRefresher, IonRefresherContent, IonSpinner, IonItemSliding, IonItem, IonItemOptions, IonItemOption } from '@ionic/angular/standalone';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -35,6 +36,9 @@ type AbaSala = 'atividades' | 'grupos' | 'membros';
     imports: [IonIcon, IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonRefresher, IonRefresherContent, IonSpinner, IonItemSliding, IonItem, IonItemOptions, IonItemOption, CommonModule, RouterLink, AtividadeItemComponent]
 })
 export class SalaPage implements OnInit {
+    // nome da sala/atividade/grupo na aba do navegador (versão web)
+    private tituloPagina = inject(TituloPaginaService);
+
 
     sala: SalaModel;
     atividades: AtividadeModel[];
@@ -131,6 +135,7 @@ export class SalaPage implements OnInit {
                 this.sala.id = this.sala.id || id;
                 this.sala.membros = this.sala.membros || [];
                 this.sala.atividades = this.sala.atividades || [];
+                this.tituloPagina.definir(this.sala.nome);
                 this.organizarAtividades();
                 this.carregarMembros(this.sala.membros);
                 this.carregarGrupos();

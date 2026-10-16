@@ -617,3 +617,115 @@ ion-content > .vazio-data {
         margin-top: 0;
     }
 }
+
+// ---------------------------------------------------------------------------
+// Abas x versão web — feito com auxílio do Claude
+// No celular/tablet só a aba escolhida aparece. No computador as abas somem
+// e as três seções aparecem juntas: atividades à esquerda; grupos e membros
+// numa coluna à direita.
+// ---------------------------------------------------------------------------
+.aba-oculta {
+    display: none;
+}
+
+.titulo-coluna,
+.membro-acoes {
+    display: none;
+}
+
+@media (min-width: 992px) {
+    .abas {
+        display: none;
+    }
+
+    .sala-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 340px;
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+            "atividades membros"
+            "atividades grupos";
+        column-gap: 8px;
+        align-items: start;
+        padding-top: 8px;
+    }
+
+    .sala-layout .aba-oculta {
+        display: block;
+    }
+
+    .secao-atividades {
+        grid-area: atividades;
+    }
+
+    .secao-membros {
+        grid-area: membros;
+    }
+
+    .secao-grupos {
+        grid-area: grupos;
+    }
+
+    .titulo-coluna {
+        display: block;
+        margin: 0 4px 10px;
+        font-size: 17px;
+        font-weight: 800;
+        color: var(--app-text);
+    }
+
+    // na coluna estreita os dois botões de grupo ficam um embaixo do outro
+    .secao-grupos .linhas-acao {
+        flex-direction: column;
+    }
+
+    .secao-grupos .vazio-guia-botoes {
+        flex-direction: column;
+    }
+
+    .membro-acoes {
+        display: flex;
+        gap: 4px;
+        margin-left: auto;
+
+        button {
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            color: var(--app-muted);
+            font-size: 18px;
+            cursor: pointer;
+
+            ion-icon {
+                color: inherit;
+            }
+
+            &:hover:not(:disabled) {
+                background: var(--app-accent-soft);
+                color: var(--app-accent);
+            }
+
+            &.perigo:hover:not(:disabled) {
+                background: color-mix(in srgb, var(--app-danger) 14%, transparent);
+                color: var(--app-danger);
+            }
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: default;
+            }
+        }
+    }
+}
+
+// a linha do membro ocupa a largura toda do item (senão o separador e os
+// botões de ação ficavam colados no nome)
+ion-item.membro-item-host .membro-item {
+    flex: 1;
+    min-width: 0;
+}

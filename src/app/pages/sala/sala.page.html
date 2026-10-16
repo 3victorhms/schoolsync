@@ -75,11 +75,12 @@
         </button>
     </nav>
 
-    @switch (aba) {
+    <!-- No celular e no tablet só a aba escolhida aparece (as outras ficam com .aba-oculta).
+         No computador as três aparecem juntas: atividades à esquerda, grupos e membros à direita. -->
+    <div class="sala-layout">
 
     <!-- ===================== ATIVIDADES ===================== -->
-    @case ('atividades') {
-    <section class="secao" role="tabpanel">
+    <section class="secao secao-atividades" role="tabpanel" [class.aba-oculta]="aba !== 'atividades'">
         @if (periodoDaVez) {
         <button type="button" class="periodo-banner" [routerLink]="['/sala', sala.id, 'pontos']"
             aria-label="Ver pontos por matéria">
@@ -150,11 +151,10 @@
         </div>
         }
     </section>
-    }
 
     <!-- ===================== GRUPOS ===================== -->
-    @case ('grupos') {
-    <section class="secao" role="tabpanel">
+    <section class="secao secao-grupos" role="tabpanel" [class.aba-oculta]="aba !== 'grupos'">
+        <h3 class="titulo-coluna">Grupos</h3>
         @if (carregandoGrupos) {
         <div class="group">
             @for (i of [1, 2]; track i) {
@@ -214,11 +214,10 @@
         </div>
         }
     </section>
-    }
 
     <!-- ===================== MEMBROS ===================== -->
-    @case ('membros') {
-    <section class="secao" role="tabpanel">
+    <section class="secao secao-membros" role="tabpanel" [class.aba-oculta]="aba !== 'membros'">
+        <h3 class="titulo-coluna">Membros</h3>
         <div class="ocupacao" [class.quase-cheia]="vagasRestantes > 0 && vagasRestantes <= 5" [class.cheia]="vagasRestantes === 0">
             <div class="ocupacao-texto">
                 <span><strong>{{ membros.length }}</strong> de {{ LIMITE_MEMBROS }} membros</span>
@@ -253,6 +252,19 @@
                             <span class="membro-tag-lider">Líder</span>
                             }
                         </div>
+                        <!-- no computador não tem o gesto de arrastar, então as ações ficam à mostra -->
+                        @if (podeRemoverMembro(membro)) {
+                        <div class="membro-acoes">
+                            <button type="button" [disabled]="transferindoLiderId === membro.id" (click)="tornarLider(membro)"
+                                [attr.aria-label]="'Tornar ' + nomeMembro(membro) + ' líder da sala'" title="Tornar líder">
+                                <ion-icon name="ribbon-outline" aria-hidden="true"></ion-icon>
+                            </button>
+                            <button type="button" class="perigo" [disabled]="removendoMembroId === membro.id" (click)="removerMembro(membro)"
+                                [attr.aria-label]="'Remover ' + nomeMembro(membro)" title="Remover da sala">
+                                <ion-icon name="person-remove-outline" aria-hidden="true"></ion-icon>
+                            </button>
+                        </div>
+                        }
                     </div>
                 </ion-item>
                 @if (podeRemoverMembro(membro)) {
@@ -280,8 +292,7 @@
         </button>
         }
     </section>
-    }
-    }
 
+    </div>
     }
 </ion-content>

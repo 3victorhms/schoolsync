@@ -44,9 +44,10 @@
     </button>
   </div>
 
+  <!-- no computador o painel e o "Sair" já estão no menu lateral, então somem daqui -->
   @if (usuario.perfil === 'ADMIN') {
-  <h3 class="group-title">Administração</h3>
-  <div class="group">
+  <h3 class="group-title oculto-no-computador">Administração</h3>
+  <div class="group oculto-no-computador">
     <button type="button" class="row" routerLink="/admin">
       <div class="row-icon roxo">
         <ion-icon name="shield-checkmark-outline"></ion-icon>
@@ -61,7 +62,7 @@
 
   <h3 class="group-title">Conta</h3>
   <div class="group">
-    <button type="button" class="row" (click)="logout()">
+    <button type="button" class="row oculto-no-computador" (click)="logout()">
       <div class="row-icon cinza">
         <ion-icon name="log-out-outline"></ion-icon>
       </div>

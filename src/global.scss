@@ -75,6 +75,11 @@ body {
   // plataformas caem para a Inter (importada no index.html), que tem
   // proporções bem parecidas, em vez da fonte generica do sistema.
   --ion-font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  // Cor padrao do texto do Ionic presa ao tema do app. Antes ela seguia o tema
+  // do sistema operacional: com o app escuro e o celular/PC no modo claro, textos
+  // sem cor propria (ex.: o titulo da atividade) ficavam pretos sobre o fundo escuro.
+  --ion-text-color: var(--app-text);
 }
 
 html,
@@ -961,7 +966,8 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
  *     embaixo como no celular (no toque ela funciona melhor que um menu);
  *   - computador (992px ou mais): o menu lateral (app.component +
  *     components/menu-lateral) substitui a barra de abas, listas usam 880px,
- *     formularios 720px e as telas com grade (inicio e salas) 1120px.
+ *     formularios 720px e as telas com colunas (inicio, salas, sala e
+ *     atividade) 1120px.
  * Abaixo de 700px nada muda: continua exatamente o layout mobile original.
  * ------------------------------------------------------------------------ */
 @media (min-width: 700px) {
@@ -987,7 +993,7 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
   }
 
   // o ".ion-page" junto do nome e pra ganhar da regra padrao logo acima
-  app-inicio.ion-page, app-salas.ion-page {
+  app-inicio.ion-page, app-salas.ion-page, app-sala.ion-page, app-atividade.ion-page {
     --web-largura: 1120px;
   }
 
@@ -1004,6 +1010,16 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
   // no computador a navegacao fica no menu lateral, entao a barra de abas some
   // (inclusive as copias dela dentro das telas de grupo)
   ion-tab-bar {
+    display: none !important;
+  }
+
+  // o que ja aparece no menu lateral (sino do Inicio, "Sair" e painel admin do Perfil)
+  .oculto-no-computador {
+    display: none !important;
+  }
+
+  // se a linha escondida era a primeira do grupo, a seguinte nao precisa do separador
+  .oculto-no-computador + .row::before {
     display: none !important;
   }
 
@@ -1026,6 +1042,18 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
   button.row:not(:disabled):hover {
     background: color-mix(in srgb, var(--app-accent) 7%, transparent);
   }
+}
+
+/* ------------------------------------------------------------------------ *
+ * Foco visivel para quem navega pelo teclado (tecla Tab). Feito com auxilio
+ * do Claude. O :focus-visible so aparece com teclado, nao com toque ou
+ * clique, entao no celular nada muda. O :where() deixa a regra com
+ * especificidade zero: se alguma tela ja tem um estilo de foco proprio
+ * (ex.: as notificacoes), o dela continua valendo.
+ * ------------------------------------------------------------------------ */
+:where(a, button, [tabindex], ion-back-button, ion-tab-button):focus-visible {
+  outline: 2px solid var(--app-accent);
+  outline-offset: 2px;
 }
 
 /* ------------------------------------------------------------------------ *

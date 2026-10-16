@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { TituloPaginaService } from 'src/app/services/titulo-pagina.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
@@ -69,6 +70,9 @@ import { mostrarAviso } from 'src/app/utils/aviso.util';
   ]
 })
 export class GrupoPage implements OnInit {
+    // nome da sala/atividade/grupo na aba do navegador (versão web)
+    private tituloPagina = inject(TituloPaginaService);
+
 
   grupo: GrupoModel;
   usuario: UsuarioModel;
@@ -127,6 +131,7 @@ export class GrupoPage implements OnInit {
     ).subscribe({
       next: (res) => {
         this.grupo = res;
+        this.tituloPagina.definir(res.nome);
       },
       error: () => {
         this.exibirMensagem('Grupo não encontrado.');
