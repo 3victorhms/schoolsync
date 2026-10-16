@@ -55,6 +55,9 @@
           <div class="row-sub">
             <span class="row-data">{{ grupo.quantidadeMembros }} membros</span>
           </div>
+          @if (grupo.quantidadeTarefasConcluidas !== undefined) {
+          <app-progresso-tarefas compacto [concluidas]="grupo.quantidadeTarefasConcluidas" [total]="grupo.quantidadeTarefas"></app-progresso-tarefas>
+          }
         </div>
         <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
       </div>

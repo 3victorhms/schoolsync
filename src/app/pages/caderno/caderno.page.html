@@ -79,10 +79,15 @@
     </div>
     }
 
-    @if (atividadesFiltradas.length > 0) {
-    <h3 class="group-title">Atividades salvas</h3>
-    <div class="group stagger-list">
-      @for (atividade of atividadesFiltradas; track atividade.id) {
+    <!-- em ordem de prazo, separadas pelo que fazer primeiro (montarSecoes no .ts) -->
+    @for (secao of secoesAtividades; track secao.chave) {
+    <h3 class="group-title secao-titulo-caderno" [class.alerta]="secao.alerta">
+      @if (secao.alerta) { <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon> }
+      {{ secao.titulo }}
+      <span class="secao-contador">{{ secao.atividades.length }}</span>
+    </h3>
+    <div class="group stagger-list secao-caderno">
+      @for (atividade of secao.atividades; track atividade.id) {
       <app-atividade-item [atividade]="atividade" modo="caderno"></app-atividade-item>
       }
     </div>

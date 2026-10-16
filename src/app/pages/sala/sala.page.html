@@ -189,6 +189,9 @@
                 <div class="row-body">
                     <h4 class="row-label">{{ grupo.nome }}</h4>
                     <span class="row-desc">{{ grupo.quantidadeMembros }} {{ grupo.quantidadeMembros === 1 ? 'membro' : 'membros' }}</span>
+                    @if (grupo.quantidadeTarefasConcluidas !== undefined) {
+                    <app-progresso-tarefas compacto [concluidas]="grupo.quantidadeTarefasConcluidas" [total]="grupo.quantidadeTarefas"></app-progresso-tarefas>
+                    }
                 </div>
                 <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
             </div>
@@ -218,6 +221,29 @@
     <!-- ===================== MEMBROS ===================== -->
     <section class="secao secao-membros" role="tabpanel" [class.aba-oculta]="aba !== 'membros'">
         <h3 class="titulo-coluna">Membros</h3>
+        @if (sala.codigoConvite) {
+        <!-- convite em destaque: código grande + copiar + compartilhar (link que já abre com o código) -->
+        <section class="convite" aria-label="Convidar colegas">
+            <div class="convite-topo">
+                <span class="convite-icone"><ion-icon name="person-add-outline" aria-hidden="true"></ion-icon></span>
+                <div>
+                    <strong>Chame sua turma</strong>
+                    <span>Quem tiver o código entra na sala.</span>
+                </div>
+            </div>
+            <div class="convite-codigo" aria-label="Código da sala">{{ sala.codigoConvite }}</div>
+            <div class="convite-botoes">
+                <button type="button" (click)="copiarCodigo()">
+                    <ion-icon name="copy-outline" aria-hidden="true"></ion-icon>
+                    Copiar código
+                </button>
+                <button type="button" class="primario" (click)="compartilharConvite()">
+                    <ion-icon name="share-social-outline" aria-hidden="true"></ion-icon>
+                    Compartilhar
+                </button>
+            </div>
+        </section>
+        }
         <div class="ocupacao" [class.quase-cheia]="vagasRestantes > 0 && vagasRestantes <= 5" [class.cheia]="vagasRestantes === 0">
             <div class="ocupacao-texto">
                 <span><strong>{{ membros.length }}</strong> de {{ LIMITE_MEMBROS }} membros</span>

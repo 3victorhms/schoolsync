@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ProgressoTarefasComponent } from 'src/app/components/progresso-tarefas/progresso-tarefas.component';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import {
@@ -38,6 +39,7 @@ import { finalize } from 'rxjs';
   styleUrls: ['./grupos.page.scss'],
   standalone: true,
   imports: [
+    ProgressoTarefasComponent,
     IonContent,
     IonHeader,
     IonToolbar,

@@ -729,3 +729,97 @@ ion-item.membro-item-host .membro-item {
     flex: 1;
     min-width: 0;
 }
+
+// Cartão de convite (topo da aba/coluna Membros) — feito com auxílio do Claude
+.convite {
+    margin-bottom: 12px;
+    padding: 16px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--app-accent-soft), var(--app-surface) 70%);
+    border: 1px solid color-mix(in srgb, var(--app-accent) 25%, transparent);
+
+    .convite-topo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        > div {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        strong {
+            font-size: 15px;
+            color: var(--app-text);
+        }
+
+        span {
+            font-size: 12.5px;
+            color: var(--app-muted);
+        }
+    }
+
+    .convite-icone {
+        width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: var(--app-accent);
+
+        ion-icon {
+            font-size: 20px;
+            color: #ffffff !important;
+        }
+    }
+
+    .convite-codigo {
+        margin: 14px 0;
+        padding: 12px;
+        border-radius: 14px;
+        background: var(--app-bg);
+        border: 1.5px dashed color-mix(in srgb, var(--app-accent) 45%, transparent);
+        text-align: center;
+        font-family: 'SF Mono', 'Roboto Mono', Consolas, monospace;
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: 6px;
+        color: var(--app-text);
+        user-select: all;
+    }
+
+    .convite-botoes {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 42px;
+            border: none;
+            border-radius: 12px;
+            background: var(--app-surface-strong);
+            color: var(--app-text);
+            font-family: inherit;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+
+            ion-icon {
+                font-size: 17px;
+                color: inherit !important;
+            }
+
+            &.primario {
+                background: var(--app-accent);
+                color: #ffffff;
+            }
+        }
+    }
+}

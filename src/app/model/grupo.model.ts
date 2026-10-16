@@ -10,6 +10,8 @@ export class GrupoModel {
     criador: boolean;
     quantidadeMembros: number;
     quantidadeTarefas: number;
+    /** Só vem na lista de grupos da sala (GrupoResumoDTO), para a barrinha de progresso. */
+    quantidadeTarefasConcluidas?: number;
     tarefas: TarefaGrupoModel[];
 
     constructor() {

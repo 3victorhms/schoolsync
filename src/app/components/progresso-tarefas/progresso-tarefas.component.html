@@ -1,0 +1,50 @@
+@if (compacto) {
+<span class="compacto" [class.completo]="completo">
+  @if (total > 0) {
+  <span class="barra" role="progressbar" [attr.aria-valuenow]="concluidas" aria-valuemin="0" [attr.aria-valuemax]="total"
+    [attr.aria-label]="concluidas + ' de ' + total + ' tarefas concluídas'">
+    <span class="preenchimento" [style.width.%]="percentual"></span>
+  </span>
+  <span class="texto">{{ concluidas }}/{{ total }} {{ total === 1 ? 'tarefa' : 'tarefas' }}</span>
+  } @else {
+  <span class="texto">Sem tarefas ainda</span>
+  }
+</span>
+} @else {
+<section class="cartao" [class.completo]="completo" aria-label="Progresso das tarefas do grupo">
+  <div class="topo">
+    <strong>Progresso do grupo</strong>
+    <span class="percentual">
+      @if (completo) { <ion-icon name="checkmark-circle" aria-hidden="true"></ion-icon> }
+      {{ percentual }}%
+    </span>
+  </div>
+  <div class="barra grande" role="progressbar" [attr.aria-valuenow]="concluidas" aria-valuemin="0" [attr.aria-valuemax]="total"
+    [attr.aria-label]="concluidas + ' de ' + total + ' tarefas concluídas'">
+    <span class="preenchimento" [style.width.%]="percentual"></span>
+  </div>
+  <p class="resumo">
+    @if (total === 0) {
+    Nenhuma tarefa dividida ainda.
+    } @else if (completo) {
+    Todas as {{ total }} tarefas concluídas. Trabalho pronto!
+    } @else {
+    {{ concluidas }} de {{ total }} {{ total === 1 ? 'tarefa concluída' : 'tarefas concluídas' }}
+    }
+  </p>
+
+  @if (porMembro.length > 1) {
+  <ul class="membros">
+    @for (membro of porMembro; track membro.nome) {
+    <li [class.feito]="membro.concluidas === membro.total">
+      <span class="membro-nome">{{ membro.nome }}</span>
+      <span class="barra">
+        <span class="preenchimento" [style.width.%]="percentualDe(membro)"></span>
+      </span>
+      <span class="membro-conta">{{ membro.concluidas }}/{{ membro.total }}</span>
+    </li>
+    }
+  </ul>
+  }
+</section>
+}

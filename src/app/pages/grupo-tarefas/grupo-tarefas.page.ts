@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ProgressoTarefasComponent, calcularProgresso } from 'src/app/components/progresso-tarefas/progresso-tarefas.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -49,6 +50,7 @@ import { mostrarAviso } from 'src/app/utils/aviso.util';
   styleUrls: ['./grupo-tarefas.page.scss'],
   standalone: true,
   imports: [
+    ProgressoTarefasComponent,
     IonContent,
     IonHeader,
     IonToolbar,
@@ -266,6 +268,11 @@ export class GrupoTarefasPage implements OnInit {
         this.exibirMensagem(`Erro ao excluir tarefa (${erro?.status || 'sem conexão'}).`);
       }
     });
+  }
+
+  /** Quantas tarefas já foram concluídas, no total e por membro (cartão no topo da lista). */
+  get progresso() {
+    return calcularProgresso(this.tarefas);
   }
 
   iconeStatus(status: string): string {

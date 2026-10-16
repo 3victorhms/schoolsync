@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { ProgressoTarefasComponent } from 'src/app/components/progresso-tarefas/progresso-tarefas.component';
 import { TituloPaginaService } from 'src/app/services/titulo-pagina.service';
 import { CommonModule } from '@angular/common';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonIcon, IonButton, IonRefresher, IonRefresherContent, IonSpinner, IonItemSliding, IonItem, IonItemOptions, IonItemOption } from '@ionic/angular/standalone';
@@ -10,7 +11,8 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { SalaModel } from 'src/app/model/sala.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { addIcons } from 'ionicons';
-import { addOutline, peopleOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline, logOutOutline, personRemoveOutline, chevronForwardOutline, copyOutline, archiveOutline, personAddOutline, statsChartOutline, schoolOutline, ribbonOutline } from 'ionicons/icons';
+import { addOutline, peopleOutline, bookOutline, calendarOutline, starOutline, timeOutline, checkmarkCircleOutline, bookmarkOutline, createOutline, trashOutline, logOutOutline, personRemoveOutline, chevronForwardOutline, copyOutline, archiveOutline, personAddOutline, statsChartOutline, schoolOutline, ribbonOutline, shareSocialOutline } from 'ionicons/icons';
+import { environment } from 'src/environments/environment';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { finalize, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -33,7 +35,7 @@ type AbaSala = 'atividades' | 'grupos' | 'membros';
     templateUrl: './sala.page.html',
     styleUrls: ['./sala.page.scss'],
     standalone: true,
-    imports: [IonIcon, IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonRefresher, IonRefresherContent, IonSpinner, IonItemSliding, IonItem, IonItemOptions, IonItemOption, CommonModule, RouterLink, AtividadeItemComponent]
+    imports: [IonIcon, IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonRefresher, IonRefresherContent, IonSpinner, IonItemSliding, IonItem, IonItemOptions, IonItemOption, CommonModule, RouterLink, AtividadeItemComponent, ProgressoTarefasComponent]
 })
 export class SalaPage implements OnInit {
     // nome da sala/atividade/grupo na aba do navegador (versão web)
@@ -98,7 +100,7 @@ export class SalaPage implements OnInit {
             checkmarkCircleOutline, bookmarkOutline,
             createOutline, trashOutline, logOutOutline,
             personRemoveOutline, chevronForwardOutline,
-            copyOutline, archiveOutline, personAddOutline, statsChartOutline, schoolOutline, ribbonOutline
+            copyOutline, archiveOutline, personAddOutline, statsChartOutline, schoolOutline, ribbonOutline, shareSocialOutline
         });
     }
 
@@ -418,6 +420,33 @@ export class SalaPage implements OnInit {
         // aparece de forma confiável no navegador.
         this.hapticsService.leve();
         this.desfazerService.mostrarMensagem(`Código ${this.sala.codigoConvite} copiado! Envie para seus colegas entrarem na sala.`, 3000);
+    }
+
+    /** Texto e link do convite (o link abre "Entrar na sala" com o código já preenchido). */
+    get linkConvite(): string {
+        return `${environment.webUrl}/entrar-sala?codigo=${encodeURIComponent(this.sala.codigoConvite)}`;
+    }
+
+    /**
+     * Abre o "compartilhar" do celular (WhatsApp, e-mail...). No app usa o plugin
+     * @capacitor/share; no navegador ele cai no compartilhamento do próprio navegador.
+     * Se nenhum dos dois existir (ex.: Chrome no Windows), copia o convite inteiro.
+     */
+    async compartilharConvite() {
+        const texto = `Entra na sala "${this.sala.nome}" no SchoolSync! Código: ${this.sala.codigoConvite}`;
+        try {
+            const { Share } = await import('@capacitor/share');
+            await Share.share({ title: 'Convite para a sala', text: texto, url: this.linkConvite, dialogTitle: 'Convidar colegas' });
+            this.hapticsService.leve();
+        } catch (erro: any) {
+            // quem fechou a janela de compartilhar não precisa de aviso
+            if (String(erro?.message || erro).toLowerCase().includes('cancel')) return;
+
+            const copiou = await this.clipboardService.copiar(`${texto}\n${this.linkConvite}`);
+            this.desfazerService.mostrarMensagem(copiou
+                ? 'Convite copiado! Cole no grupo da turma.'
+                : 'Não foi possível compartilhar o convite.', 3000);
+        }
     }
 
     exibirMensagem(texto: string): void {

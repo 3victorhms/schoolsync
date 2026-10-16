@@ -31,6 +31,14 @@
   </section>
   } @else {
 
+  <!-- progresso no topo, antes do formulário de nova tarefa -->
+  @if (tarefas.length) {
+  <section class="secao-progresso">
+    <app-progresso-tarefas [concluidas]="progresso.concluidas" [total]="progresso.total"
+      [porMembro]="progresso.porMembro"></app-progresso-tarefas>
+  </section>
+  }
+
   @if (grupo.criador) {
   <section class="secao-form">
     <h3 class="group-title">Nova tarefa</h3>

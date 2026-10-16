@@ -1,5 +1,6 @@
 import { finalize } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonButtons, IonBackButton, IonItem, IonButton } from '@ionic/angular/standalone';
@@ -32,7 +33,8 @@ export class EntrarSalaPage implements OnInit {
     private navController: NavController,
     private salaService: SalaService,
     private usuarioService: UsuarioService,
-    private hapticsService: HapticsService
+    private hapticsService: HapticsService,
+    private activatedRoute: ActivatedRoute
   ) {
     this.sala = new SalaModel();
     this.usuario = this.usuarioService.buscarAutenticacao();
@@ -46,6 +48,12 @@ export class EntrarSalaPage implements OnInit {
 
   ngOnInit() {
     this.usuario = this.usuarioService.buscarAutenticacao();
+
+    // link de convite (/entrar-sala?codigo=ABC123): já deixa o código preenchido
+    const codigo = this.activatedRoute.snapshot.queryParamMap.get('codigo');
+    if (codigo) {
+      this.formGroup.patchValue({ codigoConvite: codigo.trim().toUpperCase() });
+    }
   }
 
   entrar() {
