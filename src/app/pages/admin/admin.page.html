@@ -73,6 +73,14 @@
           <span class="selo" [class.admin]="usuario.perfil === 'ADMIN'">{{ usuario.perfil || 'USUARIO' }}</span>
           @if (usuario.ativo === false) { <span class="selo inativo">Desativada</span> }
         </div>
+        @if (podeAlterarPerfil(usuario)) {
+        <button type="button" class="cargo-btn" [class.remover]="usuario.perfil === 'ADMIN'"
+          [disabled]="alterandoPerfilId === usuario.id" (click)="alterarPerfil(usuario)"
+          [attr.aria-label]="(usuario.perfil === 'ADMIN' ? 'Remover administrador: ' : 'Tornar administrador: ') + usuario.nome"
+          [title]="usuario.perfil === 'ADMIN' ? 'Remover administrador' : 'Tornar administrador'">
+          <ion-icon [name]="usuario.perfil === 'ADMIN' ? 'shield-outline' : 'shield-checkmark-outline'" aria-hidden="true"></ion-icon>
+        </button>
+        }
       </div>
       } @empty {
       <div class="estado-vazio">
@@ -82,7 +90,7 @@
       }
     </section>
 
-    <p class="rodape">Lista de <code>GET /admin/usuarios</code>, liberada só para o perfil ADMIN.</p>
+    <p class="rodape">Lista de <code>GET /admin/usuarios</code> e troca de perfil por <code>PUT /admin/usuarios/{{ '{' }}id{{ '}' }}/perfil</code>, liberadas só para o perfil ADMIN.</p>
     }
   </main>
 </ion-content>
