@@ -6,7 +6,7 @@
           <p class="ola">Olá,</p>
           <h1 class="nome">{{ primeiroNomeUsuario }} 👋</h1>
         </div>
-        <a class="notificacao-btn" routerLink="/notificacao" aria-label="Abrir notificações">
+        <a class="notificacao-btn oculto-no-computador" routerLink="/notificacao" aria-label="Abrir notificações">
           <ion-icon name="notifications-outline"></ion-icon>
           @if (notificacoesNaoLidas > 0) {
           <span class="notificacao-badge">{{ notificacoesNaoLidas > 9 ? '9+' : notificacoesNaoLidas }}</span>

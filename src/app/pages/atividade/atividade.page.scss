@@ -13,46 +13,48 @@ ion-toolbar {
         font-weight: 700;
         color: var(--app-text);
     }
+}
 
-    .status-badge {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 12px;
-        font-weight: 600;
-        padding: 4px 10px;
-        border-radius: 20px;
-        margin-right: 8px;
+// selo de status do prazo, no cartão da atividade (antes os estilos estavam
+// presos dentro do ion-toolbar, de quando o selo ficava no cabeçalho)
+.status-badge {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
 
-        ion-icon {
-            font-size: 13px;
-        }
+    ion-icon {
+        font-size: 13px;
+    }
 
-        &.badge-expirada {
-            background: #3d1515;
-            color: #e05c5c;
-        }
+    &.badge-expirada {
+        background: #3d1515;
+        color: #e05c5c;
+    }
 
-        &.badge-andamento {
-            background: #1e2f5e;
-            color: var(--app-accent);
-        }
+    &.badge-andamento {
+        background: #1e2f5e;
+        color: var(--app-accent);
+    }
 
-        &.badge-concluido {
-            background: #0f3d2a;
-            color: var(--app-success);
-        }
+    &.badge-concluido {
+        background: #0f3d2a;
+        color: var(--app-success);
+    }
 
-        &.badge-naoiniciada {
-            background: var(--app-surface-strong);
-            color: var(--app-muted);
-        }
+    &.badge-naoiniciada {
+        background: var(--app-surface-strong);
+        color: var(--app-muted);
+    }
 
-        &.badge-fora_caderno {
-            background: transparent;
-            border: 1.5px dashed var(--app-muted-strong);
-            color: var(--app-muted-strong);
-        }
+    &.badge-fora_caderno {
+        background: transparent;
+        border: 1.5px dashed var(--app-muted-strong);
+        color: var(--app-muted-strong);
     }
 }
 
@@ -82,6 +84,15 @@ ion-content {
     display: flex;
     flex-direction: column;
     gap: 12px;
+
+    .atividade-titulo {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        line-height: 1.25;
+        color: var(--app-text);
+    }
 
     .atividade-descricao-titulo {
         font-size: 16px;
@@ -606,5 +617,26 @@ ion-content {
         color: var(--app-accent);
         font-size: 14px;
         font-weight: 600;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Versão web (computador) — feito com auxílio do Claude
+// Detalhes, status, nota e tarefas à esquerda; comentários numa coluna à direita.
+// ---------------------------------------------------------------------------
+@media (min-width: 992px) {
+    .atividade-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(340px, 400px);
+        gap: 8px;
+        align-items: start;
+    }
+
+    .atividade-lateral .comentarios-secao {
+        padding-top: 16px;
+    }
+
+    .atividade-card .atividade-titulo {
+        font-size: 26px;
     }
 }

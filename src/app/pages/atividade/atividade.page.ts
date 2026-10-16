@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { TituloPaginaService } from 'src/app/services/titulo-pagina.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -80,6 +81,9 @@ import { mostrarAviso } from 'src/app/utils/aviso.util';
   ]
 })
 export class AtividadePage implements OnInit {
+    // nome da sala/atividade/grupo na aba do navegador (versão web)
+    private tituloPagina = inject(TituloPaginaService);
+
 
   atividade: AtividadeModel;
   usuario: UsuarioModel;
@@ -166,6 +170,7 @@ export class AtividadePage implements OnInit {
     ).subscribe({
       next: (res) => {
         this.atividade = res;
+        this.tituloPagina.definir(res.titulo);
         this.novoComentario = '';
         this.comentarioRespondendo = null;
         this.carregarCriador();
