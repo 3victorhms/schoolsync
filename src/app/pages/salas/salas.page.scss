@@ -219,17 +219,17 @@ ion-content {
 
 
 // ---------------------------------------------------------------------------
-// Versão web (computador) — feito com auxílio do Claude
-// A lista vira uma grade de cartões, um por sala.
+// Tablet e computador — feito com auxílio do Claude
+// A lista vira uma grade de cartões, um por sala (2 colunas no tablet em pé).
 // ---------------------------------------------------------------------------
-@media (min-width: 992px) {
+@media (min-width: 700px) {
     .salas-lista {
         padding: 20px 16px;
     }
 
     .salas-lista .group {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 16px;
         background: transparent;
         border-radius: 0;
