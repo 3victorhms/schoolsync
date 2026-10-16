@@ -223,3 +223,82 @@
     }
 
 }
+
+// ---------------------------------------------------------------------------
+// Versão web (computador) — feito com auxílio do Claude
+// Apresentação do app à esquerda e o formulário num cartão à direita.
+// No celular a lista de destaques fica escondida e nada muda.
+// ---------------------------------------------------------------------------
+.destaques {
+    display: none;
+}
+
+@media (min-width: 992px) {
+    .login-container {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: clamp(48px, 8vw, 120px);
+        padding: 48px;
+    }
+
+    .logo-area {
+        align-items: flex-start;
+        max-width: 420px;
+        margin-bottom: 0;
+    }
+
+    .logo-mark {
+        width: 72px;
+        height: 72px;
+    }
+
+    .logo-area h1 {
+        font-size: 44px;
+        letter-spacing: -1px;
+    }
+
+    .logo-area p {
+        text-align: left;
+        max-width: none;
+        font-size: 18px;
+    }
+
+    .destaques {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        list-style: none;
+        margin: 28px 0 0;
+        padding: 0;
+
+        li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--app-text-soft);
+            font-size: 15px;
+        }
+
+        ion-icon {
+            font-size: 20px;
+            padding: 9px;
+            border-radius: 12px;
+            background: var(--app-accent-soft);
+            color: var(--app-accent) !important;
+        }
+    }
+
+    .form-area {
+        max-width: 420px;
+        padding: 36px 32px;
+        border-radius: 24px;
+        background: var(--app-surface);
+        border: 1px solid var(--app-border);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+    }
+
+    .form-area h2 {
+        margin-top: 0;
+    }
+}

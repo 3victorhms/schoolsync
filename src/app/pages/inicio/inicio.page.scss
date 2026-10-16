@@ -707,3 +707,26 @@ ion-content {
         font-size: 13px;
     }
 }
+
+
+// ---------------------------------------------------------------------------
+// Versão web (computador) — feito com auxílio do Claude
+// Agenda à esquerda; calendário, dia selecionado e última sala à direita.
+// ---------------------------------------------------------------------------
+@media (min-width: 992px) {
+    .inicio-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.3fr) minmax(360px, 1fr);
+        gap: 8px;
+        align-items: start;
+        padding-top: 12px;
+    }
+
+    .agenda-titulo.calendario-titulo {
+        margin-top: 8px;
+    }
+
+    .header-titulo .nome {
+        font-size: 28px;
+    }
+}

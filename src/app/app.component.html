@@ -1,3 +1,10 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-split-pane contentId="conteudo-principal" when="(min-width: 992px)" [disabled]="!mostrarMenu">
+    <ion-menu contentId="conteudo-principal" menuId="menu-lateral" [disabled]="!mostrarMenu" [swipeGesture]="false">
+      @if (rotaComMenu) {
+      <app-menu-lateral></app-menu-lateral>
+      }
+    </ion-menu>
+    <ion-router-outlet id="conteudo-principal"></ion-router-outlet>
+  </ion-split-pane>
 </ion-app>

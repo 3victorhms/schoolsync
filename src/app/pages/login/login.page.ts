@@ -7,7 +7,7 @@ import { LoginService } from '../../services/login.service';
 import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { schoolOutline, arrowForwardOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
+import { schoolOutline, arrowForwardOutline, eyeOutline, eyeOffOutline, peopleOutline, calendarOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NotificacaoPushService } from '../../services/notificacao-push.service';
 import { finalize } from 'rxjs';
@@ -40,7 +40,7 @@ export class LoginPage implements OnInit {
     });
 
     addIcons({
-      schoolOutline, arrowForwardOutline, eyeOutline, eyeOffOutline
+      schoolOutline, arrowForwardOutline, eyeOutline, eyeOffOutline, peopleOutline, calendarOutline, checkmarkCircleOutline
     })
 
   }

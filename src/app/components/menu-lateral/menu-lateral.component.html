@@ -1,0 +1,42 @@
+<nav class="menu" aria-label="Menu principal">
+  <div class="marca">
+    <div class="marca-icone" aria-hidden="true">
+      <ion-icon name="book-outline"></ion-icon>
+    </div>
+    <span class="marca-nome">SchoolSync</span>
+  </div>
+
+  <ul class="itens">
+    @for (item of itensVisiveis; track item.rota) {
+    <li>
+      <button type="button" class="item" [class.ativo]="estaAtivo(item)" [attr.aria-current]="estaAtivo(item) ? 'page' : null"
+        (click)="abrir(item)">
+        <ion-icon [name]="item.icone" aria-hidden="true"></ion-icon>
+        <span>{{ item.titulo }}</span>
+        @if (item.rota === '/notificacao' && naoLidas > 0) {
+        <span class="contador" [attr.aria-label]="naoLidas + ' não lidas'">{{ naoLidas > 99 ? '99+' : naoLidas }}</span>
+        }
+      </button>
+    </li>
+    }
+  </ul>
+
+  <div class="rodape">
+    <button type="button" class="usuario" (click)="abrirPerfil()">
+      <div class="avatar" [class.tem-foto]="!!usuario.foto">
+        @if (usuario.foto) {
+        <img [src]="usuario.foto" alt="">
+        } @else {
+        <span>{{ iniciais }}</span>
+        }
+      </div>
+      <div class="usuario-info">
+        <strong>{{ usuario.nome }}</strong>
+        <small>{{ usuario.email }}</small>
+      </div>
+    </button>
+    <button type="button" class="sair" (click)="sair()" aria-label="Sair da conta" title="Sair da conta">
+      <ion-icon name="log-out-outline" aria-hidden="true"></ion-icon>
+    </button>
+  </div>
+</nav>

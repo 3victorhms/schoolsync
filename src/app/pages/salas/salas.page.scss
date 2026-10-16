@@ -216,3 +216,40 @@ ion-content {
         flex-shrink: 0;
     }
 }
+
+
+// ---------------------------------------------------------------------------
+// Versão web (computador) — feito com auxílio do Claude
+// A lista vira uma grade de cartões, um por sala.
+// ---------------------------------------------------------------------------
+@media (min-width: 992px) {
+    .salas-lista {
+        padding: 20px 16px;
+    }
+
+    .salas-lista .group {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 16px;
+        background: transparent;
+        border-radius: 0;
+        overflow: visible;
+    }
+
+    .salas-lista .group .row {
+        background: var(--app-surface);
+        border: 1px solid var(--app-border);
+        border-radius: 18px;
+        padding: 20px 18px;
+        transition: border-color var(--transition-fast), transform var(--transition-fast);
+
+        &::before {
+            display: none;
+        }
+
+        &:hover {
+            border-color: color-mix(in srgb, var(--app-accent) 55%, transparent);
+            transform: translateY(-2px);
+        }
+    }
+}
