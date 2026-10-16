@@ -19,6 +19,10 @@
 
 <ion-content [fullscreen]="true">
 
+  <!-- no celular as duas colunas ficam uma embaixo da outra; no computador ficam lado a lado -->
+  <div class="inicio-layout">
+  <div class="inicio-principal">
+
   <!-- ===================== AGENDA ===================== -->
   <section class="agenda" aria-labelledby="agenda-titulo">
     <div class="agenda-topo">
@@ -113,7 +117,9 @@
     }
     }
   </section>
+  </div>
 
+  <aside class="inicio-lateral">
   <h2 class="agenda-titulo calendario-titulo">Calendário</h2>
   <div class="calendario-card">
     <div class="calendario-header">
@@ -219,5 +225,7 @@
     </div>
   </div>
   }
+  </aside>
+  </div>
 
 </ion-content>
