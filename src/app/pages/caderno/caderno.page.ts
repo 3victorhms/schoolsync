@@ -24,7 +24,10 @@ import {
   ellipseOutline,
   searchOutline,
   closeOutline,
-  chevronForwardOutline
+  chevronForwardOutline,
+  archiveOutline,
+  chevronDownOutline,
+  chevronUpOutline
 } from 'ionicons/icons';
 import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
@@ -33,7 +36,7 @@ import { TarefaService } from 'src/app/services/tarefa.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { finalize } from 'rxjs';
-import { classeUrgencia } from 'src/app/utils/urgencia.util';
+import { DIAS_ATE_ARQUIVAR, classeUrgencia, deveArquivar } from 'src/app/utils/urgencia.util';
 import { formatarDataCurta } from 'src/app/utils/data.util';
 import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
 import { labelPontos } from 'src/app/utils/pontos.util';
@@ -64,6 +67,11 @@ export class CadernoPage implements OnInit {
   usuario: UsuarioModel;
   atividades: AtividadeModel[];
   atividadesFiltradas: AtividadeModel[];
+  /** Concluídas com prazo vencido ou atrasadas há mais de 3 dias (regra em deveArquivar). Ficam recolhidas no fim. */
+  atividadesArquivadas: AtividadeModel[] = [];
+  /** null = automático (abre sozinha com busca ou filtro); true/false = o aluno abriu ou fechou na mão. */
+  mostrarArquivadas: boolean | null = null;
+  readonly DIAS_ATE_ARQUIVAR = DIAS_ATE_ARQUIVAR;
   tarefas: TarefaModel[];
   tarefasFiltradas: TarefaModel[];
   filtroAtivo: string;
@@ -97,7 +105,10 @@ export class CadernoPage implements OnInit {
       ellipseOutline,
       searchOutline,
       closeOutline,
-      chevronForwardOutline
+      chevronForwardOutline,
+      archiveOutline,
+      chevronDownOutline,
+      chevronUpOutline
     });
   }
 
@@ -121,6 +132,7 @@ export class CadernoPage implements OnInit {
     if (!this.usuario.id) {
       this.atividades = [];
       this.atividadesFiltradas = [];
+      this.atividadesArquivadas = [];
       this.tarefas = [];
       this.tarefasFiltradas = [];
       this.termoBusca = '';
@@ -148,6 +160,7 @@ export class CadernoPage implements OnInit {
       error: () => {
         this.atividades = [];
         this.atividadesFiltradas = [];
+        this.atividadesArquivadas = [];
       }
     });
 
@@ -199,13 +212,17 @@ export class CadernoPage implements OnInit {
   aplicarFiltros() {
     const termo = this.normalizarTexto(this.termoBusca);
 
-    this.atividadesFiltradas = this.atividades.filter(atividade => {
+    const atividadesQueBatem = this.atividades.filter(atividade => {
       const bateStatus = this.filtroAtivo === 'todas' || atividade.status === this.filtroAtivo;
       const bateBusca = !termo || this.textoBuscaAtividade(atividade).includes(termo);
       const bateMateria = !this.filtroMateria || atividade.nomeMateria === this.filtroMateria;
 
       return bateStatus && bateBusca && bateMateria;
     });
+
+    // as arquivadas saem da lista principal e vão para a seção recolhida no fim
+    this.atividadesFiltradas = atividadesQueBatem.filter(atividade => !deveArquivar(atividade));
+    this.atividadesArquivadas = atividadesQueBatem.filter(atividade => deveArquivar(atividade));
 
     this.tarefasFiltradas = this.tarefas.filter(tarefa => {
       const bateStatus = this.filtroAtivo === 'todas' || this.statusNormalizadoTarefa(tarefa.status) === this.filtroAtivo;
@@ -247,7 +264,12 @@ export class CadernoPage implements OnInit {
   }
 
   get temResultados(): boolean {
-    return this.atividadesFiltradas.length > 0 || this.tarefasFiltradas.length > 0;
+    return this.atividadesFiltradas.length > 0 || this.atividadesArquivadas.length > 0 || this.tarefasFiltradas.length > 0;
+  }
+
+  /** Com busca ou filtro ativo, as arquivadas aparecem abertas (senão o resultado ficaria escondido). */
+  get arquivadasAbertas(): boolean {
+    return this.mostrarArquivadas ?? (!!this.termoBusca.trim() || this.filtroAtivo !== 'todas' || !!this.filtroMateria);
   }
 
   normalizarTexto(texto: string): string {

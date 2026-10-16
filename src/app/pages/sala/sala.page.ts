@@ -16,7 +16,7 @@ import { finalize, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
 import { DesfazerService } from 'src/app/services/desfazer.service';
-import { compararPorEntrega, estaArquivada } from 'src/app/utils/urgencia.util';
+import { compararPorEntrega, deveArquivar } from 'src/app/utils/urgencia.util';
 import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
 import { HapticsService } from 'src/app/services/haptics.service';
 import { ClipboardService } from 'src/app/services/clipboard.service';
@@ -171,10 +171,10 @@ export class SalaPage implements OnInit {
         this.hapticsService.leve();
     }
 
-    /** Separa as próximas atividades (o dia de entrega ainda não terminou) das arquivadas. */
+    /** Separa as atividades à vista das arquivadas (regra em deveArquivar, utils/urgencia.util.ts). */
     organizarAtividades() {
         this.proximasAtividades = this.sala.atividades
-            .filter(atividade => !estaArquivada(atividade.dataEntrega))
+            .filter(atividade => !deveArquivar(atividade))
             .sort(compararPorEntrega);
         this.quantidadeArquivadas = this.sala.atividades.length - this.proximasAtividades.length;
     }

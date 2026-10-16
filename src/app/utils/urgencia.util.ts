@@ -71,17 +71,35 @@ function parsearDataEntrega(dataEntrega: string | null | undefined): Date | null
   return new Date(ano, mes - 1, dia);
 }
 
-/**
- * Uma atividade é "arquivada" quando o dia de entrega já terminou, ou seja,
- * a partir da meia-noite do dia seguinte ao prazo. Sem data, nunca arquiva.
- */
-export function estaArquivada(dataEntrega: string | null | undefined): boolean {
+/** Por quantos dias uma atividade atrasada (e não concluída) continua à vista antes de ser arquivada. */
+export const DIAS_ATE_ARQUIVAR = 3;
+
+/** Quantos dias o prazo já passou (0 se a entrega é hoje, no futuro ou não tem data). */
+export function diasDeAtraso(dataEntrega: string | null | undefined): number {
   const prazo = parsearDataEntrega(dataEntrega);
-  if (!prazo) return false;
+  if (!prazo) return 0;
 
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
-  return prazo.getTime() < hoje.getTime();
+  return Math.max(Math.round((hoje.getTime() - prazo.getTime()) / 86400000), 0);
+}
+
+/**
+ * Regra única de arquivamento, usada na sala, nas atividades da sala, no
+ * caderno e no Início. Nada é salvo no banco: é calculado pela data toda vez,
+ * então nunca fica desatualizado.
+ *  - o prazo ainda não passou: nunca arquiva;
+ *  - o prazo passou e o aluno concluiu: arquiva na hora (não tem mais nada a fazer);
+ *  - o prazo passou e não concluiu: fica à vista como "Atrasada" por
+ *    DIAS_ATE_ARQUIVAR dias e depois vai para as arquivadas.
+ * O status é o do aluno logado (vem do caderno dele), por isso uma mesma
+ * atividade pode estar arquivada para um colega e atrasada para outro.
+ */
+export function deveArquivar(atividade: { dataEntrega?: string | null; status?: string | null }): boolean {
+  const atraso = diasDeAtraso(atividade.dataEntrega);
+  if (atraso === 0) return false;
+  if (atividade.status === 'concluido') return true;
+  return atraso > DIAS_ATE_ARQUIVAR;
 }
 
 /** Ordena pela data de entrega, da mais próxima para a mais distante (sem data vai pro fim). */

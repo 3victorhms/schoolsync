@@ -13,7 +13,7 @@ import { addIcons } from 'ionicons';
 import { Subscription, from, of } from 'rxjs';
 import { catchError, finalize, mergeMap } from 'rxjs/operators';
 import { notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, bookOutline, personOutline, pencilOutline, chevronDownOutline, chevronUpOutline, sunnyOutline, alertCircleOutline } from 'ionicons/icons';
-import { calcularUrgencia, classeUrgencia, compararPorEntrega, ordemUrgencia } from 'src/app/utils/urgencia.util';
+import { calcularUrgencia, classeUrgencia, compararPorEntrega, deveArquivar, ordemUrgencia } from 'src/app/utils/urgencia.util';
 import { labelPontos } from 'src/app/utils/pontos.util';
 import { formatarDataCurta, parsearData } from 'src/app/utils/data.util';
 import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
@@ -77,8 +77,6 @@ export class InicioPage implements OnInit {
   nomesSalas: Record<string, string> = {};
   quantidadeSalas = 0;
   readonly LIMITE_POR_SECAO = 5;
-  /** Atrasadas há mais tempo que isso já estão nas "Arquivadas" de cada sala. */
-  private readonly DIAS_ATRASADAS = 7;
   private atividadesCaderno: AtividadeModel[] = [];
   /** null = ainda não carregadas (só carrega se o aluno escolher "Todas"). */
   private atividadesTodas: AtividadeModel[] | null = null;
@@ -301,7 +299,7 @@ export class InicioPage implements OnInit {
     });
   }
 
-  /** Separa as atividades pendentes em Atrasadas (últimos 7 dias), Hoje, Amanhã, Esta semana e Depois. */
+  /** Separa as atividades pendentes em Atrasadas (até serem arquivadas, ver deveArquivar), Hoje, Amanhã, Esta semana e Depois. */
   private montarAgenda() {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -319,7 +317,7 @@ export class InicioPage implements OnInit {
 
       const dias = Math.round((prazo.getTime() - hoje.getTime()) / 86400000);
       if (dias < 0) {
-        if (dias >= -this.DIAS_ATRASADAS) atrasadas.push(atividade);
+        if (!deveArquivar(atividade)) atrasadas.push(atividade);
       } else if (dias === 0) {
         deHoje.push(atividade);
       } else if (dias === 1) {
