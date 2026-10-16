@@ -316,3 +316,53 @@ ion-content {
         font-size: 12.5px;
     }
 }
+
+// Seção recolhida das arquivadas, no fim do caderno — feito com auxílio do Claude
+.arquivadas-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    border: none;
+    border-radius: 16px;
+    background: var(--app-surface);
+    color: var(--app-muted);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+
+    ion-icon {
+        font-size: 18px;
+        color: inherit;
+        flex-shrink: 0;
+    }
+
+    .arquivadas-texto {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        > span {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+    }
+
+    small {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--app-muted-strong);
+    }
+}
+
+// um pouco apagadas, para ficar claro que já saíram do dia a dia
+.arquivadas-lista {
+    margin-top: 8px;
+    opacity: 0.75;
+}

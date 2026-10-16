@@ -40,7 +40,7 @@ import { AtividadeModel } from 'src/app/model/atividade.model';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { SalaService } from 'src/app/services/sala.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { compararPorEntrega, estaArquivada } from 'src/app/utils/urgencia.util';
+import { compararPorEntrega, deveArquivar } from 'src/app/utils/urgencia.util';
 import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
 
@@ -157,11 +157,11 @@ export class SalaAtividadesPage {
     );
 
     this.proximas = atividades
-      .filter(atividade => !estaArquivada(atividade.dataEntrega))
+      .filter(atividade => !deveArquivar(atividade))
       .sort(compararPorEntrega);
 
     this.arquivadas = atividades
-      .filter(atividade => estaArquivada(atividade.dataEntrega))
+      .filter(atividade => deveArquivar(atividade))
       .sort((a, b) => compararPorEntrega(b, a));
 
     // "Todas": ordem do calendário (da primeira entrega para a última)

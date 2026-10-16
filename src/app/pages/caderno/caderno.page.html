@@ -120,6 +120,27 @@
     </div>
     }
 
+    @if (atividadesArquivadas.length > 0) {
+    <button type="button" class="arquivadas-btn" (click)="mostrarArquivadas = !arquivadasAbertas"
+      [attr.aria-expanded]="arquivadasAbertas">
+      <span class="arquivadas-texto">
+        <ion-icon name="archive-outline" aria-hidden="true"></ion-icon>
+        <span>
+          Arquivadas ({{ atividadesArquivadas.length }})
+          <small>concluídas ou atrasadas há mais de {{ DIAS_ATE_ARQUIVAR }} dias</small>
+        </span>
+      </span>
+      <ion-icon [name]="arquivadasAbertas ? 'chevron-up-outline' : 'chevron-down-outline'" aria-hidden="true"></ion-icon>
+    </button>
+    @if (arquivadasAbertas) {
+    <div class="group arquivadas-lista">
+      @for (atividade of atividadesArquivadas; track atividade.id) {
+      <app-atividade-item [atividade]="atividade" modo="caderno"></app-atividade-item>
+      }
+    </div>
+    }
+    }
+
     @if (!temResultados) {
     <div class="vazio-guia">
       @if (atividades.length === 0 && tarefas.length === 0) {
