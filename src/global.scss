@@ -951,42 +951,36 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
 }
 
 /* ------------------------------------------------------------------------ *
- * Telas medias (tablet / janela estreita): o layout foi pensado para celular, entao
- * em janelas largas os cards e o calendario esticavam e ficavam enormes.
- * Em vez disso, o app roda dentro de uma "moldura" com largura de celular,
- * centralizada, e o resto da tela fica com um fundo neutro. Abaixo do
- * breakpoint nada muda: continua exatamente o layout mobile original.
+ * Telas maiores que celular (tablet e computador). Feito com auxilio do Claude.
  *
- * O <body> ja vem com "position: fixed" e "transform: translateZ(0)" (ver
- * @ionic/angular/css/structure.css importado no topo deste arquivo) — esse
- * transform faz com que qualquer elemento "position: fixed" dentro do app
- * (como a tab bar flutuante) passe a se posicionar em relacao ao proprio
- * <body>, e nao a janela inteira. Por isso basta limitar a largura do body
- * e centralizar: a tab bar acompanha automaticamente.
+ * O layout foi pensado para celular, entao em telas largas os cards e o
+ * calendario esticavam e ficavam enormes. Agora o app ocupa a tela toda e o
+ * conteudo de cada pagina fica numa coluna centralizada. A largura dessa
+ * coluna vem da variavel --web-largura:
+ *   - tablet (700px a 991px): 720px em todas as telas, com a barra de abas
+ *     embaixo como no celular (no toque ela funciona melhor que um menu);
+ *   - computador (992px ou mais): o menu lateral (app.component +
+ *     components/menu-lateral) substitui a barra de abas, listas usam 880px,
+ *     formularios 720px e as telas com grade (inicio e salas) 1120px.
+ * Abaixo de 700px nada muda: continua exatamente o layout mobile original.
  * ------------------------------------------------------------------------ */
-@media (min-width: 700px) and (max-width: 991.98px) {
-  html {
-    background: #05070d;
+@media (min-width: 700px) {
+  .ion-page {
+    --web-largura: 720px;
   }
 
-  body {
-    max-width: 480px;
-    left: 50%;
-    transform: translateX(-50%) translateZ(0);
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 30px 70px rgba(0, 0, 0, 0.55);
+  // coluna centralizada: o que sobrar dos lados vira margem
+  .ion-page:not(app-login):not(app-add-usuario) > ion-content::part(scroll) {
+    padding-inline: max(12px, calc((100% - var(--web-largura)) / 2));
+  }
+
+  // o cabecalho acompanha a mesma coluna do conteudo
+  .ion-page > ion-header ion-toolbar {
+    --padding-start: max(12px, calc((100% - var(--web-largura)) / 2));
+    --padding-end: max(12px, calc((100% - var(--web-largura)) / 2));
   }
 }
 
-/* ------------------------------------------------------------------------ *
- * Versao web (a partir de 992px). Feito com auxilio do Claude.
- *
- * Em vez da moldura de celular, o app ocupa a tela toda: o menu lateral
- * (app.component + components/menu-lateral) substitui a barra de abas, e o
- * conteudo de cada pagina fica numa coluna centralizada. A largura dessa
- * coluna vem da variavel --web-largura, que cada tipo de pagina ajusta:
- * listas usam a padrao, formularios ficam mais estreitos e as telas com
- * grade (inicio e salas) ficam mais largas.
- * ------------------------------------------------------------------------ */
 @media (min-width: 992px) {
   .ion-page {
     --web-largura: 880px;
@@ -1003,15 +997,7 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
     --web-largura: 720px;
   }
 
-  // coluna centralizada: o que sobrar dos lados vira margem
-  .ion-page:not(app-login):not(app-add-usuario) > ion-content::part(scroll) {
-    padding-inline: max(12px, calc((100% - var(--web-largura)) / 2));
-  }
-
-  // o cabecalho acompanha a mesma coluna do conteudo
   .ion-page > ion-header ion-toolbar {
-    --padding-start: max(12px, calc((100% - var(--web-largura)) / 2));
-    --padding-end: max(12px, calc((100% - var(--web-largura)) / 2));
     --min-height: 64px;
   }
 
