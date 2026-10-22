@@ -1,6 +1,6 @@
 // Escala de urgência compartilhada (psicologia das cores): quanto mais perto
 // do prazo, mais "quente" a cor (vermelho = urgente/atrasado, passando por
-// laranja e amarelo, até verde/azul = tranquilo ou concluído).
+// laranja e amarelo, até azul = tranquilo, está longe). Verde fica só para concluída.
 //
 // Usada tanto no calendário (src/app/pages/inicio) quanto nas listas de
 // atividades (caderno, sala), pra manter o mesmo padrão visual em todo o app.

@@ -19,7 +19,7 @@ $cal-atrasada-borda: var(--app-urgencia-atrasada-borda);
 $cal-proxima: var(--app-urgencia-proxima);
 $cal-semana: var(--app-urgencia-semana);
 $cal-mes: var(--app-urgencia-mes);
-$cal-selo-texto: #2458a9;
+$cal-selo-texto: #1a6b2b; // ✓ do selo, no mesmo tom do verde de concluída
 
 ion-toolbar {
     --background: var(--app-bg);
@@ -171,9 +171,9 @@ ion-content {
                 font-weight: 700;
             }
 
+            // laranja e amarelo são claros: número escuro. Os outros (vermelho, azul, verde) usam número branco
             &[data-indicador='proxima'],
-            &[data-indicador='semana'],
-            &[data-indicador='mes'] {
+            &[data-indicador='semana'] {
                 color: #151922;
 
                 .numero-dia { color: #151922; }
@@ -188,8 +188,10 @@ ion-content {
                 border-radius: 50%;
                 z-index: 1;
                 box-shadow: 0 3px 10px rgba(0, 0, 0, .24);
-                // Escala de urgência: vermelho → laranja → amarelo → verde → azul.
-                &.concluida, &.futuro { background: $cal-concluida; }
+                // Escala de urgência: vermelho → laranja → amarelo → azul (longe).
+                // Verde fica só pra dia com tudo concluído.
+                &.concluida { background: $cal-concluida; }
+                &.futuro { background: $cal-mes; }
                 &.atrasada, &.hoje { background: $cal-atrasada; }
                 &.proxima { background: $cal-proxima; }
                 &.semana { background: $cal-semana; }
