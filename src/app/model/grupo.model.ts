@@ -49,6 +49,7 @@ export class TarefaGrupoModel {
     titulo: string;
     status: string;
     dataCriacao: string;
+    prazo?: string | null;
     idGrupo: string;
     idAtividade: string;
     tituloAtividade: string;

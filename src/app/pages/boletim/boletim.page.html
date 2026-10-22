@@ -76,6 +76,25 @@
       </div>
     </div>
 
+    <!-- "quanto falta" no total e legenda das barras das matérias -->
+    @if (falta(totalObtido, totalAvaliado, totalMaximo); as metaTotal) {
+    @if (metaTotal.situacao !== 'sem-pontos') {
+    <div class="meta-total" [ngClass]="metaTotal.situacao">
+      @switch (metaTotal.situacao) {
+      @case ('atingida') { <strong>Meta de {{ metaPercentual }}% atingida ✓</strong><span>Você já garantiu {{ metaPercentual }}% dos {{ totalMaximo }} pontos.</span> }
+      @case ('possivel') { <strong>Faltam {{ metaTotal.precisa }} pontos para {{ metaPercentual }}%</strong><span>Precisa de {{ metaTotal.percentualDoAberto }}% dos {{ metaTotal.emAberto }} pontos que ainda vão ser avaliados.</span> }
+      @case ('impossivel') { <strong>Não dá mais para chegar a {{ metaPercentual }}%</strong><span>Faltam {{ metaTotal.precisa }} pontos, mas só {{ metaTotal.emAberto }} ainda vão ser avaliados.</span> }
+      }
+    </div>
+    }
+    }
+
+    <div class="legenda-barras" aria-hidden="true">
+      <span><i class="obtido"></i>Obtido</span>
+      <span><i class="perdido"></i>Perdido</span>
+      <span><i class="aberto"></i>Em aberto</span>
+    </div>
+
     <!-- Matérias -->
     <div class="group stagger-list">
       @for (linha of linhas; track linha.idMateria) {
@@ -102,6 +121,13 @@
               Sem notas · máx. {{ linha.maximo }}
               }
             </span>
+            @if (falta(linha.obtido, linha.avaliado, linha.maximo); as meta) {
+            @switch (meta.situacao) {
+            @case ('atingida') { <span class="meta-linha atingida">✓ Meta de {{ metaPercentual }}% atingida</span> }
+            @case ('possivel') { <span class="meta-linha possivel">Faltam {{ meta.precisa }} pts para {{ metaPercentual }}% · {{ meta.percentualDoAberto }}% dos {{ meta.emAberto }} em aberto</span> }
+            @case ('impossivel') { <span class="meta-linha impossivel">Não dá mais para chegar a {{ metaPercentual }}% (faltam {{ meta.precisa }}, só {{ meta.emAberto }} em aberto)</span> }
+            }
+            }
           </div>
           <ion-icon [name]="abertas.has(linha.idMateria) ? 'chevron-up-outline' : 'chevron-down-outline'" class="row-seta"></ion-icon>
         </button>

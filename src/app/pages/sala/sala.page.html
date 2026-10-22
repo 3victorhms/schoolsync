@@ -4,13 +4,8 @@
             <ion-back-button defaultHref="/tabs/salas"></ion-back-button>
         </ion-buttons>
         <ion-title>
+            <!-- o código saiu daqui (cortava o nome no celular): agora fica no cartão "Chame sua turma", em Membros -->
             {{ sala.nome }}
-            @if (sala.codigoConvite) {
-            <button type="button" class="subtitulo codigo-copiar" (click)="copiarCodigo()" aria-label="Copiar código da sala">
-                {{ sala.codigoConvite }}
-                <ion-icon name="copy-outline"></ion-icon>
-            </button>
-            }
         </ion-title>
         <ion-buttons slot="end">
             @if (usuario.id === sala.idLider) {

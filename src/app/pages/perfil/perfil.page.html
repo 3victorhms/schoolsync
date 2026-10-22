@@ -19,15 +19,24 @@
 
   <h3 class="group-title">Preferências</h3>
   <div class="group">
-    <button type="button" class="row" (click)="alternarTema()">
+    <div class="row tema-row">
       <div class="row-icon laranja">
         <ion-icon [name]="temaClaro ? 'sunny-outline' : 'moon-outline'"></ion-icon>
       </div>
       <div class="row-body">
-        <span class="row-label">Tema escuro</span>
+        <span class="row-label">Tema</span>
       </div>
-      <div class="switch" [class.on]="!temaClaro"></div>
-    </button>
+      <!-- "Sistema" acompanha o modo claro/escuro do celular ou do computador -->
+      <div class="tema-opcoes" role="radiogroup" aria-label="Tema do aplicativo">
+        @for (opcao of opcoesTema; track opcao.valor) {
+        <button type="button" role="radio" [attr.aria-checked]="modoTema === opcao.valor" [class.ativo]="modoTema === opcao.valor"
+          (click)="escolherTema(opcao.valor)">
+          <ion-icon [name]="opcao.icone" aria-hidden="true"></ion-icon>
+          {{ opcao.rotulo }}
+        </button>
+        }
+      </div>
+    </div>
   </div>
 
   <h3 class="group-title">Notificações</h3>

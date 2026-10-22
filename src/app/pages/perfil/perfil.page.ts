@@ -6,13 +6,13 @@ import {
   IonIcon
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { homeOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline, chevronForwardOutline, shieldCheckmarkOutline } from 'ionicons/icons';
+import { homeOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline, chevronForwardOutline, shieldCheckmarkOutline, phonePortraitOutline } from 'ionicons/icons';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { AtividadeModel } from 'src/app/model/atividade.model';
-import { TemaService } from 'src/app/services/tema.service';
+import { ModoTema, TemaService } from 'src/app/services/tema.service';
 import { LoginService } from 'src/app/services/login.service';
 import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
 import { NotificacaoPushService } from 'src/app/services/notificacao-push.service';
@@ -37,6 +37,12 @@ export class PerfilPage implements OnInit {
   atividadesFiltradas: AtividadeModel[] = [];
   filtroAtivo: string = 'todas';
   temaClaro: boolean = false;
+  modoTema: ModoTema = 'escuro';
+  readonly opcoesTema: { valor: ModoTema; rotulo: string; icone: string }[] = [
+    { valor: 'escuro', rotulo: 'Escuro', icone: 'moon-outline' },
+    { valor: 'claro', rotulo: 'Claro', icone: 'sunny-outline' },
+    { valor: 'sistema', rotulo: 'Sistema', icone: 'phone-portrait-outline' },
+  ];
   inativando = false;
   testandoNotificacaoPush = false;
 
@@ -69,7 +75,7 @@ export class PerfilPage implements OnInit {
     private notificacaoPushService: NotificacaoPushService
   ) {
     addIcons({
-      homeOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline, chevronForwardOutline, shieldCheckmarkOutline
+      homeOutline, trophyOutline, personOutline, logOutOutline, bookOutline, timeOutline, checkmarkCircleOutline, calendarOutline, peopleOutline, starOutline, sunnyOutline, moonOutline, trashOutline, notificationsOutline, chevronForwardOutline, shieldCheckmarkOutline, phonePortraitOutline
     });
   }
 
@@ -84,6 +90,7 @@ export class PerfilPage implements OnInit {
       perfil: this.usuarioService.buscarAutenticacao().perfil,
     };
     this.temaClaro = this.temaService.temaClaroAtivo();
+    this.modoTema = this.temaService.modoAtual();
     this.carregarCaderno();
   }
 
@@ -150,8 +157,15 @@ export class PerfilPage implements OnInit {
     this.navController.navigateRoot('/login');
   }
 
+  escolherTema(modo: ModoTema) {
+    this.temaService.definirModo(modo);
+    this.modoTema = modo;
+    this.temaClaro = this.temaService.temaClaroAtivo();
+  }
+
   alternarTema() {
     this.temaClaro = this.temaService.alternarTema();
+    this.modoTema = this.temaService.modoAtual();
   }
 
   async testarNotificacao(): Promise<void> {

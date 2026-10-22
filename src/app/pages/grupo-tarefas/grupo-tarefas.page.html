@@ -35,7 +35,7 @@
   @if (tarefas.length) {
   <section class="secao-progresso">
     <app-progresso-tarefas [concluidas]="progresso.concluidas" [total]="progresso.total"
-      [porMembro]="progresso.porMembro"></app-progresso-tarefas>
+      [porMembro]="progresso.porMembro" [atrasadas]="progresso.atrasadas"></app-progresso-tarefas>
   </section>
   }
 
@@ -69,6 +69,11 @@
         </select>
       </div>
 
+      <div class="campo">
+        <label class="campo-label" for="prazo-tarefa">Prazo <small>(opcional{{ prazoMaximo ? ', até a entrega da atividade' : '' }})</small></label>
+        <input id="prazo-tarefa" type="date" [(ngModel)]="prazoTarefa" [min]="hojeIso" [max]="prazoMaximo || null" />
+      </div>
+
       <button type="button" (click)="criarTarefa()"
         [disabled]="criandoTarefa || !idAtividadeSelecionada || !idUsuarioAtribuido || !tituloTarefa.trim()">
         @if (criandoTarefa) { <span class="btn-spinner" aria-hidden="true"></span> Criando... } @else { Criar tarefa }
@@ -97,6 +102,11 @@
         <div class="row-body">
           <span class="row-label">{{ tarefa.titulo }}</span>
           <span class="row-desc">{{ tarefa.materiaAtividade }} • {{ tarefa.nomeUsuarioAtribuido }}</span>
+          @if (tarefa.prazo) {
+          <span class="prazo-tarefa" [ngClass]="classePrazo(tarefa)">
+            <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>{{ rotuloPrazo(tarefa) }}
+          </span>
+          }
         </div>
 
         <span class="status-tag" [ngClass]="tarefa.status">{{ labelStatus(tarefa.status) }}</span>

@@ -23,10 +23,11 @@ export class TarefaService {
     return this.http.get<TarefaModel[]>(`${this.API_URL}/tarefas`);
   }
 
-  criar(idGrupo: string, titulo: string, idAtividade: string, idUsuarioAtribuido: string): Observable<TarefaModel> {
+  // prazo é opcional ("AAAA-MM-DD"); a API n deixa passar da entrega da atividade
+  criar(idGrupo: string, titulo: string, idAtividade: string, idUsuarioAtribuido: string, prazo?: string): Observable<TarefaModel> {
     return this.http.post<TarefaModel>(
       `${this.API_URL}/grupos/${idGrupo}/tarefas`,
-      { titulo, idAtividade, idUsuarioAtribuido }
+      { titulo, idAtividade, idUsuarioAtribuido, prazo: prazo || null }
     );
   }
 

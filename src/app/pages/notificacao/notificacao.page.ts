@@ -74,9 +74,10 @@ export class NotificacaoPage {
   }
 
   icone(tipo: string): string {
-    const valor = tipo?.toUpperCase();
-    if (valor.includes('GRUPO') || valor.includes('CONVITE') || valor.includes('SALA')) return 'people-outline';
+    const valor = tipo?.toUpperCase() || '';
+    // tarefa ou grupo concluído vem antes do "GRUPO" pra ganhar o ícone de concluído
     if (valor.includes('CONCLUID')) return 'checkmark-circle-outline';
+    if (valor.includes('GRUPO') || valor.includes('CONVITE') || valor.includes('SALA')) return 'people-outline';
     return 'book-outline';
   }
 
@@ -131,7 +132,8 @@ export class NotificacaoPage {
   private rotaDaNotificacao(notificacao: NotificacaoModel): string[] | null {
     if (!notificacao.targetId) return null;
     const tipo = notificacao.tipo?.toUpperCase();
-    if (tipo.includes('GRUPO') || tipo.includes('CONVITE')) return ['/grupo', notificacao.targetId];
+    // o lembrete de tarefa usa "idGrupo:pedaço do id da tarefa" como alvo, ent o grupo é a primeira parte
+    if (tipo.includes('GRUPO') || tipo.includes('CONVITE')) return ['/grupo', notificacao.targetId.split(':')[0]];
     if (tipo.includes('SALA')) return ['/sala', notificacao.targetId];
     // o lembrete usa "idAtividade:data:dias" como alvo, ent a atividade é só a primeira parte
     if (tipo.includes('ATIVIDADE')) return ['/atividade', notificacao.targetId.split(':')[0]];

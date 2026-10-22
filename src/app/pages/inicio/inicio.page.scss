@@ -215,7 +215,8 @@ ion-content {
                 place-items: center;
                 border: 2px solid var(--app-surface);
                 border-radius: 50%;
-                background: var(--app-text);
+                // branco nos dois temas (com var(--app-text) ficava uma bolinha escura no tema claro)
+                background: #ffffff;
                 color: $cal-selo-texto;
                 font-size: 9px;
                 font-weight: 900;

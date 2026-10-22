@@ -62,7 +62,7 @@
 
   <div class="grupo-secao">
     <app-progresso-tarefas class="progresso-grupo" [concluidas]="progresso.concluidas" [total]="progresso.total"
-      [porMembro]="progresso.porMembro"></app-progresso-tarefas>
+      [porMembro]="progresso.porMembro" [atrasadas]="progresso.atrasadas"></app-progresso-tarefas>
     <div class="group stagger-list">
       <div class="row" [routerLink]="['/grupo', grupo.id, 'tarefas']" button>
         <div class="row-icon">

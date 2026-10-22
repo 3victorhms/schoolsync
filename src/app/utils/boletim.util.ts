@@ -96,6 +96,36 @@ export function aproveitamento(obtido: number, avaliado: number): number | null 
   return avaliado > 0 ? Math.round((obtido / avaliado) * 100) : null;
 }
 
+/** Meta usada no "quanto falta" (60% dos pontos, a média mais comum nas escolas). */
+export const META_APROVACAO = 0.6;
+
+export interface QuantoFalta {
+  /** 'atingida': já tem a meta; 'possivel': dá pra chegar com o que falta avaliar; 'impossivel': não dá mais. */
+  situacao: 'atingida' | 'possivel' | 'impossivel' | 'sem-pontos';
+  /** Pontos que ainda faltam para a meta. */
+  precisa: number;
+  /** Pontos que ainda não foram avaliados (máximo - avaliado). */
+  emAberto: number;
+  /** Quanto dos pontos em aberto precisa tirar, em % (só quando 'possivel'). */
+  percentualDoAberto: number;
+}
+
+/**
+ * Feito com auxílio do Claude: "quanto falta" para chegar à meta.
+ * Ex.: máximo 25, já avaliado 15, tirou 9 -> meta 15, precisa 6 dos 10 em aberto (60%).
+ */
+export function quantoFalta(obtido: number, avaliado: number, maximo: number, meta = META_APROVACAO): QuantoFalta {
+  const arredondar = (valor: number) => Math.round(valor * 10) / 10;
+  if (maximo <= 0) return { situacao: 'sem-pontos', precisa: 0, emAberto: 0, percentualDoAberto: 0 };
+
+  const emAberto = arredondar(Math.max(maximo - avaliado, 0));
+  const precisa = arredondar(Math.max(maximo * meta - obtido, 0));
+
+  if (precisa <= 0) return { situacao: 'atingida', precisa: 0, emAberto, percentualDoAberto: 0 };
+  if (precisa > emAberto) return { situacao: 'impossivel', precisa, emAberto, percentualDoAberto: 100 };
+  return { situacao: 'possivel', precisa, emAberto, percentualDoAberto: Math.round((precisa / emAberto) * 100) };
+}
+
 /**
  * Atividades que valem ponto, já passaram da data de entrega e ainda não têm nota
  * lançada: são as que o aluno provavelmente já pode registrar.

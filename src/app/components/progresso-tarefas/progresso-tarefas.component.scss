@@ -130,3 +130,15 @@
     color: var(--app-success);
   }
 }
+
+// tarefas com prazo vencido (prazo é opcional nas tarefas)
+.resumo-atrasadas,
+.membro-atraso {
+  color: var(--app-urgencia-atrasada);
+  font-weight: 700;
+}
+
+.membro-atraso {
+  margin-left: 6px;
+  font-size: 11px;
+}
