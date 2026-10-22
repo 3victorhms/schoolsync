@@ -44,3 +44,46 @@ ion-content { --background: var(--app-bg); }
 .estado-erro { border: 1px solid #7d1f35; color: #ffadb7; }
 .notificacao:hover, .notificacao:focus-visible { border-color: var(--app-accent); outline: none; background: var(--app-surface); }
 .notificacao:not(.nao-lida) { opacity: .78; }
+
+// Agrupamento por dia — feito com auxílio do Claude
+.grupo-titulo {
+  margin: 14px 4px 2px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--app-muted-strong);
+}
+
+.grupo-titulo:first-of-type { margin-top: 4px; }
+
+.barra-nao-lidas {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px 10px 14px;
+  border-radius: 14px;
+  background: var(--app-accent-soft);
+  color: var(--app-text-soft);
+  font-size: 13.5px;
+
+  strong { color: var(--app-accent); }
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    border-radius: 999px;
+    padding: 7px 12px;
+    background: var(--app-accent);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+
+    ion-icon { color: inherit !important; font-size: 16px; }
+  }
+}
