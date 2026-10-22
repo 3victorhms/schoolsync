@@ -13,7 +13,7 @@ import { addIcons } from 'ionicons';
 import { Subscription, from, of } from 'rxjs';
 import { catchError, finalize, mergeMap } from 'rxjs/operators';
 import { notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, bookOutline, personOutline, pencilOutline, chevronDownOutline, chevronUpOutline, sunnyOutline, alertCircleOutline } from 'ionicons/icons';
-import { calcularUrgencia, classeUrgencia, compararPorEntrega, deveArquivar, ordemUrgencia } from 'src/app/utils/urgencia.util';
+import { calcularUrgencia, classeUrgencia, compararPorEntrega, deveArquivar, ordemUrgencia, rotuloUrgencia } from 'src/app/utils/urgencia.util';
 import { labelPontos } from 'src/app/utils/pontos.util';
 import { formatarDataCurta, parsearData } from 'src/app/utils/data.util';
 import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
@@ -473,6 +473,52 @@ export class InicioPage implements OnInit {
       .sort((a, b) => a.dataEntrega.localeCompare(b.dataEntrega));
 
     return pendentes[0] || null;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Painel do celular (próxima entrega + resumo + faixa da semana)
+  // ---------------------------------------------------------------------------
+
+  /** No celular o mês inteiro fica recolhido; a faixa da semana abre ele. */
+  mostrarMes = false;
+
+  /** A semana (linha do calendário) do dia selecionado, ou de hoje. */
+  get semanaVisivel(): DiaCalendario[] {
+    let base = this.diasCalendario.findIndex(dia => dia.selecionado);
+    if (base < 0) base = this.diasCalendario.findIndex(dia => dia.hoje);
+    if (base < 0) return this.diasCalendario.slice(0, 7);
+    const inicio = base - (base % 7);
+    return this.diasCalendario.slice(inicio, inicio + 7);
+  }
+
+  /** A atividade pendente mais urgente da agenda (atrasada, hoje, amanhã...). */
+  get proximaEntrega(): AtividadeModel | null {
+    for (const secao of this.secoes) {
+      if (secao.atividades.length) return secao.atividades[0];
+    }
+    return this.atividadesDepois[0] ?? null;
+  }
+
+  rotuloEntrega(atividade: AtividadeModel): string {
+    return rotuloUrgencia(atividade.dataEntrega, atividade.status) || this.formatarData(atividade.dataEntrega);
+  }
+
+  /** Entregas dos próximos 7 dias (hoje incluso) e quantas já estão concluídas. */
+  get resumoSemana(): { total: number; concluidas: number; percentual: number } {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const daSemana = this.atividadesCalendario.filter(atividade => {
+      const prazo = parsearData(atividade.dataEntrega);
+      if (!prazo) return false;
+      const dias = Math.round((prazo.getTime() - hoje.getTime()) / 86400000);
+      return dias >= 0 && dias <= 6;
+    });
+    const concluidas = daSemana.filter(atividade => atividade.status === 'concluido').length;
+    return {
+      total: daSemana.length,
+      concluidas,
+      percentual: daSemana.length ? Math.round((concluidas / daSemana.length) * 100) : 0
+    };
   }
 
   irParaAtividade(atividade: AtividadeModel) {

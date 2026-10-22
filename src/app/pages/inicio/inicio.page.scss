@@ -732,3 +732,231 @@ ion-content {
         font-size: 28px;
     }
 }
+
+
+// ---------------------------------------------------------------------------
+// Painel do celular (próxima entrega + resumo da semana + faixa da semana) — feito com auxílio do Claude
+// ---------------------------------------------------------------------------
+.painel-celular {
+    padding: 4px 16px 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.proxima-entrega {
+    --cor-prazo: var(--app-accent);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 18px;
+    border-radius: 22px;
+    text-decoration: none;
+    color: var(--app-text);
+    background:
+        radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--cor-prazo) 34%, transparent) 0%, transparent 60%),
+        var(--app-surface);
+    border: 1px solid color-mix(in srgb, var(--cor-prazo) 40%, transparent);
+
+    &.urgencia-atrasada, &.urgencia-hoje { --cor-prazo: var(--app-urgencia-atrasada); }
+    &.urgencia-proxima { --cor-prazo: var(--app-urgencia-proxima); }
+    &.urgencia-semana { --cor-prazo: var(--app-urgencia-semana); }
+    &.urgencia-mes, &.urgencia-futuro { --cor-prazo: var(--app-urgencia-mes); }
+    &.em-dia { --cor-prazo: var(--app-urgencia-concluida); }
+
+    .proxima-rotulo {
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--cor-prazo);
+    }
+
+    .proxima-titulo {
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: -0.3px;
+        line-height: 1.2;
+    }
+
+    .proxima-detalhe {
+        font-size: 13px;
+        color: var(--app-muted);
+    }
+
+    .proxima-rodape {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    .proxima-prazo {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--cor-prazo) 18%, transparent);
+        color: var(--cor-prazo);
+        font-size: 13px;
+        font-weight: 700;
+
+        ion-icon { color: inherit !important; font-size: 15px; }
+    }
+
+    .proxima-abrir {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--app-text-soft);
+
+        ion-icon { color: inherit !important; }
+    }
+}
+
+.resumo-semana {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 4px;
+    font-size: 13px;
+    color: var(--app-muted);
+
+    strong { color: var(--app-text); }
+
+    .resumo-barra {
+        height: 6px;
+        border-radius: 999px;
+        background: var(--app-surface-strong);
+        overflow: hidden;
+
+        span {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+            background: var(--app-urgencia-concluida);
+        }
+    }
+}
+
+.semana-card {
+    padding: 12px 10px 10px;
+    border-radius: 20px;
+    background: var(--app-surface);
+
+    .semana-topo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 6px 8px;
+
+        strong { font-size: 15px; color: var(--app-text); }
+    }
+
+    .ver-mes {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        border: none;
+        background: var(--app-accent-soft);
+        color: var(--app-accent);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 700;
+
+        ion-icon { color: inherit !important; }
+    }
+}
+
+.semana-dias {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.semana-dia {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 0;
+    border: none;
+    border-radius: 14px;
+    background: transparent;
+    font-family: inherit;
+    color: var(--app-text);
+
+    .semana-dia-nome {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--app-muted);
+        text-transform: lowercase;
+    }
+
+    .semana-dia-numero {
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .semana-dia-ponto {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: transparent;
+
+        &[data-indicador='atrasada'], &[data-indicador='hoje'] { background: var(--app-urgencia-atrasada); }
+        &[data-indicador='proxima'] { background: var(--app-urgencia-proxima); }
+        &[data-indicador='semana'] { background: var(--app-urgencia-semana); }
+        &[data-indicador='mes'], &[data-indicador='futuro'] { background: var(--app-urgencia-mes); }
+        &[data-indicador='concluida'] { background: var(--app-urgencia-concluida); }
+    }
+
+    &.hoje .semana-dia-numero { color: var(--app-accent); }
+
+    &.selecionado {
+        background: var(--app-accent);
+
+        .semana-dia-nome, .semana-dia-numero { color: #ffffff; }
+        .semana-dia-ponto[data-indicador] { box-shadow: 0 0 0 2px #ffffff; }
+    }
+}
+
+// celular e tablet: o painel entra no lugar do calendário grande
+@media (max-width: 991.98px) {
+    // saudação numa linha só ("Olá, Victor 👋"), pra sobrar espaço pro painel
+    .header-titulo {
+        > div { display: flex; align-items: baseline; gap: 6px; }
+        .ola { font-size: 22px; font-weight: 600; }
+        .nome { font-size: 22px; }
+    }
+
+    // as duas colunas "somem" e cada bloco ganha uma posição própria
+    .inicio-layout {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .inicio-principal,
+    .inicio-lateral {
+        display: contents;
+    }
+
+    .data-secao { order: 1; padding-top: 12px; }
+    .agenda { order: 2; }
+    .ultima-sala-secao { order: 3; }
+
+    .calendario-titulo { display: none; }
+
+    // mês inteiro só quando a pessoa pede ("Ver mês")
+    .calendario-card { order: 0; display: none; }
+    .mes-aberto .calendario-card { display: block; margin-top: -4px; }
+}
+
+@media (min-width: 992px) {
+    .painel-celular { display: none; }
+}

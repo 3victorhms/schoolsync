@@ -34,16 +34,30 @@
         <p>As novidades sobre suas atividades e grupos aparecerão aqui.</p>
       </div>
       }
-      @for (notificacao of notificacoes; track notificacao.id) {
+      @if (naoLidas > 0) {
+      <div class="barra-nao-lidas">
+        <span><strong>{{ naoLidas }}</strong> {{ naoLidas === 1 ? 'não lida' : 'não lidas' }}</span>
+        <button type="button" (click)="marcarTodas()">
+          <ion-icon name="checkmark-done-outline" aria-hidden="true"></ion-icon>
+          Marcar todas como lidas
+        </button>
+      </div>
+      }
+
+      <!-- separadas por dia: Hoje, Ontem, Esta semana, Mais antigas -->
+      @for (grupo of grupos; track grupo.chave) {
+      <h3 class="grupo-titulo">{{ grupo.titulo }}</h3>
+      @for (notificacao of grupo.itens; track notificacao.id) {
       <button class="notificacao" type="button" [class.nao-lida]="!notificacao.lido" (click)="abrir(notificacao)">
         <span class="icone"><ion-icon [name]="icone(notificacao.tipo)"></ion-icon></span>
         <span class="conteudo">
           <strong>{{ notificacao.titulo }}</strong>
           <span class="mensagem">{{ notificacao.mensagem }}</span>
-          <small>{{ formatarHorario(notificacao.horario) }}</small>
+          <small>{{ formatarHorario(notificacao.horario, grupo.chave) }}</small>
         </span>
         @if (!notificacao.lido) { <span class="indicador" aria-label="Não lida"></span> }
       </button>
+      }
       }
     </section>
   </main>

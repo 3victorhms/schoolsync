@@ -8,6 +8,13 @@ import { NotificacaoModel } from '../../model/notificacao.model';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { Subscription } from 'rxjs';
 
+/** Bloco da lista ("Hoje", "Ontem"...). */
+interface GrupoNotificacoes {
+  chave: string;
+  titulo: string;
+  itens: NotificacaoModel[];
+}
+
 @Component({
   selector: 'app-notificacao',
   templateUrl: './notificacao.page.html',
@@ -73,13 +80,52 @@ export class NotificacaoPage {
     return 'book-outline';
   }
 
-  formatarHorario(valor: string): string {
+  get naoLidas(): number {
+    return this.notificacoes.filter(item => !item.lido).length;
+  }
+
+  // feito com auxílio do Claude: separa por dia (mais nova primeiro), igual app de mensagens
+  get grupos(): GrupoNotificacoes[] {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const grupos: GrupoNotificacoes[] = [
+      { chave: 'hoje', titulo: 'Hoje', itens: [] },
+      { chave: 'ontem', titulo: 'Ontem', itens: [] },
+      { chave: 'semana', titulo: 'Esta semana', itens: [] },
+      { chave: 'antigas', titulo: 'Mais antigas', itens: [] },
+    ];
+
+    const ordenadas = [...this.notificacoes].sort((a, b) => this.tempo(b.horario) - this.tempo(a.horario));
+    for (const notificacao of ordenadas) {
+      const data = new Date(notificacao.horario);
+      data.setHours(0, 0, 0, 0);
+      const diasAtras = Math.round((hoje.getTime() - data.getTime()) / 86400000);
+
+      if (Number.isNaN(diasAtras) || diasAtras > 6) grupos[3].itens.push(notificacao);
+      else if (diasAtras <= 0) grupos[0].itens.push(notificacao);
+      else if (diasAtras === 1) grupos[1].itens.push(notificacao);
+      else grupos[2].itens.push(notificacao);
+    }
+
+    return grupos.filter(grupo => grupo.itens.length > 0);
+  }
+
+  private tempo(valor: string): number {
+    const tempo = new Date(valor).getTime();
+    return Number.isNaN(tempo) ? 0 : tempo;
+  }
+
+  /** Hoje e ontem mostram só a hora (o bloco já diz o dia); as outras mostram dia e hora. */
+  formatarHorario(valor: string, chaveGrupo = ''): string {
     if (!valor) return '';
     const data = new Date(valor);
     if (Number.isNaN(data.getTime())) return valor;
-    return new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
-    }).format(data);
+    const soHora = chaveGrupo === 'hoje' || chaveGrupo === 'ontem';
+    return new Intl.DateTimeFormat('pt-BR', soHora
+      ? { hour: '2-digit', minute: '2-digit' }
+      : { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }
+    ).format(data);
   }
 
   private rotaDaNotificacao(notificacao: NotificacaoModel): string[] | null {

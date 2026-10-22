@@ -19,8 +19,61 @@
 
 <ion-content [fullscreen]="true">
 
+  <!-- ===================== PAINEL DO CELULAR ===================== -->
+  <!-- só aparece no celular/tablet; no computador a coluna da direita já mostra o mês inteiro -->
+  <div class="painel-celular">
+    @if (!agendaCarregando) {
+    @if (proximaEntrega; as proxima) {
+    <a class="proxima-entrega" [routerLink]="['/atividade', proxima.id]" [ngClass]="classeUrgencia(proxima)">
+      <span class="proxima-rotulo">Próxima entrega</span>
+      <strong class="proxima-titulo">{{ proxima.titulo }}</strong>
+      <span class="proxima-detalhe">{{ proxima.nomeMateria }} · {{ nomeDaSala(proxima) }}</span>
+      <span class="proxima-rodape">
+        <span class="proxima-prazo"><ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>{{ rotuloEntrega(proxima) }}</span>
+        <span class="proxima-abrir">Abrir <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon></span>
+      </span>
+    </a>
+    } @else {
+    <div class="proxima-entrega em-dia">
+      <span class="proxima-rotulo">Tudo em dia</span>
+      <strong class="proxima-titulo">Nenhuma entrega pendente ✓</strong>
+      <span class="proxima-detalhe">Aproveite para adiantar o que vem depois.</span>
+    </div>
+    }
+
+    @if (resumoSemana.total > 0) {
+    <div class="resumo-semana">
+      <span><strong>{{ resumoSemana.total }}</strong> {{ resumoSemana.total === 1 ? 'entrega' : 'entregas' }} nos próximos 7 dias · <strong>{{ resumoSemana.concluidas }}</strong> {{ resumoSemana.concluidas === 1 ? 'concluída' : 'concluídas' }}</span>
+      <span class="resumo-barra"><span [style.width.%]="resumoSemana.percentual"></span></span>
+    </div>
+    }
+    }
+
+    <div class="semana-card">
+      <div class="semana-topo">
+        <strong>{{ mesAtual }}</strong>
+        <button type="button" class="ver-mes" (click)="mostrarMes = !mostrarMes" [attr.aria-expanded]="mostrarMes">
+          {{ mostrarMes ? 'Ver semana' : 'Ver mês' }}
+          <ion-icon [name]="mostrarMes ? 'chevron-up-outline' : 'chevron-down-outline'" aria-hidden="true"></ion-icon>
+        </button>
+      </div>
+      @if (!mostrarMes) {
+      <div class="semana-dias">
+        @for (dia of semanaVisivel; track dia.data) {
+        <button type="button" class="semana-dia" [class.hoje]="dia.hoje" [class.selecionado]="dia.selecionado"
+          [attr.aria-label]="dia.resumoAtividades ? dia.numero + '. ' + dia.resumoAtividades : dia.numero" (click)="selecionarDia(dia)">
+          <span class="semana-dia-nome">{{ ['dom','seg','ter','qua','qui','sex','sáb'][dia.data.getDay()] }}</span>
+          <span class="semana-dia-numero">{{ dia.numero }}</span>
+          <span class="semana-dia-ponto" [attr.data-indicador]="dia.indicador || null"></span>
+        </button>
+        }
+      </div>
+      }
+    </div>
+  </div>
+
   <!-- no celular as duas colunas ficam uma embaixo da outra; no computador ficam lado a lado -->
-  <div class="inicio-layout">
+  <div class="inicio-layout" [class.mes-aberto]="mostrarMes">
   <div class="inicio-principal">
 
   <!-- ===================== AGENDA ===================== -->
