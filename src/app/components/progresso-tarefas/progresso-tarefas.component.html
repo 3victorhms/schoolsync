@@ -31,13 +31,19 @@
     } @else {
     {{ concluidas }} de {{ total }} {{ total === 1 ? 'tarefa concluída' : 'tarefas concluídas' }}
     }
+    @if (atrasadas > 0) {
+    <span class="resumo-atrasadas"> · {{ atrasadas }} {{ atrasadas === 1 ? 'atrasada' : 'atrasadas' }}</span>
+    }
   </p>
 
   @if (porMembro.length > 1) {
   <ul class="membros">
     @for (membro of porMembro; track membro.nome) {
     <li [class.feito]="membro.concluidas === membro.total">
-      <span class="membro-nome">{{ membro.nome }}</span>
+      <span class="membro-nome">
+        {{ membro.nome }}
+        @if (membro.atrasadas > 0) { <span class="membro-atraso">{{ membro.atrasadas }} {{ membro.atrasadas === 1 ? 'atrasada' : 'atrasadas' }}</span> }
+      </span>
       <span class="barra">
         <span class="preenchimento" [style.width.%]="percentualDe(membro)"></span>
       </span>

@@ -217,3 +217,45 @@ ion-content {
 
 // A barra de abas (ion-tab-bar) agora vive em app/pages/tabs/tabs.page.scss,
 // compartilhada pelas 4 telas principais.
+
+// escolha do tema (escuro / claro / sistema) — feito com auxílio do Claude
+.tema-row {
+    flex-wrap: wrap;
+
+    .row-body { flex: 1; }
+}
+
+// as três opções ficam numa linha própria, embaixo do "Tema"
+.tema-opcoes {
+    flex-basis: 100%;
+    display: flex;
+    gap: 4px;
+    padding: 3px;
+    border-radius: 12px;
+    background: var(--app-bg-muted);
+
+    button {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        min-height: 34px;
+        padding: 0 10px;
+        border: none;
+        flex: 1;
+        justify-content: center;
+        border-radius: 9px;
+        background: transparent;
+        color: var(--app-muted);
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+
+        ion-icon { font-size: 15px; color: inherit !important; }
+
+        &.ativo {
+            background: var(--app-accent);
+            color: #ffffff;
+        }
+    }
+}

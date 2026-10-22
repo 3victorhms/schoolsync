@@ -57,6 +57,16 @@
     border-top: 1px solid var(--app-border);
 }
 
+.barra {
+    // fundo da barra = pontos ainda em aberto (antes n tinha estilo e a barra n aparecia)
+    display: block;
+    height: 8px;
+    margin: 8px 0 6px;
+    border-radius: 4px;
+    background: var(--app-surface-strong);
+    overflow: hidden;
+}
+
 .barra-dupla {
     position: relative;
 
@@ -69,8 +79,9 @@
         border-radius: 3px;
     }
 
+    // o que já foi avaliado e n veio em nota = perdido (fica à mostra atrás do obtido)
     .barra-avaliada {
-        background: var(--app-accent-soft);
+        background: color-mix(in srgb, var(--app-danger) 45%, transparent);
     }
 
     .barra-preenchida {
@@ -186,4 +197,53 @@
     color: var(--app-muted);
     font-size: 12.5px;
     line-height: 1.4;
+}
+
+// "Quanto falta" e legenda das barras — feito com auxílio do Claude
+.meta-linha {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: 600;
+
+    &.atingida { color: var(--app-urgencia-concluida); }
+    &.possivel { color: var(--app-text-soft); }
+    &.impossivel { color: var(--app-danger); }
+}
+
+.meta-total {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0 0 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border-left: 4px solid var(--app-accent);
+    background: var(--app-surface);
+
+    strong { font-size: 14.5px; color: var(--app-text); }
+    span { font-size: 13px; color: var(--app-muted); }
+
+    &.atingida { border-left-color: var(--app-urgencia-concluida); }
+    &.impossivel { border-left-color: var(--app-danger); }
+}
+
+.legenda-barras {
+    display: flex;
+    gap: 14px;
+    margin: 0 4px 10px;
+    font-size: 12px;
+    color: var(--app-muted);
+
+    span { display: inline-flex; align-items: center; gap: 6px; }
+
+    i {
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+
+        &.obtido { background: var(--app-accent); }
+        &.perdido { background: color-mix(in srgb, var(--app-danger) 45%, transparent); }
+        &.aberto { background: var(--app-surface-strong); }
+    }
 }

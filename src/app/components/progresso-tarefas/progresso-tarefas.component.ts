@@ -13,10 +13,22 @@ export interface ProgressoMembro {
   nome: string;
   concluidas: number;
   total: number;
+  /** Tarefas com prazo vencido e ainda não concluídas. */
+  atrasadas: number;
+}
+
+/** "AAAA-MM-DD" (ou ISO com hora) já passou? Compara só o dia. */
+function prazoVencido(prazo: string | null | undefined): boolean {
+  if (!prazo) return false;
+  const [ano, mes, dia] = prazo.split('T')[0].split('-').map(Number);
+  if (!ano || !mes || !dia) return false;
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  return new Date(ano, mes - 1, dia).getTime() < hoje.getTime();
 }
 
 /** Monta o progresso a partir da lista de tarefas do grupo. */
-export function calcularProgresso(tarefas: { status?: string | null; nomeUsuarioAtribuido?: string | null }[]) {
+export function calcularProgresso(tarefas: { status?: string | null; nomeUsuarioAtribuido?: string | null; prazo?: string | null }[]) {
   const porNome = new Map<string, ProgressoMembro>();
   let concluidas = 0;
 
@@ -25,17 +37,21 @@ export function calcularProgresso(tarefas: { status?: string | null; nomeUsuario
     if (feita) concluidas++;
 
     const nome = tarefa.nomeUsuarioAtribuido || 'Sem responsável';
-    const membro = porNome.get(nome) || { nome, concluidas: 0, total: 0 };
+    const membro = porNome.get(nome) || { nome, concluidas: 0, total: 0, atrasadas: 0 };
     membro.total++;
     if (feita) membro.concluidas++;
+    else if (prazoVencido(tarefa.prazo)) membro.atrasadas++;
     porNome.set(nome, membro);
   }
 
-  // quem tem mais coisa pendente aparece primeiro
+  // quem tem tarefa atrasada aparece primeiro, depois quem tem mais coisa pendente
   const porMembro = [...porNome.values()].sort((a, b) =>
-    (b.total - b.concluidas) - (a.total - a.concluidas) || a.nome.localeCompare(b.nome, 'pt-BR'));
+    b.atrasadas - a.atrasadas
+    || (b.total - b.concluidas) - (a.total - a.concluidas)
+    || a.nome.localeCompare(b.nome, 'pt-BR'));
+  const atrasadas = porMembro.reduce((soma, membro) => soma + membro.atrasadas, 0);
 
-  return { concluidas, total: (tarefas || []).length, porMembro };
+  return { concluidas, total: (tarefas || []).length, porMembro, atrasadas };
 }
 
 @Component({
@@ -51,6 +67,7 @@ export class ProgressoTarefasComponent {
   // dá pra escrever só <app-progresso-tarefas compacto>, sem [compacto]="true"
   @Input({ transform: booleanAttribute }) compacto = false;
   @Input() porMembro: ProgressoMembro[] = [];
+  @Input() atrasadas = 0;
 
   constructor() {
     addIcons({ checkmarkCircle });

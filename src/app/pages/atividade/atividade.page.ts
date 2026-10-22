@@ -532,8 +532,15 @@ export class AtividadePage implements OnInit {
     return 'time-outline';
   }
 
-  alterarStatus(novoStatus: string) {
+  async alterarStatus(novoStatus: string) {
     if (this.prazoEncerrado || !this.atividade.estaNoCaderno) return;
+    if (novoStatus === this.statusAtual) return;
+
+    // quem já lançou nota já entregou: confirma antes de tirar o "concluído"
+    if (this.statusAtual === 'concluido' && this.minhaNota && !(await this.confirmarApesarDaNota(
+      'Você já lançou sua nota desta atividade no boletim. Quer mesmo marcar como não concluída?', 'Marcar mesmo assim'))) {
+      return;
+    }
 
     this.atividadeService.alterarStatus(
       this.atividade.id,
@@ -567,7 +574,17 @@ export class AtividadePage implements OnInit {
     });
   }
 
-  removerDoCaderno() {
+  /** Aviso quando a ação desfaz a conclusão de uma atividade que já tem nota lançada. */
+  private confirmarApesarDaNota(mensagem: string, textoConfirmar: string): Promise<boolean> {
+    return this.confirmacaoService.confirmar('Atividade com nota lançada', mensagem, textoConfirmar);
+  }
+
+  async removerDoCaderno() {
+    if (this.minhaNota && !(await this.confirmarApesarDaNota(
+      'Você já lançou sua nota desta atividade. Ela continua no boletim, mas a atividade sai do caderno e deixa de aparecer como concluída.', 'Remover'))) {
+      return;
+    }
+
     this.atividadeService.removerDoCaderno(this.atividade.id).subscribe({
       next: () => {
         this.atividade.estaNoCaderno = false;

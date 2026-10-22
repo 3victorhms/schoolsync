@@ -340,3 +340,35 @@ ion-tab-button {
 .secao-progresso {
   padding: 16px 16px 0;
 }
+
+// prazo da tarefa, nas mesmas cores de urgência das atividades — feito com auxílio do Claude
+.prazo-tarefa {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--app-muted);
+
+  ion-icon { font-size: 13px; color: inherit !important; }
+
+  &.urgencia-atrasada, &.urgencia-hoje { color: var(--app-urgencia-atrasada); }
+  &.urgencia-proxima { color: var(--app-urgencia-proxima); }
+  &.urgencia-semana { color: var(--app-urgencia-semana); }
+  &.urgencia-mes, &.urgencia-futuro { color: var(--app-urgencia-mes); }
+  &.urgencia-concluida { color: var(--app-urgencia-concluida); }
+}
+
+.campo-label small {
+  font-weight: 400;
+  color: var(--app-muted);
+}
+
+input[type='date'] {
+  color-scheme: dark;
+}
+
+:host-context(body.tema-claro) input[type='date'] {
+  color-scheme: light;
+}

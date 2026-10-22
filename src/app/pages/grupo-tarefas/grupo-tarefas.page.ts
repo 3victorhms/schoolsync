@@ -30,7 +30,8 @@ import {
   peopleOutline,
   personOutline,
   trashOutline,
-  addOutline
+  addOutline,
+  calendarOutline
 } from 'ionicons/icons';
 import { GrupoModel } from 'src/app/model/grupo.model';
 import { TarefaModel } from 'src/app/model/tarefa.model';
@@ -43,6 +44,8 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { finalize } from 'rxjs';
 import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
+import { classeUrgencia, rotuloUrgencia } from 'src/app/utils/urgencia.util';
+import { formatarDataCurta } from 'src/app/utils/data.util';
 
 @Component({
   selector: 'app-grupo-tarefas',
@@ -78,6 +81,8 @@ export class GrupoTarefasPage implements OnInit {
   idAtividadeSelecionada: string;
   idUsuarioAtribuido: string;
   tituloTarefa: string;
+  /** Prazo opcional da tarefa ("AAAA-MM-DD"). */
+  prazoTarefa = '';
   tarefaExcluindoId = '';
   criandoTarefa = false;
   carregando = true;
@@ -110,7 +115,8 @@ export class GrupoTarefasPage implements OnInit {
       peopleOutline,
       personOutline,
       trashOutline,
-      addOutline
+      addOutline,
+      calendarOutline
     });
   }
 
@@ -201,7 +207,8 @@ export class GrupoTarefasPage implements OnInit {
       this.grupo.id,
       this.tituloTarefa.trim(),
       this.idAtividadeSelecionada,
-      this.idUsuarioAtribuido
+      this.idUsuarioAtribuido,
+      this.prazoTarefa
     ).pipe(
       finalize(() => this.criandoTarefa = false)
     ).subscribe({
@@ -210,10 +217,12 @@ export class GrupoTarefasPage implements OnInit {
         this.idAtividadeSelecionada = '';
         this.idUsuarioAtribuido = '';
         this.tituloTarefa = '';
+        this.prazoTarefa = '';
         this.carregarTarefas(this.grupo.id);
       },
-      error: () => {
-        this.exibirMensagem('Erro ao criar tarefa.');
+      error: (erro) => {
+        // ex.: prazo depois da entrega da atividade (a API explica o motivo)
+        this.exibirMensagem(erro?.error?.message || 'Erro ao criar tarefa.');
       }
     });
   }
@@ -268,6 +277,28 @@ export class GrupoTarefasPage implements OnInit {
         this.exibirMensagem(`Erro ao excluir tarefa (${erro?.status || 'sem conexão'}).`);
       }
     });
+  }
+
+  /** Hoje no formato do input de data (mínimo do prazo). */
+  get hojeIso(): string {
+    const hoje = new Date();
+    return `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
+  }
+
+  /** O prazo da tarefa vai no máximo até a entrega da atividade escolhida. */
+  get prazoMaximo(): string {
+    const atividade = this.atividades.find(item => item.id === this.idAtividadeSelecionada);
+    return atividade?.dataEntrega?.split('T')[0] || '';
+  }
+
+  classePrazo(tarefa: TarefaModel): string {
+    return classeUrgencia(tarefa.prazo, tarefa.status);
+  }
+
+  rotuloPrazo(tarefa: TarefaModel): string {
+    if (!tarefa.prazo) return '';
+    const rotulo = rotuloUrgencia(tarefa.prazo, tarefa.status);
+    return rotulo ? `${formatarDataCurta(tarefa.prazo)} · ${rotulo}` : formatarDataCurta(tarefa.prazo);
   }
 
   /** Quantas tarefas já foram concluídas, no total e por membro (cartão no topo da lista). */

@@ -38,7 +38,7 @@ import { NotaService } from 'src/app/services/nota.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
 import { formatarDataBr, periodoAtual } from 'src/app/utils/periodo.util';
-import { Boletim, LinhaBoletim, aproveitamento, atividadesSemNota, montarBoletim } from 'src/app/utils/boletim.util';
+import { Boletim, LinhaBoletim, META_APROVACAO, QuantoFalta, aproveitamento, atividadesSemNota, montarBoletim, quantoFalta } from 'src/app/utils/boletim.util';
 
 /** id do período selecionado, ou "ano" para o acumulado. */
 type Visao = string;
@@ -176,6 +176,13 @@ export class BoletimPage {
 
   aproveitamento(obtido: number, avaliado: number): number | null {
     return aproveitamento(obtido, avaliado);
+  }
+
+  /** Meta do "quanto falta", em % (60). */
+  readonly metaPercentual = Math.round(META_APROVACAO * 100);
+
+  falta(obtido: number, avaliado: number, maximo: number): QuantoFalta {
+    return quantoFalta(obtido, avaliado, maximo);
   }
 
   /** Barra: parte obtida e parte avaliada sobre o máximo possível. */
