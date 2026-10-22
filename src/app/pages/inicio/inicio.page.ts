@@ -43,7 +43,8 @@ interface SecaoAgenda {
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.page.html',
-  styleUrls: ['./inicio.page.scss'],
+  // o painel do celular fica num arquivo próprio (ver inicio-painel.scss)
+  styleUrls: ['./inicio.page.scss', './inicio-painel.scss'],
   standalone: true,
   imports: [IonIcon, IonCard, IonCardContent, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, RouterLink, AtividadeItemComponent]
 })
