@@ -62,8 +62,11 @@ body {
   --app-urgencia-atrasada-borda: #7f1720;
   --app-urgencia-proxima: #ee7d1a;
   --app-urgencia-semana: #f9ca32;
-  --app-urgencia-mes: #299c32;
-  --app-urgencia-concluida: #3670cd;
+  // mês ou mais = azul ("tranquilo, está longe"); concluída = verde, igual ao
+  // resto do app (selo de tarefa concluída, barra de progresso cheia).
+  // O verde é um tom mais escuro pra o número branco do calendário ficar legível.
+  --app-urgencia-mes: #3670cd;
+  --app-urgencia-concluida: #238636;
 
   // Tokens de transição/animação compartilhados por todo o app, pra usar a
   // mesma curva em botões, cards, toggles etc. em vez de valores soltos.
@@ -929,8 +932,7 @@ app-inicio .cal-dia[data-indicador] {
   font-weight: 750;
 }
 app-inicio .cal-dia[data-indicador='proxima'],
-app-inicio .cal-dia[data-indicador='semana'],
-app-inicio .cal-dia[data-indicador='mes'] {
+app-inicio .cal-dia[data-indicador='semana'] {
   color: #151922;
 }
 app-inicio .cal-dia[data-indicador].selecionado .indicador-atividade {
@@ -943,8 +945,7 @@ body.tema-claro app-inicio .cal-dia[data-indicador] .numero-dia {
   color: #ffffff !important;
 }
 body.tema-claro app-inicio .cal-dia[data-indicador='proxima'] .numero-dia,
-body.tema-claro app-inicio .cal-dia[data-indicador='semana'] .numero-dia,
-body.tema-claro app-inicio .cal-dia[data-indicador='mes'] .numero-dia {
+body.tema-claro app-inicio .cal-dia[data-indicador='semana'] .numero-dia {
   color: #151922 !important;
 }
 body.tema-claro app-inicio .cal-dia[data-indicador].selecionado .indicador-atividade {

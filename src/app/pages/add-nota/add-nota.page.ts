@@ -263,7 +263,13 @@ export class AddNotaPage {
     this.salvando = true;
     requisicao.pipe(finalize(() => this.salvando = false)).subscribe({
       next: () => {
-        mostrarAviso(this.nota ? 'Nota atualizada!' : 'Nota lançada no boletim!');
+        // nota de atividade: a API também marca a atividade como concluída no caderno (NotaService.concluirNoCaderno)
+        const lancouDeAtividade = !this.nota && 'idAtividade' in corpo;
+        mostrarAviso(this.nota
+          ? 'Nota atualizada!'
+          : lancouDeAtividade
+            ? 'Nota lançada! A atividade foi marcada como concluída.'
+            : 'Nota lançada no boletim!', lancouDeAtividade ? 3500 : 2500);
         this.voltar();
       },
       error: (erro) => mostrarAviso(erro?.error?.message || 'Não foi possível salvar a nota.', 4000)
