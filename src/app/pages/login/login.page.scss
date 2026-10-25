@@ -302,3 +302,15 @@
         margin-top: 0;
     }
 }
+
+// feito com auxílio do Claude: link de recuperação de senha
+.esqueci-area {
+    display: flex;
+    justify-content: flex-end;
+    margin: -4px 0 12px;
+}
+
+.esqueci-senha {
+    padding: 4px 0;
+    font-size: 13px;
+}

@@ -48,6 +48,10 @@
         <p class="erro-campo">A senha deve ter pelo menos 8 caracteres.</p>
         }
 
+        <div class="esqueci-area">
+          <button type="button" class="register-button esqueci-senha" (click)="irRecuperarSenha()">Esqueci minha senha</button>
+        </div>
+
         <ion-button expand="block" type="submit" class="login-button" [disabled]="formGroup.invalid || autenticando">
 
           @if (autenticando) { <span class="btn-spinner" aria-hidden="true"></span> Entrando... } @else { Entrar }

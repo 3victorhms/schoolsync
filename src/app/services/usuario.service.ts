@@ -60,6 +60,16 @@ export class UsuarioService {
     return this.apiDelete.excluir(`${this.API_URL_USUARIOS}/me`);
   }
 
+  /** Feito com auxílio do Claude: pede o código de recuperação de senha por e-mail. */
+  solicitarRecuperacaoSenha(email: string): Observable<void> {
+    return this.http.post<void>(`${this.API_URL_USUARIOS}/senha/esqueci`, { email });
+  }
+
+  /** Troca a senha com o código recebido por e-mail. */
+  redefinirSenha(email: string, codigo: string, novaSenha: string): Observable<void> {
+    return this.http.post<void>(`${this.API_URL_USUARIOS}/senha/redefinir`, { email, codigo, novaSenha });
+  }
+
   verificarLogin(login: string): Observable<boolean> {
     const params = { email: login };
     return this.http.get<boolean>(`${this.API_URL_USUARIOS}/verificar-login`, { params });

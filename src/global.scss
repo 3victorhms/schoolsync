@@ -1292,3 +1292,50 @@ button.row,
   font-size: 13px;
   line-height: 1.4;
 }
+
+// ===== Aviso de servidor acordando (servidor-lento.util.ts) — feito com auxílio do Claude =====
+.servidor-lento {
+  position: fixed;
+  left: 50%;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  transform: translateX(-50%);
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: var(--app-surface-strong);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  font-size: 0.9rem;
+  line-height: 1.35;
+  animation: servidor-lento-entrar var(--transition-base) ease-out;
+}
+
+.servidor-lento-spinner {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--app-border);
+  border-top-color: var(--app-accent);
+  animation: servidor-lento-girar 0.8s linear infinite;
+}
+
+@keyframes servidor-lento-girar {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes servidor-lento-entrar {
+  from { opacity: 0; transform: translate(-50%, -8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .servidor-lento { animation: none; }
+  .servidor-lento-spinner { animation-duration: 2s; }
+}

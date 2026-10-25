@@ -6,7 +6,17 @@
 // (salvar no Drive, mandar no WhatsApp...). No navegador, baixa direto.
 
 import { Capacitor } from '@capacitor/core';
-import { Boletim, LinhaBoletim, aproveitamento } from './boletim.util';
+import {
+  Boletim,
+  LinhaBoletim,
+  META_APROVACAO,
+  ROTULO_SITUACAO,
+  SituacaoMateria,
+  analisarMateria,
+  aproveitamento,
+  juntarNomes,
+  resumirSituacoes
+} from './boletim.util';
 import { formatarDataBr } from './periodo.util';
 import { NotaModel } from '../model/nota.model';
 
@@ -27,6 +37,16 @@ const COR_SUAVE: [number, number, number] = [110, 117, 130];
 const COR_DESTAQUE: [number, number, number] = [76, 134, 190];
 const COR_FUNDO_CABECALHO: [number, number, number] = [232, 240, 250];
 const COR_LINHA: [number, number, number] = [220, 224, 230];
+
+// Cor do texto da situação de cada matéria (feito com auxílio do Claude)
+const COR_SITUACAO: Record<SituacaoMateria, [number, number, number]> = {
+  'atingida': [40, 140, 80],
+  'no-caminho': COR_DESTAQUE,
+  'atencao': [190, 120, 0],
+  'fora-de-alcance': [200, 55, 55],
+  'sem-notas': COR_SUAVE,
+  'sem-pontos': COR_SUAVE,
+};
 
 interface Coluna {
   titulo: string;
@@ -70,8 +90,24 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
     doc.text(conteudo, x, y, { align: alinhamento });
   };
 
-  /** Desenha uma tabela simples; repete o cabeçalho se quebrar de página. */
-  const tabela = (colunas: Coluna[], linhas: string[][], ultimaEmNegrito = false) => {
+  /** Parágrafo que quebra em várias linhas se não couber na largura da página. */
+  const paragrafo = (conteudo: string, tamanho: number, estilo: 'normal' | 'bold' = 'normal',
+    cor: [number, number, number] = COR_TEXTO) => {
+    if (!conteudo) return;
+    doc.setFont('helvetica', estilo);
+    doc.setFontSize(tamanho);
+    const partes: string[] = doc.splitTextToSize(conteudo, LARGURA_UTIL);
+    partes.forEach((parte, i) => {
+      if (i > 0) y += tamanho * 0.45;
+      texto(parte, MARGEM, tamanho, estilo, cor);
+    });
+  };
+
+  /**
+   * Desenha uma tabela simples; repete o cabeçalho se quebrar de página.
+   * `situacoes` (opcional) pinta a última coluna com a cor da situação da matéria.
+   */
+  const tabela = (colunas: Coluna[], linhas: string[][], ultimaEmNegrito = false, situacoes?: SituacaoMateria[]) => {
     const desenharCabecalho = () => {
       doc.setFillColor(...COR_FUNDO_CABECALHO);
       doc.rect(MARGEM, y - 5, LARGURA_UTIL, ALTURA_LINHA, 'F');
@@ -102,7 +138,9 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
           : coluna.alinhamento === 'center' ? x + coluna.largura / 2 : x + 2;
         // Corta textos longos para caberem na coluna
         const conteudo = doc.splitTextToSize(celula, coluna.largura - 4)[0] ?? '';
-        texto(conteudo, xTexto, 9.5, negrito ? 'bold' : 'normal', COR_TEXTO, coluna.alinhamento ?? 'left');
+        const situacao = situacoes && i === linha.length - 1 ? situacoes[indice] : undefined;
+        texto(conteudo, xTexto, 9.5, negrito || situacao ? 'bold' : 'normal',
+          situacao ? COR_SITUACAO[situacao] : COR_TEXTO, coluna.alinhamento ?? 'left');
         x += coluna.largura;
       });
       doc.setDrawColor(...COR_LINHA);
@@ -130,53 +168,72 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
   y += 10;
 
   // ===== Resumo do ano =====
+  // Sem linha de "Total": a aprovação é por matéria, então somar matérias diferentes
+  // esconderia justamente a matéria que está mal. No lugar, cada matéria tem sua situação.
+  const metaPercentual = Math.round(META_APROVACAO * 100);
+
+  /** "Meta de 60% atingida em 3 de 8 matérias · foque em Química e Física" */
+  const frase = (linhas: LinhaBoletim[]): string => {
+    const resumo = resumirSituacoes(linhas);
+    if (!resumo.total) return '';
+    const partes = [`Meta de ${metaPercentual}% atingida em ${resumo.contagem['atingida']} de ${resumo.total} matérias`];
+    if (resumo.foco.length) partes.push(`foque em ${juntarNomes(resumo.foco.map(l => l.nomeMateria), 4)}`);
+    return partes.join(' · ');
+  };
+
   const colunasPeriodos = boletim.periodos.length;
-  const larguraMateria = 50;
-  const larguraPeriodo = Math.min(22, (LARGURA_UTIL - larguraMateria - 50) / Math.max(1, colunasPeriodos));
   const colunasAno: Coluna[] = [
-    { titulo: 'Matéria', largura: larguraMateria },
-    ...boletim.periodos.map(p => ({ titulo: `${p.periodo.ordem}º`, largura: larguraPeriodo, alinhamento: 'center' as const })),
-    { titulo: 'Total', largura: 18, alinhamento: 'right' },
-    { titulo: 'Máx.', largura: 16, alinhamento: 'right' },
+    { titulo: 'Matéria', largura: 40 },
+    ...boletim.periodos.map(p => ({
+      titulo: `${p.periodo.ordem}º`,
+      largura: Math.min(18, (LARGURA_UTIL - 40 - 76) / Math.max(1, colunasPeriodos)),
+      alinhamento: 'center' as const,
+    })),
+    { titulo: 'Total', largura: 16, alinhamento: 'right' },
+    { titulo: 'Máx.', largura: 14, alinhamento: 'right' },
     { titulo: 'Aprov.', largura: 16, alinhamento: 'right' },
+    { titulo: 'Situação', largura: 30 },
   ];
   // A coluna da matéria absorve a sobra para a tabela ocupar a largura toda
   colunasAno[0].largura += LARGURA_UTIL - colunasAno.reduce((soma, c) => soma + c.largura, 0);
 
-  garantirEspaco(30);
+  garantirEspaco(40);
   texto('Resumo do ano', MARGEM, 13, 'bold');
-  y += 5;
-  texto('Pontos obtidos em cada período. Aproveitamento = nota obtida / valor das avaliações já lançadas.',
-    MARGEM, 8, 'normal', COR_SUAVE);
+  y += 6;
+  paragrafo(frase(boletim.ano), 10, 'bold', COR_TEXTO);
   y += 7;
 
-  const linhasAno = boletim.ano.map(linha => [
+  const situacoesAno = boletim.ano.map(linha => analisarMateria(linha).situacao);
+  const linhasAno = boletim.ano.map((linha, indice) => [
     linha.nomeMateria,
     ...boletim.periodos.map(p => {
       const doPeriodo = p.linhas.find(l => l.idMateria === linha.idMateria);
       return doPeriodo && doPeriodo.avaliado > 0 ? numero(doPeriodo.obtido) : '-';
     }),
-    numero(linha.obtido),
+    linha.avaliado > 0 ? numero(linha.obtido) : '-',
     numero(linha.maximo),
     percentual(linha.obtido, linha.avaliado),
+    ROTULO_SITUACAO[situacoesAno[indice]],
   ]);
-  linhasAno.push([
-    'Total',
-    ...boletim.periodos.map(p => (p.avaliado > 0 ? numero(p.obtido) : '-')),
-    numero(boletim.obtidoAno),
-    numero(boletim.maximoAno),
-    percentual(boletim.obtidoAno, boletim.avaliadoAno),
-  ]);
-  tabela(colunasAno, linhasAno, true);
+  tabela(colunasAno, linhasAno, false, situacoesAno);
+
+  paragrafo(
+    `Situação: compara os pontos de cada matéria com a meta de ${metaPercentual}% do máximo. ` +
+    'Atenção = ainda dá para chegar, mas é preciso tirar no que falta uma porcentagem maior do que vem tirando. ' +
+    'Fora de alcance = mesmo tirando tudo o que falta, não chega na meta. ' +
+    'Aprov. (aproveitamento) = nota obtida / valor das avaliações já lançadas.',
+    8, 'normal', COR_SUAVE);
+  y += 8;
 
   // ===== Um bloco por período =====
   const colunasPeriodo: Coluna[] = [
-    { titulo: 'Matéria', largura: 70 },
-    { titulo: 'Avaliações', largura: 24, alinhamento: 'center' },
-    { titulo: 'Obtido', largura: 22, alinhamento: 'right' },
-    { titulo: 'Avaliado', largura: 22, alinhamento: 'right' },
-    { titulo: 'Máximo', largura: 20, alinhamento: 'right' },
-    { titulo: 'Aprov.', largura: 22, alinhamento: 'right' },
+    { titulo: 'Matéria', largura: 58 },
+    { titulo: 'Notas', largura: 16, alinhamento: 'center' },
+    { titulo: 'Obtido', largura: 18, alinhamento: 'right' },
+    { titulo: 'Avaliado', largura: 20, alinhamento: 'right' },
+    { titulo: 'Máximo', largura: 18, alinhamento: 'right' },
+    { titulo: 'Aprov.', largura: 18, alinhamento: 'right' },
+    { titulo: 'Situação', largura: 32 },
   ];
 
   const colunasNotas: Coluna[] = [
@@ -193,22 +250,21 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
     texto(periodo.nome, MARGEM, 13, 'bold');
     texto(`${formatarDataBr(periodo.dataInicio)} a ${formatarDataBr(periodo.dataFim)} · até ${numero(periodo.pontuacaoMaxima)} pontos por matéria`,
       LARGURA_PAGINA - MARGEM, 9, 'normal', COR_SUAVE, 'right');
+    y += 6;
+    paragrafo(frase(periodoBoletim.linhas), 9.5, 'bold', COR_TEXTO);
     y += 7;
 
-    const linhas = periodoBoletim.linhas.map((linha: LinhaBoletim) => [
+    const situacoes = periodoBoletim.linhas.map(linha => analisarMateria(linha).situacao);
+    const linhas = periodoBoletim.linhas.map((linha: LinhaBoletim, indice) => [
       linha.nomeMateria,
       String(linha.notas.length),
       linha.avaliado > 0 ? numero(linha.obtido) : '-',
       numero(linha.avaliado),
       numero(linha.maximo),
       percentual(linha.obtido, linha.avaliado),
+      ROTULO_SITUACAO[situacoes[indice]],
     ]);
-    linhas.push([
-      'Total do período', '',
-      numero(periodoBoletim.obtido), numero(periodoBoletim.avaliado), numero(periodoBoletim.maximo),
-      percentual(periodoBoletim.obtido, periodoBoletim.avaliado),
-    ]);
-    tabela(colunasPeriodo, linhas, true);
+    tabela(colunasPeriodo, linhas, false, situacoes);
 
     const notas = periodoBoletim.linhas
       .reduce<NotaModel[]>((todas, l) => todas.concat(l.notas), [])

@@ -23,6 +23,11 @@ const rotasDaAplicacao: Routes = [
     loadComponent: () => import('./pages/add-usuario/add-usuario.page').then(m => m.AddUsuarioPage)
   },
   {
+    path: 'recuperar-senha',
+    title: 'Recuperar senha',
+    loadComponent: () => import('./pages/recuperar-senha/recuperar-senha.page').then(m => m.RecuperarSenhaPage)
+  },
+  {
     path: 'tabs',
     loadComponent: () => import('./pages/tabs/tabs.page').then(m => m.TabsPage),
     children: [
@@ -185,7 +190,7 @@ const rotasDaAplicacao: Routes = [
   },
 ];
 
-const rotasPublicas = new Set(['', 'login', 'add-usuario']);
+const rotasPublicas = new Set(['', 'login', 'add-usuario', 'recuperar-senha']);
 
 export const routes: Routes = rotasDaAplicacao.map(route =>
   rotasPublicas.has(route.path || '')

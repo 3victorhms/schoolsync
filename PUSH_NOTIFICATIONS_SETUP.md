@@ -3,7 +3,7 @@
 O código do aplicativo e da API já está preparado. Para o Firebase autorizar o envio aos celulares Android, faça uma única configuração externa:
 
 1. No console do Firebase, crie ou abra o projeto do SchoolSync.
-2. Adicione um aplicativo Android usando o identificador `io.ionic.starter`.
+2. Adicione um aplicativo Android usando o identificador `br.cefetmg.schoolsync` (o projeto antigo usava `io.ionic.starter`; o `google-services.json` precisa ter o identificador novo, senão o build do Android falha).
 3. Baixe o arquivo `google-services.json` e coloque-o em `android/app/google-services.json`.
 4. Em **Configurações do projeto > Contas de serviço**, gere uma chave privada da conta de serviço.
 5. Converta o arquivo JSON da chave para Base64 e cadastre no Render as variáveis:

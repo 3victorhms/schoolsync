@@ -94,6 +94,7 @@ export class AddNotaPage {
     const idNota = this.activatedRoute.snapshot.params['idNota'] || '';
     const idAtividade = this.activatedRoute.snapshot.queryParams['atividade'] || '';
     const idPeriodoSugerido = this.activatedRoute.snapshot.queryParams['periodo'] || '';
+    const idMateriaSugerida = this.activatedRoute.snapshot.queryParams['materia'] || '';
 
     this.carregando = true;
     forkJoin({
@@ -122,7 +123,7 @@ export class AddNotaPage {
           this.nota = this.notas.find(n => n.idAtividade === this.atividade!.id) ?? null;
         }
 
-        this.prepararFormulario(idPeriodoSugerido);
+        this.prepararFormulario(idPeriodoSugerido, idMateriaSugerida);
       },
       error: () => {
         mostrarAviso('Não foi possível carregar a sala.');
@@ -131,7 +132,7 @@ export class AddNotaPage {
     });
   }
 
-  private prepararFormulario(idPeriodoSugerido: string) {
+  private prepararFormulario(idPeriodoSugerido: string, idMateriaSugerida = '') {
     const controlesDaAvulsa = ['descricao', 'idMateria', 'data', 'valorMaximo'];
 
     if (this.atividade) {
@@ -149,7 +150,9 @@ export class AddNotaPage {
       const periodoSugerido = this.sala.periodos.find(p => p.id === idPeriodoSugerido);
       this.formGroup.reset({
         descricao: this.nota?.descricao ?? '',
-        idMateria: this.nota?.idMateria ?? '',
+        // Aberta pela matéria no boletim: já vem com ela escolhida
+        idMateria: this.nota?.idMateria
+          ?? (this.sala.materias.some(m => m.id === idMateriaSugerida) ? idMateriaSugerida : ''),
         // Sugere uma data dentro do período escolhido no boletim (sem passar de hoje)
         data: this.nota?.data ?? (periodoSugerido ? this.dataSugerida(periodoSugerido) : ''),
         valorMaximo: this.nota?.valorMaximo ?? '',

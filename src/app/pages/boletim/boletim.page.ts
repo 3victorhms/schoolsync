@@ -38,7 +38,23 @@ import { NotaService } from 'src/app/services/nota.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
 import { formatarDataBr, periodoAtual } from 'src/app/utils/periodo.util';
-import { Boletim, LinhaBoletim, META_APROVACAO, QuantoFalta, aproveitamento, atividadesSemNota, montarBoletim, quantoFalta } from 'src/app/utils/boletim.util';
+import {
+  AnaliseMateria,
+  Boletim,
+  LinhaBoletim,
+  META_APROVACAO,
+  ORDEM_SITUACOES,
+  ROTULO_SITUACAO,
+  ResumoSituacoes,
+  SituacaoMateria,
+  analisarMateria,
+  atividadesSemNota,
+  descreverSituacao,
+  formatarPontos,
+  juntarNomes,
+  montarBoletim,
+  resumirSituacoes
+} from 'src/app/utils/boletim.util';
 
 /** id do período selecionado, ou "ano" para o acumulado. */
 type Visao = string;
@@ -129,6 +145,10 @@ export class BoletimPage {
         if (!visaoValida || (this.visao === 'ano' && !this.jaEscolheuVisao)) {
           this.visao = atual?.id ?? 'ano';
         }
+        this.montarVisao();
+        // Com 4 bimestres + "Ano" as abas passam da largura da tela: rola até a selecionada
+        setTimeout(() => document.querySelector('app-boletim .filtro-btn.ativo')
+          ?.scrollIntoView({ inline: 'center', block: 'nearest' }));
       },
       error: () => {
         mostrarAviso('Não foi possível carregar o boletim.');
@@ -142,47 +162,70 @@ export class BoletimPage {
   selecionarVisao(visao: Visao) {
     this.visao = visao;
     this.jaEscolheuVisao = true;
+    this.mostrarPendentes = false;
+    this.montarVisao();
   }
 
   // ===================== dados da visão atual =====================
+  // Feito com auxílio do Claude. Recalculados só quando muda a visão ou chegam dados
+  // novos, e não a cada ciclo de detecção de mudanças da tela.
 
-  get periodoDaVisao() {
-    return this.boletim?.periodos.find(p => p.periodo.id === this.visao) ?? null;
-  }
-
-  get linhas(): LinhaBoletim[] {
-    if (!this.boletim) return [];
-    return this.visao === 'ano' ? this.boletim.ano : (this.periodoDaVisao?.linhas ?? []);
-  }
-
-  get totalObtido(): number {
-    if (!this.boletim) return 0;
-    return this.visao === 'ano' ? this.boletim.obtidoAno : (this.periodoDaVisao?.obtido ?? 0);
-  }
-
-  get totalAvaliado(): number {
-    if (!this.boletim) return 0;
-    return this.visao === 'ano' ? this.boletim.avaliadoAno : (this.periodoDaVisao?.avaliado ?? 0);
-  }
-
-  get totalMaximo(): number {
-    if (!this.boletim) return 0;
-    return this.visao === 'ano' ? this.boletim.maximoAno : (this.periodoDaVisao?.maximo ?? 0);
-  }
-
-  get pendentes(): AtividadeModel[] {
-    return atividadesSemNota(this.sala, this.notas, this.visao === 'ano' ? undefined : this.visao);
-  }
-
-  aproveitamento(obtido: number, avaliado: number): number | null {
-    return aproveitamento(obtido, avaliado);
-  }
+  linhas: LinhaBoletim[] = [];
+  analises = new Map<string, AnaliseMateria>();
+  resumo: ResumoSituacoes | null = null;
+  pendentes: AtividadeModel[] = [];
+  mostrarPendentes = false;
 
   /** Meta do "quanto falta", em % (60). */
   readonly metaPercentual = Math.round(META_APROVACAO * 100);
+  readonly ordemSituacoes = ORDEM_SITUACOES;
+  readonly rotuloSituacao = ROTULO_SITUACAO;
+  readonly formatarPontos = formatarPontos;
 
-  falta(obtido: number, avaliado: number, maximo: number): QuantoFalta {
-    return quantoFalta(obtido, avaliado, maximo);
+  private montarVisao() {
+    if (!this.boletim) {
+      this.linhas = [];
+      this.analises = new Map();
+      this.resumo = null;
+      this.pendentes = [];
+      return;
+    }
+    const periodo = this.boletim.periodos.find(p => p.periodo.id === this.visao);
+    this.linhas = this.visao === 'ano' ? this.boletim.ano : (periodo?.linhas ?? []);
+    this.analises = new Map(this.linhas.map(linha => [linha.idMateria, analisarMateria(linha)]));
+    this.resumo = resumirSituacoes(this.linhas);
+    this.pendentes = atividadesSemNota(this.sala, this.notas, this.visao === 'ano' ? undefined : this.visao);
+  }
+
+  analise(linha: LinhaBoletim): AnaliseMateria {
+    return this.analises.get(linha.idMateria) ?? analisarMateria(linha);
+  }
+
+  descricao(linha: LinhaBoletim): string {
+    return descreverSituacao(linha, this.analise(linha));
+  }
+
+  /** Título do card de situação: aponta as matérias que pedem foco. */
+  get tituloResumo(): string {
+    const resumo = this.resumo;
+    if (!resumo || !resumo.total) return 'Nenhuma matéria vale pontos aqui';
+    if (resumo.foco.length) return `Foque em ${juntarNomes(resumo.foco.map(l => l.nomeMateria))}`;
+    if (resumo.contagem['atingida'] === resumo.total) return 'Meta atingida em todas as matérias';
+    if (resumo.contagem['sem-notas'] === resumo.total) {
+      return this.visao === 'ano' ? 'Nenhuma nota lançada ainda' : 'Nenhuma nota lançada neste período';
+    }
+    return 'Tudo no caminho';
+  }
+
+  rotuloContagem(situacao: SituacaoMateria, quantidade: number): string {
+    switch (situacao) {
+      case 'atingida': return `${quantidade} com meta atingida`;
+      case 'no-caminho': return `${quantidade} no caminho`;
+      case 'atencao': return `${quantidade} em atenção`;
+      case 'fora-de-alcance': return `${quantidade} fora de alcance`;
+      case 'sem-notas': return `${quantidade} sem notas`;
+      default: return String(quantidade);
+    }
   }
 
   /** Barra: parte obtida e parte avaliada sobre o máximo possível. */
@@ -204,9 +247,10 @@ export class BoletimPage {
     this.router.navigate(['/sala', this.idSala, 'nota'], { queryParams: { atividade: atividade.id } });
   }
 
-  novaAvulsa() {
+  novaAvulsa(idMateria?: string) {
     const query: Record<string, string> = {};
     if (this.visao !== 'ano') query['periodo'] = this.visao;
+    if (idMateria) query['materia'] = idMateria;
     this.router.navigate(['/sala', this.idSala, 'nota'], { queryParams: query });
   }
 

@@ -4,7 +4,8 @@ android {
     namespace = "io.ionic.starter"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "io.ionic.starter"
+        // O namespace continua io.ionic.starter (pacote das classes Java); o que identifica o app é o applicationId
+        applicationId "br.cefetmg.schoolsync"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

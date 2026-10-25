@@ -1,0 +1,41 @@
+// O layout vem do login.page.scss (mesma tela de entrada); aqui só o que é desta página.
+
+.explicacao {
+    margin: -4px 0 18px;
+    color: var(--app-muted);
+    font-size: 14px;
+    line-height: 1.45;
+
+    strong {
+        color: var(--app-text);
+        overflow-wrap: anywhere;
+    }
+}
+
+.codigo-input {
+    letter-spacing: 0.3em;
+    font-variant-numeric: tabular-nums;
+}
+
+.acoes-codigo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 16px;
+    margin-top: 14px;
+
+    .register-button {
+        padding: 6px 0;
+    }
+
+    .register-button:disabled {
+        color: var(--app-muted);
+        cursor: default;
+    }
+}
+
+.register-button.voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
