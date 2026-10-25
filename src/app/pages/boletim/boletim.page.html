@@ -60,73 +60,82 @@
       </button>
     </div>
 
-    <!-- Resumo -->
-    <div class="resumo-boletim">
-      <div class="resumo-numero">
-        <strong>{{ totalObtido }}</strong>
-        <span>de {{ totalAvaliado }} avaliados</span>
-      </div>
-      <div class="resumo-detalhe">
-        @if (aproveitamento(totalObtido, totalAvaliado) !== null) {
-        <span class="resumo-aproveitamento">{{ aproveitamento(totalObtido, totalAvaliado) }}% de aproveitamento</span>
-        } @else {
-        <span class="resumo-aproveitamento vazio">Nenhuma nota lançada</span>
+    <!-- Situação por matéria (feito com auxílio do Claude). A aprovação é por matéria,
+         então o boletim não soma matérias diferentes num total geral. -->
+    @if (resumo) {
+    <div class="situacao-resumo" [class.com-foco]="resumo.foco.length">
+      <strong class="situacao-titulo">{{ tituloResumo }}</strong>
+      <span class="situacao-sub">Meta de {{ metaPercentual }}% dos pontos em cada matéria</span>
+      @if (resumo.total) {
+      <div class="situacao-contagem">
+        @for (situacao of ordemSituacoes; track situacao) {
+        @if (resumo.contagem[situacao]) {
+        <span class="situacao-chip" [ngClass]="situacao">{{ rotuloContagem(situacao, resumo.contagem[situacao]) }}</span>
         }
-        <span class="resumo-maximo">máximo possível: {{ totalMaximo }} pontos</span>
+        }
       </div>
+      }
     </div>
+    }
 
-    <!-- "quanto falta" no total e legenda das barras das matérias -->
-    @if (falta(totalObtido, totalAvaliado, totalMaximo); as metaTotal) {
-    @if (metaTotal.situacao !== 'sem-pontos') {
-    <div class="meta-total" [ngClass]="metaTotal.situacao">
-      @switch (metaTotal.situacao) {
-      @case ('atingida') { <strong>Meta de {{ metaPercentual }}% atingida ✓</strong><span>Você já garantiu {{ metaPercentual }}% dos {{ totalMaximo }} pontos.</span> }
-      @case ('possivel') { <strong>Faltam {{ metaTotal.precisa }} pontos para {{ metaPercentual }}%</strong><span>Precisa de {{ metaTotal.percentualDoAberto }}% dos {{ metaTotal.emAberto }} pontos que ainda vão ser avaliados.</span> }
-      @case ('impossivel') { <strong>Não dá mais para chegar a {{ metaPercentual }}%</strong><span>Faltam {{ metaTotal.precisa }} pontos, mas só {{ metaTotal.emAberto }} ainda vão ser avaliados.</span> }
+    <!-- Atividades que já podem receber nota -->
+    @if (pendentes.length) {
+    <button type="button" class="pendentes-aviso" (click)="mostrarPendentes = !mostrarPendentes"
+      [attr.aria-expanded]="mostrarPendentes">
+      <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+      <span class="pendentes-texto">
+        {{ pendentes.length }} {{ pendentes.length === 1 ? 'atividade esperando' : 'atividades esperando' }} sua nota
+      </span>
+      <ion-icon [name]="mostrarPendentes ? 'chevron-up-outline' : 'chevron-down-outline'" aria-hidden="true"></ion-icon>
+    </button>
+    @if (mostrarPendentes) {
+    <div class="group pendentes-lista">
+      @for (atividade of pendentes; track atividade.id) {
+      <button type="button" class="row pendente-linha" (click)="lancarDaAtividade(atividade)">
+        <div class="row-body">
+          <span class="row-label">{{ atividade.titulo }}</span>
+          <span class="row-desc">{{ atividade.nomeMateria }} · {{ formatarDataBr(atividade.dataEntrega) }} · vale {{ formatarPontos(atividade.valor) }}</span>
+        </div>
+        <span class="lancar-chip">Lançar</span>
+      </button>
       }
     </div>
     }
     }
 
-    <div class="legenda-barras" aria-hidden="true">
-      <span><i class="obtido"></i>Obtido</span>
-      <span><i class="perdido"></i>Perdido</span>
-      <span><i class="aberto"></i>Em aberto</span>
+    <!-- Matérias -->
+    <div class="materias-cabecalho">
+      <h3 class="group-title">Matérias</h3>
+      <div class="legenda-barras" aria-hidden="true">
+        <span><i class="obtido"></i>Obtido</span>
+        <span><i class="perdido"></i>Perdido</span>
+        <span><i class="aberto"></i>Em aberto</span>
+      </div>
     </div>
 
-    <!-- Matérias -->
     <div class="group stagger-list">
       @for (linha of linhas; track linha.idMateria) {
+      @let info = analise(linha);
       <div class="materia-bloco">
         <button type="button" class="row materia-linha" (click)="alternar(linha.idMateria)"
           [attr.aria-expanded]="abertas.has(linha.idMateria)">
           <div class="row-body">
             <div class="materia-topo">
               <span class="row-label">{{ linha.nomeMateria }}</span>
+              <!-- obtido sobre o máximo: a mesma escala da barra -->
               <span class="materia-pontos">
-                {{ linha.obtido }}<span class="materia-max">/{{ linha.avaliado }}</span>
+                {{ linha.avaliado > 0 ? formatarPontos(linha.obtido) : '–' }}<span class="materia-max">/{{ formatarPontos(linha.maximo) }}</span>
               </span>
             </div>
             <div class="barra barra-dupla" role="presentation">
               <div class="barra-avaliada" [style.width.%]="largura(linha.avaliado, linha.maximo)"></div>
               <div class="barra-preenchida" [style.width.%]="largura(linha.obtido, linha.maximo)"></div>
             </div>
-            <span class="row-desc">
-              @if (linha.notas.length) {
-              {{ linha.notas.length }} {{ linha.notas.length === 1 ? 'nota' : 'notas' }}
-              @if (aproveitamento(linha.obtido, linha.avaliado) !== null) { · {{ aproveitamento(linha.obtido, linha.avaliado) }}% }
-              · máx. {{ linha.maximo }}
-              } @else {
-              Sem notas · máx. {{ linha.maximo }}
-              }
-            </span>
-            @if (falta(linha.obtido, linha.avaliado, linha.maximo); as meta) {
-            @switch (meta.situacao) {
-            @case ('atingida') { <span class="meta-linha atingida">✓ Meta de {{ metaPercentual }}% atingida</span> }
-            @case ('possivel') { <span class="meta-linha possivel">Faltam {{ meta.precisa }} pts para {{ metaPercentual }}% · {{ meta.percentualDoAberto }}% dos {{ meta.emAberto }} em aberto</span> }
-            @case ('impossivel') { <span class="meta-linha impossivel">Não dá mais para chegar a {{ metaPercentual }}% (faltam {{ meta.precisa }}, só {{ meta.emAberto }} em aberto)</span> }
-            }
+            @if (info.situacao !== 'sem-pontos') {
+            <div class="materia-status">
+              <span class="situacao-chip" [ngClass]="info.situacao">{{ rotuloSituacao[info.situacao] }}</span>
+              <span class="situacao-texto">{{ descricao(linha) }}</span>
+            </div>
             }
           </div>
           <ion-icon [name]="abertas.has(linha.idMateria) ? 'chevron-up-outline' : 'chevron-down-outline'" class="row-seta"></ion-icon>
@@ -134,6 +143,12 @@
 
         @if (abertas.has(linha.idMateria)) {
         <div class="notas-lista">
+          @if (info.aproveitamento !== null) {
+          <p class="materia-detalhe">
+            Aproveitamento de <strong>{{ info.aproveitamento }}%</strong> no que já foi avaliado
+            ({{ formatarPontos(linha.obtido) }} de {{ formatarPontos(linha.avaliado) }} pontos).
+          </p>
+          }
           @for (nota of linha.notas; track nota.id) {
           <button type="button" class="nota-item" (click)="editarNota(nota)">
             <span class="nota-corpo">
@@ -145,32 +160,20 @@
                 {{ formatarDataBr(nota.data) }}@if (visao === 'ano') { · {{ nota.nomePeriodo }} }
               </span>
             </span>
-            <span class="nota-valor">{{ nota.valorObtido }}<small>/{{ nota.valorMaximo }}</small></span>
+            <span class="nota-valor">{{ formatarPontos(nota.valorObtido) }}<small>/{{ formatarPontos(nota.valorMaximo) }}</small></span>
           </button>
           } @empty {
           <p class="notas-vazio">Nenhuma nota nesta matéria{{ visao === 'ano' ? '' : ' neste período' }}.</p>
           }
+          <button type="button" class="nota-avulsa-materia" (click)="novaAvulsa(linha.idMateria)">
+            <ion-icon name="add-outline" aria-hidden="true"></ion-icon>
+            Nota avulsa em {{ linha.nomeMateria }}
+          </button>
         </div>
         }
       </div>
       }
     </div>
-
-    <!-- Atividades que já podem receber nota -->
-    @if (pendentes.length) {
-    <h3 class="group-title titulo-pendentes">Atividades sem nota</h3>
-    <div class="group">
-      @for (atividade of pendentes; track atividade.id) {
-      <button type="button" class="row pendente-linha" (click)="lancarDaAtividade(atividade)">
-        <div class="row-body">
-          <span class="row-label">{{ atividade.titulo }}</span>
-          <span class="row-desc">{{ atividade.nomeMateria }} · {{ formatarDataBr(atividade.dataEntrega) }} · vale {{ atividade.valor }}</span>
-        </div>
-        <span class="lancar-chip">Lançar</span>
-      </button>
-      }
-    </div>
-    }
 
     <button type="button" class="linha-acao nova-avulsa" (click)="novaAvulsa()">
       <span class="linha-acao-icone"><ion-icon name="add-outline"></ion-icon></span>

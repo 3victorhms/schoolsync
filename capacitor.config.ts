@@ -2,8 +2,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'schoolsync',
+  appId: 'br.cefetmg.schoolsync',
+  appName: 'SchoolSync',
   webDir: 'www',
   plugins: {
     // No Android, usa a camada HTTP nativa para que chamadas DELETE não sejam

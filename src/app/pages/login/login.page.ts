@@ -47,6 +47,9 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.loginService.encerrarAutenticacao();
+    // voltando da recuperação de senha, o e-mail já vem preenchido
+    const email = this.route.snapshot.queryParamMap.get('email');
+    if (email) this.formGroup.patchValue({ login: email });
     this.exibirAvisoDeRedirecionamento();
   }
 
@@ -56,7 +59,9 @@ export class LoginPage implements OnInit {
 
     const mensagem = motivo === 'sessao-expirada'
       ? 'Sua sessão expirou. Entre novamente para continuar.'
-      : 'Faça login para acessar esta página.';
+      : motivo === 'senha-redefinida'
+        ? 'Senha alterada. Entre com a senha nova.'
+        : 'Faça login para acessar esta página.';
 
     mostrarAviso(mensagem, 3500);
   }
@@ -105,6 +110,11 @@ export class LoginPage implements OnInit {
           this.exibirMensagem('Login ou senha inválidos');
         }
       });
+  }
+
+  irRecuperarSenha() {
+    const email = this.formGroup.value.login;
+    this.navController.navigateForward('/recuperar-senha', email ? { queryParams: { email } } : undefined);
   }
 
   irCadastrar() {

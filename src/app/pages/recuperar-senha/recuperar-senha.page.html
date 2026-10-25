@@ -1,0 +1,89 @@
+<ion-content [fullscreen]="true" class="login-content">
+
+  <div class="login-container">
+
+    <div class="logo-area">
+      <img src="assets/schoolsync-logo-wordmark.svg" alt="SchoolSync" class="logo-mark" />
+      <h1>SchoolSync</h1>
+      <p>Recupere o acesso à sua conta</p>
+    </div>
+
+    <div class="form-area">
+
+      @if (etapa === 'email') {
+      <h2>Esqueci minha senha</h2>
+      <p class="explicacao">Informe o e-mail da sua conta. Vamos enviar um código de 6 dígitos para você criar uma senha nova.</p>
+
+      <form [formGroup]="formEmail" (ngSubmit)="enviarCodigo()">
+        <ion-input type="email" formControlName="email" placeholder="Email" class="custom-input"
+          autocomplete="email" [class.campo-invalido]="invalido(formEmail, 'email')">
+        </ion-input>
+        @if (invalido(formEmail, 'email')) {
+        <p class="erro-campo">Informe um email em um formato válido (ex.: nome&#64;exemplo.com).</p>
+        }
+
+        <ion-button expand="block" type="submit" class="login-button" [disabled]="formEmail.invalid || enviando">
+          @if (enviando) { <span class="btn-spinner" aria-hidden="true"></span> Enviando... } @else { Enviar código }
+          <ion-icon slot="end" name="mail-outline"></ion-icon>
+        </ion-button>
+      </form>
+      } @else {
+      <h2>Criar nova senha</h2>
+      <p class="explicacao">
+        Se existir uma conta com <strong>{{ email }}</strong>, o código já foi enviado. Ele vale por 15 minutos.
+        Confira também a caixa de spam.
+      </p>
+
+      <form [formGroup]="formSenha" (ngSubmit)="redefinir()">
+        <ion-input formControlName="codigo" placeholder="Código de 6 dígitos" inputmode="numeric" maxlength="6"
+          autocomplete="one-time-code" class="custom-input codigo-input" [class.campo-invalido]="invalido(formSenha, 'codigo')">
+        </ion-input>
+        @if (invalido(formSenha, 'codigo')) {
+        <p class="erro-campo">O código tem 6 números.</p>
+        }
+
+        <div class="senha-container">
+          <ion-input [type]="mostrarSenha ? 'text' : 'password'" formControlName="novaSenha" placeholder="Nova senha"
+            class="custom-input senha-input" autocomplete="new-password" [class.campo-invalido]="invalido(formSenha, 'novaSenha')">
+          </ion-input>
+          <button type="button" class="olho-senha" (click)="mostrarSenha = !mostrarSenha"
+            [attr.aria-label]="mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'">
+            <ion-icon [name]="mostrarSenha ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </button>
+        </div>
+        @if (invalido(formSenha, 'novaSenha')) {
+        <p class="erro-campo">A senha deve ter entre 8 e 72 caracteres.</p>
+        }
+
+        <ion-input [type]="mostrarSenha ? 'text' : 'password'" formControlName="confirmacao" placeholder="Repita a nova senha"
+          class="custom-input" autocomplete="new-password" [class.campo-invalido]="senhasDiferentes">
+        </ion-input>
+        @if (senhasDiferentes) {
+        <p class="erro-campo">As senhas não são iguais.</p>
+        }
+
+        <ion-button expand="block" type="submit" class="login-button" [disabled]="formSenha.invalid || redefinindo">
+          @if (redefinindo) { <span class="btn-spinner" aria-hidden="true"></span> Salvando... } @else { Redefinir senha }
+        </ion-button>
+      </form>
+
+      <div class="acoes-codigo">
+        <button type="button" class="register-button" (click)="reenviar()" [disabled]="segundosParaReenviar > 0 || enviando">
+          {{ segundosParaReenviar > 0 ? 'Reenviar código em ' + segundosParaReenviar + ' s' : 'Reenviar código' }}
+        </button>
+        <button type="button" class="register-button" (click)="trocarEmail()">Usar outro e-mail</button>
+      </div>
+      }
+
+      <p class="register-text">
+        <button type="button" class="register-button voltar" (click)="voltarLogin()">
+          <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
+          Voltar para o login
+        </button>
+      </p>
+
+    </div>
+
+  </div>
+
+</ion-content>

@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:433261075665:android:57ad9b59eaa3ce7a5a79f0",
+        "android_client_info": {
+          "package_name": "br.cefetmg.schoolsync"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgfccxFjIB2lI-yUNHMB5D8cN1bGySaVI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:433261075665:android:e4008d1745742e1d5a79f0",
         "android_client_info": {
           "package_name": "io.ionic.starter"

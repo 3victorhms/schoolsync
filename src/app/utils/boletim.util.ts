@@ -160,3 +160,118 @@ export function disponivelParaAvulsa(
   );
   return arredondar(Math.max(0, periodo.pontuacaoMaxima - daSala - avulsas));
 }
+
+// ===================== situação por matéria =====================
+// Feito com auxílio do Claude. A aprovação é por matéria: 90% em física não compensa
+// 40% em química. Por isso o boletim não soma matérias diferentes num total geral;
+// ele mostra a situação de cada uma em relação à meta.
+
+export type SituacaoMateria = 'atingida' | 'no-caminho' | 'atencao' | 'fora-de-alcance' | 'sem-notas' | 'sem-pontos';
+
+/** Ordem de exibição dos contadores, da mais urgente para a mais tranquila. */
+export const ORDEM_SITUACOES: SituacaoMateria[] = ['fora-de-alcance', 'atencao', 'no-caminho', 'atingida', 'sem-notas'];
+
+export const ROTULO_SITUACAO: Record<SituacaoMateria, string> = {
+  'atingida': 'Meta atingida',
+  'no-caminho': 'No caminho',
+  'atencao': 'Atenção',
+  'fora-de-alcance': 'Fora de alcance',
+  'sem-notas': 'Sem notas',
+  'sem-pontos': 'Sem pontos',
+};
+
+export interface AnaliseMateria {
+  situacao: SituacaoMateria;
+  falta: QuantoFalta;
+  /** Aproveitamento sobre o que já foi avaliado, ou null se nada foi avaliado. */
+  aproveitamento: number | null;
+}
+
+/**
+ * Situação de uma matéria em relação à meta:
+ * - atingida: já tem os pontos da meta;
+ * - fora de alcance: mesmo tirando tudo o que falta, não chega na meta;
+ * - sem notas: nada avaliado ainda;
+ * - atenção: ainda dá, mas precisa tirar no que falta uma % maior do que vem tirando
+ *   (ex.: vem com 50% e precisa de 70% do que está em aberto);
+ * - no caminho: precisa de uma % igual ou menor do que já vem tirando.
+ */
+export function analisarMateria(linha: LinhaBoletim, meta = META_APROVACAO): AnaliseMateria {
+  const falta = quantoFalta(linha.obtido, linha.avaliado, linha.maximo, meta);
+  const aprov = aproveitamento(linha.obtido, linha.avaliado);
+
+  let situacao: SituacaoMateria;
+  if (falta.situacao === 'sem-pontos') situacao = 'sem-pontos';
+  else if (falta.situacao === 'atingida') situacao = 'atingida';
+  else if (falta.situacao === 'impossivel') situacao = 'fora-de-alcance';
+  else if (aprov === null) situacao = 'sem-notas';
+  else situacao = falta.percentualDoAberto > aprov ? 'atencao' : 'no-caminho';
+
+  return { situacao, falta, aproveitamento: aprov };
+}
+
+export interface ResumoSituacoes {
+  /** Matérias que valem ponto na visão (ignora as sem pontos). */
+  total: number;
+  contagem: Record<SituacaoMateria, number>;
+  /** Matérias que pedem foco, da mais crítica para a menos crítica. */
+  foco: LinhaBoletim[];
+}
+
+export function resumirSituacoes(linhas: LinhaBoletim[], meta = META_APROVACAO): ResumoSituacoes {
+  const contagem: Record<SituacaoMateria, number> = {
+    'atingida': 0, 'no-caminho': 0, 'atencao': 0, 'fora-de-alcance': 0, 'sem-notas': 0, 'sem-pontos': 0,
+  };
+  const criticas: { linha: LinhaBoletim; peso: number }[] = [];
+
+  linhas.forEach(linha => {
+    const analise = analisarMateria(linha, meta);
+    contagem[analise.situacao]++;
+    // Fora de alcance vem antes de atenção; dentro de cada grupo, a que precisa de mais
+    if (analise.situacao === 'fora-de-alcance') criticas.push({ linha, peso: 1000 + analise.falta.precisa });
+    if (analise.situacao === 'atencao') criticas.push({ linha, peso: analise.falta.percentualDoAberto });
+  });
+
+  return {
+    total: linhas.length - contagem['sem-pontos'],
+    contagem,
+    foco: criticas.sort((a, b) => b.peso - a.peso).map(c => c.linha),
+  };
+}
+
+/** Número no formato brasileiro (7,5), sem casas quando é inteiro. */
+export function formatarPontos(valor: number): string {
+  return Number.isInteger(valor) ? String(valor) : String(arredondar(valor)).replace('.', ',');
+}
+
+/** "1 pt" / "2 pts" / "7,5 pts". */
+export function pts(valor: number): string {
+  return `${formatarPontos(valor)} ${valor === 1 ? 'pt' : 'pts'}`;
+}
+
+/** Texto curto que acompanha a situação da matéria (mesmo texto na tela e no PDF). */
+export function descreverSituacao(linha: LinhaBoletim, analise: AnaliseMateria, meta = META_APROVACAO): string {
+  const { falta } = analise;
+  switch (analise.situacao) {
+    case 'atingida':
+      return `já garantiu os ${pts(arredondar(linha.maximo * meta))} da meta`;
+    case 'no-caminho':
+    case 'atencao':
+      return `faltam ${pts(falta.precisa)} · ${falta.percentualDoAberto}% dos ${pts(falta.emAberto)} em aberto`;
+    case 'fora-de-alcance':
+      return `faltam ${pts(falta.precisa)}, só ${pts(falta.emAberto)} em aberto`;
+    case 'sem-notas':
+      return `meta: ${pts(arredondar(linha.maximo * meta))} de ${pts(linha.maximo)}`;
+    default:
+      return '';
+  }
+}
+
+/** "Química", "Química e Física", "Química, Física e Biologia", "Química, Física e mais 2". */
+export function juntarNomes(nomes: string[], limite = 3): string {
+  if (nomes.length <= 1) return nomes[0] ?? '';
+  if (nomes.length > limite) {
+    return `${nomes.slice(0, limite - 1).join(', ')} e mais ${nomes.length - (limite - 1)}`;
+  }
+  return `${nomes.slice(0, -1).join(', ')} e ${nomes[nomes.length - 1]}`;
+}
