@@ -44,7 +44,7 @@ export class MenuLateralComponent implements OnInit, OnDestroy {
     { titulo: 'Início', icone: 'home-outline', rota: '/tabs/inicio', relacionadas: [] },
     {
       titulo: 'Salas', icone: 'people-outline', rota: '/tabs/salas',
-      relacionadas: ['/sala', '/grupo', '/grupos', '/add-sala', '/entrar-sala', '/add-grupo', '/entrar-grupo', '/atividade', '/add-atividade', '/tarefa', '/add-tarefa']
+      relacionadas: ['/sala', '/grupo', '/grupos', '/add-sala', '/entrar-sala', '/add-grupo', '/entrar-grupo', '/atividade', '/add-atividade', '/tarefa']
     },
     { titulo: 'Caderno', icone: 'book-outline', rota: '/tabs/caderno', relacionadas: [] },
     { titulo: 'Notificações', icone: 'notifications-outline', rota: '/notificacao', relacionadas: [] },

@@ -15,6 +15,8 @@ section h2 { color: var(--app-text-soft); font-size: 18px; font-weight: 600; mar
 .texto strong { font-size: 18px; }
 .texto small { color: var(--app-muted); font-size: 13px; line-height: 1.35; }
 ion-toggle { --track-background: var(--app-surface-strong); --track-background-checked: var(--app-accent); --handle-background: #fff; }
+.testar-push { display: block; width: 100%; margin: -4px 0 14px; padding: 10px; border: 0; background: none; color: var(--app-accent); font-size: 14px; font-weight: 600; cursor: pointer; }
+.testar-push:disabled { opacity: .6; }
 .lembretes h2 { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
 .lembretes h2 ion-icon { color: var(--app-accent); }
 .lembretes > p { color: var(--app-text-soft); margin: 0 0 16px; font-size: 15px; }

@@ -5,6 +5,8 @@
 //
 // Mesmo padrão do aviso.util.ts: HTML/CSS puro, sem injeção de dependência.
 
+import { estaOffline } from './conexao.util';
+
 const ESPERA_PARA_AVISAR_MS = 3000;
 const ESPERA_PARA_REFORCAR_MS = 15000;
 
@@ -15,6 +17,8 @@ let banner: HTMLElement | null = null;
 
 function mostrarBanner(texto: string) {
   if (typeof document === 'undefined') return;
+  // sem internet o problema não é o servidor dormindo: quem avisa é o conexao.util.ts
+  if (estaOffline()) return;
   if (!banner) {
     banner = document.createElement('div');
     banner.className = 'servidor-lento';

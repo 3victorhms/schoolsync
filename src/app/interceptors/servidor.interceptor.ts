@@ -1,5 +1,6 @@
-import { HttpInterceptorFn } from '@angular/common/http';
-import { finalize } from 'rxjs';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { catchError, finalize, throwError } from 'rxjs';
+import { falhaDeRede } from '../utils/conexao.util';
 import { environment } from 'src/environments/environment';
 import { requisicaoIniciada, requisicaoTerminada } from '../utils/servidor-lento.util';
 
@@ -12,5 +13,11 @@ export const servidorInterceptor: HttpInterceptorFn = (request, next) => {
     return next(request);
   }
   requisicaoIniciada();
-  return next(request).pipe(finalize(() => requisicaoTerminada()));
+  return next(request).pipe(
+    catchError((erro: unknown) => {
+      if (erro instanceof HttpErrorResponse && erro.status === 0) falhaDeRede();
+      return throwError(() => erro);
+    }),
+    finalize(() => requisicaoTerminada())
+  );
 };

@@ -245,7 +245,17 @@ export class CadernoPage implements OnInit {
       const bateMateria = !this.filtroMateria || tarefa.materiaAtividade === this.filtroMateria;
 
       return bateStatus && bateBusca && bateMateria;
-    });
+    }).sort((a, b) => this.chavePrazoTarefa(a).localeCompare(this.chavePrazoTarefa(b)));
+  }
+
+  /** Concluídas por último; entre as outras, a de prazo mais perto primeiro e as sem prazo no fim. */
+  private chavePrazoTarefa(tarefa: TarefaModel): string {
+    const concluida = tarefa.status === 'concluido' ? '1' : '0';
+    return concluida + (tarefa.prazo || '9999-12-31');
+  }
+
+  classeUrgenciaTarefa(tarefa: TarefaModel): string {
+    return classeUrgencia(tarefa.prazo, tarefa.status);
   }
 
   textoBuscaAtividade(atividade: AtividadeModel): string {
@@ -268,8 +278,8 @@ export class CadernoPage implements OnInit {
       tarefa.materiaAtividade,
       tarefa.nomeUsuarioAtribuido,
       tarefa.nomeCriador,
-      this.formatarData(tarefa.dataCriacao),
-      tarefa.dataCriacao
+      this.formatarData(tarefa.prazo || ''),
+      tarefa.prazo
     ].join(' '));
   }
 

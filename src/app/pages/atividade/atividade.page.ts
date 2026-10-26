@@ -57,6 +57,7 @@ import {
 import { NotaModel } from 'src/app/model/nota.model';
 import { NotaService } from 'src/app/services/nota.service';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
+import { hojeIso } from 'src/app/utils/periodo.util';
 
 @Component({
   selector: 'app-atividade',
@@ -521,44 +522,49 @@ export class AtividadePage implements OnInit {
   get prazoEncerrado(): boolean {
     if (!this.atividade.dataEntrega) return false;
 
-    const hoje = new Date().toISOString().split('T')[0];
-
-    return this.atividade.dataEntrega < hoje;
+    // no fuso do aparelho: com toISOString (UTC) a atividade de hoje aparecia encerrada depois das 21h
+    return this.atividade.dataEntrega < hojeIso();
   }
 
   get statusAtual(): string {
     return this.atividade.status || 'nao_iniciada';
   }
 
+  /** Concluída vale mais que o prazo: quem entregou não deve ver "Prazo encerrado". */
+  get concluida(): boolean {
+    return !!this.atividade.estaNoCaderno && this.statusAtual === 'concluido';
+  }
+
   get statusPrazo(): string {
+    if (this.concluida) return 'concluido';
     if (this.prazoEncerrado) return 'expirada';
     if (!this.atividade.estaNoCaderno) return 'fora_caderno';
-    if (this.statusAtual === 'concluido') return 'concluido';
     if (this.statusAtual === 'nao_iniciada') return 'naoiniciada';
 
     return 'andamento';
   }
 
   get labelPrazo(): string {
-    if (this.prazoEncerrado) return 'Expirada';
+    if (this.concluida) return 'Concluído';
+    if (this.prazoEncerrado) return 'Prazo encerrado';
     if (!this.atividade.estaNoCaderno) return 'Não está no caderno';
-    if (this.statusAtual === 'concluido') return 'Concluído';
     if (this.statusAtual === 'nao_iniciada') return 'Não iniciada';
 
     return 'Em andamento';
   }
 
   get iconePrazo(): string {
+    if (this.concluida) return 'checkmark-circle-outline';
     if (this.prazoEncerrado) return 'lock-closed-outline';
     if (!this.atividade.estaNoCaderno) return 'bookmark-outline';
-    if (this.statusAtual === 'concluido') return 'checkmark-circle-outline';
     if (this.statusAtual === 'nao_iniciada') return 'ellipse-outline';
 
     return 'time-outline';
   }
 
   async alterarStatus(novoStatus: string) {
-    if (this.prazoEncerrado || !this.atividade.estaNoCaderno) return;
+    // depois do prazo o status continua editável: quem entregou atrasado precisa poder concluir
+    if (!this.atividade.estaNoCaderno) return;
     if (novoStatus === this.statusAtual) return;
 
     // quem já lançou nota já entregou: confirma antes de tirar o "concluído"

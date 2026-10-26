@@ -227,15 +227,23 @@ ion-content {
         }
     }
 
+    .status-dica {
+        margin: -4px 0 0;
+        font-size: 12.5px;
+        color: var(--app-muted);
+        text-align: center;
+    }
+
+    // tirar do caderno não apaga nada, então fica neutro (o vermelho passava ideia de ação perigosa)
     .remover-btn {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
-        background: #2a1515;
-        border: none;
+        background: var(--app-bg-muted);
+        border: 1px solid var(--app-border);
         border-radius: 14px;
-        color: #e05c5c;
+        color: var(--app-text-soft);
         font-size: 14px;
         font-weight: 600;
         padding: 14px;

@@ -732,6 +732,35 @@ ion-content {
     .header-titulo .nome {
         font-size: 28px;
     }
+
+    // no computador cada célula ficava enorme (aspect-ratio 1 na coluna larga) e os círculos
+    // coloridos disputavam atenção com o dia selecionado. Agora: círculo de tamanho fixo no
+    // centro e o selecionado vira um retângulo arredondado em volta dele
+    .calendario-card .calendario-dias .cal-dia {
+        aspect-ratio: auto;
+        height: 48px;
+        border-radius: 12px;
+
+        .indicador-atividade {
+            inset: auto;
+            top: 50%;
+            left: 50%;
+            width: 36px;
+            height: 36px;
+            transform: translate(-50%, -50%);
+            box-shadow: none;
+        }
+
+        &.selecionado {
+            background: var(--app-accent-soft);
+            box-shadow: inset 0 0 0 2px var(--app-accent);
+            color: var(--app-text);
+        }
+
+        &[data-indicador].selecionado .indicador-atividade {
+            box-shadow: none;
+        }
+    }
 }
 
 // alerta de semana pesada — feito com auxílio do Claude

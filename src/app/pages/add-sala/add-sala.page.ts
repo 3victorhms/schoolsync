@@ -38,6 +38,8 @@ export class AddSalaPage implements OnInit {
   formGroup: FormGroup;
   editando: boolean;
   salvando = false;
+  /** Editando: true até a sala chegar da API (salvar antes disso gravaria a sugestão padrão). */
+  carregandoSala = false;
 
   // ===== v2: matérias =====
   materias: MateriaModel[] = [];
@@ -75,8 +77,13 @@ export class AddSalaPage implements OnInit {
 
     if (id) {
       this.editando = true;
+      this.carregandoSala = true;
 
-      this.salaService.buscarPorId(id).subscribe(res => {
+      this.salaService.buscarPorId(id).pipe(finalize(() => this.carregandoSala = false)).subscribe({ error: () => {
+        // sem os dados não dá pra editar (salvar agora apagaria matérias e períodos): avisa e volta
+        this.exibirMensagem('Não foi possível carregar a sala. Verifique sua conexão e tente de novo.');
+        this.navController.back();
+      }, next: res => {
         if (!res) {
           this.exibirMensagem('Sala não encontrada');
           return;
@@ -96,7 +103,7 @@ export class AddSalaPage implements OnInit {
           this.montarPeriodos(gerarPeriodosPadrao(this.tipoPeriodo));
           this.semDivisaoSalva = true;
         }
-      });
+      }});
     }
   }
 
@@ -243,7 +250,7 @@ export class AddSalaPage implements OnInit {
   // ===================== salvar =====================
 
   salvar() {
-    if (this.salvando) return;
+    if (this.salvando || this.carregandoSala) return;
     this.tentouSalvar = true;
 
     if (this.novaMateria.trim()) {

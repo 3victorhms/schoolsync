@@ -480,8 +480,8 @@ body.tema-claro app-atividade .status-btn.ativo {
 }
 
 body.tema-claro app-atividade .remover-btn {
-  background: #fdebed !important;
-  color: var(--app-danger) !important;
+  background: var(--app-bg-muted) !important;
+  color: var(--app-text-soft) !important;
 }
 
 body.tema-claro app-atividade .aviso-prazo,
@@ -955,6 +955,14 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
   border-color: var(--app-surface);
 }
 
+/* computador: o dia selecionado é um contorno, não um bloco cheio (ver inicio.page.scss) */
+@media (min-width: 992px) {
+  body.tema-claro app-inicio .cal-dia.selecionado {
+    background: var(--app-accent-soft) !important;
+    color: var(--app-text) !important;
+  }
+}
+
 /* ------------------------------------------------------------------------ *
  * Telas maiores que celular (tablet e computador). Feito com auxilio do Claude.
  *
@@ -1293,6 +1301,18 @@ button.row,
   line-height: 1.4;
 }
 
+// ===== Botões sem CAIXA ALTA (feito com auxílio do Claude) =====
+// O modo md do Ionic deixa ion-button, segmentos e botões de alerta em maiúsculas,
+// enquanto os botões feitos à mão usam texto normal. Fica tudo igual: só a primeira maiúscula.
+ion-button,
+ion-segment-button,
+.alert-button,
+.action-sheet-button,
+.picker-button {
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+
 // ===== Aviso de servidor acordando (servidor-lento.util.ts) — feito com auxílio do Claude =====
 .servidor-lento {
   position: fixed;
@@ -1324,6 +1344,37 @@ button.row,
   border: 2px solid var(--app-border);
   border-top-color: var(--app-accent);
   animation: servidor-lento-girar 0.8s linear infinite;
+}
+
+// aviso de sem internet (conexao.util.ts), no mesmo lugar do aviso acima
+.sem-conexao {
+  position: fixed;
+  left: 50%;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  transform: translateX(-50%);
+  z-index: 10002;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: var(--app-surface-strong);
+  color: var(--app-text);
+  border: 1px solid var(--app-danger);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  font-size: 0.9rem;
+  line-height: 1.35;
+  animation: servidor-lento-entrar var(--transition-base) ease-out;
+}
+
+.sem-conexao-ponto {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--app-danger);
 }
 
 @keyframes servidor-lento-girar {

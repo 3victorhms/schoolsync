@@ -19,6 +19,9 @@ import { mostrarAviso } from 'src/app/utils/aviso.util';
 export class NotificacaoConfiguracoesPage {
   configuracao: ConfiguracaoNotificacao = { noAplicativo: true, push: false, lembreteDias: 1 };
   salvando = false;
+  testandoPush = false;
+  /** O teste só faz sentido com o push já salvo como ligado (antes ficava no Perfil, para todo mundo). */
+  pushSalvo = false;
 
   constructor(
     private service: NotificacaoService,
@@ -41,9 +44,22 @@ export class NotificacaoConfiguracoesPage {
     this.carregando = true;
     this.erroCarregar = false;
     this.service.buscarConfiguracao().subscribe({
-      next: configuracao => { this.configuracao = configuracao; this.carregando = false; },
+      next: configuracao => { this.configuracao = configuracao; this.pushSalvo = !!configuracao.push; this.carregando = false; },
       error: () => { this.carregando = false; this.erroCarregar = true; }
     });
+  }
+
+  async testarPush(): Promise<void> {
+    if (this.testandoPush) return;
+    this.testandoPush = true;
+    try {
+      await this.notificacaoPushService.testar();
+      mostrarAviso('Notificação de teste enviada. Ela deve chegar em instantes.', 5000);
+    } catch (erro: any) {
+      mostrarAviso(erro?.message || 'Não foi possível enviar a notificação de teste.', 6000);
+    } finally {
+      this.testandoPush = false;
+    }
   }
 
   async salvar(): Promise<void> {
@@ -55,6 +71,7 @@ export class NotificacaoConfiguracoesPage {
       }
 
       this.configuracao = await firstValueFrom(this.service.salvarConfiguracao(this.configuracao));
+      this.pushSalvo = !!this.configuracao.push;
       if (!this.configuracao.push) {
         await this.notificacaoPushService.desregistrar().catch(() => undefined);
       }

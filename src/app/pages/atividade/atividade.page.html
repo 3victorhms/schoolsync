@@ -64,10 +64,10 @@
       {{ labelPrazo }}
     </span>
 
-    @if (prazoEncerrado) {
+    @if (prazoEncerrado && !concluida) {
     <div class="aviso-prazo">
       <ion-icon name="triangle-outline"></ion-icon>
-      Prazo encerrado — atividade somente leitura
+      O prazo acabou. Se você já entregou, marque como concluída.
     </div>
     }
 
@@ -78,23 +78,27 @@
 
     <div class="status-botoes">
       <button class="status-btn" [class.ativo]="atividade.estaNoCaderno && statusAtual === 'nao_iniciada'"
-        [disabled]="prazoEncerrado || !atividade.estaNoCaderno" (click)="alterarStatus('nao_iniciada')">
+        [disabled]="!atividade.estaNoCaderno" (click)="alterarStatus('nao_iniciada')">
         <ion-icon name="ellipse-outline"></ion-icon>
         Não iniciada
       </button>
 
       <button class="status-btn" [class.ativo]="statusAtual === 'em_andamento'"
-        [disabled]="prazoEncerrado || !atividade.estaNoCaderno" (click)="alterarStatus('em_andamento')">
+        [disabled]="!atividade.estaNoCaderno" (click)="alterarStatus('em_andamento')">
         <ion-icon name="time-outline"></ion-icon>
         Em andamento
       </button>
 
       <button class="status-btn" [class.ativo]="statusAtual === 'concluido'"
-        [disabled]="prazoEncerrado || !atividade.estaNoCaderno" (click)="alterarStatus('concluido')">
+        [disabled]="!atividade.estaNoCaderno" (click)="alterarStatus('concluido')">
         <ion-icon name="checkmark-circle-outline"></ion-icon>
         Concluído
       </button>
     </div>
+
+    @if (!atividade.estaNoCaderno) {
+    <p class="status-dica">Adicione ao caderno para acompanhar o status desta atividade.</p>
+    }
 
     @if (atividade.estaNoCaderno) {
     <button class="remover-btn" (click)="removerDoCaderno()">
@@ -269,7 +273,7 @@
         [ngModelOptions]="{standalone: true}"
         maxlength="1000"
         rows="1"
-        placeholder="Escrever comentario..."></textarea>
+        placeholder="Escrever comentário..."></textarea>
 
       <button type="button" (click)="enviarComentario()" [disabled]="enviandoComentario || !novoComentario.trim()" aria-label="Enviar comentário">
         <ion-icon name="send-outline"></ion-icon>
