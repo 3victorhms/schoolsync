@@ -3,7 +3,7 @@ export class TarefaModel {
     titulo: string;
     status: string;
     dataCriacao: string;
-    /** Prazo da parte de cada um ("AAAA-MM-DD"), opcional. */
+    // prazo da parte de cada um ("AAAA-MM-DD"), opcional
     prazo?: string | null;
     idGrupo: string;
     idAtividade: string;

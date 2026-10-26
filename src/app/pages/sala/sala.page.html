@@ -4,7 +4,7 @@
             <ion-back-button defaultHref="/tabs/salas"></ion-back-button>
         </ion-buttons>
         <ion-title>
-            <!-- o código saiu daqui (cortava o nome no celular): agora fica no cartão "Chame sua turma", em Membros -->
+            <!-- o código da sala fica no cartão "Chame sua turma", em Membros -->
             {{ sala.nome }}
         </ion-title>
         <ion-buttons slot="end">
@@ -70,8 +70,7 @@
         </button>
     </nav>
 
-    <!-- No celular e no tablet só a aba escolhida aparece (as outras ficam com .aba-oculta).
-         No computador as três aparecem juntas: atividades à esquerda, grupos e membros à direita. -->
+    <!-- no celular só a aba escolhida aparece (.aba-oculta). no computador aparecem as três juntas -->
     <div class="sala-layout">
 
     <!-- ===================== ATIVIDADES ===================== -->

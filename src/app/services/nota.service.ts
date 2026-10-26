@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { NotaModel, NotaRequest } from '../model/nota.model';
 import { ApiDeleteService } from './api-delete.service';
 
-/** Boletim pessoal: o usuário vem do token, então só aparecem as notas de quem está logado. */
+// boletim pessoal: o usuário vem do token, então só aparecem as notas de quem está logado
 @Injectable({
   providedIn: 'root',
 })

@@ -1,19 +1,14 @@
-// feito com auxílio do Claude
-//
-// As páginas das abas (/tabs/...) ficam dentro de outro ion-router-outlet.
-// Quando o app volta de uma página de fora das abas (ex.: /sala/:id), o Ionic
-// dispara o ionViewWillEnter da página das abas, mas NÃO o da aba de dentro,
-// então listas como a de Salas ficavam desatualizadas (ex.: após excluir uma sala).
-// Este helper recarrega a aba sempre que a URL volta para ela, sem repetir a
-// carga quando o ionViewWillEnter também dispara (troca normal de aba).
+// as páginas das abas ficam em outro ion-router-outlet. quando volta de uma página de fora
+// (ex.: /sala/:id) o ionic dispara o ionViewWillEnter da página de abas mas n o da aba de dentro,
+// ent a lista de salas ficava desatualizada. isso recarrega a aba quando a url volta pra ela
 
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
 export interface RecarregadorDeAba {
-  /** Recarrega agora (ignora chamadas repetidas em menos de 800 ms). */
+  // recarrega agora (ignora chamadas repetidas em menos de 800 ms)
   executar(): void;
-  /** Para de observar a navegação (chamar no ngOnDestroy). */
+  // para de observar a navegação (chamar no ngOnDestroy)
   encerrar(): void;
 }
 

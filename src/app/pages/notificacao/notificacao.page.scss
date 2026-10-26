@@ -13,15 +13,13 @@ ion-toolbar {
     height: 44px;
     margin: 0 2px;
 
-    // O Ionic escala o ícone "icon-only" pelo font-size do botão (~1.8em),
-    // o que deixava os ícones enormes; fixa um tamanho próximo aos outros cabeçalhos.
+    // o ionic aumenta o ícone icon-only pelo font-size do botão (~1.8em), ent fixa um tamanho
     ion-icon {
       font-size: 22px;
     }
   }
 
-  // Continua destacado em azul (era o unico texto colorido do cabecalho
-  // antigo), pra deixar claro que "marcar todas" e a acao principal.
+  // em azul pra deixar claro que "marcar todas" é a ação principal
   .marcar-lidas-btn {
     --color: var(--app-accent);
   }
@@ -45,7 +43,7 @@ ion-content { --background: var(--app-bg); }
 .notificacao:hover, .notificacao:focus-visible { border-color: var(--app-accent); outline: none; background: var(--app-surface); }
 .notificacao:not(.nao-lida) { opacity: .78; }
 
-// Agrupamento por dia — feito com auxílio do Claude
+// agrupamento por dia
 .grupo-titulo {
   margin: 14px 4px 2px;
   font-size: 13px;

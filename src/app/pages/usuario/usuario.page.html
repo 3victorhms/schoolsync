@@ -49,6 +49,9 @@
 
     <div class="secao-titulo">Alterar senha</div>
     <p class="secao-ajuda">Só preencha se quiser trocar de senha. Para trocar a senha ou o e-mail, informe a senha que você usa hoje.</p>
+    @if (usuario.contaGoogle) {
+    <p class="secao-ajuda">Criou a conta pelo Google e nunca teve senha? Use "Esqueci minha senha" na tela de login pra criar uma.</p>
+    }
 
     <div class="campo-grupo">
       <label class="campo-label" for="senha-atual">Senha atual</label>

@@ -1,9 +1,5 @@
-// Exportação do boletim em PDF, gerada no próprio app (sem carga na API).
-// jsPDF e os plugins do Capacitor são carregados só quando o aluno toca em "Exportar",
-// para não pesar a abertura do app.
-//
-// No Android o arquivo vai para o cache do app e abre a folha de compartilhamento
-// (salvar no Drive, mandar no WhatsApp...). No navegador, baixa direto.
+// PDF do boletim gerado no próprio app (pra n pesar a API). o jsPDF e os plugins só carregam
+// quando o aluno toca em "Exportar". no android abre o compartilhar, no navegador baixa direto
 
 import { Capacitor } from '@capacitor/core';
 import {
@@ -25,7 +21,7 @@ export interface DadosPdfBoletim {
   boletim: Boletim;
   nomeSala: string;
   nomeAluno: string;
-  /** Matérias/períodos em que as avulsas passam do limite (aviso no PDF). */
+  // matérias/períodos em que as avulsas passam do limite (aviso no PDF)
   excessos?: ExcessoAvulsas[];
 }
 
@@ -41,7 +37,7 @@ const COR_DESTAQUE: [number, number, number] = [76, 134, 190];
 const COR_FUNDO_CABECALHO: [number, number, number] = [232, 240, 250];
 const COR_LINHA: [number, number, number] = [220, 224, 230];
 
-// Cor do texto da situação de cada matéria (feito com auxílio do Claude)
+// cor do texto da situação de cada matéria
 const COR_SITUACAO: Record<SituacaoMateria, [number, number, number]> = {
   'revisar': [190, 120, 0],
   'atingida': [40, 140, 80],
@@ -94,7 +90,7 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
     doc.text(conteudo, x, y, { align: alinhamento });
   };
 
-  /** Parágrafo que quebra em várias linhas se não couber na largura da página. */
+  // parágrafo que quebra em várias linhas se não couber na largura da página
   const paragrafo = (conteudo: string, tamanho: number, estilo: 'normal' | 'bold' = 'normal',
     cor: [number, number, number] = COR_TEXTO) => {
     if (!conteudo) return;
@@ -107,10 +103,8 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
     });
   };
 
-  /**
-   * Desenha uma tabela simples; repete o cabeçalho se quebrar de página.
-   * `situacoes` (opcional) pinta a última coluna com a cor da situação da matéria.
-   */
+  // tabela simples que repete o cabeçalho se quebrar de página
+  // situacoes (opcional) pinta a última coluna com a cor da situação da matéria
   const tabela = (colunas: Coluna[], linhas: string[][], ultimaEmNegrito = false, situacoes?: SituacaoMateria[]) => {
     const desenharCabecalho = () => {
       doc.setFillColor(...COR_FUNDO_CABECALHO);
@@ -140,7 +134,7 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
         const coluna = colunas[i];
         const xTexto = coluna.alinhamento === 'right' ? x + coluna.largura - 2
           : coluna.alinhamento === 'center' ? x + coluna.largura / 2 : x + 2;
-        // Corta textos longos para caberem na coluna
+        // corta textos longos para caberem na coluna
         const conteudo = doc.splitTextToSize(celula, coluna.largura - 4)[0] ?? '';
         const situacao = situacoes && i === linha.length - 1 ? situacoes[indice] : undefined;
         texto(conteudo, xTexto, 9.5, negrito || situacao ? 'bold' : 'normal',
@@ -172,11 +166,10 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
   y += 10;
 
   // ===== Resumo do ano =====
-  // Sem linha de "Total": a aprovação é por matéria, então somar matérias diferentes
-  // esconderia justamente a matéria que está mal. No lugar, cada matéria tem sua situação.
+  // sem linha de total: a aprovação é por matéria e somar tudo esconderia a matéria que tá mal
   const metaPercentual = Math.round(META_APROVACAO * 100);
 
-  /** "Meta de 60% atingida em 3 de 8 matérias · foque em Química e Física" */
+  // "Meta de 60% atingida em 3 de 8 matérias · foque em Química e Física"
   const frase = (linhas: LinhaBoletim[]): string => {
     const resumo = resumirSituacoes(linhas);
     if (!resumo.total) return '';
@@ -198,7 +191,7 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
     { titulo: 'Aprov.', largura: 16, alinhamento: 'right' },
     { titulo: 'Situação', largura: 30 },
   ];
-  // A coluna da matéria absorve a sobra para a tabela ocupar a largura toda
+  // a coluna da matéria absorve a sobra para a tabela ocupar a largura toda
   colunasAno[0].largura += LARGURA_UTIL - colunasAno.reduce((soma, c) => soma + c.largura, 0);
 
   garantirEspaco(40);
@@ -270,7 +263,7 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
     ]);
     tabela(colunasPeriodo, linhas, false, situacoes);
 
-    // feito com auxílio do Claude: mesmo aviso da tela quando as avulsas passam do limite
+    // mesmo aviso da tela quando as avulsas passam do limite
     const excessosDoPeriodo = (dados.excessos || []).filter(e => e.idPeriodo === periodo.id);
     if (excessosDoPeriodo.length) {
       garantirEspaco(12);

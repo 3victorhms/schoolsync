@@ -1,18 +1,6 @@
-// Estilos feitos com auxílio das I.As Lovable e Claude
-//
-// Cores lidas dos tokens definidos em src/global.scss (--app-*) para que o
-// tema claro (body.tema-claro) funcione automaticamente, sem precisar de
-// overrides manuais por página. Cores sem token equivalente no design
-// system (ex.: a escala de urgência do calendário) ficam como variáveis
-// locais, documentadas abaixo.
+// as cores vêm dos tokens --app-* do global.scss, ent o tema claro funciona sem ajuste por página
 
-// Escala de urgência do calendário: azul → vermelho → laranja → amarelo →
-// verde. Não faz parte da paleta semântica (accent/success/warning/danger)
-// porque precisa de 5 degraus distintos; candidata a virar tokens próprios
-// (--app-cal-*) se for reaproveitada em outra tela.
-// Valores vêm dos tokens globais --app-urgencia-* (src/global.scss), únicos
-// pros dois temas — assim o calendário e as listas de atividade (caderno,
-// sala) usam exatamente a mesma escala de cores.
+// escala de urgência do calendário (tokens --app-urgencia-* do global.scss), a mesma das listas de atividade
 $cal-concluida: var(--app-urgencia-concluida);
 $cal-atrasada: var(--app-urgencia-atrasada);
 $cal-atrasada-borda: var(--app-urgencia-atrasada-borda);
@@ -71,8 +59,6 @@ ion-content {
             position: absolute;
             top: 2px;
             right: 2px;
-            // Era #e05c5c: um vermelho quase idêntico ao token de perigo,
-            // provavelmente uma cópia manual que divergiu com o tempo.
             background: var(--app-danger);
             color: var(--app-text);
             font-size: 10px;
@@ -153,10 +139,7 @@ ion-content {
             cursor: pointer;
 
             &.outro-mes {
-                // Era #2e3450: próximo de --app-border, mas usado aqui como
-                // cor de texto "apagado", não de fundo/borda — mantido como
-                // valor dedicado até o design system ganhar um token de
-                // texto desabilitado.
+                // texto apagado dos dias de outro mês
                 color: #2e3450;
             }
 
@@ -171,7 +154,7 @@ ion-content {
                 font-weight: 700;
             }
 
-            // laranja e amarelo são claros: número escuro. Os outros (vermelho, azul, verde) usam número branco
+            // laranja e amarelo são claros: número escuro. os outros (vermelho, azul, verde) usam número branco
             &[data-indicador='proxima'],
             &[data-indicador='semana'] {
                 color: #151922;
@@ -188,8 +171,8 @@ ion-content {
                 border-radius: 50%;
                 z-index: 1;
                 box-shadow: 0 3px 10px rgba(0, 0, 0, .24);
-                // Escala de urgência: vermelho → laranja → amarelo → azul (longe).
-                // Verde fica só pra dia com tudo concluído.
+                // escala de urgência: vermelho → laranja → amarelo → azul (longe)
+                // verde fica só pra dia com tudo concluído
                 &.concluida { background: $cal-concluida; }
                 &.futuro { background: $cal-mes; }
                 &.atrasada, &.hoje { background: $cal-atrasada; }
@@ -197,7 +180,7 @@ ion-content {
                 &.semana { background: $cal-semana; }
                 &.mes { background: $cal-mes; }
 
-                // Prazo vencido continua vermelho, mas fica visualmente marcado como atraso.
+                // prazo vencido continua vermelho, mas fica visualmente marcado como atraso
                 &.atrasada {
                     border-color: $cal-atrasada-borda;
                     box-shadow: 0 0 0 2px rgba(214, 47, 47, .22), 0 3px 10px rgba(0, 0, 0, .28);
@@ -228,7 +211,6 @@ ion-content {
 
     .resumo-indicador {
         margin: 10px 4px 0;
-        // Era #aeb8ca: variação próxima de --app-muted-strong.
         color: var(--app-muted-strong);
         font-size: 12px;
         text-align: center;
@@ -346,7 +328,6 @@ ion-content {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    // Era var(--app-muted-strong): variação próxima de --app-muted-strong.
     color: var(--app-muted-strong);
     margin: 0 4px 10px;
 }
@@ -429,10 +410,7 @@ ion-content {
                 white-space: nowrap;
             }
 
-            // Usados no card "Última sala" (contagem de membros/atividades e
-            // código de convite). Ficavam sem tamanho definido aqui (o
-            // .row-data "oficial" só existia dentro de .row-meta), herdando
-            // o tamanho de fonte padrão — daí ficarem grandes demais.
+            // contagem de membros/atividades e código no card "Última sala"
             .row-data {
                 display: flex;
                 align-items: center;
@@ -460,10 +438,7 @@ ion-content {
             flex-wrap: wrap;
 
             .tag-disciplina {
-                // Roxo de categoria: não existe token semântico para isso
-                // hoje (só accent/success/warning/danger). Mantido explícito
-                // — candidato a virar --app-category-purple ou similar caso
-                // apareça em outras telas.
+                // roxo da tag de matéria (n tem token pra ele)
                 background: #2a1f5e;
                 color: #a78bfa;
                 font-size: 11px;
@@ -484,8 +459,7 @@ ion-content {
                     font-size: 13px;
                 }
 
-                // Mesma escala de urgência do calendário, aplicada ao rótulo
-                // de data: quanto mais perto do prazo, mais forte a cor.
+                // cor de urgência na data, igual o calendário
                 &.urgencia-atrasada,
                 &.urgencia-hoje {
                     color: $cal-atrasada;
@@ -525,12 +499,11 @@ ion-content {
     padding: 0 16px 32px;
 }
 
-// A barra de abas (ion-tab-bar) agora vive em app/pages/tabs/tabs.page.scss,
-// compartilhada pelas 4 telas principais.
+// a barra de abas fica no tabs.page.scss
 
 
 // ---------------------------------------------------------------------------
-// Agenda do Início — feito com auxílio do Claude
+// agenda do início
 // ---------------------------------------------------------------------------
 .agenda {
     padding: 8px 16px 8px;
@@ -697,7 +670,7 @@ ion-content {
     color: var(--app-muted);
 }
 
-// v2: período atual da última sala
+// período atual da última sala
 .ultima-sala-secao .row-periodo {
     display: inline-flex;
     align-items: center;
@@ -713,8 +686,7 @@ ion-content {
 
 
 // ---------------------------------------------------------------------------
-// Versão web (computador) — feito com auxílio do Claude
-// Agenda à esquerda; calendário, dia selecionado e última sala à direita.
+// versão web: agenda na esquerda; calendário, dia selecionado e última sala na direita
 // ---------------------------------------------------------------------------
 @media (min-width: 992px) {
     .inicio-layout {
@@ -733,9 +705,7 @@ ion-content {
         font-size: 28px;
     }
 
-    // no computador cada célula ficava enorme (aspect-ratio 1 na coluna larga) e os círculos
-    // coloridos disputavam atenção com o dia selecionado. Agora: círculo de tamanho fixo no
-    // centro e o selecionado vira um retângulo arredondado em volta dele
+    // no computador os círculos têm tamanho fixo e o dia selecionado vira um contorno em volta
     .calendario-card .calendario-dias .cal-dia {
         aspect-ratio: auto;
         height: 48px;
@@ -763,7 +733,7 @@ ion-content {
     }
 }
 
-// alerta de semana pesada — feito com auxílio do Claude
+// alerta de semana pesada
 .semana-pesada {
     display: flex;
     align-items: flex-start;

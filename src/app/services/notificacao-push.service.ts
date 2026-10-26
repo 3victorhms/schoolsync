@@ -57,8 +57,8 @@ export class NotificacaoPushService {
   }
 
   async testar(): Promise<void> {
-    // O aviso é criado e enviado pela API/Firebase; o app só registra o
-    // dispositivo e pede o disparo. Assim ele não depende de um alarme local.
+    // o aviso é criado e enviado pela API/Firebase; o app só registra o
+    // dispositivo e pede o disparo. assim ele não depende de um alarme local
     await this.ativar();
     try {
       await firstValueFrom(this.http.post<void>(this.API_TESTE_URL, {}));
@@ -178,7 +178,7 @@ export class NotificacaoPushService {
     const targetId = String(dados['targetId'] || '');
     if (!targetId || !this.tokenService.estaValido()) return;
 
-    // mesma regra da lista de notificações (antes o lembrete abria uma rota quebrada)
+    // mesma regra da lista de notificações
     const rota = rotaDaNotificacao(tipo, targetId);
     if (rota) this.ngZone.run(() => this.router.navigate(rota));
   }

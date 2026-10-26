@@ -1,4 +1,3 @@
-// Estilos feitos com auxílio das I.As Lovable e Claude
 
 ion-toolbar {
     --background: var(--app-bg);
@@ -129,8 +128,7 @@ ion-content {
         justify-content: center;
         flex-shrink: 0;
 
-        // Badges com cor solida (como no Ajustes do iOS), para o icone continuar
-        // legivel tanto no tema escuro quanto no tema claro sem precisar de ajuste.
+        // badges com cor sólida (tipo os Ajustes do iOS), funcionam nos dois temas
         ion-icon {
             font-size: 17px;
             color: #ffffff !important;
@@ -215,10 +213,9 @@ ion-content {
     }
 }
 
-// A barra de abas (ion-tab-bar) agora vive em app/pages/tabs/tabs.page.scss,
-// compartilhada pelas 4 telas principais.
+// a barra de abas fica no tabs.page.scss
 
-// escolha do tema (escuro / claro / sistema) — feito com auxílio do Claude
+// escolha do tema (escuro / claro / sistema)
 .tema-row {
     flex-wrap: wrap;
 

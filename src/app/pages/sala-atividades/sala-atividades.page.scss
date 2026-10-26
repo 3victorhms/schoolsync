@@ -1,4 +1,4 @@
-// Abas "Próximas / Arquivadas" (mesmo visual dos filtros do caderno).
+// abas "Próximas / Arquivadas" (mesmo visual dos filtros do caderno)
 .filtros {
     display: flex;
     gap: 10px;
@@ -50,7 +50,7 @@
     }
 }
 
-// v2: filtros de matéria e período
+// filtros de matéria e período
 .filtros-v2 {
     display: grid;
     grid-template-columns: 1fr 1fr;

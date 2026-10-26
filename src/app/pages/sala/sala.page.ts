@@ -52,21 +52,21 @@ export class SalaPage implements OnInit {
     transferindoLiderId = '';
     carregando = true;
 
-    /** Aba selecionada. Fica guardada ao abrir um grupo/atividade e voltar. */
+    // aba selecionada. fica guardada ao abrir um grupo/atividade e voltar
     aba: AbaSala = 'atividades';
 
-    /** RN16: mesmo limite da API (MAXIMO_MEMBROS_POR_SALA em SalaService.java). */
+    // RN16: mesmo limite da API (MAXIMO_MEMBROS_POR_SALA em SalaService.java)
     readonly LIMITE_MEMBROS = 50;
     private abaInicialAplicada = false;
 
-    /** Atividades cujo dia de entrega ainda não terminou, da mais urgente para a mais distante. */
+    // atividades cujo dia de entrega ainda não terminou, da mais urgente para a mais distante
     proximasAtividades: AtividadeModel[] = [];
     quantidadeArquivadas = 0;
 
     grupos: GrupoModel[] = [];
     carregandoGrupos = true;
 
-    /** v2: período em andamento (ou o próximo, no recesso) e quanto falta para acabar. */
+    // período em andamento (ou o próximo, no recesso) e quanto falta pra acabar
     get periodoDaVez(): PeriodoModel | null {
         return periodoAtual(this.sala.periodos || []);
     }
@@ -110,8 +110,8 @@ export class SalaPage implements OnInit {
         const id = this.activatedRoute.snapshot.params['id'];
         this.idSala = id || '';
 
-        // Permite abrir a sala direto numa aba (ex.: voltar de um grupo para "Grupos").
-        // Só na primeira entrada, para não desfazer a aba que o usuário escolheu depois.
+        // permite abrir a sala direto numa aba (ex.: voltar de um grupo para "Grupos")
+        // só na primeira entrada, para não desfazer a aba que o usuário escolheu depois
         const abaInicial = this.activatedRoute.snapshot.queryParams['aba'];
         if (!this.abaInicialAplicada && (abaInicial === 'atividades' || abaInicial === 'grupos' || abaInicial === 'membros')) {
             this.aba = abaInicial;
@@ -163,7 +163,7 @@ export class SalaPage implements OnInit {
         return Math.max(this.LIMITE_MEMBROS - this.membros.length, 0);
     }
 
-    /** Percentual de ocupação, para a barrinha da aba Membros. */
+    // percentual de ocupação, para a barrinha da aba Membros
     get ocupacaoPercentual(): number {
         return Math.min(Math.round((this.membros.length / this.LIMITE_MEMBROS) * 100), 100);
     }
@@ -173,7 +173,7 @@ export class SalaPage implements OnInit {
         this.hapticsService.leve();
     }
 
-    /** Separa as atividades à vista das arquivadas (regra em deveArquivar, utils/urgencia.util.ts). */
+    // separa as atividades à vista das arquivadas (regra em deveArquivar, utils/urgencia.util.ts)
     organizarAtividades() {
         this.proximasAtividades = this.sala.atividades
             .filter(atividade => !deveArquivar(atividade))
@@ -181,7 +181,7 @@ export class SalaPage implements OnInit {
         this.quantidadeArquivadas = this.sala.atividades.length - this.proximasAtividades.length;
     }
 
-    /** Grupos da sala dos quais o usuário participa. */
+    // grupos da sala dos quais o usuário participa
     carregarGrupos() {
         const idSala = this.idSala || this.sala.id;
         if (!idSala || !this.usuario.id) {
@@ -359,13 +359,8 @@ export class SalaPage implements OnInit {
         this.hapticsService.aviso();
         this.removendoMembroId = removido.id;
 
-        // Chama a remocao no servidor imediatamente (sem esperar nenhum
-        // toast/desfazer) - do contrario, se o aviso de "Membro removido"
-        // depender do ion-toast do Ionic pra disparar a chamada, e esse
-        // componente nunca hidratar em producao, a remocao nunca acontece
-        // de verdade e o membro "volta" ao atualizar a pagina. Nao tem
-        // como desfazer isso automaticamente (reentrar na sala exige um
-        // convite), entao aqui e so um aviso informativo.
+        // remove no servidor na hora, sem depender do toast. voltar pra sala precisa de convite,
+        // ent aqui n tem desfazer, é só um aviso
         this.salaService.removerMembro(this.sala.id, removido.id).subscribe({
             next: () => {
                 this.removendoMembroId = '';
@@ -416,22 +411,18 @@ export class SalaPage implements OnInit {
             return;
         }
 
-        // Aviso em HTML puro (DesfazerService) em vez do ion-toast, que não
-        // aparece de forma confiável no navegador.
+        // aviso em html puro (DesfazerService) pq o ion-toast n aparecia direito no navegador
         this.hapticsService.leve();
         this.desfazerService.mostrarMensagem(`Código ${this.sala.codigoConvite} copiado! Envie para seus colegas entrarem na sala.`, 3000);
     }
 
-    /** Texto e link do convite (o link abre "Entrar na sala" com o código já preenchido). */
+    // texto e link do convite (o link abre "Entrar na sala" com o código já preenchido)
     get linkConvite(): string {
         return `${environment.webUrl}/entrar-sala?codigo=${encodeURIComponent(this.sala.codigoConvite)}`;
     }
 
-    /**
-     * Abre o "compartilhar" do celular (WhatsApp, e-mail...). No app usa o plugin
-     * @capacitor/share; no navegador ele cai no compartilhamento do próprio navegador.
-     * Se nenhum dos dois existir (ex.: Chrome no Windows), copia o convite inteiro.
-     */
+    // abre o compartilhar do celular (whatsapp, e-mail...). no app usa o @capacitor/share e no
+    // navegador o compartilhamento do próprio navegador. se nenhum existir, copia o convite
     async compartilharConvite() {
         const texto = `Entra na sala "${this.sala.nome}" no SchoolSync! Código: ${this.sala.codigoConvite}`;
         try {

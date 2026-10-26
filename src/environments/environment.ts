@@ -4,13 +4,13 @@
 
 export const environment = {
   production: false,
-  /**
-   * Endereço da API usado por todos os services e pelo interceptor do token.
-   * Para testar com a API rodando na sua máquina, troque por 'http://localhost:8080'.
-   */
+  // endereço da API usado pelos services e pelo interceptor. pra testar com a API local troca por 'http://localhost:8080'
   apiUrl: 'https://schoolsync-api-kvfx.onrender.com',
-  /** Endereço da versão web, usado no link de convite das salas. */
-  webUrl: 'https://ppschoolsync.netlify.app'
+  // endereço da versão web, usado no link de convite das salas
+  webUrl: 'https://ppschoolsync.netlify.app',
+  // client id "Aplicativo da Web" do Google Cloud (é público, pode ficar no código).
+  // vazio = o botão "Continuar com o Google" n aparece
+  googleClientId: '956777039074-4vb5lrndudfhlavddf83de908obpc066.apps.googleusercontent.com'
 };
 
 /*

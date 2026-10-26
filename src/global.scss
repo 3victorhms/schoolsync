@@ -53,35 +53,25 @@ body {
   --app-warning: #f5a623;
   --app-danger: #ff5c6c;
 
-  // Escala de urgência (psicologia das cores): quanto mais perto do prazo,
-  // mais forte/vermelho. Usada no calendário (pontos dos dias) e nas listas
-  // de atividades (rótulo de data). Fica fora da paleta semântica porque
-  // precisa de 5 degraus distintos, e mantém o mesmo valor nos dois temas
-  // (claro/escuro) pra não perder contraste em nenhum dos dois.
+  // escala de urgência: quanto mais perto do prazo, mais vermelho. usada no calendário e nas
+  // listas de atividades, com o mesmo valor nos dois temas
   --app-urgencia-atrasada: #d62f2f;
   --app-urgencia-atrasada-borda: #7f1720;
   --app-urgencia-proxima: #ee7d1a;
   --app-urgencia-semana: #f9ca32;
-  // mês ou mais = azul ("tranquilo, está longe"); concluída = verde, igual ao
-  // resto do app (selo de tarefa concluída, barra de progresso cheia).
-  // O verde é um tom mais escuro pra o número branco do calendário ficar legível.
+  // mês ou mais = azul, concluída = verde (um tom mais escuro pro número branco ficar legível)
   --app-urgencia-mes: #3670cd;
   --app-urgencia-concluida: #238636;
 
-  // Tokens de transição/animação compartilhados por todo o app, pra usar a
-  // mesma curva em botões, cards, toggles etc. em vez de valores soltos.
+  // transições usadas no app todo
   --transition-fast: 150ms cubic-bezier(.4, 0, .2, 1);
   --transition-base: 250ms cubic-bezier(.4, 0, .2, 1);
 
-  // No iOS/macOS, -apple-system e BlinkMacSystemFont resolvem para a San
-  // Francisco nativa (a mesma fonte dos apps da Apple). Em outras
-  // plataformas caem para a Inter (importada no index.html), que tem
-  // proporções bem parecidas, em vez da fonte generica do sistema.
+  // no iOS/macOS usa a San Francisco do sistema, nos outros cai pra Inter (importada no index.html)
   --ion-font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
-  // Cor padrao do texto do Ionic presa ao tema do app. Antes ela seguia o tema
-  // do sistema operacional: com o app escuro e o celular/PC no modo claro, textos
-  // sem cor propria (ex.: o titulo da atividade) ficavam pretos sobre o fundo escuro.
+  // cor do texto do ionic presa ao tema do app, senão com o celular no modo claro alguns textos
+  // ficavam pretos no fundo escuro
   --ion-text-color: var(--app-text);
 }
 
@@ -528,9 +518,8 @@ body.tema-claro app-atividade .comentario-acoes button.acao-excluir {
   color: var(--app-danger) !important;
 }
 
-/* Dialogo de confirmacao (ConfirmacaoService) feito em HTML/CSS puro, sem
-   depender do ion-alert do Ionic - que em alguns builds de producao nunca
-   hidrata, deixando o botao parecendo sem nenhuma acao ao clicar. */
+/* dialog de confirmação (ConfirmacaoService) em html/css puro, pq o ion-alert às vezes
+   n carregava no build de produção */
 .confirmacao-overlay {
   position: fixed;
   inset: 0;
@@ -612,10 +601,7 @@ body.tema-claro app-atividade .comentario-acoes button.acao-excluir {
   to { opacity: 1; transform: scale(1); }
 }
 
-/* Aviso tipo "toast" com/sem botao de desfazer, feito em HTML/CSS puro
-   pelo DesfazerService - substitui o ion-toast em pontos onde a acao real
-   (excluir, remover) precisa acontecer de forma confiavel, sem depender
-   da hidratacao do componente Ionic. */
+/* toast com ou sem desfazer (DesfazerService), em html/css puro no lugar do ion-toast */
 .desfazer-toast {
   position: fixed;
   left: 50%;
@@ -670,8 +656,7 @@ body.tema-claro app-atividade .comentario-acoes button.acao-excluir {
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-/* Toasts: mesmo estilo "cartao" do resto do app (cantos arredondados, sem
-   sombra dura, cores dos tokens) em vez do visual padrao do Ionic. */
+/* toasts com o mesmo estilo de cartão do resto do app */
 ion-toast {
   --border-radius: 14px;
   --background: var(--app-surface-strong);
@@ -703,8 +688,7 @@ ion-toast.ion-color-success {
   --button-color: var(--app-success);
 }
 
-/* Notificações no tema claro precisam ficar globais porque os overlays e o body
-   não recebem o atributo de encapsulamento do componente Angular. */
+/* notificações no tema claro ficam aqui pq os overlays e o body n recebem o encapsulamento do angular */
 body.tema-claro app-notificacao ion-content { --background: var(--app-bg); }
 body.tema-claro app-notificacao .cabecalho h1,
 body.tema-claro app-notificacao .conteudo strong,
@@ -738,7 +722,7 @@ body.tema-claro app-notificacao .estado-vazio ion-icon {
   color: var(--app-accent);
 }
 
-/* Configurações de notificações no tema claro. */
+/* configurações de notificações no tema claro */
 body.tema-claro app-notificacao-configuracoes .pagina-configuracoes {
   color: var(--app-text);
 }
@@ -786,7 +770,7 @@ body.tema-claro app-notificacao-configuracoes ion-toggle {
   --handle-background-checked: #ffffff;
 }
 
-/* Ações novas do perfil no tema claro. */
+/* ações novas do perfil no tema claro */
 body.tema-claro app-perfil .notificacao-teste-btn {
   background: var(--app-accent-soft);
   border-color: var(--app-accent);
@@ -806,7 +790,7 @@ body.tema-claro app-perfil .inativacao-aviso li {
   color: #8f2f39 !important;
 }
 
-/* Telas de Início e Perfil em estilo iOS (listas agrupadas) no tema claro. */
+/* telas de Início e Perfil em estilo iOS (listas agrupadas) no tema claro */
 body.tema-claro .profile-hero,
 body.tema-claro .group {
   background: var(--app-surface) !important;
@@ -830,7 +814,7 @@ body.tema-claro .group-title {
   color: var(--app-muted) !important;
 }
 
-/* A regra acima apagava as cores de urgência das datas no tema claro. */
+/* a regra acima apagava as cores de urgência das datas no tema claro */
 body.tema-claro .row-data.urgencia-atrasada,
 body.tema-claro .row-data.urgencia-hoje {
   color: var(--app-urgencia-atrasada) !important;
@@ -840,7 +824,7 @@ body.tema-claro .row-data.urgencia-proxima {
   color: var(--app-urgencia-proxima) !important;
 }
 
-/* Amarelo mais escuro: o amarelo do tema escuro some no fundo claro. */
+/* amarelo mais escuro: o amarelo do tema escuro some no fundo claro */
 body.tema-claro .row-data.urgencia-semana {
   color: #a87c00 !important;
 }
@@ -896,10 +880,7 @@ body.tema-claro .switch.on {
   background: var(--app-accent) !important;
 }
 
-/* .row-icon acento-suave (navegacional, sem cor por status): usada em varias
-   telas de lista (inicio/salas/grupos/grupo). As variantes com cor solida por
-   status ou categoria (perfil, caderno, acao-icone dos grupos) ja funcionam
-   nos dois temas por conta propria e nao entram aqui. */
+/* .row-icon acento-suave (sem cor por status), das listas do início, salas, grupos e grupo */
 body.tema-claro app-inicio .row-icon,
 body.tema-claro app-salas .row-icon,
 body.tema-claro app-grupos .row-icon,
@@ -914,13 +895,12 @@ body.tema-claro app-grupo .row-icon ion-icon {
   color: var(--app-accent) !important;
 }
 
-/* Nav bar flutuante (iOS): o item selecionado tinha o fundo do realce fixo
-   no tom escuro; usa o token para acompanhar o tema em todas as paginas. */
+/* nav bar flutuante: o item selecionado usa o token pra acompanhar o tema */
 body.tema-claro .selecionado::part(native) {
   background: var(--app-accent-soft) !important;
 }
 
-/* Mantém os círculos de atividade legíveis no calendário claro. */
+/* mantém os círculos de atividade legíveis no calendário claro */
 app-inicio .cal-dia .numero-dia {
   position: relative;
   z-index: 2;
@@ -964,19 +944,13 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
 }
 
 /* ------------------------------------------------------------------------ *
- * Telas maiores que celular (tablet e computador). Feito com auxilio do Claude.
- *
- * O layout foi pensado para celular, entao em telas largas os cards e o
- * calendario esticavam e ficavam enormes. Agora o app ocupa a tela toda e o
- * conteudo de cada pagina fica numa coluna centralizada. A largura dessa
- * coluna vem da variavel --web-largura:
- *   - tablet (700px a 991px): 720px em todas as telas, com a barra de abas
- *     embaixo como no celular (no toque ela funciona melhor que um menu);
- *   - computador (992px ou mais): o menu lateral (app.component +
- *     components/menu-lateral) substitui a barra de abas, listas usam 880px,
- *     formularios 720px e as telas com colunas (inicio, salas, sala e
- *     atividade) 1120px.
- * Abaixo de 700px nada muda: continua exatamente o layout mobile original.
+ * telas maiores que celular (tablet e computador)
+ * o layout foi feito pra celular e nas telas largas os cards e o calendário ficavam enormes.
+ * o conteúdo de cada página fica numa coluna centralizada com a largura --web-largura:
+ *   - tablet (700px a 991px): 720px, com a barra de abas embaixo igual no celular
+ *   - computador (992px ou mais): menu lateral no lugar da barra de abas; listas 880px,
+ *     formulários 720px e as telas com colunas (início, salas, sala e atividade) 1120px
+ * abaixo de 700px nada muda
  * ------------------------------------------------------------------------ */
 @media (min-width: 700px) {
   .ion-page {
@@ -1053,11 +1027,8 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
 }
 
 /* ------------------------------------------------------------------------ *
- * Foco visivel para quem navega pelo teclado (tecla Tab). Feito com auxilio
- * do Claude. O :focus-visible so aparece com teclado, nao com toque ou
- * clique, entao no celular nada muda. O :where() deixa a regra com
- * especificidade zero: se alguma tela ja tem um estilo de foco proprio
- * (ex.: as notificacoes), o dela continua valendo.
+ * foco visível pra quem navega pelo teclado (Tab). o :focus-visible só aparece com teclado
+ * e o :where() deixa a especificidade zero pra n passar por cima do foco de cada tela
  * ------------------------------------------------------------------------ */
 :where(a, button, [tabindex], ion-back-button, ion-tab-button):focus-visible {
   outline: 2px solid var(--app-accent);
@@ -1065,11 +1036,8 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
 }
 
 /* ------------------------------------------------------------------------ *
- * Feedback de toque global. Os cards/linhas clicaveis do app (as <div> com
- * routerLink e o atributo "button") nao tinham nenhum retorno visual ao
- * toque, entao o app parecia "travar" por uma fracao de segundo antes de
- * navegar. Isso cobre tanto essas divs quanto os <button class="row"> do
- * perfil e os botoes de filtro/acao espalhados pelas paginas.
+ * feedback de toque nos cards e linhas clicáveis (divs com routerLink e button, os
+ * button.row do perfil e os botões de filtro). sem isso o app parecia travar antes de navegar
  * ------------------------------------------------------------------------ */
 .row[button],
 [button],
@@ -1087,9 +1055,7 @@ button.row,
 }
 
 /* ------------------------------------------------------------------------ *
- * Skeleton loader (shimmer) para usar no lugar do ion-spinner central nas
- * listas. Evita o "pulo" de layout quando o conteudo real chega: o
- * placeholder ja ocupa o mesmo espaco/formato dos cards reais.
+ * skeleton (shimmer) no lugar do spinner nas listas, no mesmo formato dos cards reais
  * ------------------------------------------------------------------------ */
 @keyframes skeleton-shimmer {
   0% { background-position: -200px 0; }
@@ -1102,9 +1068,7 @@ button.row,
 
 .skeleton-block,
 .skeleton-line {
-  // !important porque .row-icon/.avatar-small etc. definem "background" (o
-  // shorthand, que reseta background-image) no proprio estilo do componente
-  // — precisa ganhar deles enquanto o placeholder estiver visivel.
+  // !important pq o .row-icon/.avatar-small usam o shorthand background, que reseta o background-image
   background-image: linear-gradient(
     90deg,
     var(--app-surface-strong) 25%,
@@ -1132,10 +1096,8 @@ button.row,
 }
 
 /* ------------------------------------------------------------------------ *
- * Entrada suave (fade + leve subida) para os itens de uma lista, com um
- * pequeno atraso crescente por item ("stagger") para nao entrarem todos
- * de uma vez. Aplicar a classe "stagger-list" no container (ex.: a <div
- * class="group">) que envolve os itens.
+ * entrada suave dos itens de uma lista, um depois do outro. usar a classe
+ * stagger-list no container dos itens (ex.: a div.group)
  * ------------------------------------------------------------------------ */
 @keyframes fadeUp {
   from {
@@ -1172,9 +1134,7 @@ button.row,
   }
 }
 
-// feito com auxílio do Claude
-// Estado vazio com orientação: ícone, título, explicação e botões de ação.
-// Usa as variáveis de tema, então funciona no tema claro e no escuro.
+// estado vazio: ícone, título, explicação e botões de ação
 .vazio-guia {
   display: flex;
   flex-direction: column;
@@ -1258,9 +1218,7 @@ button.row,
   }
 }
 
-// feito com auxílio do Claude
-// Spinner leve para botões em andamento (salvar, criar, excluir...).
-// Usa a cor do texto do próprio botão, então funciona em qualquer tema.
+// spinner pros botões em andamento (salvar, criar, excluir...), usa a cor do texto do botão
 .btn-spinner {
   display: inline-block;
   width: 16px;
@@ -1287,8 +1245,7 @@ button.row,
   .btn-spinner { animation-duration: 1.6s; }
 }
 
-// feito com auxílio do Claude
-// Erro de validação mostrado logo abaixo do campo.
+// erro de validação embaixo do campo
 .campo-item.campo-invalido {
   border: 1px solid var(--app-danger);
 }
@@ -1301,9 +1258,8 @@ button.row,
   line-height: 1.4;
 }
 
-// ===== Botões sem CAIXA ALTA (feito com auxílio do Claude) =====
-// O modo md do Ionic deixa ion-button, segmentos e botões de alerta em maiúsculas,
-// enquanto os botões feitos à mão usam texto normal. Fica tudo igual: só a primeira maiúscula.
+// ===== botões sem caixa alta =====
+// o modo md do ionic deixa ion-button, segmentos e alertas em maiúsculas
 ion-button,
 ion-segment-button,
 .alert-button,
@@ -1313,7 +1269,7 @@ ion-segment-button,
   letter-spacing: normal !important;
 }
 
-// ===== Aviso de servidor acordando (servidor-lento.util.ts) — feito com auxílio do Claude =====
+// ===== aviso de servidor acordando (servidor-lento.util.ts) =====
 .servidor-lento {
   position: fixed;
   left: 50%;

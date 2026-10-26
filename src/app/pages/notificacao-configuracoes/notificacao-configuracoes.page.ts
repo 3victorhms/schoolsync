@@ -20,7 +20,7 @@ export class NotificacaoConfiguracoesPage {
   configuracao: ConfiguracaoNotificacao = { noAplicativo: true, push: false, lembreteDias: 1 };
   salvando = false;
   testandoPush = false;
-  /** O teste só faz sentido com o push já salvo como ligado (antes ficava no Perfil, para todo mundo). */
+  // o teste só aparece com o push salvo como ligado
   pushSalvo = false;
 
   constructor(
@@ -31,8 +31,7 @@ export class NotificacaoConfiguracoesPage {
     addIcons({ checkmarkOutline, notificationsOutline, phonePortraitOutline, timeOutline });
   }
 
-  // feito com auxílio do Claude: antes a tela mostrava os valores padrão enquanto a API respondia,
-  // e dava para salvar por cima da configuração real. Agora espera carregar.
+  // espera carregar antes de deixar salvar, senão dava pra salvar os valores padrão por cima
   carregando = true;
   erroCarregar = false;
 

@@ -1,9 +1,5 @@
-// feito com auxílio do Claude
-//
-// Lista completa de atividades de uma sala, separada em "Próximas" (o dia de
-// entrega ainda não terminou) e "Arquivadas" (o dia de entrega já passou).
-// A página da sala mostra só uma prévia com as próximas mais urgentes.
-// v2: dá pra filtrar por matéria e por período (a tela de pontos abre já filtrada).
+// todas as atividades da sala, separadas em "Próximas" e "Arquivadas" (o dia de entrega já passou)
+// a página da sala mostra só uma prévia. dá pra filtrar por matéria e período
 
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -49,7 +45,7 @@ type Aba = 'proximas' | 'arquivadas' | 'todas';
 @Component({
   selector: 'app-sala-atividades',
   templateUrl: './sala-atividades.page.html',
-  // Reaproveita os estilos de lista da página da sala (.group, .row, tags...).
+  // reaproveita os estilos de lista da página da sala (.group, .row, tags...)
   styleUrls: ['../sala/sala.page.scss', './sala-atividades.page.scss'],
   standalone: true,
   imports: [
@@ -80,7 +76,7 @@ export class SalaAtividadesPage {
   arquivadas: AtividadeModel[] = [];
   todas: AtividadeModel[] = [];
 
-  /** Filtros v2 (vazio = sem filtro). */
+  // filtros (vazio = sem filtro)
   filtroMateria = '';
   filtroPeriodo = '';
 
@@ -110,12 +106,12 @@ export class SalaAtividadesPage {
 
   ionViewWillEnter() {
     this.idSala = this.activatedRoute.snapshot.params['id'] || '';
-    // A aba "Arquivadas" da sala abre esta página já na aba certa.
+    // a aba "Arquivadas" da sala abre esta página já na aba certa
     const query = this.activatedRoute.snapshot.queryParams;
     if (query['aba'] === 'arquivadas' || query['aba'] === 'todas') {
       this.aba = query['aba'];
     }
-    // Vindo da tela de pontos: já abre filtrado pela matéria/período
+    // vindo da tela de pontos: já abre filtrado pela matéria/período
     if (query['materia']) this.filtroMateria = query['materia'];
     if (query['periodo']) this.filtroPeriodo = query['periodo'];
 
@@ -149,7 +145,7 @@ export class SalaAtividadesPage {
     this.carregar(event);
   }
 
-  /** Próximas: da entrega mais perto para a mais longe. Arquivadas: da mais recente para a mais antiga. */
+  // próximas: da entrega mais perto para a mais longe. arquivadas: da mais recente para a mais antiga
   organizar() {
     const atividades = (this.sala.atividades || []).filter(atividade =>
       (!this.filtroMateria || atividade.idMateria === this.filtroMateria) &&

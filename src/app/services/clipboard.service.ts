@@ -6,7 +6,7 @@ import { Clipboard } from '@capacitor/clipboard';
 })
 export class ClipboardService {
 
-  /** Retorna true se o texto foi copiado. */
+  // retorna true se o texto foi copiado
   async copiar(texto: string): Promise<boolean> {
     if (!texto) return false;
 

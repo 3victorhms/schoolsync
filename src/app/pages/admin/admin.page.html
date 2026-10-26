@@ -14,7 +14,7 @@
 
   <main class="pagina-admin" aria-live="polite">
     @if (carregando) {
-    <!-- skeleton no formato do resumo e da lista (feito com auxílio do Claude) -->
+    <!-- skeleton no formato do resumo e da lista -->
     <div class="carregando-admin" aria-hidden="true">
       <section class="resumo">
         @for (i of [1, 2, 3, 4]; track i) {
@@ -49,6 +49,35 @@
 
     @if (erro) {
     <div class="estado-erro" role="alert">{{ erro }}</div>
+    }
+
+    @if (!carregando && !semPermissao && manutencao) {
+    <section class="manutencao-card" [class.ligada]="manutencao.ativa" aria-labelledby="titulo-manutencao">
+      <div class="manutencao-topo">
+        <span class="manutencao-icone" aria-hidden="true"><ion-icon name="construct-outline"></ion-icon></span>
+        <div class="manutencao-texto">
+          <h2 id="titulo-manutencao">Modo manutenção</h2>
+          <p>{{ manutencao.ativa ? 'Ligado: só administradores conseguem usar o app.' : 'Desligado: todo mundo usa o app normalmente.' }}</p>
+        </div>
+        <ion-toggle [checked]="manutencaoForm.ativa" (ionChange)="manutencaoForm.ativa = $event.detail.checked"
+          aria-label="Ligar ou desligar o modo manutenção"></ion-toggle>
+      </div>
+      <label class="manutencao-campo">
+        <span>Mensagem para os usuários</span>
+        <textarea rows="2" maxlength="300" [(ngModel)]="manutencaoForm.mensagem"
+          placeholder="Estamos fazendo uma manutenção no SchoolSync. Volte daqui a pouco."></textarea>
+      </label>
+      <label class="manutencao-campo">
+        <span>Previsão de volta (opcional)</span>
+        <input type="text" maxlength="60" [(ngModel)]="manutencaoForm.previsao" placeholder="Ex.: hoje às 22h" />
+      </label>
+      @if (manutencao.alteradoPor) {
+      <p class="manutencao-alterado">Última mudança por {{ manutencao.alteradoPor }} em {{ formatarData(manutencao.alteradoEm) }}</p>
+      }
+      <button type="button" class="manutencao-salvar" [disabled]="salvandoManutencao || !manutencaoMudou" (click)="salvarManutencao()">
+        @if (salvandoManutencao) { <span class="btn-spinner" aria-hidden="true"></span> Salvando... } @else { Salvar }
+      </button>
+    </section>
     }
 
     @if (!carregando && !semPermissao && !erro) {

@@ -1,4 +1,3 @@
-// Estilos feitos com auxílio das I.As Lovable e Claude
 
 ion-toolbar {
     --background: var(--app-bg);
@@ -15,8 +14,7 @@ ion-toolbar {
     }
 }
 
-// selo de status do prazo, no cartão da atividade (antes os estilos estavam
-// presos dentro do ion-toolbar, de quando o selo ficava no cabeçalho)
+// selo de status do prazo no cartão da atividade
 .status-badge {
     align-self: flex-start;
     display: flex;
@@ -234,7 +232,7 @@ ion-content {
         text-align: center;
     }
 
-    // tirar do caderno não apaga nada, então fica neutro (o vermelho passava ideia de ação perigosa)
+    // cor neutra pq tirar do caderno n apaga nada
     .remover-btn {
         display: flex;
         align-items: center;
@@ -387,7 +385,7 @@ ion-content {
                 color: var(--app-accent);
                 font-size: 12px;
                 font-weight: 600;
-                // Área de toque maior sem mudar o espaçamento visual.
+                // área de toque maior sem mudar o espaçamento visual
                 padding: 12px 6px;
                 margin: -12px -6px;
                 cursor: pointer;
@@ -499,7 +497,7 @@ ion-content {
     }
 }
 
-// Tarefas de grupo do usuário para esta atividade — feito com auxílio do Claude
+// tarefas de grupo do usuário nessa atividade
 .tarefas-secao {
     padding: 0 16px 20px;
     display: flex;
@@ -585,7 +583,7 @@ ion-content {
     }
 }
 
-// Skeleton dos comentários (primeira carga)
+// skeleton dos comentários (primeira carga)
 .skeleton-comentario-corpo {
     flex: 1;
     display: flex;
@@ -594,7 +592,7 @@ ion-content {
     padding-top: 2px;
 }
 
-// v2: nota do aluno no boletim
+// nota do aluno no boletim
 .nota-lancada {
     display: flex;
     align-items: center;
@@ -629,8 +627,7 @@ ion-content {
 }
 
 // ---------------------------------------------------------------------------
-// Versão web (computador) — feito com auxílio do Claude
-// Detalhes, status, nota e tarefas à esquerda; comentários numa coluna à direita.
+// versão web: detalhes, status, nota e tarefas na esquerda e comentários na direita
 // ---------------------------------------------------------------------------
 @media (min-width: 992px) {
     .atividade-layout {
@@ -649,7 +646,7 @@ ion-content {
     }
 }
 
-// feito com auxílio do Claude: carregar comentários mais antigos
+// botão de carregar comentários mais antigos
 .comentarios-anteriores {
     display: inline-flex;
     align-items: center;

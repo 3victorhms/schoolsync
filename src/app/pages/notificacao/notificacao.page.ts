@@ -9,7 +9,7 @@ import { NotificacaoService } from '../../services/notificacao.service';
 import { Subscription } from 'rxjs';
 import { rotaDaNotificacao } from '../../utils/notificacao-rota.util';
 
-/** Bloco da lista ("Hoje", "Ontem"...). */
+// bloco da lista ("Hoje", "Ontem"...)
 interface GrupoNotificacoes {
   chave: string;
   titulo: string;
@@ -53,7 +53,7 @@ export class NotificacaoPage {
     this.carregarNotificacoes(event);
   }
 
-  // feito com auxílio do Claude: rolagem infinita, 20 notificações por vez
+  // rolagem infinita, 20 notificações por vez
   get temMais(): boolean {
     return this.service.temMais;
   }
@@ -101,7 +101,7 @@ export class NotificacaoPage {
     return this.service.quantidadeNaoLidas;
   }
 
-  // feito com auxílio do Claude: separa por dia (mais nova primeiro), igual app de mensagens
+  // separa por dia (mais nova primeiro), tipo app de mensagem
   get grupos(): GrupoNotificacoes[] {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -133,7 +133,7 @@ export class NotificacaoPage {
     return Number.isNaN(tempo) ? 0 : tempo;
   }
 
-  /** Hoje e ontem mostram só a hora (o bloco já diz o dia); as outras mostram dia e hora. */
+  // hoje e ontem mostram só a hora (o bloco já diz o dia); as outras mostram dia e hora
   formatarHorario(valor: string, chaveGrupo = ''): string {
     if (!valor) return '';
     const data = new Date(valor);

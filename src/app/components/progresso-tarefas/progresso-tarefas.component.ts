@@ -1,8 +1,5 @@
-// feito com auxílio do Claude
-//
-// Progresso das tarefas de um grupo ("3 de 5 concluídas"). Aparece de dois jeitos:
-//  - compacto: barrinha dentro da linha do grupo (sala e lista de grupos);
-//  - completo: cartão no topo do grupo e da divisão de tarefas, com a parte de cada membro.
+// progresso das tarefas do grupo ("3 de 5 concluídas")
+// compacto: barrinha na linha do grupo. completo: cartão no topo do grupo com a parte de cada membro
 
 import { Component, Input, booleanAttribute } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -13,11 +10,11 @@ export interface ProgressoMembro {
   nome: string;
   concluidas: number;
   total: number;
-  /** Tarefas com prazo vencido e ainda não concluídas. */
+  // tarefas com prazo vencido e ainda não concluídas
   atrasadas: number;
 }
 
-/** "AAAA-MM-DD" (ou ISO com hora) já passou? Compara só o dia. */
+// "AAAA-MM-DD" (ou ISO com hora) já passou? Compara só o dia
 function prazoVencido(prazo: string | null | undefined): boolean {
   if (!prazo) return false;
   const [ano, mes, dia] = prazo.split('T')[0].split('-').map(Number);
@@ -27,7 +24,7 @@ function prazoVencido(prazo: string | null | undefined): boolean {
   return new Date(ano, mes - 1, dia).getTime() < hoje.getTime();
 }
 
-/** Monta o progresso a partir da lista de tarefas do grupo. */
+// monta o progresso a partir da lista de tarefas do grupo
 export function calcularProgresso(tarefas: { status?: string | null; nomeUsuarioAtribuido?: string | null; prazo?: string | null }[]) {
   const porNome = new Map<string, ProgressoMembro>();
   let concluidas = 0;

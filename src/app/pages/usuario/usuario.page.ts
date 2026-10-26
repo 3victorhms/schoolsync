@@ -64,7 +64,7 @@ export class UsuarioPage implements OnInit {
     return nova !== confirmar;
   }
 
-  /** Trocar o e-mail ou a senha exige confirmar a senha atual (a API confere). */
+  // trocar o e-mail ou a senha exige confirmar a senha atual (a API confere)
   get trocandoCredenciais(): boolean {
     const novaPreenchida = !!this.formGroup.get('novaSenha')?.value;
     const email: string = this.formGroup.get('email')?.value || '';
@@ -76,13 +76,13 @@ export class UsuarioPage implements OnInit {
     return this.trocandoCredenciais && !senhaAtualPreenchida;
   }
 
-  /** Mesmo mínimo do cadastro: 8 caracteres. */
+  // mesmo mínimo do cadastro: 8 caracteres
   get novaSenhaCurta(): boolean {
     const novaSenha: string = this.formGroup.get('novaSenha')?.value || '';
     return novaSenha.length > 0 && novaSenha.length < 8;
   }
 
-  /** O campo tem erro e o usuário já mexeu nele. */
+  // o campo tem erro e o usuário já mexeu nele
   campoInvalido(campo: string): boolean {
     const controle = this.formGroup.get(campo);
     return !!controle && controle.invalid && (controle.touched || controle.dirty);
@@ -269,7 +269,7 @@ export class UsuarioPage implements OnInit {
         });
     };
 
-    // a senha atual é conferida pela própria API (antes era só aqui no app)
+    // quem confere a senha atual é a API
     atualizar();
   }
 }

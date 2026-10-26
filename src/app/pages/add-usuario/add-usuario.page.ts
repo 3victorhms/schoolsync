@@ -10,13 +10,14 @@ import { finalize } from 'rxjs';
 import { addIcons } from 'ionicons';
 import { schoolOutline, arrowForwardOutline, eyeOutline, eyeOffOutline, peopleOutline, calendarOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
+import { BotaoGoogleComponent } from 'src/app/components/botao-google/botao-google.component';
 
 @Component({
   selector: 'app-add-usuario',
   templateUrl: './add-usuario.page.html',
   styleUrls: ['./add-usuario.page.scss'],
   standalone: true,
-  imports: [IonLabel, IonItem, IonInput, IonBackButton, IonButtons, IonIcon, IonButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, ReactiveFormsModule]
+  imports: [IonLabel, IonItem, IonInput, IonBackButton, IonButtons, IonIcon, IonButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, ReactiveFormsModule, BotaoGoogleComponent]
 })
 export class AddUsuarioPage implements OnInit {
 
@@ -40,9 +41,7 @@ export class AddUsuarioPage implements OnInit {
   ngOnInit() {
   }
 
-  /** Verdadeiro quando o campo é inválido e já foi "tocado" (perdeu o foco
-   * ou o usuário tentou enviar o formulário), pra não mostrar erro antes
-   * da hora enquanto a pessoa ainda está digitando. */
+  // campo inválido que já foi tocado (pra n mostrar erro enquanto a pessoa ainda tá digitando)
   campoInvalido(campo: string): boolean {
     const controle = this.formGroup.get(campo);
     return !!controle && controle.invalid && (controle.touched || controle.dirty);

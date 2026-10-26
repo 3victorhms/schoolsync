@@ -31,9 +31,7 @@ export class AddAtividadePage implements OnInit {
   editando: boolean = false;
   salvando = false;
 
-  // "hoje" no fuso do aparelho. Antes era new Date().toISOString(), que usa UTC: depois das 21h
-  // o app achava que já era amanhã e não deixava criar atividade para o dia atual
-  // (correção feita com auxílio do Claude)
+  // hoje no fuso do celular. com toISOString (UTC) depois das 21h já virava o dia seguinte
   get hoje(): string {
     return hojeIso();
   }
@@ -57,14 +55,12 @@ export class AddAtividadePage implements OnInit {
       'dataEntrega': ['', [Validators.required, this.dataMinima(), this.dentroDosPeriodos()]],
     });
 
-    // O limite de pontos depende da matéria e do período (que sai da data):
-    // quando um dos dois muda, o valor precisa ser validado de novo.
+    // o limite de pontos depende da matéria e do período (que sai da data):
+    // quando um dos dois muda, o valor precisa ser validado de novo
     this.formGroup.get('idMateria')?.valueChanges.subscribe(() => this.revalidarValor());
     this.formGroup.get('dataEntrega')?.valueChanges.subscribe(() => this.revalidarValor());
 
-    // Ligado por padrão (a maioria das atividades vale ponto). Ao desligar,
-    // dispensa o campo "Valor" (fica travado em 0 e sem as validações de
-    // obrigatório/mínimo).
+    // ligado por padrão pq a maioria vale ponto. desligado, o valor fica 0 e sem validação
     this.formGroup.get('valePontuacao')?.valueChanges.subscribe(valePontuacao => {
       const valorControl = this.formGroup.get('valor');
       if (!valorControl) return;
@@ -83,7 +79,7 @@ export class AddAtividadePage implements OnInit {
   }
 
 
-  /** O líder da sala editando a atividade de outro colega (moderação). */
+  // o líder da sala editando a atividade de outro colega (moderação)
   get editandoComoLider(): boolean {
     return this.editando && !!this.atividade.idCriador && this.atividade.idCriador !== this.usuario.id;
   }
@@ -110,7 +106,7 @@ export class AddAtividadePage implements OnInit {
         this.formGroup.get('dataEntrega')?.setValue(this.atividade.dataEntrega);
         this.formGroup.get('dataEntrega')?.disable();
 
-        // Na edição a rota não traz a sala: carrega pela atividade (matérias e períodos)
+        // na edição a rota não traz a sala: carrega pela atividade (matérias e períodos)
         if (!this.activatedRoute.snapshot.params['idSala'] && this.atividade.idSala) {
           this.carregarSala(this.atividade.idSala);
         }
@@ -118,9 +114,7 @@ export class AddAtividadePage implements OnInit {
     } else {
       this.editando = false;
       this.atividade = new AtividadeModel();
-      // FormGroup.reset() sem argumentos zera TUDO pra null (inclusive
-      // "valePontuacao", que precisa voltar pra true) — por isso os valores
-      // padrão são passados explicitamente aqui.
+      // o reset() sem argumento deixa tudo null, inclusive o valePontuacao, ent passa os valores padrão
       this.formGroup.reset({
         titulo: '',
         descricao: '',
@@ -149,25 +143,25 @@ export class AddAtividadePage implements OnInit {
       this.sala = res;
       this.atividade.idSala = idSala;
 
-      // Com a sala carregada dá pra conferir período e pontos disponíveis
+      // com a sala carregada dá pra conferir período e pontos disponíveis
       this.formGroup.get('dataEntrega')?.updateValueAndValidity({ emitEvent: false });
       this.revalidarValor();
     }});
   }
 
-  /** Sem os dados não dá pra editar: avisa e volta (antes ficava o formulário vazio, sem aviso). */
+  // sem os dados n dá pra editar, ent avisa e volta
   private falhaAoCarregar(mensagem: string): void {
     this.exibirMensagem(`${mensagem} Verifique sua conexão e tente de novo.`);
     this.navController.back();
   }
 
-  // ===================== v2: matéria, período e pontos =====================
+  // ===================== matéria, período e pontos =====================
 
   get materias(): MateriaModel[] {
     return this.sala?.materias ?? [];
   }
 
-  /** Período em que a data escolhida cai (ou null se ainda não escolheu / está fora). */
+  // período em que a data escolhida cai (ou null se ainda não escolheu / está fora)
   get periodoSelecionado(): PeriodoModel | null {
     return periodoDaData(this.sala?.periodos ?? [], this.formGroup?.get('dataEntrega')?.value || this.atividade?.dataEntrega);
   }
@@ -177,7 +171,7 @@ export class AddAtividadePage implements OnInit {
     return this.materias.find(m => m.id === id) ?? null;
   }
 
-  /** Primeiro e último dia do ano letivo da sala, pra limitar o calendário. */
+  // primeiro e último dia do ano letivo da sala, pra limitar o calendário
   get dataMaxima(): string {
     const periodos = this.sala.periodos ?? [];
     return periodos.length ? periodos[periodos.length - 1].dataFim : '';
@@ -194,10 +188,8 @@ export class AddAtividadePage implements OnInit {
     return `${formatarDataBr(periodos[0].dataInicio)} a ${formatarDataBr(periodos[periodos.length - 1].dataFim)}`;
   }
 
-  /**
-   * Pontos que ainda cabem na matéria dentro do período da data escolhida.
-   * Soma as atividades da sala na mesma matéria/período (menos a que está sendo editada).
-   */
+  // pontos que ainda cabem na matéria no período da data escolhida
+  // soma as atividades da sala na mesma matéria e período (menos a que tá sendo editada)
   get pontosDisponiveis(): number | null {
     const periodo = this.periodoSelecionado;
     const materia = this.materiaSelecionada;
@@ -214,7 +206,7 @@ export class AddAtividadePage implements OnInit {
     this.formGroup.get('valor')?.updateValueAndValidity({ emitEvent: false });
   }
 
-  /** A data precisa cair em algum período da sala (só confere depois que a sala carregou). */
+  // a data precisa cair em algum período da sala (só confere depois que a sala carregou)
   private dentroDosPeriodos() {
     return (control: any) => {
       const periodos = this.sala?.periodos ?? [];
@@ -223,7 +215,7 @@ export class AddAtividadePage implements OnInit {
     };
   }
 
-  /** O valor não pode passar do que sobra na matéria naquele período. */
+  // o valor não pode passar do que sobra na matéria naquele período
   private cabeNoPeriodo() {
     return (control: any) => {
       const disponiveis = this.sala ? this.pontosDisponiveis : null;
@@ -240,9 +232,7 @@ export class AddAtividadePage implements OnInit {
     // verifica se a data escolhida é anterior a hoje
   }
 
-  /** Verdadeiro quando o campo é inválido e já foi "tocado" (perdeu o foco
-   * ou o usuário tentou salvar), pra não mostrar erro antes da hora
-   * enquanto a pessoa ainda está preenchendo o formulário. */
+  // campo inválido que já foi tocado (pra n mostrar erro enquanto a pessoa ainda tá preenchendo)
   campoInvalido(campo: string): boolean {
     const controle = this.formGroup.get(campo);
     return !!controle && controle.invalid && (controle.touched || controle.dirty);

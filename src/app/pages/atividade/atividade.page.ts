@@ -90,29 +90,27 @@ export class AtividadePage implements OnInit {
   usuario: UsuarioModel;
   criadorNome: string = '';
   comentarios: ComentarioModel[] = [];
-  /** Só na primeira carga: no "puxar para atualizar" os comentários atuais continuam na tela. */
+  // só na primeira carga: no "puxar para atualizar" os comentários atuais continuam na tela
   carregandoComentarios = true;
-  // feito com auxílio do Claude: comentários em páginas de 20 (os mais recentes primeiro)
+  // comentários vêm de 20 em 20 (os mais recentes primeiro)
   temMaisComentarios = false;
   carregandoAnteriores = false;
   private readonly TAMANHO_COMENTARIOS = 20;
   novoComentario: string = '';
   comentarioRespondendo: ComentarioModel | null = null;
   excluindo = false;
-  /** IDs de comentarios com exclusao em andamento (aguardando o "Desfazer"
-   * ou a resposta do servidor). Ficam escondidos mesmo que a lista seja
-   * recarregada antes da exclusao real terminar, senao eles "voltam"
-   * quando o usuario sai e entra na tela de novo. */
+  // ids dos comentários com exclusão em andamento. ficam escondidos mesmo se a lista recarregar
+  // antes da exclusão terminar, senão eles voltam quando a pessoa sai e entra na tela
   comentariosExcluindoIds = new Set<string>();
   enviandoComentario = false;
   carregando = true;
 
-  /** Tarefas de grupo atribuídas ao usuário logado para esta atividade. */
+  // tarefas de grupo atribuídas ao usuário logado para esta atividade
   minhasTarefas: TarefaModel[] = [];
 
-  /** v2: nota que o aluno lançou no boletim para esta atividade (se houver). */
+  // nota que o aluno lançou no boletim pra essa atividade (se tiver)
   minhaNota: NotaModel | null = null;
-  /** Nome de cada grupo do usuário na sala, por id (a tarefa só traz o id do grupo). */
+  // nome de cada grupo do usuário na sala, por id (a tarefa só traz o id do grupo)
   nomesGrupos: Record<string, string> = {};
 
   constructor(
@@ -190,7 +188,7 @@ export class AtividadePage implements OnInit {
     });
   }
 
-  /** Boletim: busca as notas do aluno na sala e fica com a desta atividade. */
+  // boletim: busca as notas do aluno na sala e fica com a desta atividade
   carregarMinhaNota() {
     this.minhaNota = null;
     if (!this.atividade.idSala || !(Number(this.atividade.valor) > 0)) return;
@@ -201,14 +199,14 @@ export class AtividadePage implements OnInit {
     });
   }
 
-  /** Abre o lançamento (ou a edição, se já existir) da nota desta atividade. */
+  // abre o lançamento (ou a edição, se já existir) da nota desta atividade
   abrirMinhaNota() {
     this.navController.navigateForward(['/sala', this.atividade.idSala, 'nota'], {
       queryParams: { atividade: this.atividade.id, origem: 'atividade' }
     });
   }
 
-  /** Busca as tarefas do usuário e fica só com as desta atividade. */
+  // busca as tarefas do usuário e fica só com as desta atividade
   carregarMinhasTarefas() {
     if (!this.usuario.id || !this.atividade.id) return;
 
@@ -295,9 +293,7 @@ export class AtividadePage implements OnInit {
     });
   }
 
-  /** Remove da lista recem-carregada os comentarios que ainda estao com
-   * exclusao pendente (dentro da janela do "Desfazer"), pra nao reaparecerem
-   * na tela por causa de um refresh antes da exclusao real acontecer. */
+  // tira da lista os comentários com exclusão pendente, pra n reaparecerem num refresh
   private filtrarPendentesExclusao(lista: ComentarioModel[]): ComentarioModel[] {
     return lista
       .filter(comentario => !this.comentariosExcluindoIds.has(comentario.id))
@@ -357,11 +353,8 @@ export class AtividadePage implements OnInit {
     this.comentariosExcluindoIds.add(removido.id);
     this.hapticsService.leve();
 
-    // A exclusao de verdade acontece IMEDIATAMENTE, antes de qualquer
-    // aviso de "Desfazer" - assim, se a pessoa atualizar a pagina durante
-    // a janela de desfazer (ou o aviso nunca aparecer, por qualquer
-    // motivo), o comentario ja foi excluido no servidor e nao "volta"
-    // depois de um refresh. O "Desfazer" so recria o comentario.
+    // exclui no servidor na hora, antes do aviso de desfazer. assim se a pessoa atualizar a página
+    // o comentário n volta. o desfazer só cria ele de novo
     this.comentarioService.excluir(removido.id).subscribe({
       next: async () => {
         this.comentariosExcluindoIds.delete(removido.id);
@@ -405,9 +398,7 @@ export class AtividadePage implements OnInit {
     return { lista: null, indice: -1 };
   }
 
-  /** Devolve um comentario removido otimisticamente pra lista atual (que
-   * pode ter sido substituida por um recarregamento enquanto a exclusao
-   * estava pendente, entao nao da pra confiar na referencia antiga). */
+  // devolve o comentário pra lista atual (ela pode ter sido recarregada enquanto a exclusão tava pendente)
   private reinserirComentario(comentario: ComentarioModel, indiceOriginal: number) {
     if (comentario.idComentarioPai) {
       const pai = this.comentarios.find(c => c.id === comentario.idComentarioPai);
@@ -453,13 +444,13 @@ export class AtividadePage implements OnInit {
     this.navController.navigateForward('/add-atividade-editar/' + this.atividade.id);
   }
 
-  /** Quem criou a atividade ou o líder da sala (moderação). */
+  // quem criou a atividade ou o líder da sala (moderação)
   get podeGerenciar(): boolean {
     return !!this.usuario.id
       && (this.usuario.id === this.atividade.idCriador || this.usuario.id === this.atividade.idLiderSala);
   }
 
-  /** O líder mexendo na atividade de outro colega. */
+  // o líder mexendo na atividade de outro colega
   get moderando(): boolean {
     return this.podeGerenciar && this.usuario.id !== this.atividade.idCriador;
   }
@@ -522,7 +513,7 @@ export class AtividadePage implements OnInit {
   get prazoEncerrado(): boolean {
     if (!this.atividade.dataEntrega) return false;
 
-    // no fuso do aparelho: com toISOString (UTC) a atividade de hoje aparecia encerrada depois das 21h
+    // no fuso do celular (com toISOString/UTC a de hoje aparecia encerrada depois das 21h)
     return this.atividade.dataEntrega < hojeIso();
   }
 
@@ -530,7 +521,7 @@ export class AtividadePage implements OnInit {
     return this.atividade.status || 'nao_iniciada';
   }
 
-  /** Concluída vale mais que o prazo: quem entregou não deve ver "Prazo encerrado". */
+  // se tá concluída n mostra "prazo encerrado"
   get concluida(): boolean {
     return !!this.atividade.estaNoCaderno && this.statusAtual === 'concluido';
   }
@@ -605,7 +596,7 @@ export class AtividadePage implements OnInit {
     });
   }
 
-  /** Aviso quando a ação desfaz a conclusão de uma atividade que já tem nota lançada. */
+  // aviso quando a ação desfaz a conclusão de uma atividade que já tem nota lançada
   private confirmarApesarDaNota(mensagem: string, textoConfirmar: string): Promise<boolean> {
     return this.confirmacaoService.confirmar('Atividade com nota lançada', mensagem, textoConfirmar);
   }

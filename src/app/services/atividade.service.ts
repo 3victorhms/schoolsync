@@ -42,7 +42,7 @@ export class AtividadeService {
     );
   }
 
-  /** Atividades no caderno do usuário logado (o usuário vem do token). */
+  // atividades no caderno do usuário logado (o usuário vem do token)
   listarMeuCaderno(): Observable<AtividadeModel[]> {
     return this.http.get<AtividadeModel[]>(`${this.API_URL}/caderno`);
   }

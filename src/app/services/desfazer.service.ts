@@ -5,18 +5,10 @@ import { Injectable } from '@angular/core';
 })
 export class DesfazerService {
 
-  /** Mostra um aviso tipo "toast" com um botao de "Desfazer", em HTML/CSS
-   * puro (sem depender do ion-toast do Ionic, que tem o mesmo problema de
-   * hidratacao do ion-alert - ver ConfirmacaoService). Resolve `true` se a
-   * pessoa clicar em "Desfazer" a tempo, `false` se o aviso simplesmente
-   * expirar.
-   *
-   * Importante: quem chama deve fazer a acao de verdade (a exclusao, por
-   * exemplo) ANTES de mostrar este aviso, nao depois dele - assim a acao
-   * fica persistida imediatamente, e um recarregamento da pagina durante
-   * a janela de "Desfazer" nao perde a exclusao. Undo aqui e so pra
-   * reverter a acao ja feita (recriar o que foi excluido), nao pra adiar
-   * a exclusao. */
+  // toast com botão "Desfazer" em html puro (o ion-toast tem o mesmo problema do ion-alert)
+  // resolve true se a pessoa clicar em desfazer a tempo e false se o aviso sumir
+  // quem chama tem que fazer a ação de verdade antes de mostrar o aviso, assim um refresh
+  // n perde a exclusão. o desfazer só reverte (recria o que foi excluído)
   mostrar(mensagem: string, textoAcao: string = 'Desfazer', duracaoMs: number = 4000): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
       const toast = document.createElement('div');
@@ -52,10 +44,7 @@ export class DesfazerService {
     });
   }
 
-  /** Aviso simples, sem botao de acao - pra confirmacoes que nao tem
-   * como ser desfeitas (por exemplo, remover um membro da sala, que so
-   * pode voltar com um novo convite). Mesmo HTML/CSS puro do `mostrar`,
-   * so que some sozinho sem esperar clique nenhum. */
+  // aviso simples sem botão, pra coisas que n tem como desfazer (ex.: remover membro da sala)
   mostrarMensagem(mensagem: string, duracaoMs: number = 2500): void {
     const toast = document.createElement('div');
     toast.className = 'desfazer-toast';

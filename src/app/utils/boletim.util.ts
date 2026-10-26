@@ -1,5 +1,5 @@
-// Monta o boletim a partir da sala (matérias, períodos, atividades) e das notas do aluno.
-// Usado pela tela do boletim e pela exportação em PDF, para os dois mostrarem os mesmos números.
+// monta o boletim a partir da sala (matérias, períodos, atividades) e das notas do aluno
+// usado pela tela do boletim e pela exportação em PDF, para os dois mostrarem os mesmos números
 
 import { NotaModel } from '../model/nota.model';
 import { PeriodoModel } from '../model/periodo.model';
@@ -13,9 +13,9 @@ export interface LinhaBoletim {
   notas: NotaModel[];
   /** Soma das notas obtidas. */
   obtido: number;
-  /** Soma do valor das avaliações que já têm nota. */
+  // soma do valor das avaliações que já têm nota
   avaliado: number;
-  /** Máximo possível (do período, ou a soma dos períodos no ano). */
+  // máximo possível (do período, ou a soma dos períodos no ano)
   maximo: number;
 }
 
@@ -29,7 +29,7 @@ export interface PeriodoBoletim {
 
 export interface Boletim {
   periodos: PeriodoBoletim[];
-  /** Acumulado do ano por matéria. */
+  // acumulado do ano por matéria
   ano: LinhaBoletim[];
   obtidoAno: number;
   avaliadoAno: number;
@@ -91,29 +91,27 @@ export function montarBoletim(sala: SalaModel, notas: NotaModel[]): Boletim {
   };
 }
 
-/** Aproveitamento em % sobre o que já foi avaliado (ex.: 16 de 20 = 80%). */
+// aproveitamento em % sobre o que já foi avaliado (ex.: 16 de 20 = 80%)
 export function aproveitamento(obtido: number, avaliado: number): number | null {
   return avaliado > 0 ? Math.round((obtido / avaliado) * 100) : null;
 }
 
-/** Meta usada no "quanto falta" (60% dos pontos, a média mais comum nas escolas). */
+// meta usada no "quanto falta" (60% dos pontos, a média mais comum nas escolas)
 export const META_APROVACAO = 0.6;
 
 export interface QuantoFalta {
-  /** 'atingida': já tem a meta; 'possivel': dá pra chegar com o que falta avaliar; 'impossivel': não dá mais. */
+  // 'atingida': já tem a meta; 'possivel': dá pra chegar com o que falta avaliar; 'impossivel': não dá mais
   situacao: 'atingida' | 'possivel' | 'impossivel' | 'sem-pontos';
-  /** Pontos que ainda faltam para a meta. */
+  // pontos que ainda faltam para a meta
   precisa: number;
-  /** Pontos que ainda não foram avaliados (máximo - avaliado). */
+  // pontos que ainda não foram avaliados (máximo - avaliado)
   emAberto: number;
-  /** Quanto dos pontos em aberto precisa tirar, em % (só quando 'possivel'). */
+  // quanto dos pontos em aberto precisa tirar, em % (só quando 'possivel')
   percentualDoAberto: number;
 }
 
-/**
- * Feito com auxílio do Claude: "quanto falta" para chegar à meta.
- * Ex.: máximo 25, já avaliado 15, tirou 9 -> meta 15, precisa 6 dos 10 em aberto (60%).
- */
+// quanto falta pra chegar na meta
+// ex.: máximo 25, avaliado 15, tirou 9 -> meta 15, precisa de 6 dos 10 em aberto (60%)
 export function quantoFalta(obtido: number, avaliado: number, maximo: number, meta = META_APROVACAO): QuantoFalta {
   const arredondar = (valor: number) => Math.round(valor * 10) / 10;
   if (maximo <= 0) return { situacao: 'sem-pontos', precisa: 0, emAberto: 0, percentualDoAberto: 0 };
@@ -126,10 +124,7 @@ export function quantoFalta(obtido: number, avaliado: number, maximo: number, me
   return { situacao: 'possivel', precisa, emAberto, percentualDoAberto: Math.round((precisa / emAberto) * 100) };
 }
 
-/**
- * Atividades que valem ponto, já passaram da data de entrega e ainda não têm nota
- * lançada: são as que o aluno provavelmente já pode registrar.
- */
+// atividades que valem ponto, já passaram da entrega e ainda n têm nota (o aluno provavelmente já pode lançar)
 export function atividadesSemNota(sala: SalaModel, notas: NotaModel[], idPeriodo?: string): AtividadeModel[] {
   const comNota = new Set(notas.filter(n => n.idAtividade).map(n => n.idAtividade));
   const hoje = hojeIso();
@@ -139,10 +134,8 @@ export function atividadesSemNota(sala: SalaModel, notas: NotaModel[], idPeriodo
     .sort((a, b) => a.dataEntrega.localeCompare(b.dataEntrega));
 }
 
-/**
- * Quanto ainda cabe numa matéria/período para uma nota avulsa: máximo do período menos
- * as atividades da sala e as outras avulsas do aluno (mesma regra da API).
- */
+// quanto ainda cabe numa matéria/período pra uma avulsa: máximo do período menos as atividades
+// da sala e as outras avulsas do aluno (mesma regra da API)
 export function disponivelParaAvulsa(
   sala: SalaModel,
   notas: NotaModel[],
@@ -162,13 +155,12 @@ export function disponivelParaAvulsa(
 }
 
 // ===================== situação por matéria =====================
-// Feito com auxílio do Claude. A aprovação é por matéria: 90% em física não compensa
-// 40% em química. Por isso o boletim não soma matérias diferentes num total geral;
-// ele mostra a situação de cada uma em relação à meta.
+// a aprovação é por matéria: 90% em física n compensa 40% em química,
+// ent o boletim n soma as matérias num total geral, mostra a situação de cada uma
 
 export type SituacaoMateria = 'revisar' | 'atingida' | 'no-caminho' | 'atencao' | 'fora-de-alcance' | 'sem-notas' | 'sem-pontos';
 
-/** Ordem de exibição dos contadores, da mais urgente para a mais tranquila. */
+// ordem de exibição dos contadores, da mais urgente para a mais tranquila
 export const ORDEM_SITUACOES: SituacaoMateria[] = ['revisar', 'fora-de-alcance', 'atencao', 'no-caminho', 'atingida', 'sem-notas'];
 
 export const ROTULO_SITUACAO: Record<SituacaoMateria, string> = {
@@ -184,23 +176,19 @@ export const ROTULO_SITUACAO: Record<SituacaoMateria, string> = {
 export interface AnaliseMateria {
   situacao: SituacaoMateria;
   falta: QuantoFalta;
-  /** Aproveitamento sobre o que já foi avaliado, ou null se nada foi avaliado. */
+  // aproveitamento sobre o que já foi avaliado, ou null se nada foi avaliado
   aproveitamento: number | null;
-  /** Pontos que as avulsas passam do limite (0 = dentro do limite). */
+  // pontos que as avulsas passam do limite (0 = dentro do limite)
   excesso: number;
 }
 
-/**
- * Situação de uma matéria em relação à meta:
- * - atingida: já tem os pontos da meta;
- * - fora de alcance: mesmo tirando tudo o que falta, não chega na meta;
- * - sem notas: nada avaliado ainda;
- * - atenção: ainda dá, mas precisa tirar no que falta uma % maior do que vem tirando
- *   (ex.: vem com 50% e precisa de 70% do que está em aberto);
- * - no caminho: precisa de uma % igual ou menor do que já vem tirando;
- * - revisar: as avulsas passam do limite do período, então a conta não é confiável
- *   (pode dar "meta atingida" com pontos que nem cabem no período). Vence as outras.
- */
+// situação da matéria em relação à meta:
+// atingida: já tem os pontos da meta
+// fora de alcance: nem tirando tudo o que falta chega na meta
+// sem notas: nada avaliado ainda
+// atenção: ainda dá, mas precisa tirar no que falta mais do que vem tirando (ex.: vem com 50% e precisa de 70%)
+// no caminho: precisa de uma % igual ou menor do que já vem tirando
+// revisar: as avulsas passam do limite do período, ent a conta n é confiável. vence as outras
 export function analisarMateria(linha: LinhaBoletim, meta = META_APROVACAO, excesso = 0): AnaliseMateria {
   const falta = quantoFalta(linha.obtido, linha.avaliado, linha.maximo, meta);
   const aprov = aproveitamento(linha.obtido, linha.avaliado);
@@ -217,10 +205,10 @@ export function analisarMateria(linha: LinhaBoletim, meta = META_APROVACAO, exce
 }
 
 export interface ResumoSituacoes {
-  /** Matérias que valem ponto na visão (ignora as sem pontos). */
+  // matérias que valem ponto na visão (ignora as sem pontos)
   total: number;
   contagem: Record<SituacaoMateria, number>;
-  /** Matérias que pedem foco, da mais crítica para a menos crítica. */
+  // matérias que pedem foco, da mais crítica para a menos crítica
   foco: LinhaBoletim[];
 }
 
@@ -237,7 +225,7 @@ export function resumirSituacoes(
   linhas.forEach(linha => {
     const analise = analisarMateria(linha, meta, excessoPorMateria.get(linha.idMateria) || 0);
     contagem[analise.situacao]++;
-    // Revisar vem primeiro, depois fora de alcance e atenção; dentro de cada grupo, a que precisa de mais
+    // revisar vem primeiro, depois fora de alcance e atenção; dentro de cada grupo, a que precisa de mais
     if (analise.situacao === 'revisar') criticas.push({ linha, peso: 10000 + analise.excesso });
     if (analise.situacao === 'fora-de-alcance') criticas.push({ linha, peso: 1000 + analise.falta.precisa });
     if (analise.situacao === 'atencao') criticas.push({ linha, peso: analise.falta.percentualDoAberto });
@@ -250,7 +238,7 @@ export function resumirSituacoes(
   };
 }
 
-/** Número no formato brasileiro (7,5), sem casas quando é inteiro. */
+// número no formato brasileiro (7,5), sem casas quando é inteiro
 export function formatarPontos(valor: number): string {
   return Number.isInteger(valor) ? String(valor) : String(arredondar(valor)).replace('.', ',');
 }
@@ -260,7 +248,7 @@ export function pts(valor: number): string {
   return `${formatarPontos(valor)} ${valor === 1 ? 'pt' : 'pts'}`;
 }
 
-/** Texto curto que acompanha a situação da matéria (mesmo texto na tela e no PDF). */
+// texto curto que acompanha a situação da matéria (mesmo texto na tela e no PDF)
 export function descreverSituacao(linha: LinhaBoletim, analise: AnaliseMateria, meta = META_APROVACAO): string {
   const { falta } = analise;
   switch (analise.situacao) {
@@ -280,7 +268,7 @@ export function descreverSituacao(linha: LinhaBoletim, analise: AnaliseMateria, 
   }
 }
 
-/** "Química", "Química e Física", "Química, Física e Biologia", "Química, Física e mais 2". */
+// "Química", "Química e Física", "Química, Física e Biologia", "Química, Física e mais 2"
 export function juntarNomes(nomes: string[], limite = 3): string {
   if (nomes.length <= 1) return nomes[0] ?? '';
   if (nomes.length > limite) {
@@ -290,11 +278,10 @@ export function juntarNomes(nomes: string[], limite = 3): string {
 }
 
 // ===================== avulsas acima do limite =====================
-// Feito com auxílio do Claude. A avulsa é pessoal e só é conferida quando o aluno a lança.
-// Se a turma cria uma atividade depois, a soma (atividades da sala + avulsas do aluno) pode
-// passar do máximo do período naquela matéria. Aqui calculamos esse excesso para avisar.
+// a avulsa só é conferida quando o aluno lança. se a turma cria uma atividade depois,
+// a soma (atividades + avulsas) pode passar do máximo do período. aqui calcula esse excesso
 
-/** Quanto as atividades da sala + as avulsas do aluno passam do máximo do período (0 = dentro do limite). */
+// quanto as atividades da sala + as avulsas do aluno passam do máximo do período (0 = dentro do limite)
 export function excessoNoPeriodo(sala: SalaModel, notas: NotaModel[], idMateria: string, periodo: PeriodoModel): number {
   const daSala = somar(
     (sala.atividades || []).filter(a => a.idMateria === idMateria && a.idPeriodo === periodo.id),
@@ -317,7 +304,7 @@ export interface ExcessoAvulsas {
   excesso: number;
 }
 
-/** Todos os pares matéria/período em que as avulsas do aluno passam do limite. */
+// todos os pares matéria/período em que as avulsas do aluno passam do limite
 export function excessosDeAvulsas(sala: SalaModel, notas: NotaModel[], idPeriodo?: string): ExcessoAvulsas[] {
   const resultado: ExcessoAvulsas[] = [];
   for (const periodo of sala.periodos || []) {

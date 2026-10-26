@@ -5,11 +5,11 @@ import { Observable } from 'rxjs';
 import { ComentarioModel } from '../model/comentario.model';
 import { ApiDeleteService } from './api-delete.service';
 
-/** Feito com auxílio do Claude: resposta paginada da API (ver Paginacao no backend). */
+// resposta paginada da API (Paginacao no back)
 export interface PaginaComentarios {
-  /** Comentários principais (com as respostas), do mais antigo para o mais novo. */
+  // comentários principais (com as respostas), do mais antigo para o mais novo
   itens: ComentarioModel[];
-  /** Ainda há comentários mais antigos. */
+  // ainda há comentários mais antigos
   temMais: boolean;
 }
 
@@ -22,7 +22,7 @@ export class ComentarioService {
 
   constructor(private http: HttpClient, private apiDelete: ApiDeleteService) { }
 
-  /** Os comentários mais recentes; com {@code antesDe}, os anteriores a esse horário. */
+  // os comentários mais recentes. com antesDe, os anteriores a esse horário
   listarPorAtividade(idAtividade: string, tamanho = 20, antesDe?: string): Observable<PaginaComentarios> {
     const params: Record<string, string | number> = { tamanho };
     if (antesDe) params['antesDe'] = antesDe;

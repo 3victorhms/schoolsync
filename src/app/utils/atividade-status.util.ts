@@ -1,5 +1,5 @@
-// Rótulo, ícone e classe CSS do status de uma atividade no caderno do aluno.
-// Compartilhado pelas listas de atividades (sala e página de atividades da sala).
+// rótulo, ícone e classe CSS do status de uma atividade no caderno do aluno
+// compartilhado pelas listas de atividades (sala e página de atividades da sala)
 
 export function classeStatus(status: string | null): string {
   if (!status || status === 'pendente') return 'nao_iniciada';

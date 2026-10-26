@@ -16,8 +16,7 @@ getTestBed().initTestEnvironment(
   platformBrowserDynamicTesting(),
 );
 
-// Dependências comuns dos componentes standalone. Cada teste continua podendo
-// sobrescrever esses providers quando precisar de um cenário específico.
+// providers comuns dos componentes standalone (cada teste pode sobrescrever)
 beforeEach(() => {
   TestBed.configureTestingModule({
     providers: [

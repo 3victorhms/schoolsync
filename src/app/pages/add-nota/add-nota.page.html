@@ -19,7 +19,7 @@
 
 <ion-content [fullscreen]="true">
   @if (carregando) {
-  <!-- skeleton no formato do formulário (feito com auxílio do Claude) -->
+  <!-- skeleton no formato do formulário -->
   <div class="carregando-form" aria-hidden="true">
     @for (i of [1, 2, 3, 4]; track i) {
     <div class="campo-skeleton">
@@ -34,7 +34,7 @@
   <form [formGroup]="formGroup" (ngSubmit)="salvar()">
 
     @if (!avulsa && atividade) {
-    <!-- Nota de atividade: dados vêm da atividade -->
+    <!-- nota de atividade: dados vêm da atividade -->
     <div class="atividade-resumo">
       <span class="atividade-resumo-titulo">{{ atividade.titulo }}</span>
       <span class="atividade-resumo-info">

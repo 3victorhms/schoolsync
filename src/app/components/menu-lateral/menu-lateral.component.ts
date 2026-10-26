@@ -1,7 +1,4 @@
-// feito com auxílio do Claude
-//
-// Menu lateral da versão web. Em tela larga (computador) ele substitui a barra
-// de abas flutuante do celular; no celular ele nem aparece (ver app.component).
+// menu lateral da versão web. no computador ele fica no lugar da barra de abas do celular
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';

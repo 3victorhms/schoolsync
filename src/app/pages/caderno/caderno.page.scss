@@ -1,4 +1,3 @@
-// Estilos feitos com auxílio das I.As Lovable e Claude
 
 ion-toolbar {
     --background: var(--app-bg);
@@ -176,8 +175,7 @@ ion-content {
         justify-content: center;
         flex-shrink: 0;
 
-        // Cor solida por status (como no app Lembretes do iOS), pra funcionar
-        // igual em qualquer tema sem precisar de ajuste.
+        // cor sólida por status (tipo o app Lembretes do iOS), funciona nos dois temas
         ion-icon {
             font-size: 17px;
             color: #ffffff !important;
@@ -213,8 +211,7 @@ ion-content {
                 white-space: nowrap;
             }
 
-            // a etiqueta "Tarefa" fica aqui na linha do título; antes o estilo estava
-            // só dentro de .row-meta e ela aparecia sem formatação
+            // etiqueta "Tarefa" na linha do título
             .tarefa-tag {
                 background: color-mix(in srgb, var(--app-success) 15%, transparent);
                 color: var(--app-success);
@@ -271,9 +268,7 @@ ion-content {
                     font-size: 13px;
                 }
 
-                // Escala de urgência (psicologia das cores), mesmo padrão do
-                // calendário em Início: quanto mais perto do prazo, mais
-                // forte/vermelha a cor da data.
+                // escala de urgência igual a do calendário: quanto mais perto do prazo, mais vermelha a data
                 &.urgencia-atrasada,
                 &.urgencia-hoje {
                     color: var(--app-urgencia-atrasada);
@@ -317,10 +312,9 @@ ion-content {
     }
 }
 
-// A barra de abas (ion-tab-bar) agora vive em app/pages/tabs/tabs.page.scss,
-// compartilhada pelas 4 telas principais.
+// a barra de abas fica no tabs.page.scss
 
-// v2: segunda linha de filtros, por matéria (toque de novo para desmarcar)
+// filtros por matéria (tocar de novo desmarca)
 .filtros.filtros-materia {
     margin-top: -10px;
 
@@ -330,7 +324,7 @@ ion-content {
     }
 }
 
-// Seção recolhida das arquivadas, no fim do caderno — feito com auxílio do Claude
+// seção das arquivadas, recolhida no fim do caderno
 .arquivadas-btn {
     display: flex;
     align-items: center;
@@ -380,7 +374,7 @@ ion-content {
     opacity: 0.75;
 }
 
-// títulos dos blocos (Atrasadas, Hoje...) — mesmo visual da agenda do Início
+// títulos dos blocos (Atrasadas, Hoje...), igual a agenda do início
 .caderno-secao .secao-titulo-caderno {
     display: flex;
     align-items: center;

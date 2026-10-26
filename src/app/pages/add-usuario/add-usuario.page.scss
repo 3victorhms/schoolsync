@@ -1,4 +1,3 @@
-// Estilos feitos com auxílio da I.A Lovable
 
 .login-content {
     --background: var(--app-bg);
@@ -144,7 +143,7 @@
     top: 50%;
     right: 8px;
     transform: translateY(-50%);
-    // 44px: tamanho mínimo recomendado para toque.
+    // 44px: tamanho mínimo recomendado para toque
     width: 44px;
     height: 44px;
     display: grid;
@@ -225,9 +224,7 @@
 }
 
 // ---------------------------------------------------------------------------
-// Versão web (computador) — feito com auxílio do Claude
-// Apresentação do app à esquerda e o formulário num cartão à direita.
-// No celular a lista de destaques fica escondida e nada muda.
+// versão web: apresentação do app na esquerda e o formulário num cartão na direita
 // ---------------------------------------------------------------------------
 .destaques {
     display: none;
