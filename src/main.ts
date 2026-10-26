@@ -10,6 +10,9 @@ import { authInterceptor } from './app/interceptors/auth.interceptor';
 import { servidorInterceptor } from './app/interceptors/servidor.interceptor';
 import { TituloPaginaService } from './app/services/titulo-pagina.service';
 import { TokenService } from './app/services/token.service';
+import { iniciarMonitorConexao } from './app/utils/conexao.util';
+
+iniciarMonitorConexao();
 
 bootstrapApplication(AppComponent, {
   providers: [

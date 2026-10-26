@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="/tabs/salas"></ion-back-button>
     </ion-buttons>
     <ion-title>
-      {{ editando ? 'Editar Sala' : 'Criar Sala' }}
+      {{ editando ? 'Editar sala' : 'Criar sala' }}
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -142,7 +142,7 @@
       </p>
     </section>
 
-    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="salvando">
+    <ion-button type="submit" expand="block" class="botao-criar" [disabled]="salvando || carregandoSala">
       @if (salvando) { <span class="btn-spinner" aria-hidden="true"></span> Salvando... } @else { {{ editando ? 'Salvar alterações' : 'Criar sala' }} }
     </ion-button>
 

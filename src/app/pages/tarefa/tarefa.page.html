@@ -1,13 +1,15 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>tarefa</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/notificacao"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Tarefa</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">tarefa</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="abrindo">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Abrindo a divisão de tarefas…</p>
+  </div>
 </ion-content>

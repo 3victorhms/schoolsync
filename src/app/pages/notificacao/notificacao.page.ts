@@ -7,6 +7,7 @@ import { bookOutline, checkmarkCircleOutline, checkmarkDoneOutline, notification
 import { NotificacaoModel } from '../../model/notificacao.model';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { Subscription } from 'rxjs';
+import { rotaDaNotificacao } from '../../utils/notificacao-rota.util';
 
 /** Bloco da lista ("Hoje", "Ontem"...). */
 interface GrupoNotificacoes {
@@ -81,7 +82,7 @@ export class NotificacaoPage {
 
   abrir(notificacao: NotificacaoModel): void {
     const navegar = () => {
-      const rota = this.rotaDaNotificacao(notificacao);
+      const rota = rotaDaNotificacao(notificacao.tipo, notificacao.targetId);
       if (rota) this.router.navigate(rota);
     };
     if (notificacao.lido) navegar();
@@ -144,15 +145,4 @@ export class NotificacaoPage {
     ).format(data);
   }
 
-  private rotaDaNotificacao(notificacao: NotificacaoModel): string[] | null {
-    if (!notificacao.targetId) return null;
-    const tipo = notificacao.tipo?.toUpperCase();
-    // o lembrete de tarefa usa "idGrupo:pedaço do id da tarefa" como alvo, ent o grupo é a primeira parte
-    if (tipo.includes('GRUPO') || tipo.includes('CONVITE')) return ['/grupo', notificacao.targetId.split(':')[0]];
-    if (tipo.includes('SALA')) return ['/sala', notificacao.targetId];
-    // o lembrete usa "idAtividade:data:dias" como alvo, ent a atividade é só a primeira parte
-    if (tipo.includes('ATIVIDADE')) return ['/atividade', notificacao.targetId.split(':')[0]];
-    if (tipo.includes('TAREFA')) return ['/tarefa'];
-    return null;
-  }
 }

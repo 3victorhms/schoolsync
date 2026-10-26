@@ -44,7 +44,6 @@ export class PerfilPage implements OnInit {
     { valor: 'sistema', rotulo: 'Sistema', icone: 'phone-portrait-outline' },
   ];
   inativando = false;
-  testandoNotificacaoPush = false;
 
   usuario = {
     id: this.usuarioService.buscarAutenticacao().id,
@@ -166,20 +165,6 @@ export class PerfilPage implements OnInit {
   alternarTema() {
     this.temaClaro = this.temaService.alternarTema();
     this.modoTema = this.temaService.modoAtual();
-  }
-
-  async testarNotificacao(): Promise<void> {
-    if (this.testandoNotificacaoPush) return;
-    this.testandoNotificacaoPush = true;
-
-    try {
-      await this.notificacaoPushService.testar();
-      mostrarAviso('Notificação push solicitada ao servidor. Ela deve chegar em instantes.', 5000);
-    } catch (erro: any) {
-      mostrarAviso(erro?.message || 'Não foi possível solicitar a notificação push de teste.', 6000);
-    } finally {
-      this.testandoNotificacaoPush = false;
-    }
   }
 
   async inativarConta() {

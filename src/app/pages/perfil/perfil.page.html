@@ -41,15 +41,15 @@
 
   <h3 class="group-title">Notificações</h3>
   <div class="group">
-    <button type="button" class="row" [class.loading]="testandoNotificacaoPush" [disabled]="testandoNotificacaoPush"
-      (click)="testarNotificacao()">
+    <!-- o teste de push foi para dentro de Configurar notificações (só aparece com o push ligado) -->
+    <button type="button" class="row" routerLink="/notificacao/configuracoes">
       <div class="row-icon azul">
         <ion-icon name="notifications-outline"></ion-icon>
       </div>
       <div class="row-body">
-        <span class="row-label">Testar notificação push</span>
+        <span class="row-label">Configurar notificações</span>
       </div>
-      <span class="btn-pill">{{ testandoNotificacaoPush ? 'Enviando...' : 'Testar' }}</span>
+      <ion-icon name="chevron-forward-outline" class="row-seta"></ion-icon>
     </button>
   </div>
 

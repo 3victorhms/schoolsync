@@ -370,6 +370,30 @@ ion-content.modo-edicao {
     }
 }
 
+// no celular as três colunas cortavam o ano das datas ("02/01/202"): as datas ficam
+// lado a lado com a largura toda e os pontos descem para uma linha própria
+@media (max-width: 480px) {
+    .periodo-campos {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .periodo-campo input[type="date"] {
+        padding: 0 6px;
+        font-size: 13.5px;
+    }
+
+    .periodo-pontos {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+
+        input {
+            width: 96px;
+        }
+    }
+}
+
 :host-context(body.tema-claro) .periodo-campo input[type="date"] {
     color-scheme: light;
 }

@@ -10,8 +10,8 @@ import { AtividadeModel } from 'src/app/model/atividade.model';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { NotificacaoService } from 'src/app/services/notificacao.service';
 import { addIcons } from 'ionicons';
-import { Subscription, from, of } from 'rxjs';
-import { catchError, finalize, mergeMap } from 'rxjs/operators';
+import { Observable, Subscription, from, of } from 'rxjs';
+import { catchError, finalize, mergeMap, shareReplay } from 'rxjs/operators';
 import { notificationsOutline, chevronBackOutline, chevronForwardOutline, peopleOutline, documentsOutline, calendarOutline, starOutline, homeOutline, bookOutline, personOutline, pencilOutline, chevronDownOutline, chevronUpOutline, sunnyOutline, alertCircleOutline } from 'ionicons/icons';
 import { calcularUrgencia, classeUrgencia, compararPorEntrega, deveArquivar, ordemUrgencia, rotuloUrgencia } from 'src/app/utils/urgencia.util';
 import { labelPontos } from 'src/app/utils/pontos.util';
@@ -216,6 +216,12 @@ export class InicioPage implements OnInit {
     // Desenha o calendário já (sem as marcações), em vez de deixar o cartão
     // vazio até a API responder; as marcações entram quando os dados chegam.
     if (!this.diasCalendario.length) this.gerarCalendario();
+    // uma só busca de GET /salas por carregamento, dividida entre os nomes e o filtro "Todas"
+    // (antes eram duas requisições iguais ao abrir a tela)
+    this.salas$ = this.salaService.listarMinhas().pipe(
+      catchError(() => of([] as SalaModel[])),
+      shareReplay(1)
+    );
     this.carregarNomesSalas();
     const filtroSalvo = this.lerFiltroSalvo();
     this.carregandoAgenda = true;
@@ -256,8 +262,14 @@ export class InicioPage implements OnInit {
     return this.filtro === 'caderno' ? this.atividadesCaderno : (this.atividadesTodas || []);
   }
 
+  private salas$: Observable<SalaModel[]> | null = null;
+
+  private minhasSalas(): Observable<SalaModel[]> {
+    return this.salas$ ?? this.salaService.listarMinhas();
+  }
+
   private carregarNomesSalas() {
-    this.salaService.listarMinhas().subscribe({
+    this.minhasSalas().subscribe({
       next: salas => {
         this.quantidadeSalas = (salas || []).length;
         (salas || []).forEach(sala => this.nomesSalas[sala.id] = sala.nome);
@@ -274,7 +286,7 @@ export class InicioPage implements OnInit {
     this.atividadesTodas = [];
     const acumuladas = new Map<string, AtividadeModel>();
 
-    this.salaService.listarMinhas().pipe(
+    this.minhasSalas().pipe(
       mergeMap(salas => {
         this.quantidadeSalas = (salas || []).length;
         (salas || []).forEach(sala => this.nomesSalas[sala.id] = sala.nome);

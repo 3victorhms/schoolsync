@@ -104,7 +104,7 @@ const rotasDaAplicacao: Routes = [
     loadComponent: () => import('./pages/atividade/atividade.page').then(m => m.AtividadePage)
   },
   {
-    path: 'tarefa',
+    path: 'tarefa/:id',
     title: 'Tarefa',
     loadComponent: () => import('./pages/tarefa/tarefa.page').then(m => m.TarefaPage)
   },
@@ -142,11 +142,6 @@ const rotasDaAplicacao: Routes = [
     path: 'add-atividade-editar/:id',
     title: 'Editar atividade',
     loadComponent: () => import('./pages/add-atividade/add-atividade.page').then(m => m.AddAtividadePage)
-  },
-  {
-    path: 'add-tarefa',
-    title: 'Nova tarefa',
-    loadComponent: () => import('./pages/add-tarefa/add-tarefa.page').then(m => m.AddTarefaPage)
   },
   {
     path: 'entrar-sala',

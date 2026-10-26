@@ -14,7 +14,7 @@ import { finalize } from 'rxjs';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
 import { PeriodoModel } from 'src/app/model/periodo.model';
 import { MateriaModel } from 'src/app/model/materia.model';
-import { formatarDataBr, periodoDaData } from 'src/app/utils/periodo.util';
+import { formatarDataBr, hojeIso, periodoDaData } from 'src/app/utils/periodo.util';
 
 @Component({
   selector: 'app-add-atividade',
@@ -31,11 +31,12 @@ export class AddAtividadePage implements OnInit {
   editando: boolean = false;
   salvando = false;
 
-  hoje = new Date().toISOString().split('T')[0];
-  // O método toISOString() retorna uma cadeia de caracteres (string) simplificada no formato ISO extendido (ISO 8601), 
-  // que é sempre 24 ou 27 caracteres de tamanho (YYYY-MM-DDTHH:mm:ss.sssZ ou ±YYYYYY-MM-DDTHH:mm:ss.sssZ, respectivamente). 
-  // O fuso horário é sempre o deslocamento zero UTC, como denotado pelo sufixo "Z".
-  // https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+  // "hoje" no fuso do aparelho. Antes era new Date().toISOString(), que usa UTC: depois das 21h
+  // o app achava que já era amanhã e não deixava criar atividade para o dia atual
+  // (correção feita com auxílio do Claude)
+  get hoje(): string {
+    return hojeIso();
+  }
 
   constructor(
     private formBuilder: FormBuilder, private toastController: ToastController,
@@ -95,7 +96,7 @@ export class AddAtividadePage implements OnInit {
 
     if (id) {
       this.editando = true;
-      this.atividadeService.buscarPorId(id).subscribe(res => {
+      this.atividadeService.buscarPorId(id).subscribe({ error: () => this.falhaAoCarregar('Não foi possível carregar a atividade.'), next: res => {
         if (!res) {
           this.exibirMensagem('Atividade não encontrada');
           return;
@@ -113,7 +114,7 @@ export class AddAtividadePage implements OnInit {
         if (!this.activatedRoute.snapshot.params['idSala'] && this.atividade.idSala) {
           this.carregarSala(this.atividade.idSala);
         }
-      });
+      }});
     } else {
       this.editando = false;
       this.atividade = new AtividadeModel();
@@ -139,7 +140,7 @@ export class AddAtividadePage implements OnInit {
   }
 
   private carregarSala(idSala: string): void {
-    this.salaService.buscarPorId(idSala).subscribe(res => {
+    this.salaService.buscarPorId(idSala).subscribe({ error: () => this.falhaAoCarregar('Não foi possível carregar a sala.'), next: res => {
       if (!res) {
         this.exibirMensagem('Sala não encontrada');
         this.navController.navigateBack('/tabs/salas');
@@ -151,7 +152,13 @@ export class AddAtividadePage implements OnInit {
       // Com a sala carregada dá pra conferir período e pontos disponíveis
       this.formGroup.get('dataEntrega')?.updateValueAndValidity({ emitEvent: false });
       this.revalidarValor();
-    });
+    }});
+  }
+
+  /** Sem os dados não dá pra editar: avisa e volta (antes ficava o formulário vazio, sem aviso). */
+  private falhaAoCarregar(mensagem: string): void {
+    this.exibirMensagem(`${mensagem} Verifique sua conexão e tente de novo.`);
+    this.navController.back();
   }
 
   // ===================== v2: matéria, período e pontos =====================
@@ -227,7 +234,7 @@ export class AddAtividadePage implements OnInit {
   }
   dataMinima() {
     return (control: any) => {
-      const hoje = new Date().toISOString().split('T')[0]; // "2026-05-28"
+      const hoje = hojeIso(); // "2026-05-28", no fuso do aparelho
       return control.value < hoje ? { dataPassada: true } : null;
     };
     // verifica se a data escolhida é anterior a hoje

@@ -6,6 +6,7 @@ import { Capacitor } from '@capacitor/core';
 import { ActionPerformed, PushNotifications } from '@capacitor/push-notifications';
 import { firstValueFrom } from 'rxjs';
 import { TokenService } from './token.service';
+import { rotaDaNotificacao } from '../utils/notificacao-rota.util';
 
 @Injectable({ providedIn: 'root' })
 export class NotificacaoPushService {
@@ -177,10 +178,8 @@ export class NotificacaoPushService {
     const targetId = String(dados['targetId'] || '');
     if (!targetId || !this.tokenService.estaValido()) return;
 
-    let rota: string[] | null = null;
-    if (tipo.includes('GRUPO') || tipo.includes('CONVITE')) rota = ['/grupo', targetId];
-    if (tipo.includes('ATIVIDADE')) rota = ['/atividade', targetId];
-    if (tipo.includes('TAREFA')) rota = ['/tarefa'];
+    // mesma regra da lista de notificações (antes o lembrete abria uma rota quebrada)
+    const rota = rotaDaNotificacao(tipo, targetId);
     if (rota) this.ngZone.run(() => this.router.navigate(rota));
   }
 }

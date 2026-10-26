@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/notificacao"></ion-back-button>
     </ion-buttons>
-    <ion-title>Configurar Notificações</ion-title>
+    <ion-title>Configurar notificações</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -45,6 +45,11 @@
         <span class="texto"><strong>Push (smartphone)</strong><small>Receber no painel de notificações do dispositivo</small></span>
         <ion-toggle [(ngModel)]="configuracao.push" aria-label="Notificações push"></ion-toggle>
       </div>
+      @if (pushSalvo) {
+      <button type="button" class="testar-push" [disabled]="testandoPush" (click)="testarPush()">
+        {{ testandoPush ? 'Enviando...' : 'Enviar notificação de teste' }}
+      </button>
+      }
     </section>
 
     <section class="lembretes">

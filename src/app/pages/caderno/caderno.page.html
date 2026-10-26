@@ -112,9 +112,10 @@
               <ion-icon name="book-outline"></ion-icon>
               {{ tarefa.materiaAtividade || 'Sem matéria' }}
             </span>
-            <span class="row-data">
+            <!-- prazo da parte (antes mostrava a data de criação da tarefa) -->
+            <span class="row-data" [ngClass]="tarefa.prazo ? classeUrgenciaTarefa(tarefa) : ''">
               <ion-icon name="calendar-outline"></ion-icon>
-              {{ formatarData(tarefa.dataCriacao) }}
+              {{ tarefa.prazo ? formatarData(tarefa.prazo) : 'Sem prazo' }}
             </span>
             <span class="atividade-status" [ngClass]="classeStatus(tarefa.status)">{{ labelStatus(tarefa.status) }}</span>
           </div>
