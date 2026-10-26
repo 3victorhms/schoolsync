@@ -201,12 +201,26 @@ export class BoletimPage {
     }
     const periodo = this.boletim.periodos.find(p => p.periodo.id === this.visao);
     this.linhas = this.visao === 'ano' ? this.boletim.ano : (periodo?.linhas ?? []);
-    this.analises = new Map(this.linhas.map(linha => [linha.idMateria, analisarMateria(linha)]));
-    this.resumo = resumirSituacoes(this.linhas);
-    this.pendentes = atividadesSemNota(this.sala, this.notas, this.visao === 'ano' ? undefined : this.visao);
+    // o excesso das avulsas vem antes: a matéria com excesso vira "Revisar notas"
     this.excessos = excessosDeAvulsas(this.sala, this.notas, this.visao === 'ano' ? undefined : this.visao);
     this.excessoPorMateria = new Map();
     this.excessos.forEach(e => this.excessoPorMateria.set(e.idMateria, (this.excessoPorMateria.get(e.idMateria) || 0) + e.excesso));
+    this.analises = new Map(this.linhas.map(linha =>
+      [linha.idMateria, analisarMateria(linha, META_APROVACAO, this.excessoPorMateria.get(linha.idMateria) || 0)]));
+    this.resumo = resumirSituacoes(this.linhas, META_APROVACAO, this.excessoPorMateria);
+    this.pendentes = atividadesSemNota(this.sala, this.notas, this.visao === 'ano' ? undefined : this.visao);
+  }
+
+  /**
+   * Feito com auxílio do Claude: "Resolver" do aviso de excesso. Abre a avulsa de maior valor
+   * daquela matéria/período, já mostrando quanto ainda cabe (?ajustar=1 no add-nota).
+   */
+  resolverExcesso(excesso: ExcessoAvulsas) {
+    const avulsa = this.notas
+      .filter(n => n.avulsa && n.idMateria === excesso.idMateria && n.idPeriodo === excesso.idPeriodo)
+      .sort((a, b) => b.valorMaximo - a.valorMaximo)[0];
+    if (!avulsa) return;
+    this.router.navigate(['/sala', this.idSala, 'nota', avulsa.id], { queryParams: { ajustar: 1 } });
   }
 
   /** Aviso do topo quando alguma avulsa passou do limite do período. */
@@ -220,10 +234,6 @@ export class BoletimPage {
     return `Suas notas avulsas passam do limite do período em ${juntarNomes(nomes, 4)}.`;
   }
 
-  textoExcessoMateria(idMateria: string): string {
-    const excesso = this.excessoPorMateria.get(idMateria) || 0;
-    return excesso > 0 ? `Avulsas passam do limite em ${pts(excesso)}` : '';
-  }
 
   analise(linha: LinhaBoletim): AnaliseMateria {
     return this.analises.get(linha.idMateria) ?? analisarMateria(linha);
@@ -237,6 +247,10 @@ export class BoletimPage {
   get tituloResumo(): string {
     const resumo = this.resumo;
     if (!resumo || !resumo.total) return 'Nenhuma matéria vale pontos aqui';
+    if (resumo.contagem['revisar']) {
+      const nomes = resumo.foco.filter(l => (this.excessoPorMateria.get(l.idMateria) || 0) > 0).map(l => l.nomeMateria);
+      return `Revise as notas avulsas de ${juntarNomes(nomes)}`;
+    }
     if (resumo.foco.length) return `Foque em ${juntarNomes(resumo.foco.map(l => l.nomeMateria))}`;
     if (resumo.contagem['atingida'] === resumo.total) return 'Meta atingida em todas as matérias';
     if (resumo.contagem['sem-notas'] === resumo.total) {
@@ -247,6 +261,7 @@ export class BoletimPage {
 
   rotuloContagem(situacao: SituacaoMateria, quantidade: number): string {
     switch (situacao) {
+      case 'revisar': return `${quantidade} para revisar`;
       case 'atingida': return `${quantidade} com meta atingida`;
       case 'no-caminho': return `${quantidade} no caminho`;
       case 'atencao': return `${quantidade} em atenção`;
@@ -288,6 +303,14 @@ export class BoletimPage {
 
   async exportar() {
     if (!this.boletim || this.exportando) return;
+    // feito com auxílio do Claude: com avulsa acima do limite a conta da matéria fica inflada,
+    // e o PDF sairia com um número impossível. Só libera depois de ajustar.
+    const pendencias = excessosDeAvulsas(this.sala, this.notas);
+    if (pendencias.length) {
+      const onde = juntarNomes(pendencias.map(e => `${e.nomeMateria} (${e.nomePeriodo})`), 3);
+      mostrarAviso(`Antes de gerar o PDF, ajuste as notas avulsas de ${onde}: elas passam do limite do período.`, 5000);
+      return;
+    }
     this.exportando = true;
     try {
       const { exportarBoletimPdf } = await import('src/app/utils/boletim-pdf.util');

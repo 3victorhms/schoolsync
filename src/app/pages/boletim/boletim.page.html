@@ -82,11 +82,21 @@
     @if (excessos.length) {
     <div class="aviso-excesso" role="note">
       <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
-      <span>
+      <div class="aviso-excesso-corpo">
         <strong>{{ textoExcesso }}</strong>
-        Isso acontece quando a turma cadastra uma atividade depois que você lançou a avulsa.
-        Edite ou exclua uma nota avulsa dessa matéria para voltar ao limite.
-      </span>
+        <span>
+          Isso acontece quando a turma cadastra uma atividade depois que você lançou a avulsa.
+          Diminua o valor ou exclua a avulsa para voltar ao limite. Até lá, o PDF fica bloqueado.
+        </span>
+        <div class="aviso-excesso-acoes">
+          @for (excesso of excessos; track excesso.idMateria + excesso.idPeriodo) {
+          <button type="button" class="resolver-btn" (click)="resolverExcesso(excesso)">
+            Resolver{{ excessos.length > 1 ? ' ' + excesso.nomeMateria + ' (' + excesso.nomePeriodo + ')' : '' }}
+            <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+          </button>
+          }
+        </div>
+      </div>
     </div>
     }
 
@@ -148,9 +158,6 @@
               <span class="situacao-chip" [ngClass]="info.situacao">{{ rotuloSituacao[info.situacao] }}</span>
               <span class="situacao-texto">{{ descricao(linha) }}</span>
             </div>
-            }
-            @if (textoExcessoMateria(linha.idMateria); as excessoTexto) {
-            <span class="excesso-linha"><ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>{{ excessoTexto }}</span>
             }
           </div>
           <ion-icon [name]="abertas.has(linha.idMateria) ? 'chevron-up-outline' : 'chevron-down-outline'" class="row-seta"></ion-icon>

@@ -124,6 +124,12 @@ export class AddNotaPage {
         }
 
         this.prepararFormulario(idPeriodoSugerido, idMateriaSugerida);
+        // vindo do "Resolver" do boletim: já mostra quanto cabe no período
+        if (this.activatedRoute.snapshot.queryParams['ajustar']) {
+          const valorMaximo = this.formGroup.get('valorMaximo');
+          valorMaximo?.markAsTouched();
+          valorMaximo?.updateValueAndValidity();
+        }
       },
       error: () => {
         mostrarAviso('Não foi possível carregar a sala.');

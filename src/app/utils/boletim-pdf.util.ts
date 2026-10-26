@@ -43,6 +43,7 @@ const COR_LINHA: [number, number, number] = [220, 224, 230];
 
 // Cor do texto da situação de cada matéria (feito com auxílio do Claude)
 const COR_SITUACAO: Record<SituacaoMateria, [number, number, number]> = {
+  'revisar': [190, 120, 0],
   'atingida': [40, 140, 80],
   'no-caminho': COR_DESTAQUE,
   'atencao': [190, 120, 0],
