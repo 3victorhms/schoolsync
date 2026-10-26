@@ -102,6 +102,17 @@
     </div>
     } @else {
 
+    <!-- feito com auxílio do Claude: alerta de semana pesada -->
+    @if (textoSemanaPesada) {
+    <div class="semana-pesada" role="note">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <span>
+        <strong>Semana pesada</strong>
+        {{ textoSemanaPesada }}
+      </span>
+    </div>
+    }
+
     @for (secao of secoes; track secao.chave) {
     <div class="secao-agenda">
       <h3 class="secao-agenda-titulo" [class.alerta]="secao.alerta">

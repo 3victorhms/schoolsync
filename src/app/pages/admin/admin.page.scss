@@ -77,3 +77,10 @@ ion-content { --background: var(--app-bg); }
   &.remover { background: var(--app-surface-strong); color: var(--app-muted); }
   &:disabled { opacity: .5; cursor: default; }
 }
+
+// skeleton do carregamento
+.carregando-admin { display: flex; flex-direction: column; gap: 14px; }
+.carregando-admin .skeleton-line { display: block; }
+.carregando-admin .resumo-item .skeleton-line-sub { width: 60%; }
+.numero-skeleton { display: block; width: 28px; height: 22px; margin-bottom: 6px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

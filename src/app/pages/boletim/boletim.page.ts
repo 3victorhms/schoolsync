@@ -20,6 +20,7 @@ import { NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
   addOutline,
+  alertCircleOutline,
   calendarOutline,
   chevronDownOutline,
   chevronForwardOutline,
@@ -50,8 +51,11 @@ import {
   analisarMateria,
   atividadesSemNota,
   descreverSituacao,
+  ExcessoAvulsas,
+  excessosDeAvulsas,
   formatarPontos,
   juntarNomes,
+  pts,
   montarBoletim,
   resumirSituacoes
 } from 'src/app/utils/boletim.util';
@@ -105,7 +109,7 @@ export class BoletimPage {
   ) {
     this.usuario = this.usuarioService.buscarAutenticacao();
     addIcons({
-      addOutline, calendarOutline, chevronDownOutline, chevronForwardOutline,
+      addOutline, alertCircleOutline, calendarOutline, chevronDownOutline, chevronForwardOutline,
       chevronUpOutline, documentTextOutline, downloadOutline, schoolOutline
     });
   }
@@ -175,6 +179,9 @@ export class BoletimPage {
   resumo: ResumoSituacoes | null = null;
   pendentes: AtividadeModel[] = [];
   mostrarPendentes = false;
+  /** Matérias/períodos em que as avulsas do aluno passam do limite (ver excessoNoPeriodo). */
+  excessos: ExcessoAvulsas[] = [];
+  excessoPorMateria = new Map<string, number>();
 
   /** Meta do "quanto falta", em % (60). */
   readonly metaPercentual = Math.round(META_APROVACAO * 100);
@@ -188,6 +195,8 @@ export class BoletimPage {
       this.analises = new Map();
       this.resumo = null;
       this.pendentes = [];
+      this.excessos = [];
+      this.excessoPorMateria = new Map();
       return;
     }
     const periodo = this.boletim.periodos.find(p => p.periodo.id === this.visao);
@@ -195,6 +204,25 @@ export class BoletimPage {
     this.analises = new Map(this.linhas.map(linha => [linha.idMateria, analisarMateria(linha)]));
     this.resumo = resumirSituacoes(this.linhas);
     this.pendentes = atividadesSemNota(this.sala, this.notas, this.visao === 'ano' ? undefined : this.visao);
+    this.excessos = excessosDeAvulsas(this.sala, this.notas, this.visao === 'ano' ? undefined : this.visao);
+    this.excessoPorMateria = new Map();
+    this.excessos.forEach(e => this.excessoPorMateria.set(e.idMateria, (this.excessoPorMateria.get(e.idMateria) || 0) + e.excesso));
+  }
+
+  /** Aviso do topo quando alguma avulsa passou do limite do período. */
+  get textoExcesso(): string {
+    if (!this.excessos.length) return '';
+    const nomes = [...new Set(this.excessos.map(e => e.nomeMateria))];
+    if (this.excessos.length === 1) {
+      const e = this.excessos[0];
+      return `Em ${e.nomeMateria} (${e.nomePeriodo}), suas notas avulsas passam do limite do período em ${pts(e.excesso)}.`;
+    }
+    return `Suas notas avulsas passam do limite do período em ${juntarNomes(nomes, 4)}.`;
+  }
+
+  textoExcessoMateria(idMateria: string): string {
+    const excesso = this.excessoPorMateria.get(idMateria) || 0;
+    return excesso > 0 ? `Avulsas passam do limite em ${pts(excesso)}` : '';
   }
 
   analise(linha: LinhaBoletim): AnaliseMateria {
@@ -267,6 +295,7 @@ export class BoletimPage {
         boletim: this.boletim,
         nomeSala: this.sala.nome,
         nomeAluno: this.usuario?.nome || 'Aluno',
+        excessos: excessosDeAvulsas(this.sala, this.notas),
       });
     } catch (erro: any) {
       // Fechar a folha de compartilhamento sem escolher nada não é erro

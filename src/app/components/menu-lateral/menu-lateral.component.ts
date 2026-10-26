@@ -80,9 +80,7 @@ export class MenuLateralComponent implements OnInit, OnDestroy {
     );
 
     this.inscricoes.add(
-      this.notificacaoService.notificacoes$.subscribe(notificacoes => {
-        this.naoLidas = notificacoes.filter(notificacao => !notificacao.lido).length;
-      })
+      this.notificacaoService.naoLidas$.subscribe(quantidade => this.naoLidas = quantidade)
     );
   }
 

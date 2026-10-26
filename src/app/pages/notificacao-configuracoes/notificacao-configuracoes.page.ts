@@ -28,15 +28,26 @@ export class NotificacaoConfiguracoesPage {
     addIcons({ checkmarkOutline, notificationsOutline, phonePortraitOutline, timeOutline });
   }
 
+  // feito com auxílio do Claude: antes a tela mostrava os valores padrão enquanto a API respondia,
+  // e dava para salvar por cima da configuração real. Agora espera carregar.
+  carregando = true;
+  erroCarregar = false;
+
   ionViewWillEnter(): void {
+    this.carregar();
+  }
+
+  carregar(): void {
+    this.carregando = true;
+    this.erroCarregar = false;
     this.service.buscarConfiguracao().subscribe({
-      next: configuracao => this.configuracao = configuracao,
-      error: () => undefined
+      next: configuracao => { this.configuracao = configuracao; this.carregando = false; },
+      error: () => { this.carregando = false; this.erroCarregar = true; }
     });
   }
 
   async salvar(): Promise<void> {
-    if (this.salvando) return;
+    if (this.salvando || this.carregando || this.erroCarregar) return;
     this.salvando = true;
     try {
       if (this.configuracao.push) {

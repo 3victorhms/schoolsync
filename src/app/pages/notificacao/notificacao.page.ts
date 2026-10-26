@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonRefresher, IonRefresherContent, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonRefresher, IonRefresherContent, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { bookOutline, checkmarkCircleOutline, checkmarkDoneOutline, notificationsOutline, peopleOutline, settingsOutline } from 'ionicons/icons';
 import { NotificacaoModel } from '../../model/notificacao.model';
@@ -20,7 +20,7 @@ interface GrupoNotificacoes {
   templateUrl: './notificacao.page.html',
   styleUrls: ['./notificacao.page.scss'],
   standalone: true,
-  imports: [IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonRefresher, IonRefresherContent, IonTitle, IonToolbar, CommonModule, RouterLink]
+  imports: [IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonRefresher, IonRefresherContent, IonTitle, IonToolbar, CommonModule, RouterLink]
 })
 export class NotificacaoPage {
   notificacoes: NotificacaoModel[] = [];
@@ -43,7 +43,7 @@ export class NotificacaoPage {
     this.carregando = true;
     this.erro = '';
     this.service.listar().subscribe({
-      next: notificacoes => { this.notificacoes = notificacoes; this.carregando = false; event?.target.complete(); },
+      next: pagina => { this.notificacoes = pagina.itens; this.carregando = false; event?.target.complete(); },
       error: () => { this.notificacoes = []; this.carregando = false; this.erro = 'Não foi possível carregar as notificações. Tente novamente.'; event?.target.complete(); }
     });
   }
@@ -52,12 +52,27 @@ export class NotificacaoPage {
     this.carregarNotificacoes(event);
   }
 
+  // feito com auxílio do Claude: rolagem infinita, 20 notificações por vez
+  get temMais(): boolean {
+    return this.service.temMais;
+  }
+
+  carregarMais(event: any): void {
+    this.service.carregarMais().subscribe({
+      next: () => event?.target.complete(),
+      error: () => {
+        event?.target.complete();
+        this.erro = 'Não foi possível carregar mais notificações. Puxe para atualizar.';
+      }
+    });
+  }
+
   ionViewWillLeave(): void {
     this.notificacoesSubscription?.unsubscribe();
   }
 
   marcarTodas(): void {
-    if (this.notificacoes.every(item => item.lido)) return;
+    if (this.naoLidas === 0) return;
     this.erro = '';
     this.service.marcarTodasComoLidas().subscribe({
       error: () => this.erro = 'Não foi possível marcar as notificações como lidas.'
@@ -82,7 +97,7 @@ export class NotificacaoPage {
   }
 
   get naoLidas(): number {
-    return this.notificacoes.filter(item => !item.lido).length;
+    return this.service.quantidadeNaoLidas;
   }
 
   // feito com auxílio do Claude: separa por dia (mais nova primeiro), igual app de mensagens

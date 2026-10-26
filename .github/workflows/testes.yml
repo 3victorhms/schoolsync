@@ -1,0 +1,31 @@
+# Feito com auxílio do Claude: compila o app e roda os testes (Karma + Chrome sem janela)
+# a cada push e pull request.
+name: Testes do app
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      # npm install em vez de npm ci: o package-lock.json pode estar atrás do package.json.
+      # Quando o lock estiver atualizado no repositório, dá para trocar por "npm ci".
+      - name: Instalar dependências
+        run: npm install --no-audit --no-fund
+
+      - name: Compilar
+        run: npm run build
+
+      - name: Rodar os testes
+        run: npx ng test --watch=false --browsers=ChromeHeadlessCI

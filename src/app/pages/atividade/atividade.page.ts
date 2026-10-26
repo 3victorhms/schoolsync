@@ -91,6 +91,10 @@ export class AtividadePage implements OnInit {
   comentarios: ComentarioModel[] = [];
   /** Só na primeira carga: no "puxar para atualizar" os comentários atuais continuam na tela. */
   carregandoComentarios = true;
+  // feito com auxílio do Claude: comentários em páginas de 20 (os mais recentes primeiro)
+  temMaisComentarios = false;
+  carregandoAnteriores = false;
+  private readonly TAMANHO_COMENTARIOS = 20;
   novoComentario: string = '';
   comentarioRespondendo: ComentarioModel | null = null;
   excluindo = false;
@@ -257,15 +261,36 @@ export class AtividadePage implements OnInit {
     }
 
     this.carregandoComentarios = this.comentarios.length === 0;
-    this.comentarioService.listarPorAtividade(this.atividade.id).pipe(
+    // recarregando (ex.: depois de comentar), pede o mesmo tanto que já estava na tela
+    const tamanho = Math.max(this.TAMANHO_COMENTARIOS, this.comentarios.length);
+    this.comentarioService.listarPorAtividade(this.atividade.id, tamanho).pipe(
       finalize(() => this.carregandoComentarios = false)
     ).subscribe({
-      next: (res) => {
-        this.comentarios = this.filtrarPendentesExclusao(res || []);
+      next: (pagina) => {
+        this.comentarios = this.filtrarPendentesExclusao(pagina?.itens || []);
+        this.temMaisComentarios = !!pagina?.temMais;
       },
       error: () => {
         this.comentarios = [];
+        this.temMaisComentarios = false;
       }
+    });
+  }
+
+  carregarComentariosAnteriores() {
+    const maisAntigo = this.comentarios[0];
+    if (!this.atividade.id || !maisAntigo || this.carregandoAnteriores) return;
+    this.carregandoAnteriores = true;
+    this.comentarioService.listarPorAtividade(this.atividade.id, this.TAMANHO_COMENTARIOS, maisAntigo.dataCriacao).pipe(
+      finalize(() => this.carregandoAnteriores = false)
+    ).subscribe({
+      next: (pagina) => {
+        const ids = new Set(this.comentarios.map(c => c.id));
+        const anteriores = this.filtrarPendentesExclusao(pagina?.itens || []).filter(c => !ids.has(c.id));
+        this.comentarios = [...anteriores, ...this.comentarios];
+        this.temMaisComentarios = !!pagina?.temMais;
+      },
+      error: () => mostrarAviso('Não foi possível carregar os comentários anteriores.')
     });
   }
 

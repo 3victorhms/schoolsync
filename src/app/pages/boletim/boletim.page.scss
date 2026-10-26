@@ -321,3 +321,45 @@
     font-weight: 700;
     cursor: pointer;
 }
+
+// avulsas acima do limite do período — feito com auxílio do Claude
+.aviso-excesso {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--app-warning) 14%, transparent);
+    color: var(--app-text-soft);
+    font-size: 13px;
+    line-height: 1.45;
+
+    ion-icon {
+        flex-shrink: 0;
+        margin-top: 1px;
+        font-size: 18px;
+        color: var(--app-warning);
+    }
+
+    strong {
+        display: block;
+        margin-bottom: 2px;
+        color: var(--app-text);
+        font-size: 14px;
+    }
+}
+
+.excesso-linha {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    color: var(--app-warning);
+    font-size: 12px;
+    font-weight: 700;
+
+    ion-icon {
+        font-size: 14px;
+    }
+}

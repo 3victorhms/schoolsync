@@ -19,6 +19,7 @@ import { formatarDataCurta, parsearData } from 'src/app/utils/data.util';
 import { AtividadeItemComponent } from 'src/app/components/atividade-item/atividade-item.component';
 import { criarRecarregadorDeAba } from 'src/app/utils/recarregar-aba.util';
 import { periodoAtual, situacaoPeriodo } from 'src/app/utils/periodo.util';
+import { AnaliseSemana, analisarSemana, rotuloDia } from 'src/app/utils/semana.util';
 
 interface DiaCalendario {
   numero: number;
@@ -112,8 +113,8 @@ export class InicioPage implements OnInit {
     this.notificacaoService.listar().subscribe({ error: () => this.notificacoesNaoLidas = 0 });
     this.notificacaoService.conectar();
     this.notificacoesSubscription?.unsubscribe();
-    this.notificacoesSubscription = this.notificacaoService.notificacoes$.subscribe(notificacoes => {
-      this.notificacoesNaoLidas = notificacoes.filter(notificacao => !notificacao.lido).length;
+    this.notificacoesSubscription = this.notificacaoService.naoLidas$.subscribe(quantidade => {
+      this.notificacoesNaoLidas = quantidade;
     });
   }
 
@@ -341,6 +342,7 @@ export class InicioPage implements OnInit {
 
     // O calendário mostra a mesma fonte escolhida no filtro.
     this.atividadesCalendario = this.atividadesAtuais;
+    this.semana = analisarSemana(this.atividadesAtuais);
     this.gerarCalendario();
     this.carregarAtividadesDoDia();
   }
@@ -505,6 +507,24 @@ export class InicioPage implements OnInit {
   }
 
   /** Entregas dos próximos 7 dias (hoje incluso) e quantas já estão concluídas. */
+  // feito com auxílio do Claude: alerta de semana pesada (ver semana.util.ts)
+  semana: AnaliseSemana | null = null;
+
+  get textoSemanaPesada(): string {
+    const semana = this.semana;
+    if (!semana?.pesada) return '';
+    const total = semana.pendentes.length;
+    const partes = [`${total} ${total === 1 ? 'entrega pendente' : 'entregas pendentes'} nos próximos 7 dias`
+      + (semana.pontos > 0 ? `, valendo ${labelPontos(semana.pontos)}` : '') + '.'];
+    if (semana.diaMaisCheio && semana.diaMaisCheio.quantidade >= 2) {
+      partes.push(`${semana.diaMaisCheio.quantidade} delas ${rotuloDia(semana.diaMaisCheio.data)}.`);
+    }
+    if (semana.maisValiosa) {
+      partes.push(`Comece por ${semana.maisValiosa.titulo}, que vale ${labelPontos(Number(semana.maisValiosa.valor))}.`);
+    }
+    return partes.join(' ');
+  }
+
   get resumoSemana(): { total: number; concluidas: number; percentual: number } {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);

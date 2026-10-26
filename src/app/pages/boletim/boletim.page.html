@@ -78,6 +78,18 @@
     </div>
     }
 
+    <!-- feito com auxílio do Claude: avulsa lançada antes de a turma criar uma atividade pode estourar o limite -->
+    @if (excessos.length) {
+    <div class="aviso-excesso" role="note">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <span>
+        <strong>{{ textoExcesso }}</strong>
+        Isso acontece quando a turma cadastra uma atividade depois que você lançou a avulsa.
+        Edite ou exclua uma nota avulsa dessa matéria para voltar ao limite.
+      </span>
+    </div>
+    }
+
     <!-- Atividades que já podem receber nota -->
     @if (pendentes.length) {
     <button type="button" class="pendentes-aviso" (click)="mostrarPendentes = !mostrarPendentes"
@@ -136,6 +148,9 @@
               <span class="situacao-chip" [ngClass]="info.situacao">{{ rotuloSituacao[info.situacao] }}</span>
               <span class="situacao-texto">{{ descricao(linha) }}</span>
             </div>
+            }
+            @if (textoExcessoMateria(linha.idMateria); as excessoTexto) {
+            <span class="excesso-linha"><ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>{{ excessoTexto }}</span>
             }
           </div>
           <ion-icon [name]="abertas.has(linha.idMateria) ? 'chevron-up-outline' : 'chevron-down-outline'" class="row-seta"></ion-icon>
