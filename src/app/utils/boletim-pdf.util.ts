@@ -8,6 +8,7 @@
 import { Capacitor } from '@capacitor/core';
 import {
   Boletim,
+  ExcessoAvulsas,
   LinhaBoletim,
   META_APROVACAO,
   ROTULO_SITUACAO,
@@ -24,6 +25,8 @@ export interface DadosPdfBoletim {
   boletim: Boletim;
   nomeSala: string;
   nomeAluno: string;
+  /** Matérias/períodos em que as avulsas passam do limite (aviso no PDF). */
+  excessos?: ExcessoAvulsas[];
 }
 
 const MARGEM = 15;
@@ -265,6 +268,17 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
       ROTULO_SITUACAO[situacoes[indice]],
     ]);
     tabela(colunasPeriodo, linhas, false, situacoes);
+
+    // feito com auxílio do Claude: mesmo aviso da tela quando as avulsas passam do limite
+    const excessosDoPeriodo = (dados.excessos || []).filter(e => e.idPeriodo === periodo.id);
+    if (excessosDoPeriodo.length) {
+      garantirEspaco(12);
+      paragrafo('Atenção: as notas avulsas passam do limite do período em '
+        + excessosDoPeriodo.map(e => `${e.nomeMateria} (${numero(e.excesso)} pts a mais)`).join(', ')
+        + '. Isso acontece quando a turma cadastra uma atividade depois da avulsa.',
+        8.5, 'normal', COR_SITUACAO['atencao']);
+      y += 8;
+    }
 
     const notas = periodoBoletim.linhas
       .reduce<NotaModel[]>((todas, l) => todas.concat(l.notas), [])

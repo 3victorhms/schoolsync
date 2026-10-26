@@ -19,7 +19,17 @@
 
 <ion-content [fullscreen]="true">
   @if (carregando) {
-  <div class="carregando-form">Carregando...</div>
+  <!-- skeleton no formato do formulário (feito com auxílio do Claude) -->
+  <div class="carregando-form" aria-hidden="true">
+    @for (i of [1, 2, 3, 4]; track i) {
+    <div class="campo-skeleton">
+      <span class="skeleton-line skeleton-line-sub"></span>
+      <span class="skeleton-block caixa-skeleton"></span>
+    </div>
+    }
+    <span class="skeleton-block botao-skeleton"></span>
+  </div>
+  <span class="sr-only">Carregando</span>
   } @else {
   <form [formGroup]="formGroup" (ngSubmit)="salvar()">
 

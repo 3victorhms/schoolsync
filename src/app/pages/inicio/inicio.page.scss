@@ -733,3 +733,31 @@ ion-content {
         font-size: 28px;
     }
 }
+
+// alerta de semana pesada — feito com auxílio do Claude
+.semana-pesada {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0 0 14px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    border: 1px solid color-mix(in srgb, var(--app-urgencia-proxima) 45%, transparent);
+    background: color-mix(in srgb, var(--app-urgencia-proxima) 12%, var(--app-surface));
+    color: var(--app-text-soft);
+    font-size: 13.5px;
+    line-height: 1.45;
+
+    ion-icon {
+        flex-shrink: 0;
+        margin-top: 1px;
+        font-size: 20px;
+        color: var(--app-urgencia-proxima);
+    }
+
+    strong {
+        display: block;
+        color: var(--app-text);
+        font-size: 14.5px;
+    }
+}

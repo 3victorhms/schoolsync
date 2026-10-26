@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { NotificacaoModel } from '../model/notificacao.model';
 import { TokenService } from './token.service';
 
@@ -9,6 +9,14 @@ export interface ConfiguracaoNotificacao {
   noAplicativo: boolean;
   push: boolean;
   lembreteDias: 1 | 3 | 7;
+}
+
+/** Feito com auxílio do Claude: resposta paginada da API (ver Paginacao no backend). */
+export interface PaginaNotificacoes {
+  itens: NotificacaoModel[];
+  temMais: boolean;
+  /** Todas as não lidas do usuário, não só as desta página. */
+  naoLidas: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -20,11 +28,42 @@ export class NotificacaoService {
 
   readonly notificacoes$ = this.notificacoesSubject.asObservable();
 
+  // a lista vem em páginas, então a contagem de não lidas vem da API e não da lista carregada
+  private readonly naoLidasSubject = new BehaviorSubject<number>(0);
+  readonly naoLidas$ = this.naoLidasSubject.asObservable();
+  private readonly TAMANHO_PAGINA = 20;
+  /** Ainda há notificações mais antigas para buscar. */
+  temMais = false;
+
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  listar(): Observable<NotificacaoModel[]> {
-    return this.http.get<NotificacaoModel[]>(this.API_URL).pipe(
-      tap(notificacoes => this.notificacoesSubject.next(notificacoes))
+  /** Primeira página (as mais recentes). Substitui o que estava carregado. */
+  listar(): Observable<PaginaNotificacoes> {
+    return this.http.get<PaginaNotificacoes>(this.API_URL, { params: { tamanho: this.TAMANHO_PAGINA } }).pipe(
+      tap(pagina => {
+        this.notificacoesSubject.next(pagina.itens || []);
+        this.temMais = pagina.temMais;
+        this.naoLidasSubject.next(pagina.naoLidas || 0);
+      })
+    );
+  }
+
+  /** Próxima página: as anteriores à mais antiga que já está na lista. */
+  carregarMais(): Observable<PaginaNotificacoes> {
+    const atuais = this.notificacoesSubject.value;
+    const maisAntiga = atuais[atuais.length - 1];
+    if (!this.temMais || !maisAntiga) {
+      return of({ itens: [], temMais: false, naoLidas: this.naoLidasSubject.value });
+    }
+    return this.http.get<PaginaNotificacoes>(this.API_URL, {
+      params: { tamanho: this.TAMANHO_PAGINA, antesDe: maisAntiga.horario }
+    }).pipe(
+      tap(pagina => {
+        const ids = new Set(atuais.map(notificacao => notificacao.id));
+        this.notificacoesSubject.next([...atuais, ...(pagina.itens || []).filter(n => !ids.has(n.id))]);
+        this.temMais = pagina.temMais;
+        this.naoLidasSubject.next(pagina.naoLidas || 0);
+      })
     );
   }
 
@@ -36,9 +75,12 @@ export class NotificacaoService {
 
   marcarTodasComoLidas(): Observable<void> {
     return this.http.put<void>(`${this.API_URL}/lidas`, null).pipe(
-      tap(() => this.notificacoesSubject.next(
-        this.notificacoesSubject.value.map(notificacao => ({ ...notificacao, lido: true }))
-      ))
+      tap(() => {
+        this.notificacoesSubject.next(
+          this.notificacoesSubject.value.map(notificacao => ({ ...notificacao, lido: true }))
+        );
+        this.naoLidasSubject.next(0);
+      })
     );
   }
 
@@ -81,7 +123,7 @@ export class NotificacaoService {
   }
 
   get quantidadeNaoLidas(): number {
-    return this.notificacoesSubject.value.filter(notificacao => !notificacao.lido).length;
+    return this.naoLidasSubject.value;
   }
 
   private get usuarioId(): string {
@@ -93,8 +135,12 @@ export class NotificacaoService {
   private tratar(data: string): void {
     try {
       const notificacao = JSON.parse(data) as NotificacaoModel;
+      const anterior = this.notificacoesSubject.value.find(item => item.id === notificacao.id);
       const atuais = this.notificacoesSubject.value.filter(item => item.id !== notificacao.id);
       this.notificacoesSubject.next([notificacao, ...atuais]);
+      // mantém o contador certo: nova não lida soma; uma que já estava não lida não conta de novo
+      if (!notificacao.lido && (!anterior || anterior.lido)) this.ajustarNaoLidas(1);
+      if (notificacao.lido && anterior && !anterior.lido) this.ajustarNaoLidas(-1);
     } catch (erro) {
       console.error('Erro ao processar notificação recebida', erro);
     }
@@ -114,7 +160,13 @@ export class NotificacaoService {
     }, 5000);
   }
 
+  private ajustarNaoLidas(diferenca: number): void {
+    this.naoLidasSubject.next(Math.max(0, this.naoLidasSubject.value + diferenca));
+  }
+
   private atualizarLeituraLocal(id: string): void {
+    const notificacao = this.notificacoesSubject.value.find(item => item.id === id);
+    if (notificacao && !notificacao.lido) this.ajustarNaoLidas(-1);
     this.notificacoesSubject.next(this.notificacoesSubject.value.map(notificacao =>
       notificacao.id === id ? { ...notificacao, lido: true } : notificacao
     ));

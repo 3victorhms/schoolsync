@@ -173,6 +173,11 @@
       }
     </div>
     } @else {
+    @if (temMaisComentarios) {
+    <button type="button" class="comentarios-anteriores" (click)="carregarComentariosAnteriores()" [disabled]="carregandoAnteriores">
+      @if (carregandoAnteriores) { <span class="btn-spinner" aria-hidden="true"></span> Carregando... } @else { Ver comentários anteriores }
+    </button>
+    }
     <div class="comentarios-lista stagger-list">
       @for (comentario of comentarios; track comentario.id) {
       <div class="comentario-card">

@@ -1,8 +1,15 @@
 .carregando-form {
-    padding: 32px 16px;
-    color: var(--app-muted);
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 20px 16px;
+
+    .skeleton-line { display: block; width: 30%; margin-bottom: 8px; }
 }
+
+.caixa-skeleton { display: block; height: 48px; border-radius: 14px; }
+.botao-skeleton { display: block; height: 50px; margin-top: 8px; border-radius: 14px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .atividade-resumo {
     display: flex;

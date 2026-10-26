@@ -640,3 +640,21 @@ ion-content {
         font-size: 26px;
     }
 }
+
+// feito com auxílio do Claude: carregar comentários mais antigos
+.comentarios-anteriores {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 10px;
+    padding: 6px 2px;
+    border: none;
+    background: transparent;
+    color: var(--app-accent);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:disabled { color: var(--app-muted); cursor: default; }
+}

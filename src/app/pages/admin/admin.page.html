@@ -14,7 +14,29 @@
 
   <main class="pagina-admin" aria-live="polite">
     @if (carregando) {
-    <div class="estado-carregando">Carregando usuários...</div>
+    <!-- skeleton no formato do resumo e da lista (feito com auxílio do Claude) -->
+    <div class="carregando-admin" aria-hidden="true">
+      <section class="resumo">
+        @for (i of [1, 2, 3, 4]; track i) {
+        <div class="resumo-item skeleton-row">
+          <span class="skeleton-block numero-skeleton"></span>
+          <span class="skeleton-line skeleton-line-sub"></span>
+        </div>
+        }
+      </section>
+      <section class="lista">
+        @for (i of [1, 2, 3, 4, 5]; track i) {
+        <div class="usuario skeleton-row">
+          <div class="avatar skeleton-block"></div>
+          <div class="dados">
+            <span class="skeleton-line skeleton-line-title"></span>
+            <span class="skeleton-line skeleton-line-sub"></span>
+          </div>
+        </div>
+        }
+      </section>
+    </div>
+    <span class="sr-only">Carregando usuários</span>
     }
 
     @if (semPermissao) {

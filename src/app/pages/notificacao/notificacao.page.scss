@@ -87,3 +87,9 @@ ion-content { --background: var(--app-bg); }
     ion-icon { color: inherit !important; font-size: 16px; }
   }
 }
+
+// skeleton: as linhas são <span>, então precisam ser blocos
+.notificacao.skeleton-row { cursor: default; }
+.notificacao.skeleton-row .skeleton-line { display: block; }
+.notificacao.skeleton-row .conteudo .skeleton-line:not(.skeleton-line-title):not(.skeleton-line-sub) { width: 85%; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

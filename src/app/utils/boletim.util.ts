@@ -275,3 +275,46 @@ export function juntarNomes(nomes: string[], limite = 3): string {
   }
   return `${nomes.slice(0, -1).join(', ')} e ${nomes[nomes.length - 1]}`;
 }
+
+// ===================== avulsas acima do limite =====================
+// Feito com auxílio do Claude. A avulsa é pessoal e só é conferida quando o aluno a lança.
+// Se a turma cria uma atividade depois, a soma (atividades da sala + avulsas do aluno) pode
+// passar do máximo do período naquela matéria. Aqui calculamos esse excesso para avisar.
+
+/** Quanto as atividades da sala + as avulsas do aluno passam do máximo do período (0 = dentro do limite). */
+export function excessoNoPeriodo(sala: SalaModel, notas: NotaModel[], idMateria: string, periodo: PeriodoModel): number {
+  const daSala = somar(
+    (sala.atividades || []).filter(a => a.idMateria === idMateria && a.idPeriodo === periodo.id),
+    a => a.valor
+  );
+  const avulsas = somar(
+    notas.filter(n => n.avulsa && n.idMateria === idMateria && n.idPeriodo === periodo.id),
+    n => n.valorMaximo
+  );
+  // só conta quando o aluno tem avulsa: sem avulsa, quem garante o limite é a API ao criar a atividade
+  if (avulsas <= 0) return 0;
+  return arredondar(Math.max(0, daSala + avulsas - periodo.pontuacaoMaxima));
+}
+
+export interface ExcessoAvulsas {
+  idMateria: string;
+  nomeMateria: string;
+  idPeriodo: string;
+  nomePeriodo: string;
+  excesso: number;
+}
+
+/** Todos os pares matéria/período em que as avulsas do aluno passam do limite. */
+export function excessosDeAvulsas(sala: SalaModel, notas: NotaModel[], idPeriodo?: string): ExcessoAvulsas[] {
+  const resultado: ExcessoAvulsas[] = [];
+  for (const periodo of sala.periodos || []) {
+    if (idPeriodo && periodo.id !== idPeriodo) continue;
+    for (const materia of sala.materias || []) {
+      const excesso = excessoNoPeriodo(sala, notas, materia.id, periodo);
+      if (excesso > 0) {
+        resultado.push({ idMateria: materia.id, nomeMateria: materia.nome, idPeriodo: periodo.id, nomePeriodo: periodo.nome, excesso });
+      }
+    }
+  }
+  return resultado;
+}

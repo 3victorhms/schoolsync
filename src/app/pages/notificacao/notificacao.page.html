@@ -25,7 +25,20 @@
 
   <main class="pagina-notificacoes">
     <section class="lista" aria-live="polite">
-      @if (carregando) { <div class="estado-carregando">Carregando notificações...</div> }
+      <!-- skeleton no formato do cartão de notificação (feito com auxílio do Claude) -->
+      @if (carregando && notificacoes.length === 0) {
+      @for (i of [1, 2, 3, 4]; track i) {
+      <div class="notificacao skeleton-row" aria-hidden="true">
+        <span class="icone skeleton-block"></span>
+        <span class="conteudo">
+          <span class="skeleton-line skeleton-line-title"></span>
+          <span class="skeleton-line"></span>
+          <span class="skeleton-line skeleton-line-sub"></span>
+        </span>
+      </div>
+      }
+      <span class="sr-only">Carregando notificações</span>
+      }
       @if (erro) { <div class="estado-erro" role="alert">{{ erro }}</div> }
       @if (!carregando && !erro && notificacoes.length === 0) {
       <div class="estado-vazio">
@@ -61,4 +74,8 @@
       }
     </section>
   </main>
+
+  <ion-infinite-scroll (ionInfinite)="carregarMais($event)" [disabled]="carregando || !temMais">
+    <ion-infinite-scroll-content loadingText="Carregando mais notificações..."></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

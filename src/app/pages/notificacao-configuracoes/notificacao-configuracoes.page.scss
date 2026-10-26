@@ -27,3 +27,14 @@ ion-toggle { --track-background: var(--app-surface-strong); --track-background-c
 .botao-salvar { width: 100%; height: 55px; border: 0; border-radius: 24px; background: var(--app-accent); color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; }
 .botao-salvar:disabled { opacity: .65; }
 @media (max-width: 430px) { .opcao-canal { padding: 0 14px; } .texto strong { font-size: 16px; } }
+
+// carregamento e erro — feito com auxílio do Claude
+.carregando-config { display: flex; flex-direction: column; gap: 14px; }
+.carregando-config .skeleton-line { display: block; }
+.carregando-config > .skeleton-line-title { width: 45%; height: 16px; margin: 6px 0 2px; }
+.carregando-config .opcao-canal { margin-bottom: 0; }
+.carregando-config .texto .skeleton-line-title { width: 55%; }
+.lembrete-skeleton { display: block; height: 64px; border-radius: 20px; }
+.erro-config { padding: 24px 4px; text-align: center; color: var(--app-text-soft); }
+.erro-config p { margin: 0 0 16px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

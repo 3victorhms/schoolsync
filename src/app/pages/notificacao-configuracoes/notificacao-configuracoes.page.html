@@ -9,6 +9,30 @@
 
 <ion-content [fullscreen]="true">
   <main class="pagina-configuracoes">
+    @if (carregando) {
+    <div class="carregando-config" aria-hidden="true">
+      <span class="skeleton-line skeleton-line-title"></span>
+      @for (i of [1, 2]; track i) {
+      <div class="opcao-canal skeleton-row">
+        <span class="icone skeleton-block"></span>
+        <span class="texto">
+          <span class="skeleton-line skeleton-line-title"></span>
+          <span class="skeleton-line skeleton-line-sub"></span>
+        </span>
+      </div>
+      }
+      <span class="skeleton-line skeleton-line-title"></span>
+      @for (i of [1, 2, 3]; track i) {
+      <span class="skeleton-block lembrete-skeleton"></span>
+      }
+    </div>
+    <span class="sr-only">Carregando configurações</span>
+    } @else if (erroCarregar) {
+    <div class="erro-config" role="alert">
+      <p>Não foi possível carregar suas configurações.</p>
+      <button type="button" class="botao-salvar" (click)="carregar()">Tentar de novo</button>
+    </div>
+    } @else {
     <section>
       <h2>Canais de notificação</h2>
       <div class="opcao-canal">
@@ -38,5 +62,6 @@
     <button class="botao-salvar" type="button" [disabled]="salvando" (click)="salvar()">
       @if (salvando) { <span class="btn-spinner" aria-hidden="true"></span> Salvando... } @else { Salvar configurações }
     </button>
+    }
   </main>
 </ion-content>
