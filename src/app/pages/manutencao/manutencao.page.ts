@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { constructOutline, logInOutline, refreshOutline } from 'ionicons/icons';
+import { constructOutline, refreshOutline } from 'ionicons/icons';
 import { finalize } from 'rxjs';
 import { SistemaService } from 'src/app/services/sistema.service';
 import { TokenService } from 'src/app/services/token.service';
@@ -31,7 +31,7 @@ export class ManutencaoPage {
     private tokenService: TokenService,
     private navController: NavController
   ) {
-    addIcons({ constructOutline, logInOutline, refreshOutline });
+    addIcons({ constructOutline, refreshOutline });
   }
 
   ionViewWillEnter(): void {
@@ -61,11 +61,6 @@ export class ManutencaoPage {
         if (avisar) mostrarAviso('Não foi possível falar com o servidor agora.');
       }
     });
-  }
-
-  // o admin consegue entrar durante a manutenção
-  entrarComoAdmin(): void {
-    this.navController.navigateRoot('/login');
   }
 
   private voltar(): void {
