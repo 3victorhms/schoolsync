@@ -220,7 +220,8 @@
         color: var(--app-accent);
     }
 
-    &.atencao {
+    &.atencao,
+    &.revisar {
         background: color-mix(in srgb, var(--app-warning) 18%, transparent);
         color: var(--app-warning);
     }
@@ -350,16 +351,38 @@
     }
 }
 
-.excesso-linha {
+.aviso-excesso-corpo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.aviso-excesso-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.resolver-btn {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    margin-top: 4px;
-    color: var(--app-warning);
-    font-size: 12px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 12px;
+    background: var(--app-warning);
+    color: #1a1204;
+    font-family: inherit;
+    font-size: 13px;
     font-weight: 700;
+    cursor: pointer;
 
     ion-icon {
+        margin: 0;
         font-size: 14px;
+        color: inherit;
     }
 }
+

@@ -81,6 +81,13 @@ describe('analisarMateria', () => {
   it('sem notas quando nada foi avaliado', () => {
     expect(analisarMateria(linha(0, 0)).situacao).toBe('sem-notas');
   });
+
+  it('revisar vence as outras quando as avulsas passam do limite', () => {
+    // pela conta seria meta atingida, mas há 5 pts a mais que o período permite
+    const analise = analisarMateria(linha(20, 25), undefined, 5);
+    expect(analise.situacao).toBe('revisar');
+    expect(analise.excesso).toBe(5);
+  });
 });
 
 describe('resumirSituacoes', () => {
@@ -96,6 +103,16 @@ describe('resumirSituacoes', () => {
     expect(resumo.contagem['atencao']).toBe(1);
     expect(resumo.contagem['fora-de-alcance']).toBe(1);
     expect(resumo.contagem['sem-notas']).toBe(1);
+    expect(resumo.foco.map(l => l.nomeMateria)).toEqual(['Química', 'Física']);
+  });
+
+  it('põe a matéria para revisar na frente do foco', () => {
+    const resumo = resumirSituacoes(
+      [linha(5, 15, 25, 'Física'), linha(20, 25, 25, 'Química')],
+      undefined,
+      new Map([['Química', 5]])
+    );
+    expect(resumo.contagem['revisar']).toBe(1);
     expect(resumo.foco.map(l => l.nomeMateria)).toEqual(['Química', 'Física']);
   });
 });

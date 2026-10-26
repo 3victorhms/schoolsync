@@ -166,12 +166,13 @@ export function disponivelParaAvulsa(
 // 40% em química. Por isso o boletim não soma matérias diferentes num total geral;
 // ele mostra a situação de cada uma em relação à meta.
 
-export type SituacaoMateria = 'atingida' | 'no-caminho' | 'atencao' | 'fora-de-alcance' | 'sem-notas' | 'sem-pontos';
+export type SituacaoMateria = 'revisar' | 'atingida' | 'no-caminho' | 'atencao' | 'fora-de-alcance' | 'sem-notas' | 'sem-pontos';
 
 /** Ordem de exibição dos contadores, da mais urgente para a mais tranquila. */
-export const ORDEM_SITUACOES: SituacaoMateria[] = ['fora-de-alcance', 'atencao', 'no-caminho', 'atingida', 'sem-notas'];
+export const ORDEM_SITUACOES: SituacaoMateria[] = ['revisar', 'fora-de-alcance', 'atencao', 'no-caminho', 'atingida', 'sem-notas'];
 
 export const ROTULO_SITUACAO: Record<SituacaoMateria, string> = {
+  'revisar': 'Revisar notas',
   'atingida': 'Meta atingida',
   'no-caminho': 'No caminho',
   'atencao': 'Atenção',
@@ -185,6 +186,8 @@ export interface AnaliseMateria {
   falta: QuantoFalta;
   /** Aproveitamento sobre o que já foi avaliado, ou null se nada foi avaliado. */
   aproveitamento: number | null;
+  /** Pontos que as avulsas passam do limite (0 = dentro do limite). */
+  excesso: number;
 }
 
 /**
@@ -194,20 +197,23 @@ export interface AnaliseMateria {
  * - sem notas: nada avaliado ainda;
  * - atenção: ainda dá, mas precisa tirar no que falta uma % maior do que vem tirando
  *   (ex.: vem com 50% e precisa de 70% do que está em aberto);
- * - no caminho: precisa de uma % igual ou menor do que já vem tirando.
+ * - no caminho: precisa de uma % igual ou menor do que já vem tirando;
+ * - revisar: as avulsas passam do limite do período, então a conta não é confiável
+ *   (pode dar "meta atingida" com pontos que nem cabem no período). Vence as outras.
  */
-export function analisarMateria(linha: LinhaBoletim, meta = META_APROVACAO): AnaliseMateria {
+export function analisarMateria(linha: LinhaBoletim, meta = META_APROVACAO, excesso = 0): AnaliseMateria {
   const falta = quantoFalta(linha.obtido, linha.avaliado, linha.maximo, meta);
   const aprov = aproveitamento(linha.obtido, linha.avaliado);
 
   let situacao: SituacaoMateria;
-  if (falta.situacao === 'sem-pontos') situacao = 'sem-pontos';
+  if (excesso > 0) situacao = 'revisar';
+  else if (falta.situacao === 'sem-pontos') situacao = 'sem-pontos';
   else if (falta.situacao === 'atingida') situacao = 'atingida';
   else if (falta.situacao === 'impossivel') situacao = 'fora-de-alcance';
   else if (aprov === null) situacao = 'sem-notas';
   else situacao = falta.percentualDoAberto > aprov ? 'atencao' : 'no-caminho';
 
-  return { situacao, falta, aproveitamento: aprov };
+  return { situacao, falta, aproveitamento: aprov, excesso };
 }
 
 export interface ResumoSituacoes {
@@ -218,16 +224,21 @@ export interface ResumoSituacoes {
   foco: LinhaBoletim[];
 }
 
-export function resumirSituacoes(linhas: LinhaBoletim[], meta = META_APROVACAO): ResumoSituacoes {
+export function resumirSituacoes(
+  linhas: LinhaBoletim[],
+  meta = META_APROVACAO,
+  excessoPorMateria: Map<string, number> = new Map()
+): ResumoSituacoes {
   const contagem: Record<SituacaoMateria, number> = {
-    'atingida': 0, 'no-caminho': 0, 'atencao': 0, 'fora-de-alcance': 0, 'sem-notas': 0, 'sem-pontos': 0,
+    'revisar': 0, 'atingida': 0, 'no-caminho': 0, 'atencao': 0, 'fora-de-alcance': 0, 'sem-notas': 0, 'sem-pontos': 0,
   };
   const criticas: { linha: LinhaBoletim; peso: number }[] = [];
 
   linhas.forEach(linha => {
-    const analise = analisarMateria(linha, meta);
+    const analise = analisarMateria(linha, meta, excessoPorMateria.get(linha.idMateria) || 0);
     contagem[analise.situacao]++;
-    // Fora de alcance vem antes de atenção; dentro de cada grupo, a que precisa de mais
+    // Revisar vem primeiro, depois fora de alcance e atenção; dentro de cada grupo, a que precisa de mais
+    if (analise.situacao === 'revisar') criticas.push({ linha, peso: 10000 + analise.excesso });
     if (analise.situacao === 'fora-de-alcance') criticas.push({ linha, peso: 1000 + analise.falta.precisa });
     if (analise.situacao === 'atencao') criticas.push({ linha, peso: analise.falta.percentualDoAberto });
   });
@@ -253,6 +264,8 @@ export function pts(valor: number): string {
 export function descreverSituacao(linha: LinhaBoletim, analise: AnaliseMateria, meta = META_APROVACAO): string {
   const { falta } = analise;
   switch (analise.situacao) {
+    case 'revisar':
+      return `as avulsas passam ${pts(analise.excesso)} do limite do período`;
     case 'atingida':
       return `já garantiu os ${pts(arredondar(linha.maximo * meta))} da meta`;
     case 'no-caminho':
