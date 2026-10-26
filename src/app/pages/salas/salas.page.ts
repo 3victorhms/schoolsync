@@ -73,7 +73,7 @@ export class SalasPage implements OnInit {
 
   ngOnInit() { }
 
-  /** Recarrega a lista ao voltar para a aba (inclusive vindo de uma sala excluída/renomeada). */
+  // recarrega a lista ao voltar para a aba (inclusive vindo de uma sala excluída/renomeada)
   private recarregador = criarRecarregadorDeAba(inject(Router), '/tabs/salas', () => this.carregarSalas());
 
   ionViewWillEnter() {

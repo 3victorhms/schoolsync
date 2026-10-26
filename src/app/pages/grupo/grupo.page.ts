@@ -168,7 +168,7 @@ export class GrupoPage implements OnInit {
     return !!membro?.criador || membro?.idUsuario === this.grupo.idCriador;
   }
 
-  /** Só o líder remove, e nunca a si mesmo. */
+  // só o líder remove, e nunca a si mesmo
   podeRemoverMembro(membro: MembroGrupoModel): boolean {
     return this.grupo.criador && !this.ehLiderGrupo(membro) && membro.idUsuario !== this.usuario.id;
   }
@@ -226,7 +226,7 @@ export class GrupoPage implements OnInit {
     });
   }
 
-  /** Quantas tarefas do grupo já foram concluídas, no total e por membro. */
+  // quantas tarefas do grupo já foram concluídas, no total e por membro
   get progresso() {
     return calcularProgresso(this.grupo.tarefas || []);
   }
@@ -248,8 +248,7 @@ export class GrupoPage implements OnInit {
       return;
     }
 
-    // Aviso em HTML puro (DesfazerService) em vez do ion-toast, que não
-    // aparece de forma confiável no navegador.
+    // aviso em html puro (DesfazerService) pq o ion-toast n aparecia direito no navegador
     this.hapticsService.leve();
     this.desfazerService.mostrarMensagem(`Código ${this.grupo.codigoConvite} copiado! Envie para quem vai entrar no grupo.`, 3000);
   }

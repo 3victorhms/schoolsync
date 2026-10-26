@@ -1,4 +1,4 @@
-// Feito com auxílio do Claude: testes das regras do boletim (situação por matéria e avulsas).
+// testes das regras do boletim (situação por matéria e avulsas)
 import { AtividadeModel } from '../model/atividade.model';
 import { NotaModel } from '../model/nota.model';
 import { PeriodoModel } from '../model/periodo.model';

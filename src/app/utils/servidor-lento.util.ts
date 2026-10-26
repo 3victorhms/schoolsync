@@ -1,9 +1,6 @@
-// Feito com auxílio do Claude: aviso de "servidor acordando".
-// A API fica no plano gratuito do Render, que desliga o servidor depois de um tempo
-// sem uso. A primeira requisição depois disso pode levar até um minuto. Sem aviso,
-// o app parece travado; com ele, a pessoa sabe que é só esperar.
-//
-// Mesmo padrão do aviso.util.ts: HTML/CSS puro, sem injeção de dependência.
+// aviso de servidor acordando. a API tá no plano grátis do render, que desliga o servidor
+// depois de um tempo sem uso, e a primeira requisição pode levar até 1 minuto. sem o aviso
+// parece que o app travou. mesmo esquema do aviso.util.ts (html/css puro)
 
 import { estaOffline } from './conexao.util';
 
@@ -40,7 +37,7 @@ function esconderBanner() {
   banner = null;
 }
 
-/** Chamado quando uma requisição à API começa. */
+// chamado quando uma requisição à API começa
 export function requisicaoIniciada() {
   pendentes++;
   if (pendentes > 1) return;
@@ -54,7 +51,7 @@ export function requisicaoIniciada() {
   );
 }
 
-/** Chamado quando uma requisição à API termina (com sucesso, erro ou cancelada). */
+// chamado quando uma requisição à API termina (com sucesso, erro ou cancelada)
 export function requisicaoTerminada() {
   pendentes = Math.max(0, pendentes - 1);
   if (pendentes > 0) return;

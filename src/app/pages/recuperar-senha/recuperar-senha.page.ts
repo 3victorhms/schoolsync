@@ -1,8 +1,6 @@
-// Feito com auxílio do Claude: recuperação de senha em duas etapas.
-// 1) o aluno informa o e-mail e a API manda um código de 6 dígitos;
-// 2) ele digita o código e a senha nova.
-// A API responde igual se o e-mail existe ou não (pra n revelar quem tem conta),
-// então a tela também não diz "e-mail não encontrado".
+// recuperação de senha em duas etapas: o aluno informa o e-mail e recebe um código,
+// depois digita o código e a senha nova. a API responde igual se o e-mail existe ou n
+// (pra n revelar quem tem conta), ent a tela também n diz "e-mail não encontrado"
 
 import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -148,7 +146,7 @@ export class RecuperarSenhaPage implements OnDestroy {
     this.navController.navigateBack('/login');
   }
 
-  /** A API devolve { message } (TratamentoGlobalDeErros); sem resposta, é rede ou servidor fora. */
+  // a API devolve { message } (TratamentoGlobalDeErros); sem resposta, é rede ou servidor fora
   private mensagemDeErro(erro: HttpErrorResponse, padrao: string): string {
     const mensagem = erro?.error?.message;
     if (erro?.status && erro.status < 500 && typeof mensagem === 'string' && mensagem) return mensagem;

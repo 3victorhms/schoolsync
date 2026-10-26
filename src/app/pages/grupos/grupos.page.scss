@@ -41,9 +41,7 @@ ion-content {
   font-weight: 600;
   cursor: pointer;
 
-  // Sem fundo, so o icone colorido. Cor solida (com !important, ja que o
-  // global.scss forca ".acao-btn ion-icon" pra cor de acento no tema claro,
-  // e ".acao-card" segue a mesma logica), pra ficar certo em qualquer tema.
+  // só o ícone colorido. tem !important pq o global.scss força a cor de acento no .acao-btn ion-icon do tema claro
   .acao-icone {
     width: 40px;
     height: 40px;
@@ -211,7 +209,7 @@ ion-tab-button {
     padding: 10px 16px;
   }
 
-  // Pequeno espaco entre o icone e o texto do item ativo (senao ficam colados).
+  // espaço entre o ícone e o texto do item ativo
   ion-icon {
     margin-inline-end: 6px;
   }

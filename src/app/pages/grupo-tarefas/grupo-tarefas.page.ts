@@ -81,7 +81,7 @@ export class GrupoTarefasPage implements OnInit {
   idAtividadeSelecionada: string;
   idUsuarioAtribuido: string;
   tituloTarefa: string;
-  /** Prazo opcional da tarefa ("AAAA-MM-DD"). */
+  // prazo opcional da tarefa ("AAAA-MM-DD")
   prazoTarefa = '';
   tarefaExcluindoId = '';
   criandoTarefa = false;
@@ -279,13 +279,13 @@ export class GrupoTarefasPage implements OnInit {
     });
   }
 
-  /** Hoje no formato do input de data (mínimo do prazo). */
+  // hoje no formato do input de data (mínimo do prazo)
   get hojeIso(): string {
     const hoje = new Date();
     return `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
   }
 
-  /** O prazo da tarefa vai no máximo até a entrega da atividade escolhida. */
+  // o prazo da tarefa vai no máximo até a entrega da atividade escolhida
   get prazoMaximo(): string {
     const atividade = this.atividades.find(item => item.id === this.idAtividadeSelecionada);
     return atividade?.dataEntrega?.split('T')[0] || '';
@@ -301,7 +301,7 @@ export class GrupoTarefasPage implements OnInit {
     return rotulo ? `${formatarDataCurta(tarefa.prazo)} · ${rotulo}` : formatarDataCurta(tarefa.prazo);
   }
 
-  /** Quantas tarefas já foram concluídas, no total e por membro (cartão no topo da lista). */
+  // quantas tarefas já foram concluídas, no total e por membro (cartão no topo da lista)
   get progresso() {
     return calcularProgresso(this.tarefas);
   }

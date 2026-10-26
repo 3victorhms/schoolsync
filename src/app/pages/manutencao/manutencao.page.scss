@@ -1,0 +1,92 @@
+.manutencao-content {
+  --background: var(--app-bg);
+}
+
+.manutencao {
+  min-height: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.icone {
+  width: 84px;
+  height: 84px;
+  display: grid;
+  place-items: center;
+  border-radius: 26px;
+  background: color-mix(in srgb, var(--app-urgencia-proxima) 16%, var(--app-surface));
+  color: var(--app-urgencia-proxima);
+  font-size: 42px;
+  margin-bottom: 6px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--app-text);
+}
+
+.mensagem {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--app-text-soft);
+}
+
+.previsao {
+  margin: 0;
+  font-size: 14px;
+  color: var(--app-muted);
+
+  strong {
+    color: var(--app-text);
+  }
+}
+
+.botao-principal {
+  margin-top: 16px;
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--app-accent);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.7;
+  }
+}
+
+.botao-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px;
+  border: 0;
+  background: none;
+  color: var(--app-muted);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+// o tema claro pinta todo ion-icon de cinza, aqui tem que seguir a cor do pai
+.icone ion-icon,
+.botao-principal ion-icon,
+.botao-link ion-icon {
+  color: inherit;
+}

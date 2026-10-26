@@ -1,4 +1,4 @@
-/** Nota pessoal do boletim (v2). Só o próprio aluno vê. */
+// nota pessoal do boletim, só o próprio aluno vê
 export class NotaModel {
     id: string;
     idSala: string;
@@ -6,9 +6,9 @@ export class NotaModel {
     nomeMateria: string;
     idPeriodo: string;
     nomePeriodo: string;
-    /** Vazio na nota avulsa. */
+    // vazio na nota avulsa
     idAtividade: string | null;
-    /** Título da atividade ou a descrição da nota avulsa. */
+    // título da atividade ou a descrição da nota avulsa
     descricao: string;
     avulsa: boolean;
     valorObtido: number;
@@ -32,9 +32,9 @@ export class NotaModel {
     }
 }
 
-/** Corpo de POST /salas/{id}/notas e PUT /notas/{id}. */
+// corpo de POST /salas/{id}/notas e PUT /notas/{id}
 export interface NotaRequest {
-    /** Preenchido para nota de atividade; ausente na avulsa. */
+    // preenchido para nota de atividade; ausente na avulsa
     idAtividade?: string;
     valorObtido: number;
     // só na avulsa:

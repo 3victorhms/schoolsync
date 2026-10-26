@@ -1,4 +1,4 @@
-// Feito com auxílio do Claude: testes do alerta de semana pesada.
+// testes do alerta de semana pesada
 import { AtividadeModel } from '../model/atividade.model';
 import { analisarSemana, rotuloDia } from './semana.util';
 

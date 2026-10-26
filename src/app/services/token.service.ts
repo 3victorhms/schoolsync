@@ -7,15 +7,14 @@ import { Preferences } from '@capacitor/preferences';
   providedIn: 'root',
 })
 export class TokenService {
-  // Feito com auxílio do Claude: o token sai do localStorage do WebView e vai para o
-  // @capacitor/preferences (SharedPreferences no Android). O Preferences é assíncrono e o
-  // resto do app lê o token de forma síncrona (guard, interceptor), então ele é carregado
-  // uma vez na abertura do app (provideAppInitializer no main.ts) e fica em memória.
-  // No navegador o Preferences usa o próprio localStorage, então a melhora vale para o app Android.
+  // o token fica no @capacitor/preferences (SharedPreferences no android) e n no localStorage
+  // o preferences é assíncrono e o resto do app lê o token síncrono (guard, interceptor),
+  // ent ele carrega uma vez na abertura do app (provideAppInitializer no main.ts) e fica em memória
+  // no navegador o preferences usa o localStorage mesmo
   private readonly CHAVE = 'Authorization';
   private token = '';
 
-  /** Carrega o token salvo. Chamado antes de o app abrir a primeira tela. */
+  // carrega o token salvo. chamado antes de o app abrir a primeira tela
   async inicializar(): Promise<void> {
     try {
       const { value } = await Preferences.get({ key: this.CHAVE });
@@ -57,7 +56,7 @@ export class TokenService {
     return this.token;
   }
 
-  /** Formato antigo: o token puro ou {"token": "..."} em localStorage['Authorization']. */
+  // formato antigo: o token puro ou {"token": "..."} em localStorage['Authorization']
   private lerLocalStorageAntigo(): string {
     let armazenado: string | null = null;
     try { armazenado = localStorage.getItem(this.CHAVE); } catch { return ''; }
@@ -102,7 +101,7 @@ export class TokenService {
       tokenModel.login = token.login || token.email || '';
       tokenModel.email = token.email || token.login || '';
     } catch {
-      // Token ausente ou inválido: devolve o model vazio, como no fluxo original.
+      // token ausente ou inválido: devolve o model vazio, como no fluxo original
     }
     return tokenModel;
   }

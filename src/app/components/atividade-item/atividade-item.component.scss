@@ -1,10 +1,10 @@
-// Mesmo visual das linhas de atividade que antes ficavam copiadas em cada página.
+// linha de atividade usada em várias telas
 
 :host {
     display: block;
 }
 
-// Divisória entre itens vizinhos (cada linha está no seu próprio componente).
+// divisória entre itens vizinhos (cada linha está no seu próprio componente)
 :host + :host .row::before {
     content: "";
     position: absolute;
@@ -139,7 +139,7 @@
             font-weight: 700;
         }
 
-        // Escala de urgência, mesmo padrão do calendário em Início.
+        // escala de urgência, mesmo padrão do calendário em Início
         &.urgencia-atrasada,
         &.urgencia-hoje {
             color: var(--app-urgencia-atrasada);
@@ -178,8 +178,7 @@
     margin-top: 8px;
 }
 
-// celular: a descrição quase sempre aparecia cortada e disputava espaço com o título
-// e os selos. Ela continua inteira na tela da atividade. — feito com auxílio do Claude
+// no celular esconde a descrição pq ela sempre aparecia cortada. ela aparece inteira na tela da atividade
 @media (max-width: 599.98px) {
     .row-sub .row-desc {
         display: none;

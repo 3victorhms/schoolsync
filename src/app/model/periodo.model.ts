@@ -1,7 +1,7 @@
-/** Como o ano letivo da sala é dividido. Os valores batem com o enum TipoPeriodo da API. */
+// como o ano letivo da sala é dividido. os valores batem com o enum TipoPeriodo da API
 export type TipoPeriodo = 'BIMESTRE' | 'TRIMESTRE' | 'SEMESTRE';
 
-/** Bimestre/trimestre/semestre da sala, com datas no formato "AAAA-MM-DD". */
+// bimestre/trimestre/semestre da sala, com datas no formato "AAAA-MM-DD"
 export class PeriodoModel {
     id: string;
     ordem: number;

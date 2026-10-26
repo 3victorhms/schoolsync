@@ -1,7 +1,4 @@
-// feito com auxílio do Claude
-//
-// Linha de atividade usada nas listas do app (sala, atividades da sala,
-// caderno e início), para todas terem o mesmo visual e comportamento.
+// linha de atividade usada nas listas (sala, atividades da sala, caderno e início)
 
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -23,11 +20,9 @@ import { classeUrgencia, rotuloUrgencia } from 'src/app/utils/urgencia.util';
 import { formatarDataCurta } from 'src/app/utils/data.util';
 import { labelPontos } from 'src/app/utils/pontos.util';
 
-/**
- * - `sala`: o ícone e o status dependem de a atividade estar no caderno do aluno.
- * - `caderno`: a atividade já está no caderno, então sempre mostra o status.
- * - `simples`: ícone de livro e sem status (ex.: lista do dia no Início).
- */
+// sala: ícone e status dependem de a atividade estar no caderno
+// caderno: a atividade já tá no caderno, ent sempre mostra o status
+// simples: ícone de livro e sem status (ex.: lista do dia no início)
 export type ModoAtividadeItem = 'sala' | 'caderno' | 'simples';
 
 @Component({
@@ -41,9 +36,9 @@ export class AtividadeItemComponent {
 
   @Input({ required: true }) atividade!: AtividadeModel;
   @Input() modo: ModoAtividadeItem = 'sala';
-  /** Desligue em listas de prazos já encerrados (arquivadas). */
+  // desligar nas listas de arquivadas
   @Input() mostrarUrgencia = true;
-  /** Nome da sala, para listas que juntam atividades de várias salas (ex.: agenda do Início). */
+  // nome da sala, pras listas que juntam várias salas (agenda do início)
   @Input() nomeSala = '';
 
   constructor() {

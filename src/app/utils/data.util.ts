@@ -1,9 +1,9 @@
-// Formatação de datas para exibição nas listas.
+// formatação de datas para exibição nas listas
 
 const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
 const DIAS_SEMANA = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
 
-/** Converte "AAAA-MM-DD" (ou ISO com hora) na meia-noite local desse dia. */
+// converte "AAAA-MM-DD" (ou ISO com hora) na meia-noite local desse dia
 export function parsearData(data: string | null | undefined): Date | null {
   if (!data) return null;
 
@@ -14,10 +14,7 @@ export function parsearData(data: string | null | undefined): Date | null {
   return new Date(ano, mes - 1, dia);
 }
 
-/**
- * Data curta e legível: "qua, 30 set". Se for de outro ano, inclui o ano:
- * "qua, 30 set 2027". Datas inválidas voltam como vieram.
- */
+// data curta: "qua, 30 set". de outro ano inclui o ano ("qua, 30 set 2027"). inválida volta como veio
 export function formatarDataCurta(data: string | null | undefined): string {
   const convertida = parsearData(data);
   if (!convertida) return data || '';

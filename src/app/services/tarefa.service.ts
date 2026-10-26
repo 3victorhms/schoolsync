@@ -18,7 +18,7 @@ export class TarefaService {
     return this.http.get<TarefaModel[]>(`${this.API_URL}/grupos/${idGrupo}/tarefas`);
   }
 
-  /** Tarefas atribuídas ao usuário logado. */
+  // tarefas atribuídas ao usuário logado
   listarMinhas(): Observable<TarefaModel[]> {
     return this.http.get<TarefaModel[]>(`${this.API_URL}/tarefas`);
   }

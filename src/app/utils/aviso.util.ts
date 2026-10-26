@@ -1,12 +1,10 @@
-// Aviso rápido (toast) em HTML/CSS puro, usando o estilo .desfazer-toast do
-// global.scss. Substitui o ion-toast, que não aparece de forma confiável no
-// navegador. Não precisa de injeção de dependência: pode ser chamado de
-// qualquer página ou serviço.
+// toast em html/css puro (estilo .desfazer-toast do global.scss) no lugar do ion-toast, que n
+// aparecia direito no navegador. n precisa de injeção, dá pra chamar de qualquer lugar
 
 export function mostrarAviso(mensagem: string, duracaoMs: number = 2500): void {
   if (typeof document === 'undefined' || !mensagem) return;
 
-  // Um aviso por vez: o novo substitui o anterior em vez de empilhar.
+  // um aviso por vez: o novo substitui o anterior em vez de empilhar
   document.querySelectorAll('.desfazer-toast.aviso-simples').forEach(el => el.remove());
 
   const toast = document.createElement('div');

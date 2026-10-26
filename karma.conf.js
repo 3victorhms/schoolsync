@@ -38,7 +38,7 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],
-    // feito com auxílio do Claude: navegador sem janela para rodar os testes no CI (GitHub Actions)
+    // chrome sem janela pro CI do github actions
     customLaunchers: {
       ChromeHeadlessCI: {
         base: 'ChromeHeadless',

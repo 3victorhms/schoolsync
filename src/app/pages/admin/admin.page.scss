@@ -84,3 +84,45 @@ ion-content { --background: var(--app-bg); }
 .carregando-admin .resumo-item .skeleton-line-sub { width: 60%; }
 .numero-skeleton { display: block; width: 28px; height: 22px; margin-bottom: 6px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+// modo manutenção
+.manutencao-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-surface-strong);
+
+  &.ligada {
+    border-color: var(--app-urgencia-proxima);
+    background: color-mix(in srgb, var(--app-urgencia-proxima) 8%, var(--app-surface));
+  }
+}
+.manutencao-topo { display: flex; align-items: center; gap: 12px; }
+.manutencao-icone {
+  width: 40px; height: 40px; flex: 0 0 40px; display: grid; place-items: center; border-radius: 12px;
+  background: color-mix(in srgb, var(--app-urgencia-proxima) 16%, transparent); color: var(--app-urgencia-proxima); font-size: 20px;
+}
+.manutencao-texto { flex: 1; min-width: 0; }
+.manutencao-texto h2 { margin: 0; font-size: 16px; font-weight: 700; color: var(--app-text); }
+.manutencao-texto p { margin: 2px 0 0; font-size: 13px; color: var(--app-muted); line-height: 1.35; }
+.manutencao-card ion-toggle { --track-background: var(--app-surface-strong); --track-background-checked: var(--app-urgencia-proxima); --handle-background: #fff; --handle-background-checked: #fff; }
+.manutencao-icone ion-icon { color: inherit; }
+.manutencao-campo { display: flex; flex-direction: column; gap: 6px; }
+.manutencao-campo span { font-size: 13px; color: var(--app-text-soft); }
+.manutencao-campo textarea,
+.manutencao-campo input {
+  width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--app-surface-strong);
+  background: var(--app-bg-muted); color: var(--app-text); font: inherit; font-size: 14px; resize: vertical; outline: none;
+}
+.manutencao-campo textarea:focus,
+.manutencao-campo input:focus { border-color: var(--app-accent); }
+.manutencao-alterado { margin: 0; font-size: 12px; color: var(--app-muted); }
+.manutencao-salvar {
+  align-self: flex-end; min-height: 40px; padding: 0 20px; border: 0; border-radius: 12px;
+  background: var(--app-accent); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.manutencao-salvar:disabled { opacity: .5; cursor: default; }

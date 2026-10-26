@@ -33,7 +33,7 @@ export class GrupoService {
     return this.http.get<GrupoModel>(`${this.API_URL}/grupos/${idGrupo}`);
   }
 
-  /** Grupos do usuário logado dentro da sala. */
+  // grupos do usuário logado dentro da sala
   listarMeusGruposDaSala(idSala: string): Observable<GrupoModel[]> {
     return this.http.get<GrupoModel[]>(`${this.API_URL}/salas/${idSala}/grupos`);
   }
@@ -49,7 +49,7 @@ export class GrupoService {
     return this.apiDelete.excluir(`${this.API_URL}/grupos/${idGrupo}`);
   }
 
-  /** Só o líder do grupo pode remover; as tarefas do membro removido passam para o líder. */
+  // só o líder do grupo pode remover; as tarefas do membro removido passam para o líder
   removerMembro(idGrupo: string, idUsuarioRemover: string): Observable<void> {
     return this.apiDelete.excluir(`${this.API_URL}/grupos/${idGrupo}/membros/${idUsuarioRemover}`);
   }

@@ -1,19 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
   IonBackButton, IonButtons, IonContent, IonHeader, IonIcon,
-  IonRefresher, IonRefresherContent, IonSearchbar, IonTitle, IonToolbar
+  IonRefresher, IonRefresherContent, IonSearchbar, IonTitle, IonToggle, IonToolbar
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { lockClosedOutline, peopleOutline, personCircleOutline, shieldCheckmarkOutline, shieldOutline } from 'ionicons/icons';
+import { constructOutline, lockClosedOutline, peopleOutline, personCircleOutline, shieldCheckmarkOutline, shieldOutline } from 'ionicons/icons';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { AdminService } from 'src/app/services/admin.service';
+import { EstadoManutencao } from 'src/app/services/sistema.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
 
-// área do perfil ADMIN: lista todas as contas do sistema.
+// área do perfil ADMIN: lista todas as contas do sistema
 // o botão pra chegar aqui só aparece pra admin, mas quem protege de verdade é a API:
 // se um USUARIO abrir esta tela (ex: digitando /admin na versão web), a API responde 403
 @Component({
@@ -23,7 +25,7 @@ import { mostrarAviso } from 'src/app/utils/aviso.util';
   standalone: true,
   imports: [
     IonBackButton, IonButtons, IonContent, IonHeader, IonIcon,
-    IonRefresher, IonRefresherContent, IonSearchbar, IonTitle, IonToolbar, CommonModule
+    IonRefresher, IonRefresherContent, IonSearchbar, IonTitle, IonToggle, IonToolbar, CommonModule, FormsModule
   ]
 })
 export class AdminPage {
@@ -35,12 +37,17 @@ export class AdminPage {
   idUsuarioLogado = '';
   alterandoPerfilId = '';
 
+  // modo manutenção: o que está salvo e o que está no formulário
+  manutencao: EstadoManutencao | null = null;
+  manutencaoForm = { ativa: false, mensagem: '', previsao: '' };
+  salvandoManutencao = false;
+
   constructor(
     private adminService: AdminService,
     private usuarioService: UsuarioService,
     private confirmacaoService: ConfirmacaoService
   ) {
-    addIcons({ lockClosedOutline, peopleOutline, personCircleOutline, shieldCheckmarkOutline, shieldOutline });
+    addIcons({ constructOutline, lockClosedOutline, peopleOutline, personCircleOutline, shieldCheckmarkOutline, shieldOutline });
   }
 
   // o botão n aparece pra própria conta nem pra conta desativada (a API também barra os dois casos)
@@ -82,6 +89,7 @@ export class AdminPage {
     this.carregando = true;
     this.erro = '';
     this.semPermissao = false;
+    this.carregarManutencao();
 
     this.adminService.listarUsuarios().subscribe({
       next: usuarios => {
@@ -101,6 +109,59 @@ export class AdminPage {
         event?.target.complete();
       }
     });
+  }
+
+  private carregarManutencao(): void {
+    this.adminService.buscarManutencao().subscribe({
+      next: estado => this.aplicarManutencao(estado),
+      error: () => this.manutencao = null
+    });
+  }
+
+  private aplicarManutencao(estado: EstadoManutencao): void {
+    this.manutencao = estado;
+    this.manutencaoForm = { ativa: estado.ativa, mensagem: estado.mensagem || '', previsao: estado.previsao || '' };
+  }
+
+  get manutencaoMudou(): boolean {
+    if (!this.manutencao) return false;
+    return this.manutencaoForm.ativa !== this.manutencao.ativa
+      || this.manutencaoForm.mensagem.trim() !== (this.manutencao.mensagem || '')
+      || this.manutencaoForm.previsao.trim() !== (this.manutencao.previsao || '');
+  }
+
+  async salvarManutencao(): Promise<void> {
+    if (this.salvandoManutencao || !this.manutencaoMudou) return;
+    const ligando = this.manutencaoForm.ativa && !this.manutencao?.ativa;
+    if (ligando && !(await this.confirmacaoService.confirmar(
+      'Ligar o modo manutenção',
+      'Quem não é administrador vai ver a tela de manutenção até você desligar. Você continua usando o app normalmente.',
+      'Ligar'
+    ))) {
+      return;
+    }
+
+    this.salvandoManutencao = true;
+    const { ativa, mensagem, previsao } = this.manutencaoForm;
+    this.adminService.salvarManutencao(ativa, mensagem.trim(), previsao.trim()).subscribe({
+      next: estado => {
+        this.salvandoManutencao = false;
+        this.aplicarManutencao(estado);
+        mostrarAviso(estado.ativa ? 'Modo manutenção ligado.' : 'Modo manutenção desligado. O app voltou pra todo mundo.');
+      },
+      error: (erro: HttpErrorResponse) => {
+        this.salvandoManutencao = false;
+        mostrarAviso(erro.error?.message || 'Não foi possível salvar o modo manutenção.', 3500);
+      }
+    });
+  }
+
+  formatarData(valor?: string | null): string {
+    if (!valor) return '';
+    const data = new Date(valor);
+    return Number.isNaN(data.getTime()) ? '' : new Intl.DateTimeFormat('pt-BR', {
+      day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+    }).format(data);
   }
 
   get usuariosFiltrados(): UsuarioModel[] {

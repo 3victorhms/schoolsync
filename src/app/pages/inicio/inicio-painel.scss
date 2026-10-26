@@ -1,9 +1,8 @@
-// Estilos do painel do Início no celular, num arquivo separado do inicio.page.scss
-// pra nenhum dos dois passar do limite de tamanho por arquivo de estilo (budget
-// "anyComponentStyle" no angular.json), que derrubava o build de produção no Netlify.
+// painel do início no celular. ficou num arquivo separado pq o inicio.page.scss passou do
+// budget anyComponentStyle do angular.json e quebrava o build no netlify
 
 // ---------------------------------------------------------------------------
-// Painel do celular (próxima entrega + resumo da semana + faixa da semana) — feito com auxílio do Claude
+// painel do celular (próxima entrega, resumo e faixa da semana)
 // ---------------------------------------------------------------------------
 .painel-celular {
     padding: 4px 16px 4px;

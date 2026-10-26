@@ -25,7 +25,7 @@
 
     <!-- skeleton (animação de carregando que aperece)-->
     @if (carregando) {
-    <!-- Mesmo formato da linha real: ícone, nome, (membros · atividades · código) e seta -->
+    <!-- mesmo formato da linha real: ícone, nome, (membros · atividades · código) e seta -->
     <div class="group" aria-busy="true" aria-label="Carregando salas">
       @for (i of [1, 2, 3, 4]; track i) {
       <div class="row skeleton-row">

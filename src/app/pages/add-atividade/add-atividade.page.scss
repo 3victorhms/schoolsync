@@ -69,7 +69,7 @@ form {
                 }
             }
 
-            // v2: escolha da matéria (lista vem da sala)
+            // escolha da matéria (a lista vem da sala)
             select {
                 background: transparent;
                 border: none;
@@ -174,7 +174,7 @@ form {
         }
     }
 }
-// Aviso quando o líder da sala edita a atividade de outro colega
+// aviso quando o líder da sala edita a atividade de outro colega
 .aviso-moderacao {
     margin: 0 0 16px;
     padding: 10px 14px;

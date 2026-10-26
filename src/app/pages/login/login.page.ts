@@ -12,13 +12,14 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NotificacaoPushService } from '../../services/notificacao-push.service';
 import { finalize } from 'rxjs';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
+import { BotaoGoogleComponent } from 'src/app/components/botao-google/botao-google.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonLabel, IonItem, IonIcon, IonInput, IonButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, ReactiveFormsModule, RouterModule]
+  imports: [IonLabel, IonItem, IonIcon, IonInput, IonButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, ReactiveFormsModule, RouterModule, BotaoGoogleComponent]
 })
 export class LoginPage implements OnInit {
 
@@ -66,9 +67,7 @@ export class LoginPage implements OnInit {
     mostrarAviso(mensagem, 3500);
   }
 
-  /** Verdadeiro quando o campo é inválido e já foi "tocado" (perdeu o foco
-   * ou o usuário tentou enviar o formulário), pra não mostrar erro antes
-   * da hora enquanto a pessoa ainda está digitando. */
+  // campo inválido que já foi tocado (pra n mostrar erro enquanto a pessoa ainda tá digitando)
   campoInvalido(campo: string): boolean {
     const controle = this.formGroup.get(campo);
     return !!controle && controle.invalid && (controle.touched || controle.dirty);

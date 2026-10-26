@@ -1,5 +1,4 @@
-# Feito com auxílio do Claude: compila o app e roda os testes (Karma + Chrome sem janela)
-# a cada push e pull request.
+# compila o app e roda os testes no chrome headless a cada push e pull request
 name: Testes do app
 
 on:
@@ -19,8 +18,7 @@ jobs:
           node-version: '22'
           cache: npm
 
-      # npm install em vez de npm ci: o package-lock.json pode estar atrás do package.json.
-      # Quando o lock estiver atualizado no repositório, dá para trocar por "npm ci".
+      # npm install em vez de npm ci pq o package-lock tá desatualizado. dá pra trocar quando atualizar o lock
       - name: Instalar dependências
         run: npm install --no-audit --no-fund
 

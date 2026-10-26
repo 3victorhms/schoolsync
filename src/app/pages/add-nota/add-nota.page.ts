@@ -1,4 +1,4 @@
-// v2: lançar/editar uma nota do boletim.
+// lançar ou editar uma nota do boletim
 //  /sala/:idSala/nota?atividade=ID  → nota de uma atividade da sala (só a nota obtida)
 //  /sala/:idSala/nota[?periodo=ID]  → nota avulsa (descrição, matéria, data, valor e nota)
 //  /sala/:idSala/nota/:idNota       → editar uma nota existente
@@ -47,7 +47,7 @@ export class AddNotaPage {
   notas: NotaModel[] = [];
   /** Nota sendo editada (null = nova). */
   nota: NotaModel | null = null;
-  /** Atividade da nota (lançamento ou edição de nota de atividade). */
+  // atividade da nota (lançamento ou edição de nota de atividade)
   atividade: AtividadeModel | null = null;
 
   carregando = true;
@@ -76,7 +76,7 @@ export class AddNotaPage {
       'valorObtido': ['', [Validators.required, Validators.min(0)]],
     }, { validators: this.obtidoAteOMaximo() });
 
-    // Matéria e data mudam o espaço disponível no período
+    // matéria e data mudam o espaço disponível no período
     this.formGroup.get('idMateria')?.valueChanges.subscribe(() => this.revalidarValorMaximo());
     this.formGroup.get('data')?.valueChanges.subscribe(() => this.revalidarValorMaximo());
   }
@@ -118,7 +118,7 @@ export class AddNotaPage {
         const idDaAtividade = this.nota?.idAtividade || idAtividade;
         this.atividade = idDaAtividade ? (this.sala.atividades.find(a => a.id === idDaAtividade) ?? null) : null;
 
-        // Já existe nota para essa atividade: abre a edição em vez de duplicar
+        // já existe nota para essa atividade: abre a edição em vez de duplicar
         if (!this.nota && this.atividade) {
           this.nota = this.notas.find(n => n.idAtividade === this.atividade!.id) ?? null;
         }
@@ -142,7 +142,7 @@ export class AddNotaPage {
     const controlesDaAvulsa = ['descricao', 'idMateria', 'data', 'valorMaximo'];
 
     if (this.atividade) {
-      // Nota de atividade: o resto vem da atividade, só a nota obtida é digitada
+      // nota de atividade: o resto vem da atividade, só a nota obtida é digitada
       controlesDaAvulsa.forEach(c => this.formGroup.get(c)?.disable({ emitEvent: false }));
       this.formGroup.patchValue({
         descricao: this.atividade.titulo,
@@ -156,10 +156,10 @@ export class AddNotaPage {
       const periodoSugerido = this.sala.periodos.find(p => p.id === idPeriodoSugerido);
       this.formGroup.reset({
         descricao: this.nota?.descricao ?? '',
-        // Aberta pela matéria no boletim: já vem com ela escolhida
+        // aberta pela matéria no boletim: já vem com ela escolhida
         idMateria: this.nota?.idMateria
           ?? (this.sala.materias.some(m => m.id === idMateriaSugerida) ? idMateriaSugerida : ''),
-        // Sugere uma data dentro do período escolhido no boletim (sem passar de hoje)
+        // sugere uma data dentro do período escolhido no boletim (sem passar de hoje)
         data: this.nota?.data ?? (periodoSugerido ? this.dataSugerida(periodoSugerido) : ''),
         valorMaximo: this.nota?.valorMaximo ?? '',
         valorObtido: this.nota?.valorObtido ?? '',
@@ -183,7 +183,7 @@ export class AddNotaPage {
     return this.sala?.materias?.find(m => m.id === id)?.nome ?? '';
   }
 
-  /** Quanto ainda cabe na matéria/período para esta avulsa (null enquanto falta matéria ou data). */
+  // quanto ainda cabe na matéria/período para esta avulsa (null enquanto falta matéria ou data)
   get disponivel(): number | null {
     const periodo = this.periodoSelecionado;
     const idMateria = this.formGroup?.get('idMateria')?.value;
@@ -304,7 +304,7 @@ export class AddNotaPage {
     });
   }
 
-  /** Volta para quem abriu: a atividade (botão "Minha nota") ou o boletim. */
+  // volta para quem abriu: a atividade (botão "Minha nota") ou o boletim
   private voltar() {
     const query = this.activatedRoute.snapshot.queryParams;
     if (query['origem'] === 'atividade' && query['atividade']) {

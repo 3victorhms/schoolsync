@@ -7,8 +7,7 @@ import { Capacitor } from '@capacitor/core';
 export class ConfirmacaoService {
 
   async confirmar(titulo: string, mensagem: string, textoConfirmar: string): Promise<boolean> {
-    // No Android, o dialogo do proprio WebView e mais confiavel que um
-    // overlay em HTML e nao pode ficar escondido atras da pagina.
+    // no android o dialog nativo do WebView é mais confiável que um overlay em html
     if (Capacitor.isNativePlatform()) {
       return window.confirm(`${titulo}\n\n${mensagem}`);
     }
@@ -16,9 +15,7 @@ export class ConfirmacaoService {
     return this.confirmarComOverlay(titulo, mensagem, textoConfirmar);
   }
 
-  /** Variante somente-informativa (um unico botao), pra avisos que nao
-   * precisam de confirmar/cancelar - por exemplo, um erro que so precisa
-   * de um "Entendi". */
+  // versão com um botão só, pra avisos tipo "Entendi"
   async informar(titulo: string, mensagem: string, textoFechar: string = 'Entendi'): Promise<void> {
     if (Capacitor.isNativePlatform()) {
       window.alert(`${titulo}\n\n${mensagem}`);
@@ -28,11 +25,8 @@ export class ConfirmacaoService {
     await this.confirmarComOverlay(titulo, mensagem, textoFechar, true);
   }
 
-  /** Dialogo de confirmacao feito soh com HTML/CSS puro (ver
-   * .confirmacao-overlay no global.scss), sem depender do ion-alert do
-   * Ionic - que em alguns builds de producao nunca chega a hidratar,
-   * deixando a Promise de confirmacao presa pra sempre e o botao parecendo
-   * sem nenhuma acao ao clicar. */
+  // dialog de confirmação em html/css puro (.confirmacao-overlay no global.scss). o ion-alert
+  // às vezes n carregava no build de produção e o botão ficava sem fazer nada
   private confirmarComOverlay(
     titulo: string,
     mensagem: string,
@@ -97,8 +91,7 @@ export class ConfirmacaoService {
       overlay.appendChild(card);
       document.body.appendChild(overlay);
 
-      // Foco no botao principal assim que o dialogo aparece, pra quem usa
-      // teclado/leitor de tela.
+      // foco no botão principal pra quem usa teclado ou leitor de tela
       setTimeout(() => btnConfirmar.focus(), 0);
     });
   }

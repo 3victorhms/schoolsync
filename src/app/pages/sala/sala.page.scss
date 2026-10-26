@@ -1,4 +1,3 @@
-// Estilos feitos com as I.As Lovable e Claude
 
 ion-toolbar {
     --background: var(--app-bg);
@@ -27,7 +26,7 @@ ion-toolbar {
             gap: 4px;
             background: none;
             border: none;
-            // Área de toque maior sem mudar a posição do texto.
+            // área de toque maior sem mudar a posição do texto
             padding: 10px 8px;
             margin: -10px -8px;
             font-family: inherit;
@@ -64,9 +63,7 @@ ion-content {
         font-weight: 600;
         cursor: pointer;
 
-        // Sem fundo, so o icone colorido. Cor solida (com !important, ja que
-        // o global.scss forca ".acao-btn ion-icon" pra cor de acento no tema
-        // claro), pra ficar certo em qualquer tema sem precisar de ajuste.
+        // só o ícone colorido. tem !important pq o global.scss força a cor de acento no .acao-btn ion-icon do tema claro
         .acao-icone {
             width: 40px;
             height: 40px;
@@ -135,10 +132,7 @@ ion-content {
     background: rgba(255, 255, 255, 0.06);
 }
 
-// Membros: swipe-to-delete (ion-item-sliding). O <ion-item> vira um wrapper
-// transparente — quem cuida de layout/espaçamento continua sendo o
-// .membro-item de sempre — e a linha divisória usa borda em vez do seletor
-// de irmão adjacente (agora os .membro-item não são mais irmãos diretos).
+// membros: arrastar pra remover (ion-item-sliding). o ion-item fica transparente e o .membro-item cuida do layout
 ion-item.membro-item-host {
     --background: transparent;
     --padding-start: 0;
@@ -169,8 +163,7 @@ ion-item-sliding + ion-item-sliding .membro-item {
     flex-shrink: 0;
     margin-top: 2px;
 
-    // Cor solida por status (como no app Lembretes do iOS), pra funcionar
-    // igual em qualquer tema sem precisar de ajuste.
+    // cor sólida por status (tipo o app Lembretes do iOS), funciona nos dois temas
     ion-icon {
         font-size: 17px;
         color: #ffffff !important;
@@ -250,9 +243,7 @@ ion-item-sliding + ion-item-sliding .membro-item {
             font-size: 13px;
         }
 
-        // Escala de urgência (psicologia das cores), mesmo padrão do
-        // calendário em Início: quanto mais perto do prazo, mais
-        // forte/vermelha a cor da data.
+        // escala de urgência igual a do calendário: quanto mais perto do prazo, mais vermelha a data
         &.urgencia-atrasada,
         &.urgencia-hoje {
             color: var(--app-urgencia-atrasada);
@@ -306,7 +297,7 @@ ion-item-sliding + ion-item-sliding .membro-item {
     }
 }
 
-// Link "Ver todas as atividades" abaixo da prévia de próximas atividades.
+// link "Ver todas as atividades" abaixo da prévia de próximas atividades
 .ver-todas {
     display: flex;
     align-items: center;
@@ -328,8 +319,7 @@ ion-item-sliding + ion-item-sliding .membro-item {
     }
 }
 
-// Quando usado direto dentro do ion-content (estado de carregamento
-// inicial), fora de uma secao com padding proprio.
+// quando fica direto no ion-content (carregando), fora de uma seção com padding
 ion-content > .vazio-data {
     margin: 20px 16px;
 }
@@ -386,7 +376,7 @@ ion-content > .vazio-data {
 }
 
 // ---------------------------------------------------------------------------
-// Abas da sala (Atividades | Grupos | Membros) — feito com auxílio do Claude
+// abas da sala (Atividades | Grupos | Membros)
 // ---------------------------------------------------------------------------
 .abas {
     display: flex;
@@ -434,7 +424,7 @@ ion-content > .vazio-data {
     }
 }
 
-// Botão de ação no topo de uma aba ("Nova atividade", "Criar grupo"...).
+// botão de ação no topo de uma aba ("Nova atividade", "Criar grupo"...)
 .linhas-acao {
     display: flex;
     gap: 8px;
@@ -491,7 +481,7 @@ ion-content > .vazio-data {
     }
 }
 
-// Ícone neutro (navegação) para linhas que não têm status, como grupos.
+// ícone neutro (navegação) para linhas que não têm status, como grupos
 .row-icon.neutro {
     background: var(--app-accent-soft);
 
@@ -512,7 +502,7 @@ ion-content > .vazio-data {
     gap: 8px;
 }
 
-// Ocupação da sala (RN16: máximo de 50 membros)
+// ocupação da sala (RN16: máximo de 50 membros)
 .ocupacao {
     margin-bottom: 12px;
     padding: 12px 14px;
@@ -564,7 +554,7 @@ ion-content > .vazio-data {
     }
 }
 
-// v2: período atual no topo da aba de atividades (abre a tela de pontos)
+// período atual no topo da aba de atividades (abre a tela de pontos)
 .periodo-banner {
     display: flex;
     align-items: center;
@@ -619,10 +609,8 @@ ion-content > .vazio-data {
 }
 
 // ---------------------------------------------------------------------------
-// Abas x versão web — feito com auxílio do Claude
-// No celular/tablet só a aba escolhida aparece. No computador as abas somem
-// e as três seções aparecem juntas: atividades à esquerda; grupos e membros
-// numa coluna à direita.
+// no celular só a aba escolhida aparece. no computador as abas somem e as três seções
+// aparecem juntas: atividades na esquerda, grupos e membros na direita
 // ---------------------------------------------------------------------------
 .aba-oculta {
     display: none;
@@ -730,7 +718,7 @@ ion-item.membro-item-host .membro-item {
     min-width: 0;
 }
 
-// Cartão de convite (topo da aba/coluna Membros) — feito com auxílio do Claude
+// cartão de convite (topo de Membros)
 .convite {
     margin-bottom: 12px;
     padding: 16px;

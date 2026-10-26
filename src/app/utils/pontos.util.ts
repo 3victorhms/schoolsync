@@ -1,6 +1,4 @@
-// Rótulo compartilhado pro valor em pontos de uma atividade. Uma atividade
-// pode não valer ponto (valor 0/vazio) — nesse caso mostramos um rótulo
-// dedicado em vez de "0 pontos".
+// rótulo do valor em pontos. se a atividade n vale ponto (0 ou vazio) mostra outro texto em vez de "0 pontos"
 export function labelPontos(valor: number | string | null | undefined): string {
   const pontos = Number(valor);
 

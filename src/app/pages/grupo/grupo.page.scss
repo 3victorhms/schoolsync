@@ -242,13 +242,13 @@ ion-tab-button {
     padding: 10px 16px;
   }
 
-  // Pequeno espaco entre o icone e o texto do item ativo (senao ficam colados).
+  // espaço entre o ícone e o texto do item ativo
   ion-icon {
     margin-inline-end: 6px;
   }
 }
 
-// Botão do líder para remover um membro do grupo
+// botão do líder pra remover um membro do grupo
 .tornar-lider-btn {
   display: flex;
   align-items: center;

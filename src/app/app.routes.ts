@@ -23,6 +23,11 @@ const rotasDaAplicacao: Routes = [
     loadComponent: () => import('./pages/add-usuario/add-usuario.page').then(m => m.AddUsuarioPage)
   },
   {
+    path: 'manutencao',
+    title: 'Em manutenção',
+    loadComponent: () => import('./pages/manutencao/manutencao.page').then(m => m.ManutencaoPage)
+  },
+  {
     path: 'recuperar-senha',
     title: 'Recuperar senha',
     loadComponent: () => import('./pages/recuperar-senha/recuperar-senha.page').then(m => m.RecuperarSenhaPage)
@@ -185,7 +190,7 @@ const rotasDaAplicacao: Routes = [
   },
 ];
 
-const rotasPublicas = new Set(['', 'login', 'add-usuario', 'recuperar-senha']);
+const rotasPublicas = new Set(['', 'login', 'add-usuario', 'recuperar-senha', 'manutencao']);
 
 export const routes: Routes = rotasDaAplicacao.map(route =>
   rotasPublicas.has(route.path || '')

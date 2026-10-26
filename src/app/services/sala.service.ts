@@ -14,13 +14,13 @@ export class SalaService {
 
   constructor(private http: HttpClient, private apiDelete: ApiDeleteService) { }
 
-  /** Cria a sala (sem idSala) ou edita nome, matérias e períodos de uma existente. */
+  // cria a sala (sem idSala) ou edita nome, matérias e períodos de uma existente
   salvar(dados: SalaRequest, idSala?: string): Observable<SalaModel> {
     if (idSala) {
       return this.atualizar(idSala, dados);
     }
 
-    // O usuário logado (dono do token) vira o líder da sala
+    // o usuário logado (dono do token) vira o líder da sala
     return this.http.post<SalaModel>(this.API_URL, dados);
   }
 
@@ -39,7 +39,7 @@ export class SalaService {
     );
   }
 
-  /** Salas do usuário logado. */
+  // salas do usuário logado
   listarMinhas(): Observable<SalaModel[]> {
     return this.http.get<SalaModel[]>(this.API_URL);
   }

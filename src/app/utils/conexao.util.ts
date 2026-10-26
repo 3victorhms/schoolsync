@@ -1,11 +1,9 @@
-// Feito com auxílio do Claude: aviso de "sem internet".
-// Sem isso, ficar sem conexão só aparecia como "Erro ao carregar..." em cada tela.
-// Mesmo padrão do servidor-lento.util.ts: HTML/CSS puro, sem injeção de dependência.
+// aviso de sem internet. mesmo esquema do servidor-lento.util.ts (html/css puro)
 
 let banner: HTMLElement | null = null;
 let iniciado = false;
 
-/** true quando o aparelho avisa que está sem rede. */
+// true quando o aparelho avisa que está sem rede
 export function estaOffline(): boolean {
   return typeof navigator !== 'undefined' && navigator.onLine === false;
 }
@@ -29,7 +27,7 @@ function esconder() {
   banner = null;
 }
 
-/** Liga o aviso: aparece quando a rede cai e some sozinho quando ela volta. */
+// liga o aviso: aparece quando a rede cai e some sozinho quando ela volta
 export function iniciarMonitorConexao() {
   if (iniciado || typeof window === 'undefined') return;
   iniciado = true;
@@ -38,7 +36,7 @@ export function iniciarMonitorConexao() {
   if (estaOffline()) mostrar();
 }
 
-/** Chamado pelo interceptor quando uma requisição falha sem resposta (status 0). */
+// chamado pelo interceptor quando uma requisição falha sem resposta (status 0)
 export function falhaDeRede() {
   if (estaOffline()) mostrar();
 }

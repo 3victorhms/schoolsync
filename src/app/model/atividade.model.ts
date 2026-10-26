@@ -3,10 +3,10 @@ export class AtividadeModel {
     id: string;
     titulo: string;
     descricao: string;
-    /** v2: matéria cadastrada na sala (antes era o texto livre "disciplina"). */
+    // matéria cadastrada na sala
     idMateria: string;
     nomeMateria: string;
-    /** Período da sala em que a data de entrega cai, ex.: "2º Bimestre". */
+    // período da sala em que a data de entrega cai, ex.: "2º Bimestre"
     idPeriodo: string;
     nomePeriodo: string;
     dataEntrega: string;
@@ -14,7 +14,7 @@ export class AtividadeModel {
 
     idSala: string;
     idCriador: string;
-    /** Líder da sala: pode editar e excluir qualquer atividade dela. */
+    // líder da sala: pode editar e excluir qualquer atividade dela
     idLiderSala: string;
 
     estaNoCaderno: boolean;

@@ -6,21 +6,28 @@ const config: CapacitorConfig = {
   appName: 'SchoolSync',
   webDir: 'www',
   plugins: {
-    // No Android, usa a camada HTTP nativa para que chamadas DELETE não sejam
-    // bloqueadas pelo preflight CORS do WebView.
+    // no android usa o http nativo, senão o preflight do CORS no WebView bloqueia os DELETE
     CapacitorHttp: {
       enabled: true
     },
     PushNotifications: {
       presentationOptions: ['badge', 'sound', 'banner', 'list']
     },
-    // Cor/estilo iniciais (tema escuro, igual o --app-bg padrão do app) —
-    // evita o flash com a cor default do sistema antes do TemaService
-    // assumir e sincronizar com o tema salvo do usuário.
+    // cor inicial da status bar (a do tema escuro), pra n piscar a cor padrão do sistema antes do TemaService carregar o tema salvo
     StatusBar: {
       style: 'LIGHT',
       backgroundColor: '#0f1117',
       overlaysWebView: false
+    },
+    // login com google. os outros provedores ficam de fora pra n pesar o APK
+    SocialLogin: {
+      providers: {
+        google: true,
+        facebook: false,
+        apple: false,
+        twitter: false
+      },
+      logLevel: 1
     }
   }
 };

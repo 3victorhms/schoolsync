@@ -31,7 +31,7 @@ interface DiaCalendario {
   resumoAtividades?: string;
 }
 
-/** "caderno": só o que o aluno adicionou ao caderno (1 chamada). "todas": atividades de todas as salas. */
+// "caderno": só o que o aluno adicionou ao caderno (1 chamada). "todas": atividades de todas as salas
 type FiltroAgenda = 'caderno' | 'todas';
 
 interface SecaoAgenda {
@@ -54,7 +54,7 @@ export class InicioPage implements OnInit {
   usuario: UsuarioModel;
   ultimaSala: SalaModel | null = null;
 
-  /** v2: "2º Bimestre · termina em 12 dias" no cartão da última sala. */
+  // "2º Bimestre · termina em 12 dias" no cartão da última sala
   get periodoUltimaSala(): string {
     const periodo = periodoAtual(this.ultimaSala?.periodos || []);
     return periodo ? `${periodo.nome} · ${situacaoPeriodo(periodo)}` : '';
@@ -80,7 +80,7 @@ export class InicioPage implements OnInit {
   quantidadeSalas = 0;
   readonly LIMITE_POR_SECAO = 5;
   private atividadesCaderno: AtividadeModel[] = [];
-  /** null = ainda não carregadas (só carrega se o aluno escolher "Todas"). */
+  // null = ainda não carregadas (só carrega se o aluno escolher "Todas")
   private atividadesTodas: AtividadeModel[] | null = null;
 
   private meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
@@ -102,7 +102,7 @@ export class InicioPage implements OnInit {
     return (this.usuario.nome || '').trim().split(/\s+/)[0] || 'Estudante';
   }
 
-  /** Recarrega agenda e última sala ao voltar para a aba (as abas internas não recebem ionViewWillEnter). */
+  // recarrega agenda e última sala ao voltar para a aba (as abas internas não recebem ionViewWillEnter)
   private recarregador = criarRecarregadorDeAba(inject(Router), '/tabs/inicio', () => {
     this.carregarUltimaSala();
     this.carregarAgenda();
@@ -201,9 +201,8 @@ export class InicioPage implements OnInit {
   }
 
   // =====================================================================
-  // Agenda: começa no caderno (rápido); se o caderno estiver vazio e o
-  // aluno nunca escolheu um filtro, mostra "Todas". A escolha fica salva
-  // no aparelho, então o cálculo completo só roda para quem pediu.
+  // agenda: começa pelo caderno (é uma chamada só). se o caderno tá vazio
+  // e o aluno nunca escolheu um filtro, mostra "Todas"
   // =====================================================================
 
   private carregarAgenda() {
@@ -213,11 +212,9 @@ export class InicioPage implements OnInit {
     }
 
     this.atividadesTodas = null;
-    // Desenha o calendário já (sem as marcações), em vez de deixar o cartão
-    // vazio até a API responder; as marcações entram quando os dados chegam.
+    // desenha o calendário logo, sem as marcações, pra n ficar o cartão vazio esperando a API
     if (!this.diasCalendario.length) this.gerarCalendario();
-    // uma só busca de GET /salas por carregamento, dividida entre os nomes e o filtro "Todas"
-    // (antes eram duas requisições iguais ao abrir a tela)
+    // uma busca só de GET /salas, usada pelos nomes e pelo filtro "Todas"
     this.salas$ = this.salaService.listarMinhas().pipe(
       catchError(() => of([] as SalaModel[])),
       shareReplay(1)
@@ -278,7 +275,7 @@ export class InicioPage implements OnInit {
     });
   }
 
-  /** Busca cada sala do aluno (no máximo 4 ao mesmo tempo) e vai montando a agenda conforme chegam. */
+  // busca cada sala do aluno (no máximo 4 ao mesmo tempo) e vai montando a agenda conforme chegam
   private carregarTodas() {
     if (this.carregandoTodas) return;
 
@@ -313,7 +310,7 @@ export class InicioPage implements OnInit {
     });
   }
 
-  /** Separa as atividades pendentes em Atrasadas (até serem arquivadas, ver deveArquivar), Hoje, Amanhã, Esta semana e Depois. */
+  // separa as atividades pendentes em Atrasadas (até serem arquivadas, ver deveArquivar), Hoje, Amanhã, Esta semana e Depois
   private montarAgenda() {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -352,7 +349,7 @@ export class InicioPage implements OnInit {
     ].filter(secao => secao.atividades.length);
     this.atividadesDepois = ordenar(depois);
 
-    // O calendário mostra a mesma fonte escolhida no filtro.
+    // o calendário mostra a mesma fonte escolhida no filtro
     this.atividadesCalendario = this.atividadesAtuais;
     this.semana = analisarSemana(this.atividadesAtuais);
     this.gerarCalendario();
@@ -410,7 +407,7 @@ export class InicioPage implements OnInit {
     try {
       localStorage.setItem(this.chaveFiltro(), filtro);
     } catch {
-      // Sem armazenamento local: a escolha vale só nesta sessão.
+      // sem armazenamento local: a escolha vale só nesta sessão
     }
   }
 
@@ -434,7 +431,7 @@ export class InicioPage implements OnInit {
     return tipos.sort((a, b) => ordemUrgencia(a) - ordemUrgencia(b))[0];
   }
 
-  /** Classe de urgência (mesmo padrão do calendário) pra usar em listas de atividades. */
+  // classe de urgência (mesmo padrão do calendário) pra usar em listas de atividades
   classeUrgencia(atividade: AtividadeModel): string {
     return classeUrgencia(atividade.dataEntrega, atividade.status);
   }
@@ -479,8 +476,7 @@ export class InicioPage implements OnInit {
     return labelPontos(valor);
   }
 
-  /** Próxima atividade pendente (data de hoje em diante), pra sugerir quando
-   * o dia selecionado no calendário não tem nada marcado. */
+  // próxima atividade pendente (de hoje em diante), pra sugerir quando o dia selecionado tá vazio
   get proximaAtividadeSugerida(): AtividadeModel | null {
     const hojeStr = this.dataParaChave(new Date());
     const pendentes = this.atividadesCalendario
@@ -491,13 +487,13 @@ export class InicioPage implements OnInit {
   }
 
   // ---------------------------------------------------------------------------
-  // Painel do celular (próxima entrega + resumo + faixa da semana)
+  // painel do celular (próxima entrega + resumo + faixa da semana)
   // ---------------------------------------------------------------------------
 
-  /** No celular o mês inteiro fica recolhido; a faixa da semana abre ele. */
+  // no celular o mês inteiro fica recolhido; a faixa da semana abre ele
   mostrarMes = false;
 
-  /** A semana (linha do calendário) do dia selecionado, ou de hoje. */
+  // a semana (linha do calendário) do dia selecionado, ou de hoje
   get semanaVisivel(): DiaCalendario[] {
     let base = this.diasCalendario.findIndex(dia => dia.selecionado);
     if (base < 0) base = this.diasCalendario.findIndex(dia => dia.hoje);
@@ -506,7 +502,7 @@ export class InicioPage implements OnInit {
     return this.diasCalendario.slice(inicio, inicio + 7);
   }
 
-  /** A atividade pendente mais urgente da agenda (atrasada, hoje, amanhã...). */
+  // a atividade pendente mais urgente da agenda (atrasada, hoje, amanhã...)
   get proximaEntrega(): AtividadeModel | null {
     for (const secao of this.secoes) {
       if (secao.atividades.length) return secao.atividades[0];
@@ -518,8 +514,8 @@ export class InicioPage implements OnInit {
     return rotuloUrgencia(atividade.dataEntrega, atividade.status) || this.formatarData(atividade.dataEntrega);
   }
 
-  /** Entregas dos próximos 7 dias (hoje incluso) e quantas já estão concluídas. */
-  // feito com auxílio do Claude: alerta de semana pesada (ver semana.util.ts)
+  // entregas dos próximos 7 dias (hoje incluso) e quantas já estão concluídas
+  // alerta de semana pesada (semana.util.ts)
   semana: AnaliseSemana | null = null;
 
   get textoSemanaPesada(): string {

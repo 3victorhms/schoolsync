@@ -1,5 +1,5 @@
-// v2: boletim pessoal da sala. Cada aluno lança as próprias notas (de atividades da
-// sala ou avulsas) e vê o total por matéria em cada período e no ano.
+// boletim pessoal da sala: cada aluno lança as próprias notas (de atividade ou avulsa)
+// e vê a situação de cada matéria por período e no ano
 
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -60,7 +60,7 @@ import {
   resumirSituacoes
 } from 'src/app/utils/boletim.util';
 
-/** id do período selecionado, ou "ano" para o acumulado. */
+// id do período selecionado, ou "ano" para o acumulado
 type Visao = string;
 
 @Component({
@@ -94,7 +94,7 @@ export class BoletimPage {
 
   visao: Visao = 'ano';
   idPeriodoAtual = '';
-  /** Matérias com a lista de notas aberta. */
+  // matérias com a lista de notas aberta
   abertas = new Set<string>();
 
   readonly formatarDataBr = formatarDataBr;
@@ -144,13 +144,13 @@ export class BoletimPage {
 
         const atual = periodoAtual(this.sala.periodos);
         this.idPeriodoAtual = atual?.id ?? '';
-        // Primeira abertura: período atual. Recarregando: mantém o que estava aberto.
+        // primeira abertura: período atual. recarregando: mantém o que estava aberto
         const visaoValida = this.visao === 'ano' || this.sala.periodos.some(p => p.id === this.visao);
         if (!visaoValida || (this.visao === 'ano' && !this.jaEscolheuVisao)) {
           this.visao = atual?.id ?? 'ano';
         }
         this.montarVisao();
-        // Com 4 bimestres + "Ano" as abas passam da largura da tela: rola até a selecionada
+        // com 4 bimestres + "Ano" as abas passam da largura da tela: rola até a selecionada
         setTimeout(() => document.querySelector('app-boletim .filtro-btn.ativo')
           ?.scrollIntoView({ inline: 'center', block: 'nearest' }));
       },
@@ -171,19 +171,18 @@ export class BoletimPage {
   }
 
   // ===================== dados da visão atual =====================
-  // Feito com auxílio do Claude. Recalculados só quando muda a visão ou chegam dados
-  // novos, e não a cada ciclo de detecção de mudanças da tela.
+  // calculados só quando muda a visão ou chegam dados novos, n a cada change detection
 
   linhas: LinhaBoletim[] = [];
   analises = new Map<string, AnaliseMateria>();
   resumo: ResumoSituacoes | null = null;
   pendentes: AtividadeModel[] = [];
   mostrarPendentes = false;
-  /** Matérias/períodos em que as avulsas do aluno passam do limite (ver excessoNoPeriodo). */
+  // matérias/períodos em que as avulsas do aluno passam do limite (ver excessoNoPeriodo)
   excessos: ExcessoAvulsas[] = [];
   excessoPorMateria = new Map<string, number>();
 
-  /** Meta do "quanto falta", em % (60). */
+  // meta do "quanto falta", em % (60)
   readonly metaPercentual = Math.round(META_APROVACAO * 100);
   readonly ordemSituacoes = ORDEM_SITUACOES;
   readonly rotuloSituacao = ROTULO_SITUACAO;
@@ -211,10 +210,8 @@ export class BoletimPage {
     this.pendentes = atividadesSemNota(this.sala, this.notas, this.visao === 'ano' ? undefined : this.visao);
   }
 
-  /**
-   * Feito com auxílio do Claude: "Resolver" do aviso de excesso. Abre a avulsa de maior valor
-   * daquela matéria/período, já mostrando quanto ainda cabe (?ajustar=1 no add-nota).
-   */
+  // botão "Resolver" do aviso de excesso: abre a avulsa de maior valor da matéria/período
+  // já mostrando quanto ainda cabe (?ajustar=1)
   resolverExcesso(excesso: ExcessoAvulsas) {
     const avulsa = this.notas
       .filter(n => n.avulsa && n.idMateria === excesso.idMateria && n.idPeriodo === excesso.idPeriodo)
@@ -223,7 +220,7 @@ export class BoletimPage {
     this.router.navigate(['/sala', this.idSala, 'nota', avulsa.id], { queryParams: { ajustar: 1 } });
   }
 
-  /** Aviso do topo quando alguma avulsa passou do limite do período. */
+  // aviso do topo quando alguma avulsa passou do limite do período
   get textoExcesso(): string {
     if (!this.excessos.length) return '';
     const nomes = [...new Set(this.excessos.map(e => e.nomeMateria))];
@@ -243,7 +240,7 @@ export class BoletimPage {
     return descreverSituacao(linha, this.analise(linha));
   }
 
-  /** Título do card de situação: aponta as matérias que pedem foco. */
+  // título do card de situação: aponta as matérias que pedem foco
   get tituloResumo(): string {
     const resumo = this.resumo;
     if (!resumo || !resumo.total) return 'Nenhuma matéria vale pontos aqui';
@@ -271,7 +268,7 @@ export class BoletimPage {
     }
   }
 
-  /** Barra: parte obtida e parte avaliada sobre o máximo possível. */
+  // barra: parte obtida e parte avaliada sobre o máximo possível
   largura(valor: number, maximo: number): number {
     return maximo > 0 ? Math.min(100, (valor / maximo) * 100) : 0;
   }
@@ -303,8 +300,7 @@ export class BoletimPage {
 
   async exportar() {
     if (!this.boletim || this.exportando) return;
-    // feito com auxílio do Claude: com avulsa acima do limite a conta da matéria fica inflada,
-    // e o PDF sairia com um número impossível. Só libera depois de ajustar.
+    // com avulsa acima do limite a conta da matéria fica errada, ent só deixa gerar o PDF depois de ajustar
     const pendencias = excessosDeAvulsas(this.sala, this.notas);
     if (pendencias.length) {
       const onde = juntarNomes(pendencias.map(e => `${e.nomeMateria} (${e.nomePeriodo})`), 3);
@@ -321,7 +317,7 @@ export class BoletimPage {
         excessos: excessosDeAvulsas(this.sala, this.notas),
       });
     } catch (erro: any) {
-      // Fechar a folha de compartilhamento sem escolher nada não é erro
+      // fechar a folha de compartilhamento sem escolher nada não é erro
       if (!String(erro?.message || '').toLowerCase().includes('cancel')) {
         console.error('Erro ao exportar boletim', erro);
         mostrarAviso('Não foi possível gerar o PDF do boletim.');

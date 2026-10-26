@@ -1,6 +1,6 @@
-/** Matéria cadastrada pelo líder ao criar/editar a sala (v2). */
+// matéria cadastrada pelo líder ao criar ou editar a sala
 export class MateriaModel {
-    /** Vazio enquanto a matéria ainda não foi salva no servidor. */
+    // vazio enquanto a matéria ainda não foi salva no servidor
     id: string;
     nome: string;
 

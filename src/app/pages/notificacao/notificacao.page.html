@@ -25,7 +25,7 @@
 
   <main class="pagina-notificacoes">
     <section class="lista" aria-live="polite">
-      <!-- skeleton no formato do cartão de notificação (feito com auxílio do Claude) -->
+      <!-- skeleton no formato do cartão de notificação -->
       @if (carregando && notificacoes.length === 0) {
       @for (i of [1, 2, 3, 4]; track i) {
       <div class="notificacao skeleton-row" aria-hidden="true">

@@ -1,7 +1,5 @@
-// Barra de abas flutuante compartilhada por Início, Salas, Caderno e Perfil.
-// Antes esse bloco existia duplicado (4x, um por página) porque cada tela
-// desenhava sua própria <ion-tab-bar>; agora vive só aqui, dentro do
-// <ion-tabs> real, então a barra nunca é recriada ao trocar de aba.
+// barra de abas flutuante de Início, Salas, Caderno e Perfil. fica aqui no ion-tabs
+// pra n ser recriada quando troca de aba
 
 ion-tab-bar {
     position: fixed;
@@ -49,15 +47,13 @@ ion-tab-button {
         white-space: nowrap;
     }
 
-    // O rótulo só aparece na aba ativa; nas outras fica só o ícone.
+    // o rótulo só aparece na aba ativa; nas outras fica só o ícone
     &:not(.tab-selected) ion-label {
         display: none;
     }
 }
 
-// Ionic marca a aba ativa com a classe .tab-selected (e aria-selected="true")
-// automaticamente com base na rota — não é mais preciso marcar isso à mão
-// em cada página.
+// o ionic já marca a aba ativa com .tab-selected pela rota
 ion-tab-button.tab-selected,
 ion-tab-button[aria-selected='true'] {
     color: var(--app-accent);
@@ -67,7 +63,7 @@ ion-tab-button[aria-selected='true'] {
         padding: 10px 16px;
     }
 
-    // Pequeno espaco entre o icone e o texto do item ativo (senao ficam colados).
+    // espaço entre o ícone e o texto do item ativo
     ion-icon {
         margin-inline-end: 6px;
     }

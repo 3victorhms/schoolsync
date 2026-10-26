@@ -60,8 +60,7 @@
       </button>
     </div>
 
-    <!-- Situação por matéria (feito com auxílio do Claude). A aprovação é por matéria,
-         então o boletim não soma matérias diferentes num total geral. -->
+    <!-- situação por matéria. a aprovação é por matéria, ent n tem total geral -->
     @if (resumo) {
     <div class="situacao-resumo" [class.com-foco]="resumo.foco.length">
       <strong class="situacao-titulo">{{ tituloResumo }}</strong>
@@ -78,7 +77,7 @@
     </div>
     }
 
-    <!-- feito com auxílio do Claude: avulsa lançada antes de a turma criar uma atividade pode estourar o limite -->
+    <!-- avulsa lançada antes da turma criar uma atividade pode estourar o limite do período -->
     @if (excessos.length) {
     <div class="aviso-excesso" role="note">
       <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
@@ -100,7 +99,7 @@
     </div>
     }
 
-    <!-- Atividades que já podem receber nota -->
+    <!-- atividades que já podem receber nota -->
     @if (pendentes.length) {
     <button type="button" class="pendentes-aviso" (click)="mostrarPendentes = !mostrarPendentes"
       [attr.aria-expanded]="mostrarPendentes">
@@ -125,7 +124,7 @@
     }
     }
 
-    <!-- Matérias -->
+    <!-- matérias -->
     <div class="materias-cabecalho">
       <h3 class="group-title">Matérias</h3>
       <div class="legenda-barras" aria-hidden="true">

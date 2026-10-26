@@ -11,11 +11,11 @@ export interface ConfiguracaoNotificacao {
   lembreteDias: 1 | 3 | 7;
 }
 
-/** Feito com auxílio do Claude: resposta paginada da API (ver Paginacao no backend). */
+// resposta paginada da API (Paginacao no back)
 export interface PaginaNotificacoes {
   itens: NotificacaoModel[];
   temMais: boolean;
-  /** Todas as não lidas do usuário, não só as desta página. */
+  // todas as não lidas do usuário, não só as desta página
   naoLidas: number;
 }
 
@@ -32,12 +32,12 @@ export class NotificacaoService {
   private readonly naoLidasSubject = new BehaviorSubject<number>(0);
   readonly naoLidas$ = this.naoLidasSubject.asObservable();
   private readonly TAMANHO_PAGINA = 20;
-  /** Ainda há notificações mais antigas para buscar. */
+  // ainda há notificações mais antigas para buscar
   temMais = false;
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  /** Primeira página (as mais recentes). Substitui o que estava carregado. */
+  // primeira página (as mais recentes). substitui o que estava carregado
   listar(): Observable<PaginaNotificacoes> {
     return this.http.get<PaginaNotificacoes>(this.API_URL, { params: { tamanho: this.TAMANHO_PAGINA } }).pipe(
       tap(pagina => {
@@ -48,7 +48,7 @@ export class NotificacaoService {
     );
   }
 
-  /** Próxima página: as anteriores à mais antiga que já está na lista. */
+  // próxima página: as anteriores à mais antiga que já está na lista
   carregarMais(): Observable<PaginaNotificacoes> {
     const atuais = this.notificacoesSubject.value;
     const maisAntiga = atuais[atuais.length - 1];
@@ -98,7 +98,7 @@ export class NotificacaoService {
     const usuarioId = this.usuarioId;
     if (!usuarioId || this.eventSource || this.reconexaoTimer) return;
 
-    // O EventSource não envia cabeçalhos, então o token vai na URL e a API identifica o usuário por ele.
+    // o EventSource não envia cabeçalhos, então o token vai na URL e a API identifica o usuário por ele
     const token = encodeURIComponent(this.tokenService.buscar() || '');
     this.eventSource = new EventSource(`${this.API_URL}/stream?token=${token}`);
     this.eventSource.onopen = () => {

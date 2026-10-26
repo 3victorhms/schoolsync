@@ -1,23 +1,22 @@
-// Feito com auxílio do Claude: detecta "semana pesada" na agenda do Início.
-// Conta as entregas ainda não concluídas de hoje até daqui a 6 dias (7 dias no total).
+// detecta semana pesada na agenda do início: conta as entregas n concluídas de hoje até daqui a 6 dias
 
 import { AtividadeModel } from '../model/atividade.model';
 import { parsearData } from './data.util';
 
-/** A partir de quantas entregas pendentes em 7 dias a semana é pesada. */
+// a partir de quantas entregas pendentes em 7 dias a semana é pesada
 export const LIMITE_ENTREGAS_SEMANA = 4;
-/** ...ou a partir de quantas entregas num mesmo dia. */
+// ...ou a partir de quantas entregas num mesmo dia
 export const LIMITE_ENTREGAS_DIA = 3;
 
 export interface AnaliseSemana {
   pesada: boolean;
-  /** Entregas pendentes de hoje até daqui a 6 dias, por ordem de entrega. */
+  // entregas pendentes de hoje até daqui a 6 dias, por ordem de entrega
   pendentes: AtividadeModel[];
   /** Soma dos pontos dessas entregas. */
   pontos: number;
-  /** O dia com mais entregas (null se não há nenhuma). */
+  // o dia com mais entregas (null se não há nenhuma)
   diaMaisCheio: { data: Date; quantidade: number } | null;
-  /** A entrega que vale mais pontos (null se nenhuma vale ponto). */
+  // a entrega que vale mais pontos (null se nenhuma vale ponto)
   maisValiosa: AtividadeModel | null;
 }
 
@@ -69,7 +68,7 @@ export function analisarSemana(atividades: AtividadeModel[], hoje: Date = new Da
 
 const DIAS_SEMANA = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
 
-/** "hoje", "amanhã" ou "na quinta (29/10)". */
+// "hoje", "amanhã" ou "na quinta (29/10)"
 export function rotuloDia(data: Date, hoje: Date = new Date()): string {
   const dias = Math.round((inicioDoDia(data).getTime() - inicioDoDia(hoje).getTime()) / 86400000);
   if (dias === 0) return 'hoje';

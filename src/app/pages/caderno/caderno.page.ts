@@ -40,7 +40,7 @@ import { finalize } from 'rxjs';
 import { DIAS_ATE_ARQUIVAR, classeUrgencia, compararPorEntrega, deveArquivar } from 'src/app/utils/urgencia.util';
 import { parsearData } from 'src/app/utils/data.util';
 
-/** Bloco da lista do caderno ("Atrasadas", "Hoje"...). */
+// bloco da lista do caderno ("Atrasadas", "Hoje"...)
 interface SecaoCaderno {
   chave: string;
   titulo: string;
@@ -77,17 +77,17 @@ export class CadernoPage implements OnInit {
   usuario: UsuarioModel;
   atividades: AtividadeModel[];
   atividadesFiltradas: AtividadeModel[];
-  /** As atividades à vista, em ordem de prazo e separadas por quando vencem. */
+  // as atividades à vista, em ordem de prazo e separadas por quando vencem
   secoesAtividades: SecaoCaderno[] = [];
-  /** Concluídas com prazo vencido ou atrasadas há mais de 3 dias (regra em deveArquivar). Ficam recolhidas no fim. */
+  // concluídas com prazo vencido ou atrasadas há mais de 3 dias (regra em deveArquivar). ficam recolhidas no fim
   atividadesArquivadas: AtividadeModel[] = [];
-  /** null = automático (abre sozinha com busca ou filtro); true/false = o aluno abriu ou fechou na mão. */
+  // null = automático (abre sozinha com busca ou filtro); true/false = o aluno abriu ou fechou na mão
   mostrarArquivadas: boolean | null = null;
   readonly DIAS_ATE_ARQUIVAR = DIAS_ATE_ARQUIVAR;
   tarefas: TarefaModel[];
   tarefasFiltradas: TarefaModel[];
   filtroAtivo: string;
-  /** v2: nome da matéria escolhida (vazio = todas). Por nome porque o caderno junta várias salas. */
+  // matéria escolhida (vazio = todas). é pelo nome pq o caderno junta várias salas
   filtroMateria = '';
   termoBusca: string;
   carregando = true;
@@ -127,7 +127,7 @@ export class CadernoPage implements OnInit {
 
   ngOnInit() { }
 
-  /** Recarrega o caderno ao voltar para a aba (ex.: depois de mudar o status de uma atividade). */
+  // recarrega o caderno ao voltar para a aba (ex.: depois de mudar o status de uma atividade)
   private recarregador = criarRecarregadorDeAba(inject(Router), '/tabs/caderno', () => {
     this.usuario = this.usuarioService.buscarAutenticacao();
     this.carregarCaderno();
@@ -209,7 +209,7 @@ export class CadernoPage implements OnInit {
     this.aplicarFiltros();
   }
 
-  /** Matérias que aparecem no caderno (atividades e tarefas), em ordem alfabética. */
+  // matérias que aparecem no caderno (atividades e tarefas), em ordem alfabética
   get materiasDoCaderno(): string[] {
     const nomes = new Set<string>();
     this.atividades.forEach(a => a.nomeMateria && nomes.add(a.nomeMateria));
@@ -248,7 +248,7 @@ export class CadernoPage implements OnInit {
     }).sort((a, b) => this.chavePrazoTarefa(a).localeCompare(this.chavePrazoTarefa(b)));
   }
 
-  /** Concluídas por último; entre as outras, a de prazo mais perto primeiro e as sem prazo no fim. */
+  // concluídas por último; entre as outras, a de prazo mais perto primeiro e as sem prazo no fim
   private chavePrazoTarefa(tarefa: TarefaModel): string {
     const concluida = tarefa.status === 'concluido' ? '1' : '0';
     return concluida + (tarefa.prazo || '9999-12-31');
@@ -292,10 +292,8 @@ export class CadernoPage implements OnInit {
     return this.atividadesFiltradas.length > 0 || this.atividadesArquivadas.length > 0 || this.tarefasFiltradas.length > 0;
   }
 
-  /**
-   * Separa as atividades (já em ordem de prazo) pelo que fazer primeiro, igual à agenda do Início.
-   * As concluídas que ainda não venceram ficam num bloco próprio no fim, pra não misturar com o que falta fazer.
-   */
+  // separa as atividades (já em ordem de prazo) pelo que fazer primeiro, igual a agenda do início
+  // as concluídas que ainda n venceram ficam num bloco no fim, pra n misturar com o que falta fazer
   private montarSecoes(atividades: AtividadeModel[]): SecaoCaderno[] {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -326,7 +324,7 @@ export class CadernoPage implements OnInit {
     return secoes.filter(secao => secao.atividades.length > 0);
   }
 
-  /** Com busca ou filtro ativo, as arquivadas aparecem abertas (senão o resultado ficaria escondido). */
+  // com busca ou filtro ativo, as arquivadas aparecem abertas (senão o resultado ficaria escondido)
   get arquivadasAbertas(): boolean {
     return this.mostrarArquivadas ?? (!!this.termoBusca.trim() || this.filtroAtivo !== 'todas' || !!this.filtroMateria);
   }
@@ -371,7 +369,7 @@ export class CadernoPage implements OnInit {
     return this.statusNormalizadoTarefa(status);
   }
 
-  /** Classe de urgência (psicologia das cores, mesmo padrão do calendário) pro rótulo de data. */
+  // classe de urgência (psicologia das cores, mesmo padrão do calendário) pro rótulo de data
   classeUrgencia(atividade: AtividadeModel): string {
     return classeUrgencia(atividade.dataEntrega, atividade.status);
   }

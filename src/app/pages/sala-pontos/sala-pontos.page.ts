@@ -1,6 +1,5 @@
-// v2: quanto de cada matéria já foi distribuído em atividades, período por período.
-// Ajuda a turma a ver, por exemplo, que Matemática já tem 20 dos 25 pontos do
-// 2º bimestre lançados e que só cabem mais 5.
+// quanto de cada matéria já foi distribuído em atividades em cada período
+// ex.: matemática já tem 20 dos 25 pontos do 2º bimestre, ent só cabem mais 5
 
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -37,7 +36,7 @@ import {
 @Component({
   selector: 'app-sala-pontos',
   templateUrl: './sala-pontos.page.html',
-  // Reaproveita os estilos da sala (.group, .row, filtros...).
+  // reaproveita os estilos da sala (.group, .row, filtros...)
   styleUrls: ['../sala/sala.page.scss', '../sala-atividades/sala-atividades.page.scss', './sala-pontos.page.scss'],
   standalone: true,
   imports: [
@@ -102,7 +101,7 @@ export class SalaPontosPage {
         const atual = periodoAtual(this.sala.periodos);
         this.idPeriodoAtual = atual?.id ?? '';
 
-        // Mantém o período escolhido ao recarregar; na primeira vez abre no atual
+        // mantém o período escolhido ao recarregar; na primeira vez abre no atual
         const escolhido = this.sala.periodos.find(p => p.id === this.periodoSelecionado?.id)
           ?? this.sala.periodos.find(p => p.id === this.activatedRoute.snapshot.queryParams['periodo'])
           ?? atual;
@@ -119,7 +118,7 @@ export class SalaPontosPage {
     this.periodoSelecionado = periodo;
     this.linhas = periodo
       ? pontosPorMateria(this.sala.materias, this.sala.atividades, periodo)
-          // Quem tem mais pontos lançados aparece primeiro; empate, ordem alfabética
+          // quem tem mais pontos lançados aparece primeiro; empate, ordem alfabética
           .sort((a, b) => b.distribuidos - a.distribuidos || a.nomeMateria.localeCompare(b.nomeMateria, 'pt-BR'))
       : [];
   }
@@ -144,7 +143,7 @@ export class SalaPontosPage {
     return linha.maximo ? Math.min(100, (linha.distribuidos / linha.maximo) * 100) : 0;
   }
 
-  /** Abre as atividades da sala já filtradas pela matéria e pelo período. */
+  // abre as atividades da sala já filtradas pela matéria e pelo período
   abrirAtividades(linha: PontosDaMateria) {
     this.router.navigate(['/sala', this.idSala, 'atividades'], {
       queryParams: { materia: linha.idMateria, periodo: this.periodoSelecionado?.id, aba: 'todas' }

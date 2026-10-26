@@ -158,7 +158,7 @@ button {
   padding: 0;
   position: relative;
 
-  // Aumenta a área de toque para 44px sem mudar o visual.
+  // aumenta a área de toque para 44px sem mudar o visual
   &::after {
     content: "";
     position: absolute;
@@ -173,8 +173,7 @@ button {
   flex-shrink: 0;
   cursor: pointer;
 
-  // Cor solida por status (como no app Lembretes do iOS), pra funcionar
-  // igual em qualquer tema sem precisar de ajuste.
+  // cor sólida por status (tipo o app Lembretes do iOS), funciona nos dois temas
   ion-icon {
     font-size: 17px;
     color: #ffffff !important;
@@ -330,7 +329,7 @@ ion-tab-button {
     padding: 10px 16px;
   }
 
-  // Pequeno espaco entre o icone e o texto do item ativo (senao ficam colados).
+  // espaço entre o ícone e o texto do item ativo
   ion-icon {
     margin-inline-end: 6px;
   }
@@ -341,7 +340,7 @@ ion-tab-button {
   padding: 16px 16px 0;
 }
 
-// prazo da tarefa, nas mesmas cores de urgência das atividades — feito com auxílio do Claude
+// prazo da tarefa, com as mesmas cores de urgência das atividades
 .prazo-tarefa {
   display: inline-flex;
   align-items: center;

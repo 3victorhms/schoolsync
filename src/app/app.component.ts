@@ -8,7 +8,7 @@ import { MenuLateralComponent } from './components/menu-lateral/menu-lateral.com
 
 // a partir dessa largura o app vira "versão web": menu lateral fixo no lugar da barra de abas
 const MEDIA_TELA_LARGA = '(min-width: 992px)';
-const ROTAS_SEM_MENU = ['/', '/login', '/add-usuario', '/recuperar-senha'];
+const ROTAS_SEM_MENU = ['/', '/login', '/add-usuario', '/recuperar-senha', '/manutencao'];
 
 @Component({
   selector: 'app-root',

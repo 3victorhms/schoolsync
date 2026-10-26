@@ -15,8 +15,7 @@ ion-toolbar {
     --background-activated: var(--app-accent-soft);
     --background-hover: var(--app-accent-soft);
     --color: var(--app-text);
-    // Cantos arredondados "quadrado suave", no estilo iOS do resto do app
-    // (mesma ideia do .row-icon/.acao-btn), em vez de pill 999px.
+    // cantos arredondados no estilo iOS do resto do app, em vez de pill
     --border-radius: 16px;
     --padding-start: 14px;
     --padding-end: 16px;
@@ -178,10 +177,9 @@ ion-content {
     }
 }
 
-// A barra de abas (ion-tab-bar) agora vive em app/pages/tabs/tabs.page.scss,
-// compartilhada pelas 4 telas principais.
+// a barra de abas fica no tabs.page.scss
 
-// Skeleton da lista de salas, no mesmo formato da linha real
+// skeleton da lista de salas, no mesmo formato da linha real
 .skeleton-row {
     .row-icon.skeleton-block {
         border-radius: 12px;
@@ -219,8 +217,7 @@ ion-content {
 
 
 // ---------------------------------------------------------------------------
-// Tablet e computador — feito com auxílio do Claude
-// A lista vira uma grade de cartões, um por sala (2 colunas no tablet em pé).
+// tablet e computador: a lista vira uma grade de cartões
 // ---------------------------------------------------------------------------
 @media (min-width: 700px) {
     .salas-lista {
