@@ -32,7 +32,6 @@ export class NotaModel {
     }
 }
 
-// corpo de POST /salas/{id}/notas e PUT /notas/{id}
 export interface NotaRequest {
     // preenchido para nota de atividade; ausente na avulsa
     idAtividade?: string;

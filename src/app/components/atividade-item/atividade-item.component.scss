@@ -139,7 +139,6 @@
             font-weight: 700;
         }
 
-        // escala de urgência, mesmo padrão do calendário em Início
         &.urgencia-atrasada,
         &.urgencia-hoje {
             color: var(--app-urgencia-atrasada);
@@ -178,7 +177,6 @@
     margin-top: 8px;
 }
 
-// no celular esconde a descrição pq ela sempre aparecia cortada. ela aparece inteira na tela da atividade
 @media (max-width: 599.98px) {
     .row-sub .row-desc {
         display: none;

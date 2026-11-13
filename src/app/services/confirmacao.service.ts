@@ -7,7 +7,6 @@ import { Capacitor } from '@capacitor/core';
 export class ConfirmacaoService {
 
   async confirmar(titulo: string, mensagem: string, textoConfirmar: string): Promise<boolean> {
-    // no android o dialog nativo do WebView é mais confiável que um overlay em html
     if (Capacitor.isNativePlatform()) {
       return window.confirm(`${titulo}\n\n${mensagem}`);
     }
@@ -25,8 +24,6 @@ export class ConfirmacaoService {
     await this.confirmarComOverlay(titulo, mensagem, textoFechar, true);
   }
 
-  // dialog de confirmação em html/css puro (.confirmacao-overlay no global.scss). o ion-alert
-  // às vezes n carregava no build de produção e o botão ficava sem fazer nada
   private confirmarComOverlay(
     titulo: string,
     mensagem: string,
@@ -91,7 +88,6 @@ export class ConfirmacaoService {
       overlay.appendChild(card);
       document.body.appendChild(overlay);
 
-      // foco no botão principal pra quem usa teclado ou leitor de tela
       setTimeout(() => btnConfirmar.focus(), 0);
     });
   }

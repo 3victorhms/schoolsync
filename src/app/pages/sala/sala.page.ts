@@ -38,7 +38,6 @@ type AbaSala = 'atividades' | 'grupos' | 'membros';
     imports: [IonIcon, IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonRefresher, IonRefresherContent, IonSpinner, IonItemSliding, IonItem, IonItemOptions, IonItemOption, CommonModule, RouterLink, AtividadeItemComponent, ProgressoTarefasComponent]
 })
 export class SalaPage implements OnInit {
-    // nome da sala/atividade/grupo na aba do navegador (versão web)
     private tituloPagina = inject(TituloPaginaService);
 
 
@@ -55,11 +54,9 @@ export class SalaPage implements OnInit {
     // aba selecionada. fica guardada ao abrir um grupo/atividade e voltar
     aba: AbaSala = 'atividades';
 
-    // RN16: mesmo limite da API (MAXIMO_MEMBROS_POR_SALA em SalaService.java)
     readonly LIMITE_MEMBROS = 50;
     private abaInicialAplicada = false;
 
-    // atividades cujo dia de entrega ainda não terminou, da mais urgente para a mais distante
     proximasAtividades: AtividadeModel[] = [];
     quantidadeArquivadas = 0;
 
@@ -110,8 +107,6 @@ export class SalaPage implements OnInit {
         const id = this.activatedRoute.snapshot.params['id'];
         this.idSala = id || '';
 
-        // permite abrir a sala direto numa aba (ex.: voltar de um grupo para "Grupos")
-        // só na primeira entrada, para não desfazer a aba que o usuário escolheu depois
         const abaInicial = this.activatedRoute.snapshot.queryParams['aba'];
         if (!this.abaInicialAplicada && (abaInicial === 'atividades' || abaInicial === 'grupos' || abaInicial === 'membros')) {
             this.aba = abaInicial;
@@ -173,7 +168,6 @@ export class SalaPage implements OnInit {
         this.hapticsService.leve();
     }
 
-    // separa as atividades à vista das arquivadas (regra em deveArquivar, utils/urgencia.util.ts)
     organizarAtividades() {
         this.proximasAtividades = this.sala.atividades
             .filter(atividade => !deveArquivar(atividade))
@@ -308,7 +302,6 @@ export class SalaPage implements OnInit {
         });
     }
 
-    // o líder passa a liderança pra outro membro e vira um membro comum (aí pode sair da sala ou desativar a conta)
     async tornarLider(membro: UsuarioModel) {
         if (this.transferindoLiderId || !this.sala.id) return;
 
@@ -359,8 +352,6 @@ export class SalaPage implements OnInit {
         this.hapticsService.aviso();
         this.removendoMembroId = removido.id;
 
-        // remove no servidor na hora, sem depender do toast. voltar pra sala precisa de convite,
-        // ent aqui n tem desfazer, é só um aviso
         this.salaService.removerMembro(this.sala.id, removido.id).subscribe({
             next: () => {
                 this.removendoMembroId = '';
@@ -411,18 +402,14 @@ export class SalaPage implements OnInit {
             return;
         }
 
-        // aviso em html puro (DesfazerService) pq o ion-toast n aparecia direito no navegador
         this.hapticsService.leve();
         this.desfazerService.mostrarMensagem(`Código ${this.sala.codigoConvite} copiado! Envie para seus colegas entrarem na sala.`, 3000);
     }
 
-    // texto e link do convite (o link abre "Entrar na sala" com o código já preenchido)
     get linkConvite(): string {
         return `${environment.webUrl}/entrar-sala?codigo=${encodeURIComponent(this.sala.codigoConvite)}`;
     }
 
-    // abre o compartilhar do celular (whatsapp, e-mail...). no app usa o @capacitor/share e no
-    // navegador o compartilhamento do próprio navegador. se nenhum existir, copia o convite
     async compartilharConvite() {
         const texto = `Entra na sala "${this.sala.nome}" no SchoolSync! Código: ${this.sala.codigoConvite}`;
         try {

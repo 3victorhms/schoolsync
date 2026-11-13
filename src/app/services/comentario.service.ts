@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { ComentarioModel } from '../model/comentario.model';
 import { ApiDeleteService } from './api-delete.service';
 
-// resposta paginada da API (Paginacao no back)
 export interface PaginaComentarios {
   // comentários principais (com as respostas), do mais antigo para o mais novo
   itens: ComentarioModel[];

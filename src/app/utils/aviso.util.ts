@@ -1,6 +1,3 @@
-// toast em html/css puro (estilo .desfazer-toast do global.scss) no lugar do ion-toast, que n
-// aparecia direito no navegador. n precisa de injeção, dá pra chamar de qualquer lugar
-
 export function mostrarAviso(mensagem: string, duracaoMs: number = 2500): void {
   if (typeof document === 'undefined' || !mensagem) return;
 

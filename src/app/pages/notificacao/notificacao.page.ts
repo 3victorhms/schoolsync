@@ -101,7 +101,6 @@ export class NotificacaoPage {
     return this.service.quantidadeNaoLidas;
   }
 
-  // separa por dia (mais nova primeiro), tipo app de mensagem
   get grupos(): GrupoNotificacoes[] {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -133,7 +132,6 @@ export class NotificacaoPage {
     return Number.isNaN(tempo) ? 0 : tempo;
   }
 
-  // hoje e ontem mostram só a hora (o bloco já diz o dia); as outras mostram dia e hora
   formatarHorario(valor: string, chaveGrupo = ''): string {
     if (!valor) return '';
     const data = new Date(valor);

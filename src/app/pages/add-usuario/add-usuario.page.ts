@@ -41,7 +41,6 @@ export class AddUsuarioPage implements OnInit {
   ngOnInit() {
   }
 
-  // campo inválido que já foi tocado (pra n mostrar erro enquanto a pessoa ainda tá digitando)
   campoInvalido(campo: string): boolean {
     const controle = this.formGroup.get(campo);
     return !!controle && controle.invalid && (controle.touched || controle.dirty);

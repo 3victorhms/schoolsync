@@ -1,5 +1,3 @@
-// menu lateral da versão web. no computador ele fica no lugar da barra de abas do celular
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { IonIcon, NavController } from '@ionic/angular/standalone';
@@ -23,7 +21,6 @@ interface ItemMenu {
   titulo: string;
   icone: string;
   rota: string;
-  // outras telas que pertencem a esse item (ex.: abrir uma sala deixa "Salas" marcado)
   relacionadas: string[];
   somenteAdmin?: boolean;
 }
@@ -68,7 +65,6 @@ export class MenuLateralComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.urlAtual = this.router.url;
 
-    // relê o usuário a cada troca de tela, pq o nome/foto podem ter sido editados
     this.inscricoes.add(
       this.router.events.pipe(filter(evento => evento instanceof NavigationEnd)).subscribe(evento => {
         this.urlAtual = (evento as NavigationEnd).urlAfterRedirects;
@@ -105,7 +101,6 @@ export class MenuLateralComponent implements OnInit, OnDestroy {
   }
 
   abrir(item: ItemMenu): void {
-    // navigateRoot limpa o histórico, igual trocar de aba no celular
     this.navController.navigateRoot(item.rota);
   }
 

@@ -31,7 +31,6 @@ export class AddAtividadePage implements OnInit {
   editando: boolean = false;
   salvando = false;
 
-  // hoje no fuso do celular. com toISOString (UTC) depois das 21h já virava o dia seguinte
   get hoje(): string {
     return hojeIso();
   }
@@ -55,12 +54,9 @@ export class AddAtividadePage implements OnInit {
       'dataEntrega': ['', [Validators.required, this.dataMinima(), this.dentroDosPeriodos()]],
     });
 
-    // o limite de pontos depende da matéria e do período (que sai da data):
-    // quando um dos dois muda, o valor precisa ser validado de novo
     this.formGroup.get('idMateria')?.valueChanges.subscribe(() => this.revalidarValor());
     this.formGroup.get('dataEntrega')?.valueChanges.subscribe(() => this.revalidarValor());
 
-    // ligado por padrão pq a maioria vale ponto. desligado, o valor fica 0 e sem validação
     this.formGroup.get('valePontuacao')?.valueChanges.subscribe(valePontuacao => {
       const valorControl = this.formGroup.get('valor');
       if (!valorControl) return;
@@ -79,7 +75,6 @@ export class AddAtividadePage implements OnInit {
   }
 
 
-  // o líder da sala editando a atividade de outro colega (moderação)
   get editandoComoLider(): boolean {
     return this.editando && !!this.atividade.idCriador && this.atividade.idCriador !== this.usuario.id;
   }
@@ -114,7 +109,6 @@ export class AddAtividadePage implements OnInit {
     } else {
       this.editando = false;
       this.atividade = new AtividadeModel();
-      // o reset() sem argumento deixa tudo null, inclusive o valePontuacao, ent passa os valores padrão
       this.formGroup.reset({
         titulo: '',
         descricao: '',
@@ -155,8 +149,6 @@ export class AddAtividadePage implements OnInit {
     this.navController.back();
   }
 
-  // ===================== matéria, período e pontos =====================
-
   get materias(): MateriaModel[] {
     return this.sala?.materias ?? [];
   }
@@ -188,8 +180,6 @@ export class AddAtividadePage implements OnInit {
     return `${formatarDataBr(periodos[0].dataInicio)} a ${formatarDataBr(periodos[periodos.length - 1].dataFim)}`;
   }
 
-  // pontos que ainda cabem na matéria no período da data escolhida
-  // soma as atividades da sala na mesma matéria e período (menos a que tá sendo editada)
   get pontosDisponiveis(): number | null {
     const periodo = this.periodoSelecionado;
     const materia = this.materiaSelecionada;
@@ -206,7 +196,6 @@ export class AddAtividadePage implements OnInit {
     this.formGroup.get('valor')?.updateValueAndValidity({ emitEvent: false });
   }
 
-  // a data precisa cair em algum período da sala (só confere depois que a sala carregou)
   private dentroDosPeriodos() {
     return (control: any) => {
       const periodos = this.sala?.periodos ?? [];
@@ -232,7 +221,6 @@ export class AddAtividadePage implements OnInit {
     // verifica se a data escolhida é anterior a hoje
   }
 
-  // campo inválido que já foi tocado (pra n mostrar erro enquanto a pessoa ainda tá preenchendo)
   campoInvalido(campo: string): boolean {
     const controle = this.formGroup.get(campo);
     return !!controle && controle.invalid && (controle.touched || controle.dirty);

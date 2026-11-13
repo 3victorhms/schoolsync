@@ -1,5 +1,3 @@
-// escala de urgência: quanto mais perto do prazo, mais quente a cor (vermelho, laranja, amarelo,
-// até azul quando tá longe). verde só pra concluída. usada no calendário e nas listas de atividades
 export type NivelUrgencia = 'atrasada' | 'hoje' | 'proxima' | 'semana' | 'mes' | 'futuro' | 'concluida';
 
 const ORDEM_URGENCIA: Record<NivelUrgencia, number> = {
@@ -12,13 +10,10 @@ const ORDEM_URGENCIA: Record<NivelUrgencia, number> = {
   concluida: 6
 };
 
-// quanto menor, mais urgente. útil pra escolher o pior caso entre várias atividades
 export function ordemUrgencia(nivel: NivelUrgencia): number {
   return ORDEM_URGENCIA[nivel];
 }
 
-// janelas fixas em dias a partir de hoje (e n "resto da semana/mês"), pra faixa de cor
-// n mudar de tamanho dependendo do dia
 const LIMITE_PROXIMA_DIAS = 3;
 const LIMITE_SEMANA_DIAS = 7;
 const LIMITE_MES_DIAS = 30;
@@ -46,12 +41,10 @@ export function calcularUrgencia(dataEntrega: string | null | undefined, status:
   return 'futuro';
 }
 
-// classe CSS correspondente, pra usar direto em [ngClass]
 export function classeUrgencia(dataEntrega: string | null | undefined, status: string | null | undefined): string {
   return `urgencia-${calcularUrgencia(dataEntrega, status)}`;
 }
 
-// converte "AAAA-MM-DD" (ou ISO com hora) na meia-noite local desse dia
 function parsearDataEntrega(dataEntrega: string | null | undefined): Date | null {
   if (!dataEntrega) return null;
 
@@ -62,10 +55,8 @@ function parsearDataEntrega(dataEntrega: string | null | undefined): Date | null
   return new Date(ano, mes - 1, dia);
 }
 
-// por quantos dias uma atividade atrasada (e não concluída) continua à vista antes de ser arquivada
 export const DIAS_ATE_ARQUIVAR = 3;
 
-// quantos dias o prazo já passou (0 se a entrega é hoje, no futuro ou não tem data)
 export function diasDeAtraso(dataEntrega: string | null | undefined): number {
   const prazo = parsearDataEntrega(dataEntrega);
   if (!prazo) return 0;
@@ -75,12 +66,6 @@ export function diasDeAtraso(dataEntrega: string | null | undefined): number {
   return Math.max(Math.round((hoje.getTime() - prazo.getTime()) / 86400000), 0);
 }
 
-// regra de arquivamento (sala, atividades da sala, caderno e início). nada é salvo no banco,
-// é calculado pela data toda vez:
-// prazo n passou: n arquiva
-// prazo passou e concluiu: arquiva na hora
-// prazo passou e n concluiu: fica como "Atrasada" por DIAS_ATE_ARQUIVAR dias e depois arquiva
-// o status é o do aluno logado, ent a mesma atividade pode estar arquivada pra um e atrasada pra outro
 export function deveArquivar(atividade: { dataEntrega?: string | null; status?: string | null }): boolean {
   const atraso = diasDeAtraso(atividade.dataEntrega);
   if (atraso === 0) return false;
@@ -88,7 +73,6 @@ export function deveArquivar(atividade: { dataEntrega?: string | null; status?: 
   return atraso > DIAS_ATE_ARQUIVAR;
 }
 
-// ordena pela data de entrega, da mais próxima para a mais distante (sem data vai pro fim)
 export function compararPorEntrega(
   a: { dataEntrega?: string | null },
   b: { dataEntrega?: string | null }
@@ -98,8 +82,6 @@ export function compararPorEntrega(
   return prazoA - prazoB;
 }
 
-// texto que acompanha a cor, pra informação n depender só da cor: "Atrasada", "Hoje",
-// "Amanhã", "Em 3 dias". vazio pra concluída e pra prazo com mais de uma semana
 export function rotuloUrgencia(dataEntrega: string | null | undefined, status: string | null | undefined): string {
   if (status === 'concluido') return '';
 

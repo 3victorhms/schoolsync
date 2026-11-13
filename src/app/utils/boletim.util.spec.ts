@@ -144,7 +144,6 @@ describe('avulsas acima do limite', () => {
 
   it('acusa quando a turma cria atividade depois da avulsa', () => {
     const s = sala();
-    // aluno lançou avulsa de 10; depois a turma cadastrou 20 pts de atividades (limite 25)
     s.atividades = [atividade({ id: 'a1', idMateria: 'mat', idPeriodo: 'p1', valor: 20 })];
     const notas = [nota({ id: 'n1', avulsa: true, idMateria: 'mat', idPeriodo: 'p1', valorObtido: 7, valorMaximo: 10 })];
     expect(excessoNoPeriodo(s, notas, 'mat', s.periodos[0])).toBe(5);

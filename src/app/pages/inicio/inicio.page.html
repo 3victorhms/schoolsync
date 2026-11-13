@@ -19,8 +19,6 @@
 
 <ion-content [fullscreen]="true">
 
-  <!-- ===================== PAINEL DO CELULAR ===================== -->
-  <!-- só aparece no celular/tablet; no computador a coluna da direita já mostra o mês inteiro -->
   <div class="painel-celular">
     @if (!agendaCarregando) {
     @if (proximaEntrega; as proxima) {
@@ -72,11 +70,9 @@
     </div>
   </div>
 
-  <!-- no celular as duas colunas ficam uma embaixo da outra; no computador ficam lado a lado -->
   <div class="inicio-layout" [class.mes-aberto]="mostrarMes">
   <div class="inicio-principal">
 
-  <!-- ===================== AGENDA ===================== -->
   <section class="agenda" aria-labelledby="agenda-titulo">
     <div class="agenda-topo">
       <h2 class="agenda-titulo" id="agenda-titulo">Sua agenda</h2>

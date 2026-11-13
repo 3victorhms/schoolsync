@@ -9,8 +9,6 @@ import { SistemaService } from 'src/app/services/sistema.service';
 import { TokenService } from 'src/app/services/token.service';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
 
-// aparece quando a API responde 503 de manutenção (servidor.interceptor). confere sozinha a cada
-// 30 s e volta pro app quando o admin desliga a manutenção
 @Component({
   selector: 'app-manutencao',
   templateUrl: './manutencao.page.html',

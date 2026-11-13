@@ -1,6 +1,3 @@
-// boletim pessoal da sala: cada aluno lança as próprias notas (de atividade ou avulsa)
-// e vê a situação de cada matéria por período e no ano
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -150,7 +147,6 @@ export class BoletimPage {
           this.visao = atual?.id ?? 'ano';
         }
         this.montarVisao();
-        // com 4 bimestres + "Ano" as abas passam da largura da tela: rola até a selecionada
         setTimeout(() => document.querySelector('app-boletim .filtro-btn.ativo')
           ?.scrollIntoView({ inline: 'center', block: 'nearest' }));
       },
@@ -170,15 +166,11 @@ export class BoletimPage {
     this.montarVisao();
   }
 
-  // ===================== dados da visão atual =====================
-  // calculados só quando muda a visão ou chegam dados novos, n a cada change detection
-
   linhas: LinhaBoletim[] = [];
   analises = new Map<string, AnaliseMateria>();
   resumo: ResumoSituacoes | null = null;
   pendentes: AtividadeModel[] = [];
   mostrarPendentes = false;
-  // matérias/períodos em que as avulsas do aluno passam do limite (ver excessoNoPeriodo)
   excessos: ExcessoAvulsas[] = [];
   excessoPorMateria = new Map<string, number>();
 
@@ -210,8 +202,6 @@ export class BoletimPage {
     this.pendentes = atividadesSemNota(this.sala, this.notas, this.visao === 'ano' ? undefined : this.visao);
   }
 
-  // botão "Resolver" do aviso de excesso: abre a avulsa de maior valor da matéria/período
-  // já mostrando quanto ainda cabe (?ajustar=1)
   resolverExcesso(excesso: ExcessoAvulsas) {
     const avulsa = this.notas
       .filter(n => n.avulsa && n.idMateria === excesso.idMateria && n.idPeriodo === excesso.idPeriodo)
@@ -281,8 +271,6 @@ export class BoletimPage {
     }
   }
 
-  // ===================== ações =====================
-
   lancarDaAtividade(atividade: AtividadeModel) {
     this.router.navigate(['/sala', this.idSala, 'nota'], { queryParams: { atividade: atividade.id } });
   }
@@ -300,7 +288,6 @@ export class BoletimPage {
 
   async exportar() {
     if (!this.boletim || this.exportando) return;
-    // com avulsa acima do limite a conta da matéria fica errada, ent só deixa gerar o PDF depois de ajustar
     const pendencias = excessosDeAvulsas(this.sala, this.notas);
     if (pendencias.length) {
       const onde = juntarNomes(pendencias.map(e => `${e.nomeMateria} (${e.nomePeriodo})`), 3);

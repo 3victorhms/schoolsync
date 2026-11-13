@@ -1,8 +1,3 @@
-// lançar ou editar uma nota do boletim
-//  /sala/:idSala/nota?atividade=ID  → nota de uma atividade da sala (só a nota obtida)
-//  /sala/:idSala/nota[?periodo=ID]  → nota avulsa (descrição, matéria, data, valor e nota)
-//  /sala/:idSala/nota/:idNota       → editar uma nota existente
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
@@ -45,7 +40,6 @@ export class AddNotaPage {
   idSala = '';
   sala: SalaModel = new SalaModel();
   notas: NotaModel[] = [];
-  /** Nota sendo editada (null = nova). */
   nota: NotaModel | null = null;
   // atividade da nota (lançamento ou edição de nota de atividade)
   atividade: AtividadeModel | null = null;
@@ -172,8 +166,6 @@ export class AddNotaPage {
     return periodo.dataFim < this.hoje ? periodo.dataFim : (periodo.dataInicio <= this.hoje ? this.hoje : '');
   }
 
-  // ===================== período e pontos =====================
-
   get periodoSelecionado(): PeriodoModel | null {
     return periodoDaData(this.sala?.periodos ?? [], this.formGroup?.get('data')?.value);
   }
@@ -183,7 +175,6 @@ export class AddNotaPage {
     return this.sala?.materias?.find(m => m.id === id)?.nome ?? '';
   }
 
-  // quanto ainda cabe na matéria/período para esta avulsa (null enquanto falta matéria ou data)
   get disponivel(): number | null {
     const periodo = this.periodoSelecionado;
     const idMateria = this.formGroup?.get('idMateria')?.value;
@@ -244,8 +235,6 @@ export class AddNotaPage {
     return this.formGroup.hasError('obtidoAcimaDoMaximo') && !!controle && (controle.touched || controle.dirty);
   }
 
-  // ===================== salvar / excluir =====================
-
   salvar() {
     if (this.salvando) return;
     if (this.formGroup.invalid) {
@@ -272,7 +261,6 @@ export class AddNotaPage {
     this.salvando = true;
     requisicao.pipe(finalize(() => this.salvando = false)).subscribe({
       next: () => {
-        // nota de atividade: a API também marca a atividade como concluída no caderno (NotaService.concluirNoCaderno)
         const lancouDeAtividade = !this.nota && 'idAtividade' in corpo;
         mostrarAviso(this.nota
           ? 'Nota atualizada!'

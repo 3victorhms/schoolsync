@@ -232,7 +232,6 @@ ion-content {
         text-align: center;
     }
 
-    // cor neutra pq tirar do caderno n apaga nada
     .remover-btn {
         display: flex;
         align-items: center;
@@ -385,7 +384,6 @@ ion-content {
                 color: var(--app-accent);
                 font-size: 12px;
                 font-weight: 600;
-                // área de toque maior sem mudar o espaçamento visual
                 padding: 12px 6px;
                 margin: -12px -6px;
                 cursor: pointer;
@@ -626,9 +624,6 @@ ion-content {
     }
 }
 
-// ---------------------------------------------------------------------------
-// versão web: detalhes, status, nota e tarefas na esquerda e comentários na direita
-// ---------------------------------------------------------------------------
 @media (min-width: 992px) {
     .atividade-layout {
         display: grid;

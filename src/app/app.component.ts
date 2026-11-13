@@ -6,7 +6,6 @@ import { TemaService } from './services/tema.service';
 import { NotificacaoPushService } from './services/notificacao-push.service';
 import { MenuLateralComponent } from './components/menu-lateral/menu-lateral.component';
 
-// a partir dessa largura o app vira "versão web": menu lateral fixo no lugar da barra de abas
 const MEDIA_TELA_LARGA = '(min-width: 992px)';
 const ROTAS_SEM_MENU = ['/', '/login', '/add-usuario', '/recuperar-senha', '/manutencao'];
 

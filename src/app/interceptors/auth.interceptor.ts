@@ -19,8 +19,6 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
     setHeaders: { Authorization: `Bearer ${token}` }
   })).pipe(
     catchError((erro: HttpErrorResponse) => {
-      // se a api recusar o token (expirou ou a conta foi desativada) volta pro login em qualquer tela,
-      // em vez de cada página mostrar um erro diferente
       if (erro.status === 401 && !router.url.startsWith('/login')) {
         loginService.encerrarAutenticacao();
         router.navigate(['/login'], { queryParams: { motivo: 'sessao-expirada' } });

@@ -1,6 +1,3 @@
-// progresso das tarefas do grupo ("3 de 5 concluídas")
-// compacto: barrinha na linha do grupo. completo: cartão no topo do grupo com a parte de cada membro
-
 import { Component, Input, booleanAttribute } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -14,7 +11,6 @@ export interface ProgressoMembro {
   atrasadas: number;
 }
 
-// "AAAA-MM-DD" (ou ISO com hora) já passou? Compara só o dia
 function prazoVencido(prazo: string | null | undefined): boolean {
   if (!prazo) return false;
   const [ano, mes, dia] = prazo.split('T')[0].split('-').map(Number);

@@ -1,10 +1,3 @@
-// pra onde cada notificação leva (a lista e o push usam a mesma regra)
-// targetId que a API manda:
-// ATIVIDADE e LEMBRETE_ATIVIDADE: "idAtividade" ou "idAtividade:data:dias"
-// GRUPO, GRUPO_TAREFA_CONCLUIDA, GRUPO_CONCLUIDO: "idGrupo"
-// GRUPO_LEMBRETE_TAREFA: "idGrupo:pedaço do id da tarefa"
-// TAREFA: "idTarefa" (a tela /tarefa/:id acha o grupo e redireciona)
-// SALA: "idSala"
 export function rotaDaNotificacao(tipo: string | null | undefined, targetId: string | null | undefined): string[] | null {
   if (!targetId) return null;
   const t = (tipo || '').toUpperCase();

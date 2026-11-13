@@ -221,7 +221,6 @@ export class GrupoTarefasPage implements OnInit {
         this.carregarTarefas(this.grupo.id);
       },
       error: (erro) => {
-        // ex.: prazo depois da entrega da atividade (a API explica o motivo)
         this.exibirMensagem(erro?.error?.message || 'Erro ao criar tarefa.');
       }
     });
@@ -301,7 +300,6 @@ export class GrupoTarefasPage implements OnInit {
     return rotulo ? `${formatarDataCurta(tarefa.prazo)} · ${rotulo}` : formatarDataCurta(tarefa.prazo);
   }
 
-  // quantas tarefas já foram concluídas, no total e por membro (cartão no topo da lista)
   get progresso() {
     return calcularProgresso(this.tarefas);
   }

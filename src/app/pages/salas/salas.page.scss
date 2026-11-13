@@ -15,7 +15,6 @@ ion-toolbar {
     --background-activated: var(--app-accent-soft);
     --background-hover: var(--app-accent-soft);
     --color: var(--app-text);
-    // cantos arredondados no estilo iOS do resto do app, em vez de pill
     --border-radius: 16px;
     --padding-start: 14px;
     --padding-end: 16px;
@@ -177,8 +176,6 @@ ion-content {
     }
 }
 
-// a barra de abas fica no tabs.page.scss
-
 // skeleton da lista de salas, no mesmo formato da linha real
 .skeleton-row {
     .row-icon.skeleton-block {
@@ -216,9 +213,6 @@ ion-content {
 }
 
 
-// ---------------------------------------------------------------------------
-// tablet e computador: a lista vira uma grade de cartões
-// ---------------------------------------------------------------------------
 @media (min-width: 700px) {
     .salas-lista {
         padding: 20px 16px;

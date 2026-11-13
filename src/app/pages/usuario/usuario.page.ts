@@ -76,13 +76,11 @@ export class UsuarioPage implements OnInit {
     return this.trocandoCredenciais && !senhaAtualPreenchida;
   }
 
-  // mesmo mínimo do cadastro: 8 caracteres
   get novaSenhaCurta(): boolean {
     const novaSenha: string = this.formGroup.get('novaSenha')?.value || '';
     return novaSenha.length > 0 && novaSenha.length < 8;
   }
 
-  // o campo tem erro e o usuário já mexeu nele
   campoInvalido(campo: string): boolean {
     const controle = this.formGroup.get(campo);
     return !!controle && controle.invalid && (controle.touched || controle.dirty);
@@ -220,8 +218,6 @@ export class UsuarioPage implements OnInit {
       const trocouCredenciais = this.trocandoCredenciais;
       this.usuario.senhaAtual = trocouCredenciais ? senhaAtual : undefined;
 
-      // com e-mail ou senha novos, a API invalida os tokens antigos (inclusive o deste aparelho),
-      // ent entra de novo com os dados novos pra continuar logado
       const salvarDadosUsuario = () => this.usuarioService.salvar(this.usuario).pipe(
         switchMap(usuarioAtualizado => trocouCredenciais
           ? this.loginService.autenticar({ email, senha: novaSenha || senhaAtual }).pipe(map(() => usuarioAtualizado))

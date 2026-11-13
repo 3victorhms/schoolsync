@@ -7,9 +7,6 @@ import { environment } from 'src/environments/environment';
 import { RespostaLogin } from './login.service';
 import { TokenService } from './token.service';
 
-// login com google. no android abre a escolha de conta do próprio sistema; no navegador abre um
-// popup do google que volta pra /login (é a url cadastrada no Google Cloud). o app manda o ID token
-// pra API, que confere com o google e devolve o mesmo JWT do login normal
 @Injectable({ providedIn: 'root' })
 export class LoginGoogleService {
   readonly disponivel = !!environment.googleClientId;
@@ -17,7 +14,6 @@ export class LoginGoogleService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  // no navegador precisa rodar cedo (carrega o script do google e, dentro do popup, devolve o resultado)
   preparar(): Promise<void> {
     if (!this.disponivel) return Promise.resolve();
     if (!this.iniciando) {

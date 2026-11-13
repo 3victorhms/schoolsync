@@ -70,10 +70,8 @@
         </button>
     </nav>
 
-    <!-- no celular só a aba escolhida aparece (.aba-oculta). no computador aparecem as três juntas -->
     <div class="sala-layout">
 
-    <!-- ===================== ATIVIDADES ===================== -->
     <section class="secao secao-atividades" role="tabpanel" [class.aba-oculta]="aba !== 'atividades'">
         @if (periodoDaVez) {
         <button type="button" class="periodo-banner" [routerLink]="['/sala', sala.id, 'pontos']"
@@ -146,7 +144,6 @@
         }
     </section>
 
-    <!-- ===================== GRUPOS ===================== -->
     <section class="secao secao-grupos" role="tabpanel" [class.aba-oculta]="aba !== 'grupos'">
         <h3 class="titulo-coluna">Grupos</h3>
         @if (carregandoGrupos) {
@@ -212,11 +209,9 @@
         }
     </section>
 
-    <!-- ===================== MEMBROS ===================== -->
     <section class="secao secao-membros" role="tabpanel" [class.aba-oculta]="aba !== 'membros'">
         <h3 class="titulo-coluna">Membros</h3>
         @if (sala.codigoConvite) {
-        <!-- convite em destaque: código grande + copiar + compartilhar (link que já abre com o código) -->
         <section class="convite" aria-label="Convidar colegas">
             <div class="convite-topo">
                 <span class="convite-icone"><ion-icon name="person-add-outline" aria-hidden="true"></ion-icon></span>

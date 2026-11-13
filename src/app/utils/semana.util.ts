@@ -1,18 +1,14 @@
-// detecta semana pesada na agenda do início: conta as entregas n concluídas de hoje até daqui a 6 dias
-
 import { AtividadeModel } from '../model/atividade.model';
 import { parsearData } from './data.util';
 
 // a partir de quantas entregas pendentes em 7 dias a semana é pesada
 export const LIMITE_ENTREGAS_SEMANA = 4;
-// ...ou a partir de quantas entregas num mesmo dia
 export const LIMITE_ENTREGAS_DIA = 3;
 
 export interface AnaliseSemana {
   pesada: boolean;
   // entregas pendentes de hoje até daqui a 6 dias, por ordem de entrega
   pendentes: AtividadeModel[];
-  /** Soma dos pontos dessas entregas. */
   pontos: number;
   // o dia com mais entregas (null se não há nenhuma)
   diaMaisCheio: { data: Date; quantidade: number } | null;

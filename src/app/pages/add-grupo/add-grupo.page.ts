@@ -132,7 +132,6 @@ export class AddGrupoPage implements OnInit {
     return !!this.idGrupo;
   }
 
-  // o campo tem erro e o usuário já mexeu nele
   campoInvalido(campo: string): boolean {
     const controle = this.formGroup.get(campo);
     return !!controle && controle.invalid && (controle.touched || controle.dirty);

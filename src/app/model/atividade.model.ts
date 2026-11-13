@@ -6,7 +6,6 @@ export class AtividadeModel {
     // matéria cadastrada na sala
     idMateria: string;
     nomeMateria: string;
-    // período da sala em que a data de entrega cai, ex.: "2º Bimestre"
     idPeriodo: string;
     nomePeriodo: string;
     dataEntrega: string;

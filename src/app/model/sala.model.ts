@@ -34,10 +34,8 @@ export class SalaModel {
     }
 }
 
-// o que a API espera para criar ou editar uma sala (SalaRequestDTO)
 export interface SalaRequest {
     nome: string;
-    // na edição, matérias com id são mantidas/renomeadas e as que saírem da lista são removidas
     materias: { id?: string; nome: string }[];
     tipoPeriodo: TipoPeriodo;
     // em ordem: o primeiro é o 1º bimestre/trimestre/semestre

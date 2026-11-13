@@ -7,7 +7,6 @@
 }
 
 .barra {
-    // fundo da barra = pontos ainda em aberto (antes n tinha estilo e a barra n aparecia)
     display: block;
     height: 8px;
     margin: 8px 0 6px;
@@ -163,8 +162,6 @@
         &.aberto { background: var(--app-surface-strong); }
     }
 }
-
-// ===== situação por matéria =====
 
 .situacao-resumo {
     display: flex;

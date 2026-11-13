@@ -1,7 +1,3 @@
-// regras dos períodos letivos, usadas na criação de sala e de atividade
-// as datas vêm como "AAAA-MM-DD", e nesse formato comparar as strings
-// já respeita a ordem cronológica
-
 import { PeriodoModel, TipoPeriodo } from '../model/periodo.model';
 
 export const TIPOS_PERIODO: { valor: TipoPeriodo; rotulo: string; quantidade: number }[] = [
@@ -21,7 +17,6 @@ export function quantidadeDePeriodos(tipo: TipoPeriodo): number {
   return TIPOS_PERIODO.find(t => t.valor === tipo)?.quantidade ?? 0;
 }
 
-/** Ex.: nomePeriodo('BIMESTRE', 2) = "2º Bimestre". */
 export function nomePeriodo(tipo: TipoPeriodo, ordem: number): string {
   const rotulo = TIPOS_PERIODO.find(t => t.valor === tipo)?.rotulo ?? '';
   return `${ordem}º ${rotulo}`;
@@ -34,7 +29,6 @@ export function periodoDaData(periodos: PeriodoModel[], data: string | null | un
   return periodos.find(p => p.dataInicio <= dia && dia <= p.dataFim) ?? null;
 }
 
-/** "2027-03-10" → "10/03/2027". */
 export function formatarDataBr(data: string | null | undefined): string {
   if (!data) return '';
   const [ano, mes, dia] = data.split('T')[0].split('-');
@@ -47,8 +41,6 @@ function paraIso(data: Date): string {
   return `${data.getFullYear()}-${mes}-${dia}`;
 }
 
-// sugestão inicial: ano letivo de 1º de fevereiro a 15 de dezembro dividido em partes iguais
-// em novembro/dezembro já sugere o ano seguinte. o líder ajusta antes de salvar
 export function gerarPeriodosPadrao(tipo: TipoPeriodo, hoje: Date = new Date()): { dataInicio: string; dataFim: string; pontuacaoMaxima: number }[] {
   const ano = hoje.getMonth() >= 10 ? hoje.getFullYear() + 1 : hoje.getFullYear();
   const inicioAno = new Date(ano, 1, 1);
@@ -69,13 +61,10 @@ export function gerarPeriodosPadrao(tipo: TipoPeriodo, hoje: Date = new Date()):
   });
 }
 
-// hoje em "AAAA-MM-DD" no fuso do celular (com toISOString seria UTC e erraria à noite)
 export function hojeIso(hoje: Date = new Date()): string {
   return paraIso(hoje);
 }
 
-// período da vez: o que contém hoje. antes do ano letivo, o primeiro; no recesso, o próximo;
-// depois do fim, o último
 export function periodoAtual(periodos: PeriodoModel[], hoje: Date = new Date()): PeriodoModel | null {
   if (!periodos?.length) return null;
   const dia = paraIso(hoje);
@@ -92,7 +81,6 @@ export function diasAte(data: string, hoje: Date = new Date()): number {
   return Math.round((alvo.getTime() - base.getTime()) / 86400000);
 }
 
-// texto curto sobre o período: "termina em 12 dias", "começa em 3 dias", "encerrado"
 export function situacaoPeriodo(periodo: PeriodoModel, hoje: Date = new Date()): string {
   const ateInicio = diasAte(periodo.dataInicio, hoje);
   if (ateInicio > 0) return ateInicio === 1 ? 'começa amanhã' : `começa em ${ateInicio} dias`;
@@ -103,7 +91,6 @@ export function situacaoPeriodo(periodo: PeriodoModel, hoje: Date = new Date()):
   return ateFim === 1 ? 'termina amanhã' : `termina em ${ateFim} dias`;
 }
 
-// pontos distribuídos em uma matéria dentro de um período, a partir das atividades da sala
 export interface PontosDaMateria {
   idMateria: string;
   nomeMateria: string;

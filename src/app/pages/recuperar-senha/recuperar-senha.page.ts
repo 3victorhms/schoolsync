@@ -1,7 +1,3 @@
-// recuperação de senha em duas etapas: o aluno informa o e-mail e recebe um código,
-// depois digita o código e a senha nova. a API responde igual se o e-mail existe ou n
-// (pra n revelar quem tem conta), ent a tela também n diz "e-mail não encontrado"
-
 import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
@@ -126,7 +122,6 @@ export class RecuperarSenhaPage implements OnDestroy {
       .pipe(finalize(() => this.redefinindo = false))
       .subscribe({
         next: () => {
-          // o aviso sai daqui: o Ionic reaproveita a tela de login que já estava aberta
           mostrarAviso('Senha alterada. Entre com a senha nova.', 3500);
           this.navController.navigateRoot('/login', {
             queryParams: { motivo: 'senha-redefinida', email: this.email }
@@ -146,7 +141,6 @@ export class RecuperarSenhaPage implements OnDestroy {
     this.navController.navigateBack('/login');
   }
 
-  // a API devolve { message } (TratamentoGlobalDeErros); sem resposta, é rede ou servidor fora
   private mensagemDeErro(erro: HttpErrorResponse, padrao: string): string {
     const mensagem = erro?.error?.message;
     if (erro?.status && erro.status < 500 && typeof mensagem === 'string' && mensagem) return mensagem;

@@ -11,7 +11,6 @@ export interface ConfiguracaoNotificacao {
   lembreteDias: 1 | 3 | 7;
 }
 
-// resposta paginada da API (Paginacao no back)
 export interface PaginaNotificacoes {
   itens: NotificacaoModel[];
   temMais: boolean;
@@ -28,7 +27,6 @@ export class NotificacaoService {
 
   readonly notificacoes$ = this.notificacoesSubject.asObservable();
 
-  // a lista vem em páginas, então a contagem de não lidas vem da API e não da lista carregada
   private readonly naoLidasSubject = new BehaviorSubject<number>(0);
   readonly naoLidas$ = this.naoLidasSubject.asObservable();
   private readonly TAMANHO_PAGINA = 20;
@@ -98,7 +96,6 @@ export class NotificacaoService {
     const usuarioId = this.usuarioId;
     if (!usuarioId || this.eventSource || this.reconexaoTimer) return;
 
-    // o EventSource não envia cabeçalhos, então o token vai na URL e a API identifica o usuário por ele
     const token = encodeURIComponent(this.tokenService.buscar() || '');
     this.eventSource = new EventSource(`${this.API_URL}/stream?token=${token}`);
     this.eventSource.onopen = () => {
@@ -138,7 +135,6 @@ export class NotificacaoService {
       const anterior = this.notificacoesSubject.value.find(item => item.id === notificacao.id);
       const atuais = this.notificacoesSubject.value.filter(item => item.id !== notificacao.id);
       this.notificacoesSubject.next([notificacao, ...atuais]);
-      // mantém o contador certo: nova não lida soma; uma que já estava não lida não conta de novo
       if (!notificacao.lido && (!anterior || anterior.lido)) this.ajustarNaoLidas(1);
       if (notificacao.lido && anterior && !anterior.lido) this.ajustarNaoLidas(-1);
     } catch (erro) {

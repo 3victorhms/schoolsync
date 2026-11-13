@@ -1,5 +1,3 @@
-// aviso de sem internet. mesmo esquema do servidor-lento.util.ts (html/css puro)
-
 let banner: HTMLElement | null = null;
 let iniciado = false;
 
@@ -36,7 +34,6 @@ export function iniciarMonitorConexao() {
   if (estaOffline()) mostrar();
 }
 
-// chamado pelo interceptor quando uma requisição falha sem resposta (status 0)
 export function falhaDeRede() {
   if (estaOffline()) mostrar();
 }
