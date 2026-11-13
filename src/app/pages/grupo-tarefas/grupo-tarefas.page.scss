@@ -158,7 +158,6 @@ button {
   padding: 0;
   position: relative;
 
-  // aumenta a área de toque para 44px sem mudar o visual
   &::after {
     content: "";
     position: absolute;
@@ -173,7 +172,6 @@ button {
   flex-shrink: 0;
   cursor: pointer;
 
-  // cor sólida por status (tipo o app Lembretes do iOS), funciona nos dois temas
   ion-icon {
     font-size: 17px;
     color: #ffffff !important;
@@ -329,7 +327,6 @@ ion-tab-button {
     padding: 10px 16px;
   }
 
-  // espaço entre o ícone e o texto do item ativo
   ion-icon {
     margin-inline-end: 6px;
   }

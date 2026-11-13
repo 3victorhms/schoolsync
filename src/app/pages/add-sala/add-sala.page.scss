@@ -99,8 +99,6 @@ ion-content.modo-edicao {
     }
 }
 
-// ===================== matérias e períodos =====================
-
 .campo-item input {
     background: transparent;
     border: none;
@@ -370,7 +368,6 @@ ion-content.modo-edicao {
     }
 }
 
-// no celular as datas ficam lado a lado e os pontos vão pra linha de baixo, senão o ano cortava
 @media (max-width: 480px) {
     .periodo-campos {
         grid-template-columns: 1fr 1fr;

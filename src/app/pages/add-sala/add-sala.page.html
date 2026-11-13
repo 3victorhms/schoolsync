@@ -22,7 +22,6 @@
       }
     </div>
 
-    <!-- ===================== MATÉRIAS ===================== -->
     <section class="secao-form">
       <div class="secao-cabecalho">
         <h3 class="secao-titulo">Matérias</h3>
@@ -81,7 +80,6 @@
       }
     </section>
 
-    <!-- ===================== PERÍODOS ===================== -->
     <section class="secao-form">
       <div class="secao-cabecalho">
         <h3 class="secao-titulo">Divisão do ano</h3>
@@ -107,8 +105,6 @@
       }
 
       <div formArrayName="periodos" class="lista-periodos">
-        <!-- track pelo próprio controle: quando a lista é remontada (carregar a sala, trocar o tipo),
-             o Angular recria as linhas e os campos passam a apontar para os controles novos -->
         @for (periodo of periodos.controls; track periodo; let i = $index) {
         <div class="periodo-card" [formGroupName]="i" [class.com-erro]="erroPeriodo(i)">
           <div class="periodo-topo">

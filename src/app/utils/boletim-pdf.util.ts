@@ -1,6 +1,3 @@
-// PDF do boletim gerado no próprio app (pra n pesar a API). o jsPDF e os plugins só carregam
-// quando o aluno toca em "Exportar". no android abre o compartilhar, no navegador baixa direto
-
 import { Capacitor } from '@capacitor/core';
 import {
   Boletim,
@@ -103,8 +100,6 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
     });
   };
 
-  // tabela simples que repete o cabeçalho se quebrar de página
-  // situacoes (opcional) pinta a última coluna com a cor da situação da matéria
   const tabela = (colunas: Coluna[], linhas: string[][], ultimaEmNegrito = false, situacoes?: SituacaoMateria[]) => {
     const desenharCabecalho = () => {
       doc.setFillColor(...COR_FUNDO_CABECALHO);
@@ -150,7 +145,6 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
 
   const { boletim, nomeSala, nomeAluno } = dados;
 
-  // ===== Cabeçalho =====
   y += 5;
   texto('Boletim escolar', MARGEM, 20, 'bold', COR_DESTAQUE);
   y += 8;
@@ -165,11 +159,8 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
   doc.setLineWidth(0.2);
   y += 10;
 
-  // ===== Resumo do ano =====
-  // sem linha de total: a aprovação é por matéria e somar tudo esconderia a matéria que tá mal
   const metaPercentual = Math.round(META_APROVACAO * 100);
 
-  // "Meta de 60% atingida em 3 de 8 matérias · foque em Química e Física"
   const frase = (linhas: LinhaBoletim[]): string => {
     const resumo = resumirSituacoes(linhas);
     if (!resumo.total) return '';
@@ -191,7 +182,6 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
     { titulo: 'Aprov.', largura: 16, alinhamento: 'right' },
     { titulo: 'Situação', largura: 30 },
   ];
-  // a coluna da matéria absorve a sobra para a tabela ocupar a largura toda
   colunasAno[0].largura += LARGURA_UTIL - colunasAno.reduce((soma, c) => soma + c.largura, 0);
 
   garantirEspaco(40);
@@ -222,7 +212,6 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
     8, 'normal', COR_SUAVE);
   y += 8;
 
-  // ===== Um bloco por período =====
   const colunasPeriodo: Coluna[] = [
     { titulo: 'Matéria', largura: 58 },
     { titulo: 'Notas', largura: 16, alinhamento: 'center' },
@@ -263,7 +252,6 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
     ]);
     tabela(colunasPeriodo, linhas, false, situacoes);
 
-    // mesmo aviso da tela quando as avulsas passam do limite
     const excessosDoPeriodo = (dados.excessos || []).filter(e => e.idPeriodo === periodo.id);
     if (excessosDoPeriodo.length) {
       garantirEspaco(12);
@@ -290,7 +278,6 @@ export async function exportarBoletimPdf(dados: DadosPdfBoletim): Promise<void> 
     }
   });
 
-  // ===== Rodapé com numeração =====
   const totalPaginas = doc.getNumberOfPages();
   for (let pagina = 1; pagina <= totalPaginas; pagina++) {
     doc.setPage(pagina);

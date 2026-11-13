@@ -16,7 +16,6 @@ import { addOutline, closeOutline, lockClosedOutline } from 'ionicons/icons';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
 import { TIPOS_PERIODO, gerarPeriodosPadrao, nomePeriodo } from 'src/app/utils/periodo.util';
 
-// sugestões rápidas pra não precisar digitar as matérias mais comuns
 const MATERIAS_SUGERIDAS = [
   'Português', 'Matemática', 'História', 'Geografia', 'Biologia',
   'Química', 'Física', 'Inglês', 'Filosofia', 'Sociologia',
@@ -41,16 +40,13 @@ export class AddSalaPage implements OnInit {
   // true até a sala carregar (salvar antes gravaria a sugestão padrão por cima)
   carregandoSala = false;
 
-  // ===== matérias =====
   materias: MateriaModel[] = [];
   novaMateria = '';
   erroMateria = '';
   tentouSalvar = false;
 
-  // ===== períodos =====
   readonly tiposPeriodo = TIPOS_PERIODO;
   tipoPeriodo: TipoPeriodo = 'BIMESTRE';
-  // edição de uma sala que veio da API sem períodos: o formulário mostra a sugestão padrão
   semDivisaoSalva = false;
 
   constructor(
@@ -80,7 +76,6 @@ export class AddSalaPage implements OnInit {
       this.carregandoSala = true;
 
       this.salaService.buscarPorId(id).pipe(finalize(() => this.carregandoSala = false)).subscribe({ error: () => {
-        // sem os dados não dá pra editar (salvar agora apagaria matérias e períodos): avisa e volta
         this.exibirMensagem('Não foi possível carregar a sala. Verifique sua conexão e tente de novo.');
         this.navController.back();
       }, next: res => {
@@ -106,8 +101,6 @@ export class AddSalaPage implements OnInit {
       }});
     }
   }
-
-  // ===================== matérias =====================
 
   get sugestoesDisponiveis(): string[] {
     const usadas = new Set(this.materias.map(m => this.normalizar(m.nome)));
@@ -155,13 +148,10 @@ export class AddSalaPage implements OnInit {
     return texto.trim().toLocaleLowerCase('pt-BR');
   }
 
-  // ===================== períodos =====================
-
   get periodos(): FormArray {
     return this.formGroup.get('periodos') as FormArray;
   }
 
-  // com atividades cadastradas o tipo fica travado: elas já estão ligadas aos períodos atuais
   get tipoTravado(): boolean {
     return this.editando && this.sala.atividades.length > 0;
   }
@@ -183,8 +173,6 @@ export class AddSalaPage implements OnInit {
     this.semDivisaoSalva = false;
   }
 
-  // troca o array inteiro com setControl em vez de clear() + push(), pq o FormArray aninhado
-  // n avisava o form e a tela continuava com a sugestão padrão depois de carregar a sala
   private montarPeriodos(periodos: Pick<PeriodoModel, 'dataInicio' | 'dataFim' | 'pontuacaoMaxima'>[]): void {
     const grupos = periodos.map(periodo => this.formBuilder.group({
       'dataInicio': [this.somenteData(periodo.dataInicio), Validators.required],
@@ -208,7 +196,6 @@ export class AddSalaPage implements OnInit {
     };
   }
 
-  // cada período começa depois que o anterior termina. devolve o índice do primeiro fora de ordem
   private periodosEmOrdem() {
     return (lista: AbstractControl): ValidationErrors | null => {
       const controles = (lista as FormArray).controls;
@@ -243,8 +230,6 @@ export class AddSalaPage implements OnInit {
     }
     return '';
   }
-
-  // ===================== salvar =====================
 
   salvar() {
     if (this.salvando || this.carregandoSala) return;
@@ -289,7 +274,6 @@ export class AddSalaPage implements OnInit {
     });
   }
 
-  // o campo tem erro e o usuário já mexeu nele
   campoInvalido(campo: string): boolean {
     const controle = this.formGroup.get(campo);
     return !!controle && controle.invalid && (controle.touched || controle.dirty);
@@ -299,7 +283,6 @@ export class AddSalaPage implements OnInit {
     mostrarAviso(texto, 4000);
   }
 
-  // a API devolve as regras de negócio (matéria em uso, atividade fora do período...) em "message"
   private mensagemErro(erro: any, padrao: string): string {
     return erro?.error?.message || erro?.error?.detail || padrao;
   }

@@ -53,13 +53,10 @@ body {
   --app-warning: #f5a623;
   --app-danger: #ff5c6c;
 
-  // escala de urgência: quanto mais perto do prazo, mais vermelho. usada no calendário e nas
-  // listas de atividades, com o mesmo valor nos dois temas
   --app-urgencia-atrasada: #d62f2f;
   --app-urgencia-atrasada-borda: #7f1720;
   --app-urgencia-proxima: #ee7d1a;
   --app-urgencia-semana: #f9ca32;
-  // mês ou mais = azul, concluída = verde (um tom mais escuro pro número branco ficar legível)
   --app-urgencia-mes: #3670cd;
   --app-urgencia-concluida: #238636;
 
@@ -67,11 +64,8 @@ body {
   --transition-fast: 150ms cubic-bezier(.4, 0, .2, 1);
   --transition-base: 250ms cubic-bezier(.4, 0, .2, 1);
 
-  // no iOS/macOS usa a San Francisco do sistema, nos outros cai pra Inter (importada no index.html)
   --ion-font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
-  // cor do texto do ionic presa ao tema do app, senão com o celular no modo claro alguns textos
-  // ficavam pretos no fundo escuro
   --ion-text-color: var(--app-text);
 }
 
@@ -518,8 +512,6 @@ body.tema-claro app-atividade .comentario-acoes button.acao-excluir {
   color: var(--app-danger) !important;
 }
 
-/* dialog de confirmação (ConfirmacaoService) em html/css puro, pq o ion-alert às vezes
-   n carregava no build de produção */
 .confirmacao-overlay {
   position: fixed;
   inset: 0;
@@ -601,7 +593,6 @@ body.tema-claro app-atividade .comentario-acoes button.acao-excluir {
   to { opacity: 1; transform: scale(1); }
 }
 
-/* toast com ou sem desfazer (DesfazerService), em html/css puro no lugar do ion-toast */
 .desfazer-toast {
   position: fixed;
   left: 50%;
@@ -688,7 +679,6 @@ ion-toast.ion-color-success {
   --button-color: var(--app-success);
 }
 
-/* notificações no tema claro ficam aqui pq os overlays e o body n recebem o encapsulamento do angular */
 body.tema-claro app-notificacao ion-content { --background: var(--app-bg); }
 body.tema-claro app-notificacao .cabecalho h1,
 body.tema-claro app-notificacao .conteudo strong,
@@ -790,7 +780,6 @@ body.tema-claro app-perfil .inativacao-aviso li {
   color: #8f2f39 !important;
 }
 
-/* telas de Início e Perfil em estilo iOS (listas agrupadas) no tema claro */
 body.tema-claro .profile-hero,
 body.tema-claro .group {
   background: var(--app-surface) !important;
@@ -814,7 +803,6 @@ body.tema-claro .group-title {
   color: var(--app-muted) !important;
 }
 
-/* a regra acima apagava as cores de urgência das datas no tema claro */
 body.tema-claro .row-data.urgencia-atrasada,
 body.tema-claro .row-data.urgencia-hoje {
   color: var(--app-urgencia-atrasada) !important;
@@ -880,7 +868,6 @@ body.tema-claro .switch.on {
   background: var(--app-accent) !important;
 }
 
-/* .row-icon acento-suave (sem cor por status), das listas do início, salas, grupos e grupo */
 body.tema-claro app-inicio .row-icon,
 body.tema-claro app-salas .row-icon,
 body.tema-claro app-grupos .row-icon,
@@ -935,7 +922,6 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
   border-color: var(--app-surface);
 }
 
-/* computador: o dia selecionado é um contorno, não um bloco cheio (ver inicio.page.scss) */
 @media (min-width: 992px) {
   body.tema-claro app-inicio .cal-dia.selecionado {
     background: var(--app-accent-soft) !important;
@@ -943,15 +929,6 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
   }
 }
 
-/* ------------------------------------------------------------------------ *
- * telas maiores que celular (tablet e computador)
- * o layout foi feito pra celular e nas telas largas os cards e o calendário ficavam enormes.
- * o conteúdo de cada página fica numa coluna centralizada com a largura --web-largura:
- *   - tablet (700px a 991px): 720px, com a barra de abas embaixo igual no celular
- *   - computador (992px ou mais): menu lateral no lugar da barra de abas; listas 880px,
- *     formulários 720px e as telas com colunas (início, salas, sala e atividade) 1120px
- * abaixo de 700px nada muda
- * ------------------------------------------------------------------------ */
 @media (min-width: 700px) {
   .ion-page {
     --web-largura: 720px;
@@ -974,7 +951,6 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
     --web-largura: 880px;
   }
 
-  // o ".ion-page" junto do nome e pra ganhar da regra padrao logo acima
   app-inicio.ion-page, app-salas.ion-page, app-sala.ion-page, app-atividade.ion-page {
     --web-largura: 1120px;
   }
@@ -989,18 +965,14 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
     --min-height: 64px;
   }
 
-  // no computador a navegacao fica no menu lateral, entao a barra de abas some
-  // (inclusive as copias dela dentro das telas de grupo)
   ion-tab-bar {
     display: none !important;
   }
 
-  // o que ja aparece no menu lateral (sino do Inicio, "Sair" e painel admin do Perfil)
   .oculto-no-computador {
     display: none !important;
   }
 
-  // se a linha escondida era a primeira do grupo, a seguinte nao precisa do separador
   .oculto-no-computador + .row::before {
     display: none !important;
   }
@@ -1026,19 +998,11 @@ body.tema-claro app-inicio .cal-dia .indicador-concluida {
   }
 }
 
-/* ------------------------------------------------------------------------ *
- * foco visível pra quem navega pelo teclado (Tab). o :focus-visible só aparece com teclado
- * e o :where() deixa a especificidade zero pra n passar por cima do foco de cada tela
- * ------------------------------------------------------------------------ */
 :where(a, button, [tabindex], ion-back-button, ion-tab-button):focus-visible {
   outline: 2px solid var(--app-accent);
   outline-offset: 2px;
 }
 
-/* ------------------------------------------------------------------------ *
- * feedback de toque nos cards e linhas clicáveis (divs com routerLink e button, os
- * button.row do perfil e os botões de filtro). sem isso o app parecia travar antes de navegar
- * ------------------------------------------------------------------------ */
 .row[button],
 [button],
 button.row,
@@ -1054,9 +1018,6 @@ button.row,
   }
 }
 
-/* ------------------------------------------------------------------------ *
- * skeleton (shimmer) no lugar do spinner nas listas, no mesmo formato dos cards reais
- * ------------------------------------------------------------------------ */
 @keyframes skeleton-shimmer {
   0% { background-position: -200px 0; }
   100% { background-position: calc(200px + 100%) 0; }
@@ -1068,7 +1029,6 @@ button.row,
 
 .skeleton-block,
 .skeleton-line {
-  // !important pq o .row-icon/.avatar-small usam o shorthand background, que reseta o background-image
   background-image: linear-gradient(
     90deg,
     var(--app-surface-strong) 25%,
@@ -1095,10 +1055,6 @@ button.row,
   }
 }
 
-/* ------------------------------------------------------------------------ *
- * entrada suave dos itens de uma lista, um depois do outro. usar a classe
- * stagger-list no container dos itens (ex.: a div.group)
- * ------------------------------------------------------------------------ */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -1218,7 +1174,6 @@ button.row,
   }
 }
 
-// spinner pros botões em andamento (salvar, criar, excluir...), usa a cor do texto do botão
 .btn-spinner {
   display: inline-block;
   width: 16px;
@@ -1258,8 +1213,6 @@ button.row,
   line-height: 1.4;
 }
 
-// ===== botões sem caixa alta =====
-// o modo md do ionic deixa ion-button, segmentos e alertas em maiúsculas
 ion-button,
 ion-segment-button,
 .alert-button,
@@ -1269,7 +1222,6 @@ ion-segment-button,
   letter-spacing: normal !important;
 }
 
-// ===== aviso de servidor acordando (servidor-lento.util.ts) =====
 .servidor-lento {
   position: fixed;
   left: 50%;
@@ -1302,7 +1254,6 @@ ion-segment-button,
   animation: servidor-lento-girar 0.8s linear infinite;
 }
 
-// aviso de sem internet (conexao.util.ts), no mesmo lugar do aviso acima
 .sem-conexao {
   position: fixed;
   left: 50%;

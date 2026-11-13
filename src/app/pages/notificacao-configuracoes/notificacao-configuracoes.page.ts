@@ -31,7 +31,6 @@ export class NotificacaoConfiguracoesPage {
     addIcons({ checkmarkOutline, notificationsOutline, phonePortraitOutline, timeOutline });
   }
 
-  // espera carregar antes de deixar salvar, senão dava pra salvar os valores padrão por cima
   carregando = true;
   erroCarregar = false;
 

@@ -26,7 +26,6 @@ ion-toolbar {
             gap: 4px;
             background: none;
             border: none;
-            // área de toque maior sem mudar a posição do texto
             padding: 10px 8px;
             margin: -10px -8px;
             font-family: inherit;
@@ -63,7 +62,6 @@ ion-content {
         font-weight: 600;
         cursor: pointer;
 
-        // só o ícone colorido. tem !important pq o global.scss força a cor de acento no .acao-btn ion-icon do tema claro
         .acao-icone {
             width: 40px;
             height: 40px;
@@ -132,7 +130,6 @@ ion-content {
     background: rgba(255, 255, 255, 0.06);
 }
 
-// membros: arrastar pra remover (ion-item-sliding). o ion-item fica transparente e o .membro-item cuida do layout
 ion-item.membro-item-host {
     --background: transparent;
     --padding-start: 0;
@@ -163,7 +160,6 @@ ion-item-sliding + ion-item-sliding .membro-item {
     flex-shrink: 0;
     margin-top: 2px;
 
-    // cor sólida por status (tipo o app Lembretes do iOS), funciona nos dois temas
     ion-icon {
         font-size: 17px;
         color: #ffffff !important;
@@ -243,7 +239,6 @@ ion-item-sliding + ion-item-sliding .membro-item {
             font-size: 13px;
         }
 
-        // escala de urgência igual a do calendário: quanto mais perto do prazo, mais vermelha a data
         &.urgencia-atrasada,
         &.urgencia-hoje {
             color: var(--app-urgencia-atrasada);
@@ -375,9 +370,6 @@ ion-content > .vazio-data {
     }
 }
 
-// ---------------------------------------------------------------------------
-// abas da sala (Atividades | Grupos | Membros)
-// ---------------------------------------------------------------------------
 .abas {
     display: flex;
     gap: 4px;
@@ -502,7 +494,6 @@ ion-content > .vazio-data {
     gap: 8px;
 }
 
-// ocupação da sala (RN16: máximo de 50 membros)
 .ocupacao {
     margin-bottom: 12px;
     padding: 12px 14px;
@@ -608,10 +599,6 @@ ion-content > .vazio-data {
     }
 }
 
-// ---------------------------------------------------------------------------
-// no celular só a aba escolhida aparece. no computador as abas somem e as três seções
-// aparecem juntas: atividades na esquerda, grupos e membros na direita
-// ---------------------------------------------------------------------------
 .aba-oculta {
     display: none;
 }
@@ -711,8 +698,6 @@ ion-content > .vazio-data {
     }
 }
 
-// a linha do membro ocupa a largura toda do item (senão o separador e os
-// botões de ação ficavam colados no nome)
 ion-item.membro-item-host .membro-item {
     flex: 1;
     min-width: 0;

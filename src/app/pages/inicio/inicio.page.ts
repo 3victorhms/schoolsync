@@ -31,7 +31,6 @@ interface DiaCalendario {
   resumoAtividades?: string;
 }
 
-// "caderno": só o que o aluno adicionou ao caderno (1 chamada). "todas": atividades de todas as salas
 type FiltroAgenda = 'caderno' | 'todas';
 
 interface SecaoAgenda {
@@ -44,7 +43,6 @@ interface SecaoAgenda {
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.page.html',
-  // o painel do celular fica num arquivo próprio (ver inicio-painel.scss)
   styleUrls: ['./inicio.page.scss', './inicio-painel.scss'],
   standalone: true,
   imports: [IonIcon, IonCard, IonCardContent, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, RouterLink, AtividadeItemComponent]
@@ -54,7 +52,6 @@ export class InicioPage implements OnInit {
   usuario: UsuarioModel;
   ultimaSala: SalaModel | null = null;
 
-  // "2º Bimestre · termina em 12 dias" no cartão da última sala
   get periodoUltimaSala(): string {
     const periodo = periodoAtual(this.ultimaSala?.periodos || []);
     return periodo ? `${periodo.nome} · ${situacaoPeriodo(periodo)}` : '';
@@ -69,7 +66,6 @@ export class InicioPage implements OnInit {
   atividadesCalendario: AtividadeModel[] = [];
   private notificacoesSubscription?: Subscription;
 
-  // ---------------- Agenda ----------------
   filtro: FiltroAgenda = 'caderno';
   carregandoAgenda = true;
   carregandoTodas = false;
@@ -102,7 +98,6 @@ export class InicioPage implements OnInit {
     return (this.usuario.nome || '').trim().split(/\s+/)[0] || 'Estudante';
   }
 
-  // recarrega agenda e última sala ao voltar para a aba (as abas internas não recebem ionViewWillEnter)
   private recarregador = criarRecarregadorDeAba(inject(Router), '/tabs/inicio', () => {
     this.carregarUltimaSala();
     this.carregarAgenda();
@@ -200,11 +195,6 @@ export class InicioPage implements OnInit {
     this.atividadesDoDia = this.atividadesCalendario.filter(a => a.dataEntrega === dataStr);
   }
 
-  // =====================================================================
-  // agenda: começa pelo caderno (é uma chamada só). se o caderno tá vazio
-  // e o aluno nunca escolheu um filtro, mostra "Todas"
-  // =====================================================================
-
   private carregarAgenda() {
     if (!this.usuario.id) {
       this.carregandoAgenda = false;
@@ -212,9 +202,7 @@ export class InicioPage implements OnInit {
     }
 
     this.atividadesTodas = null;
-    // desenha o calendário logo, sem as marcações, pra n ficar o cartão vazio esperando a API
     if (!this.diasCalendario.length) this.gerarCalendario();
-    // uma busca só de GET /salas, usada pelos nomes e pelo filtro "Todas"
     this.salas$ = this.salaService.listarMinhas().pipe(
       catchError(() => of([] as SalaModel[])),
       shareReplay(1)
@@ -275,7 +263,6 @@ export class InicioPage implements OnInit {
     });
   }
 
-  // busca cada sala do aluno (no máximo 4 ao mesmo tempo) e vai montando a agenda conforme chegam
   private carregarTodas() {
     if (this.carregandoTodas) return;
 
@@ -310,7 +297,6 @@ export class InicioPage implements OnInit {
     });
   }
 
-  // separa as atividades pendentes em Atrasadas (até serem arquivadas, ver deveArquivar), Hoje, Amanhã, Esta semana e Depois
   private montarAgenda() {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -407,7 +393,6 @@ export class InicioPage implements OnInit {
     try {
       localStorage.setItem(this.chaveFiltro(), filtro);
     } catch {
-      // sem armazenamento local: a escolha vale só nesta sessão
     }
   }
 
@@ -431,7 +416,6 @@ export class InicioPage implements OnInit {
     return tipos.sort((a, b) => ordemUrgencia(a) - ordemUrgencia(b))[0];
   }
 
-  // classe de urgência (mesmo padrão do calendário) pra usar em listas de atividades
   classeUrgencia(atividade: AtividadeModel): string {
     return classeUrgencia(atividade.dataEntrega, atividade.status);
   }
@@ -476,7 +460,6 @@ export class InicioPage implements OnInit {
     return labelPontos(valor);
   }
 
-  // próxima atividade pendente (de hoje em diante), pra sugerir quando o dia selecionado tá vazio
   get proximaAtividadeSugerida(): AtividadeModel | null {
     const hojeStr = this.dataParaChave(new Date());
     const pendentes = this.atividadesCalendario
@@ -485,10 +468,6 @@ export class InicioPage implements OnInit {
 
     return pendentes[0] || null;
   }
-
-  // ---------------------------------------------------------------------------
-  // painel do celular (próxima entrega + resumo + faixa da semana)
-  // ---------------------------------------------------------------------------
 
   // no celular o mês inteiro fica recolhido; a faixa da semana abre ele
   mostrarMes = false;
@@ -514,8 +493,6 @@ export class InicioPage implements OnInit {
     return rotuloUrgencia(atividade.dataEntrega, atividade.status) || this.formatarData(atividade.dataEntrega);
   }
 
-  // entregas dos próximos 7 dias (hoje incluso) e quantas já estão concluídas
-  // alerta de semana pesada (semana.util.ts)
   semana: AnaliseSemana | null = null;
 
   get textoSemanaPesada(): string {

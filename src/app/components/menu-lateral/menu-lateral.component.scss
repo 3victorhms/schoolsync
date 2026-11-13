@@ -12,7 +12,6 @@
   border-right: 1px solid var(--app-border);
   overflow-y: auto;
 
-  // o tema claro pinta todo ion-icon de cinza (global.scss); aqui o ícone segue a cor do botão
   ion-icon {
     color: inherit;
   }

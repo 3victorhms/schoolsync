@@ -128,7 +128,6 @@ ion-content {
         justify-content: center;
         flex-shrink: 0;
 
-        // badges com cor sólida (tipo os Ajustes do iOS), funcionam nos dois temas
         ion-icon {
             font-size: 17px;
             color: #ffffff !important;
@@ -212,8 +211,6 @@ ion-content {
         }
     }
 }
-
-// a barra de abas fica no tabs.page.scss
 
 // escolha do tema (escuro / claro / sistema)
 .tema-row {

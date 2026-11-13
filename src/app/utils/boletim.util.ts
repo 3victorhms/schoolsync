@@ -1,6 +1,3 @@
-// monta o boletim a partir da sala (matérias, períodos, atividades) e das notas do aluno
-// usado pela tela do boletim e pela exportação em PDF, para os dois mostrarem os mesmos números
-
 import { NotaModel } from '../model/nota.model';
 import { PeriodoModel } from '../model/periodo.model';
 import { SalaModel } from '../model/sala.model';
@@ -11,7 +8,6 @@ export interface LinhaBoletim {
   idMateria: string;
   nomeMateria: string;
   notas: NotaModel[];
-  /** Soma das notas obtidas. */
   obtido: number;
   // soma do valor das avaliações que já têm nota
   avaliado: number;
@@ -91,16 +87,13 @@ export function montarBoletim(sala: SalaModel, notas: NotaModel[]): Boletim {
   };
 }
 
-// aproveitamento em % sobre o que já foi avaliado (ex.: 16 de 20 = 80%)
 export function aproveitamento(obtido: number, avaliado: number): number | null {
   return avaliado > 0 ? Math.round((obtido / avaliado) * 100) : null;
 }
 
-// meta usada no "quanto falta" (60% dos pontos, a média mais comum nas escolas)
 export const META_APROVACAO = 0.6;
 
 export interface QuantoFalta {
-  // 'atingida': já tem a meta; 'possivel': dá pra chegar com o que falta avaliar; 'impossivel': não dá mais
   situacao: 'atingida' | 'possivel' | 'impossivel' | 'sem-pontos';
   // pontos que ainda faltam para a meta
   precisa: number;
@@ -110,8 +103,6 @@ export interface QuantoFalta {
   percentualDoAberto: number;
 }
 
-// quanto falta pra chegar na meta
-// ex.: máximo 25, avaliado 15, tirou 9 -> meta 15, precisa de 6 dos 10 em aberto (60%)
 export function quantoFalta(obtido: number, avaliado: number, maximo: number, meta = META_APROVACAO): QuantoFalta {
   const arredondar = (valor: number) => Math.round(valor * 10) / 10;
   if (maximo <= 0) return { situacao: 'sem-pontos', precisa: 0, emAberto: 0, percentualDoAberto: 0 };
@@ -124,7 +115,6 @@ export function quantoFalta(obtido: number, avaliado: number, maximo: number, me
   return { situacao: 'possivel', precisa, emAberto, percentualDoAberto: Math.round((precisa / emAberto) * 100) };
 }
 
-// atividades que valem ponto, já passaram da entrega e ainda n têm nota (o aluno provavelmente já pode lançar)
 export function atividadesSemNota(sala: SalaModel, notas: NotaModel[], idPeriodo?: string): AtividadeModel[] {
   const comNota = new Set(notas.filter(n => n.idAtividade).map(n => n.idAtividade));
   const hoje = hojeIso();
@@ -134,8 +124,6 @@ export function atividadesSemNota(sala: SalaModel, notas: NotaModel[], idPeriodo
     .sort((a, b) => a.dataEntrega.localeCompare(b.dataEntrega));
 }
 
-// quanto ainda cabe numa matéria/período pra uma avulsa: máximo do período menos as atividades
-// da sala e as outras avulsas do aluno (mesma regra da API)
 export function disponivelParaAvulsa(
   sala: SalaModel,
   notas: NotaModel[],
@@ -153,10 +141,6 @@ export function disponivelParaAvulsa(
   );
   return arredondar(Math.max(0, periodo.pontuacaoMaxima - daSala - avulsas));
 }
-
-// ===================== situação por matéria =====================
-// a aprovação é por matéria: 90% em física n compensa 40% em química,
-// ent o boletim n soma as matérias num total geral, mostra a situação de cada uma
 
 export type SituacaoMateria = 'revisar' | 'atingida' | 'no-caminho' | 'atencao' | 'fora-de-alcance' | 'sem-notas' | 'sem-pontos';
 
@@ -182,13 +166,6 @@ export interface AnaliseMateria {
   excesso: number;
 }
 
-// situação da matéria em relação à meta:
-// atingida: já tem os pontos da meta
-// fora de alcance: nem tirando tudo o que falta chega na meta
-// sem notas: nada avaliado ainda
-// atenção: ainda dá, mas precisa tirar no que falta mais do que vem tirando (ex.: vem com 50% e precisa de 70%)
-// no caminho: precisa de uma % igual ou menor do que já vem tirando
-// revisar: as avulsas passam do limite do período, ent a conta n é confiável. vence as outras
 export function analisarMateria(linha: LinhaBoletim, meta = META_APROVACAO, excesso = 0): AnaliseMateria {
   const falta = quantoFalta(linha.obtido, linha.avaliado, linha.maximo, meta);
   const aprov = aproveitamento(linha.obtido, linha.avaliado);
@@ -225,7 +202,6 @@ export function resumirSituacoes(
   linhas.forEach(linha => {
     const analise = analisarMateria(linha, meta, excessoPorMateria.get(linha.idMateria) || 0);
     contagem[analise.situacao]++;
-    // revisar vem primeiro, depois fora de alcance e atenção; dentro de cada grupo, a que precisa de mais
     if (analise.situacao === 'revisar') criticas.push({ linha, peso: 10000 + analise.excesso });
     if (analise.situacao === 'fora-de-alcance') criticas.push({ linha, peso: 1000 + analise.falta.precisa });
     if (analise.situacao === 'atencao') criticas.push({ linha, peso: analise.falta.percentualDoAberto });
@@ -268,7 +244,6 @@ export function descreverSituacao(linha: LinhaBoletim, analise: AnaliseMateria, 
   }
 }
 
-// "Química", "Química e Física", "Química, Física e Biologia", "Química, Física e mais 2"
 export function juntarNomes(nomes: string[], limite = 3): string {
   if (nomes.length <= 1) return nomes[0] ?? '';
   if (nomes.length > limite) {
@@ -277,11 +252,6 @@ export function juntarNomes(nomes: string[], limite = 3): string {
   return `${nomes.slice(0, -1).join(', ')} e ${nomes[nomes.length - 1]}`;
 }
 
-// ===================== avulsas acima do limite =====================
-// a avulsa só é conferida quando o aluno lança. se a turma cria uma atividade depois,
-// a soma (atividades + avulsas) pode passar do máximo do período. aqui calcula esse excesso
-
-// quanto as atividades da sala + as avulsas do aluno passam do máximo do período (0 = dentro do limite)
 export function excessoNoPeriodo(sala: SalaModel, notas: NotaModel[], idMateria: string, periodo: PeriodoModel): number {
   const daSala = somar(
     (sala.atividades || []).filter(a => a.idMateria === idMateria && a.idPeriodo === periodo.id),
@@ -291,7 +261,6 @@ export function excessoNoPeriodo(sala: SalaModel, notas: NotaModel[], idMateria:
     notas.filter(n => n.avulsa && n.idMateria === idMateria && n.idPeriodo === periodo.id),
     n => n.valorMaximo
   );
-  // só conta quando o aluno tem avulsa: sem avulsa, quem garante o limite é a API ao criar a atividade
   if (avulsas <= 0) return 0;
   return arredondar(Math.max(0, daSala + avulsas - periodo.pontuacaoMaxima));
 }

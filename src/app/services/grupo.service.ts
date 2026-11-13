@@ -49,7 +49,6 @@ export class GrupoService {
     return this.apiDelete.excluir(`${this.API_URL}/grupos/${idGrupo}`);
   }
 
-  // só o líder do grupo pode remover; as tarefas do membro removido passam para o líder
   removerMembro(idGrupo: string, idUsuarioRemover: string): Observable<void> {
     return this.apiDelete.excluir(`${this.API_URL}/grupos/${idGrupo}/membros/${idUsuarioRemover}`);
   }

@@ -1,6 +1,3 @@
-// quanto de cada matéria já foi distribuído em atividades em cada período
-// ex.: matemática já tem 20 dos 25 pontos do 2º bimestre, ent só cabem mais 5
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';

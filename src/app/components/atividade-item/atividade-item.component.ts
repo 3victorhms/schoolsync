@@ -20,9 +20,6 @@ import { classeUrgencia, rotuloUrgencia } from 'src/app/utils/urgencia.util';
 import { formatarDataCurta } from 'src/app/utils/data.util';
 import { labelPontos } from 'src/app/utils/pontos.util';
 
-// sala: ícone e status dependem de a atividade estar no caderno
-// caderno: a atividade já tá no caderno, ent sempre mostra o status
-// simples: ícone de livro e sem status (ex.: lista do dia no início)
 export type ModoAtividadeItem = 'sala' | 'caderno' | 'simples';
 
 @Component({

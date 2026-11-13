@@ -9,8 +9,6 @@ const TEMA_CLARO_CLASS = 'tema-claro';
 // "sistema" acompanha o modo claro/escuro do celular ou do computador
 export type ModoTema = 'escuro' | 'claro' | 'sistema';
 
-// mesmos valores de --app-bg do global.scss, pra a status bar nativa
-// acompanhar o fundo do app em vez de ficar com a cor padrão do sistema
 const COR_FUNDO_ESCURO = '#0f1117';
 const COR_FUNDO_CLARO = '#edf2f8';
 
@@ -19,7 +17,6 @@ const COR_FUNDO_CLARO = '#edf2f8';
 })
 export class TemaService {
 
-  // o sistema avisa quando a pessoa troca o modo do celular/PC; só importa no modo "sistema"
   private readonly sistemaClaro = window.matchMedia('(prefers-color-scheme: light)');
 
   constructor() {
@@ -47,7 +44,6 @@ export class TemaService {
       try {
         localStorage.setItem(TEMA_STORAGE_KEY, modo);
       } catch {
-        // sem armazenamento local: vale só nesta sessão
       }
     }
     this.aplicarTema(modo === 'sistema' ? this.sistemaClaro.matches : modo === 'claro');
@@ -69,12 +65,9 @@ export class TemaService {
     this.sincronizarStatusBar(claro);
   }
 
-  // fora do navegador o plugin não tem efeito nenhum, só sincroniza de verdade no build
   private sincronizarStatusBar(claro: boolean) {
     if (!Capacitor.isNativePlatform()) return;
 
-    // Style.Dark = ícones escuros (fundo claro). Style.Light = ícones claros
-    // (fundo escuro). é o oposto do nome do tema do app
     StatusBar.setStyle({ style: claro ? Style.Dark : Style.Light }).catch(() => { });
     StatusBar.setBackgroundColor({ color: claro ? COR_FUNDO_CLARO : COR_FUNDO_ESCURO }).catch(() => { });
   }

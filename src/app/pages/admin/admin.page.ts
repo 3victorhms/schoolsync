@@ -15,9 +15,6 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { ConfirmacaoService } from 'src/app/services/confirmacao.service';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
 
-// área do perfil ADMIN: lista todas as contas do sistema
-// o botão pra chegar aqui só aparece pra admin, mas quem protege de verdade é a API:
-// se um USUARIO abrir esta tela (ex: digitando /admin na versão web), a API responde 403
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.page.html',
@@ -50,7 +47,6 @@ export class AdminPage {
     addIcons({ constructOutline, lockClosedOutline, peopleOutline, personCircleOutline, shieldCheckmarkOutline, shieldOutline });
   }
 
-  // o botão n aparece pra própria conta nem pra conta desativada (a API também barra os dois casos)
   podeAlterarPerfil(usuario: UsuarioModel): boolean {
     return usuario.id !== this.idUsuarioLogado && usuario.ativo !== false;
   }
@@ -100,7 +96,6 @@ export class AdminPage {
       error: (erro: HttpErrorResponse) => {
         this.usuarios = [];
         this.carregando = false;
-        // 403 = está logado, mas o perfil n é ADMIN (RespostasDeSeguranca.handle na API)
         if (erro.status === 403) {
           this.semPermissao = true;
         } else {

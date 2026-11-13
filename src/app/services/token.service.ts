@@ -7,10 +7,6 @@ import { Preferences } from '@capacitor/preferences';
   providedIn: 'root',
 })
 export class TokenService {
-  // o token fica no @capacitor/preferences (SharedPreferences no android) e n no localStorage
-  // o preferences é assíncrono e o resto do app lê o token síncrono (guard, interceptor),
-  // ent ele carrega uma vez na abertura do app (provideAppInitializer no main.ts) e fica em memória
-  // no navegador o preferences usa o localStorage mesmo
   private readonly CHAVE = 'Authorization';
   private token = '';
 
@@ -56,7 +52,6 @@ export class TokenService {
     return this.token;
   }
 
-  // formato antigo: o token puro ou {"token": "..."} em localStorage['Authorization']
   private lerLocalStorageAntigo(): string {
     let armazenado: string | null = null;
     try { armazenado = localStorage.getItem(this.CHAVE); } catch { return ''; }
@@ -70,7 +65,7 @@ export class TokenService {
   }
 
   private removerLocalStorageAntigo(): void {
-    try { localStorage.removeItem(this.CHAVE); } catch { /* sem localStorage, nada a remover */ }
+    try { localStorage.removeItem(this.CHAVE); } catch { }
   }
 
   possuiToken(): boolean {
@@ -101,7 +96,6 @@ export class TokenService {
       tokenModel.login = token.login || token.email || '';
       tokenModel.email = token.email || token.login || '';
     } catch {
-      // token ausente ou inválido: devolve o model vazio, como no fluxo original
     }
     return tokenModel;
   }

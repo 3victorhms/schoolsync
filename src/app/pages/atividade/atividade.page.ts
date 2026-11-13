@@ -82,7 +82,6 @@ import { hojeIso } from 'src/app/utils/periodo.util';
   ]
 })
 export class AtividadePage implements OnInit {
-    // nome da sala/atividade/grupo na aba do navegador (versão web)
     private tituloPagina = inject(TituloPaginaService);
 
 
@@ -90,7 +89,6 @@ export class AtividadePage implements OnInit {
   usuario: UsuarioModel;
   criadorNome: string = '';
   comentarios: ComentarioModel[] = [];
-  // só na primeira carga: no "puxar para atualizar" os comentários atuais continuam na tela
   carregandoComentarios = true;
   // comentários vêm de 20 em 20 (os mais recentes primeiro)
   temMaisComentarios = false;
@@ -99,8 +97,6 @@ export class AtividadePage implements OnInit {
   novoComentario: string = '';
   comentarioRespondendo: ComentarioModel | null = null;
   excluindo = false;
-  // ids dos comentários com exclusão em andamento. ficam escondidos mesmo se a lista recarregar
-  // antes da exclusão terminar, senão eles voltam quando a pessoa sai e entra na tela
   comentariosExcluindoIds = new Set<string>();
   enviandoComentario = false;
   carregando = true;
@@ -260,7 +256,6 @@ export class AtividadePage implements OnInit {
     }
 
     this.carregandoComentarios = this.comentarios.length === 0;
-    // recarregando (ex.: depois de comentar), pede o mesmo tanto que já estava na tela
     const tamanho = Math.max(this.TAMANHO_COMENTARIOS, this.comentarios.length);
     this.comentarioService.listarPorAtividade(this.atividade.id, tamanho).pipe(
       finalize(() => this.carregandoComentarios = false)
@@ -293,7 +288,6 @@ export class AtividadePage implements OnInit {
     });
   }
 
-  // tira da lista os comentários com exclusão pendente, pra n reaparecerem num refresh
   private filtrarPendentesExclusao(lista: ComentarioModel[]): ComentarioModel[] {
     return lista
       .filter(comentario => !this.comentariosExcluindoIds.has(comentario.id))
@@ -353,8 +347,6 @@ export class AtividadePage implements OnInit {
     this.comentariosExcluindoIds.add(removido.id);
     this.hapticsService.leve();
 
-    // exclui no servidor na hora, antes do aviso de desfazer. assim se a pessoa atualizar a página
-    // o comentário n volta. o desfazer só cria ele de novo
     this.comentarioService.excluir(removido.id).subscribe({
       next: async () => {
         this.comentariosExcluindoIds.delete(removido.id);
@@ -398,7 +390,6 @@ export class AtividadePage implements OnInit {
     return { lista: null, indice: -1 };
   }
 
-  // devolve o comentário pra lista atual (ela pode ter sido recarregada enquanto a exclusão tava pendente)
   private reinserirComentario(comentario: ComentarioModel, indiceOriginal: number) {
     if (comentario.idComentarioPai) {
       const pai = this.comentarios.find(c => c.id === comentario.idComentarioPai);
@@ -444,7 +435,6 @@ export class AtividadePage implements OnInit {
     this.navController.navigateForward('/add-atividade-editar/' + this.atividade.id);
   }
 
-  // quem criou a atividade ou o líder da sala (moderação)
   get podeGerenciar(): boolean {
     return !!this.usuario.id
       && (this.usuario.id === this.atividade.idCriador || this.usuario.id === this.atividade.idLiderSala);
@@ -513,7 +503,6 @@ export class AtividadePage implements OnInit {
   get prazoEncerrado(): boolean {
     if (!this.atividade.dataEntrega) return false;
 
-    // no fuso do celular (com toISOString/UTC a de hoje aparecia encerrada depois das 21h)
     return this.atividade.dataEntrega < hojeIso();
   }
 
@@ -554,7 +543,6 @@ export class AtividadePage implements OnInit {
   }
 
   async alterarStatus(novoStatus: string) {
-    // depois do prazo o status continua editável: quem entregou atrasado precisa poder concluir
     if (!this.atividade.estaNoCaderno) return;
     if (novoStatus === this.statusAtual) return;
 

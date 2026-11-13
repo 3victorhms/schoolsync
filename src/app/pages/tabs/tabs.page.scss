@@ -1,6 +1,3 @@
-// barra de abas flutuante de Início, Salas, Caderno e Perfil. fica aqui no ion-tabs
-// pra n ser recriada quando troca de aba
-
 ion-tab-bar {
     position: fixed;
     left: 50%;
@@ -63,7 +60,6 @@ ion-tab-button[aria-selected='true'] {
         padding: 10px 16px;
     }
 
-    // espaço entre o ícone e o texto do item ativo
     ion-icon {
         margin-inline-end: 6px;
     }

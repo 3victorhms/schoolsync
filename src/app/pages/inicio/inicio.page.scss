@@ -1,6 +1,3 @@
-// as cores vêm dos tokens --app-* do global.scss, ent o tema claro funciona sem ajuste por página
-
-// escala de urgência do calendário (tokens --app-urgencia-* do global.scss), a mesma das listas de atividade
 $cal-concluida: var(--app-urgencia-concluida);
 $cal-atrasada: var(--app-urgencia-atrasada);
 $cal-atrasada-borda: var(--app-urgencia-atrasada-borda);
@@ -154,7 +151,6 @@ ion-content {
                 font-weight: 700;
             }
 
-            // laranja e amarelo são claros: número escuro. os outros (vermelho, azul, verde) usam número branco
             &[data-indicador='proxima'],
             &[data-indicador='semana'] {
                 color: #151922;
@@ -171,8 +167,6 @@ ion-content {
                 border-radius: 50%;
                 z-index: 1;
                 box-shadow: 0 3px 10px rgba(0, 0, 0, .24);
-                // escala de urgência: vermelho → laranja → amarelo → azul (longe)
-                // verde fica só pra dia com tudo concluído
                 &.concluida { background: $cal-concluida; }
                 &.futuro { background: $cal-mes; }
                 &.atrasada, &.hoje { background: $cal-atrasada; }
@@ -198,7 +192,6 @@ ion-content {
                 place-items: center;
                 border: 2px solid var(--app-surface);
                 border-radius: 50%;
-                // branco nos dois temas (com var(--app-text) ficava uma bolinha escura no tema claro)
                 background: #ffffff;
                 color: $cal-selo-texto;
                 font-size: 9px;
@@ -459,7 +452,6 @@ ion-content {
                     font-size: 13px;
                 }
 
-                // cor de urgência na data, igual o calendário
                 &.urgencia-atrasada,
                 &.urgencia-hoje {
                     color: $cal-atrasada;
@@ -499,12 +491,6 @@ ion-content {
     padding: 0 16px 32px;
 }
 
-// a barra de abas fica no tabs.page.scss
-
-
-// ---------------------------------------------------------------------------
-// agenda do início
-// ---------------------------------------------------------------------------
 .agenda {
     padding: 8px 16px 8px;
 }
@@ -685,9 +671,6 @@ ion-content {
 }
 
 
-// ---------------------------------------------------------------------------
-// versão web: agenda na esquerda; calendário, dia selecionado e última sala na direita
-// ---------------------------------------------------------------------------
 @media (min-width: 992px) {
     .inicio-layout {
         display: grid;
@@ -705,7 +688,6 @@ ion-content {
         font-size: 28px;
     }
 
-    // no computador os círculos têm tamanho fixo e o dia selecionado vira um contorno em volta
     .calendario-card .calendario-dias .cal-dia {
         aspect-ratio: auto;
         height: 48px;

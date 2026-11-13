@@ -1,5 +1,3 @@
-// no navegador o plugin n faz nada (guard isNativePlatform), ent dá pra chamar em qualquer lugar
-
 import { Injectable } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';

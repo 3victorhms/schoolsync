@@ -1,6 +1,3 @@
-// todas as atividades da sala, separadas em "Próximas" e "Arquivadas" (o dia de entrega já passou)
-// a página da sala mostra só uma prévia. dá pra filtrar por matéria e período
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -145,7 +142,6 @@ export class SalaAtividadesPage {
     this.carregar(event);
   }
 
-  // próximas: da entrega mais perto para a mais longe. arquivadas: da mais recente para a mais antiga
   organizar() {
     const atividades = (this.sala.atividades || []).filter(atividade =>
       (!this.filtroMateria || atividade.idMateria === this.filtroMateria) &&

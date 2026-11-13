@@ -3,7 +3,6 @@
 const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
 const DIAS_SEMANA = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
 
-// converte "AAAA-MM-DD" (ou ISO com hora) na meia-noite local desse dia
 export function parsearData(data: string | null | undefined): Date | null {
   if (!data) return null;
 
@@ -14,7 +13,6 @@ export function parsearData(data: string | null | undefined): Date | null {
   return new Date(ano, mes - 1, dia);
 }
 
-// data curta: "qua, 30 set". de outro ano inclui o ano ("qua, 30 set 2027"). inválida volta como veio
 export function formatarDataCurta(data: string | null | undefined): string {
   const convertida = parsearData(data);
   if (!convertida) return data || '';

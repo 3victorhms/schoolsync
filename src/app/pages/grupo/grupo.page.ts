@@ -72,7 +72,6 @@ import { mostrarAviso } from 'src/app/utils/aviso.util';
   ]
 })
 export class GrupoPage implements OnInit {
-    // nome da sala/atividade/grupo na aba do navegador (versão web)
     private tituloPagina = inject(TituloPaginaService);
 
 
@@ -173,7 +172,6 @@ export class GrupoPage implements OnInit {
     return this.grupo.criador && !this.ehLiderGrupo(membro) && membro.idUsuario !== this.usuario.id;
   }
 
-  // passa a liderança do grupo pra outro membro. quem recebe passa a gerenciar as tarefas
   async tornarLider(membro: MembroGrupoModel) {
     if (this.transferindoLiderId || !this.grupo.id) return;
 
@@ -248,7 +246,6 @@ export class GrupoPage implements OnInit {
       return;
     }
 
-    // aviso em html puro (DesfazerService) pq o ion-toast n aparecia direito no navegador
     this.hapticsService.leve();
     this.desfazerService.mostrarMensagem(`Código ${this.grupo.codigoConvite} copiado! Envie para quem vai entrar no grupo.`, 3000);
   }

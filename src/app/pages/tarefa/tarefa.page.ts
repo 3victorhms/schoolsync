@@ -5,8 +5,6 @@ import { IonBackButton, IonButtons, IonContent, IonHeader, IonSpinner, IonTitle,
 import { TarefaService } from 'src/app/services/tarefa.service';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
 
-// tela de passagem da notificação de tarefa atribuída. a notificação só traz o id da tarefa,
-// ent aqui acha o grupo dela e abre a divisão de tarefas
 @Component({
   selector: 'app-tarefa',
   templateUrl: './tarefa.page.html',

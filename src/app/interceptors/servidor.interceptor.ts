@@ -6,8 +6,6 @@ import { falhaDeRede } from '../utils/conexao.util';
 import { environment } from 'src/environments/environment';
 import { requisicaoIniciada, requisicaoTerminada } from '../utils/servidor-lento.util';
 
-// conta as requisições em andamento pro aviso de servidor acordando (servidor-lento.util.ts)
-// e manda pra tela de manutenção quando a API responde 503 com "manutencao": true
 export const servidorInterceptor: HttpInterceptorFn = (request, next) => {
   if (!request.url.startsWith(environment.apiUrl)) {
     return next(request);

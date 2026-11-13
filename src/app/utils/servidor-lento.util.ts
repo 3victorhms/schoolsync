@@ -1,7 +1,3 @@
-// aviso de servidor acordando. a API tá no plano grátis do render, que desliga o servidor
-// depois de um tempo sem uso, e a primeira requisição pode levar até 1 minuto. sem o aviso
-// parece que o app travou. mesmo esquema do aviso.util.ts (html/css puro)
-
 import { estaOffline } from './conexao.util';
 
 const ESPERA_PARA_AVISAR_MS = 3000;
@@ -14,7 +10,6 @@ let banner: HTMLElement | null = null;
 
 function mostrarBanner(texto: string) {
   if (typeof document === 'undefined') return;
-  // sem internet o problema não é o servidor dormindo: quem avisa é o conexao.util.ts
   if (estaOffline()) return;
   if (!banner) {
     banner = document.createElement('div');

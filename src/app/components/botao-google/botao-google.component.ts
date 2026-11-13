@@ -11,7 +11,6 @@ import { LoginService } from 'src/app/services/login.service';
 import { NotificacaoPushService } from 'src/app/services/notificacao-push.service';
 import { mostrarAviso } from 'src/app/utils/aviso.util';
 
-// botão "Continuar com o Google" do login e do cadastro. some sozinho se o client id n estiver no environment
 @Component({
   selector: 'app-botao-google',
   standalone: true,

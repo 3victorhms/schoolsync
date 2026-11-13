@@ -5,10 +5,6 @@ import { Injectable } from '@angular/core';
 })
 export class DesfazerService {
 
-  // toast com botão "Desfazer" em html puro (o ion-toast tem o mesmo problema do ion-alert)
-  // resolve true se a pessoa clicar em desfazer a tempo e false se o aviso sumir
-  // quem chama tem que fazer a ação de verdade antes de mostrar o aviso, assim um refresh
-  // n perde a exclusão. o desfazer só reverte (recria o que foi excluído)
   mostrar(mensagem: string, textoAcao: string = 'Desfazer', duracaoMs: number = 4000): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
       const toast = document.createElement('div');
@@ -44,7 +40,6 @@ export class DesfazerService {
     });
   }
 
-  // aviso simples sem botão, pra coisas que n tem como desfazer (ex.: remover membro da sala)
   mostrarMensagem(mensagem: string, duracaoMs: number = 2500): void {
     const toast = document.createElement('div');
     toast.className = 'desfazer-toast';
