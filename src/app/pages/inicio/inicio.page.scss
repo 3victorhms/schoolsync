@@ -13,7 +13,7 @@ ion-toolbar {
 
 ion-content {
     --background: var(--app-bg);
-    --padding-bottom: 96px;
+    --padding-bottom: calc(110px + env(safe-area-inset-bottom));
 }
 
 .header-titulo {

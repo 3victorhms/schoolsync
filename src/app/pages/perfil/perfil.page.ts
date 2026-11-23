@@ -170,9 +170,9 @@ export class PerfilPage implements OnInit {
   async inativarConta() {
     if (this.inativando) return;
     const confirmou = await this.confirmacaoService.confirmar(
-      'Inativar conta',
-      'A inativação será bloqueada enquanto você for líder de alguma sala ou grupo, ou tiver tarefas atribuídas ao seu nome. Transfira as lideranças e reatribua as tarefas antes de continuar.\n\nSua conta será inativada e seus comentários serão preservados como histórico. Esta ação não pode ser desfeita pelo aplicativo.',
-      'Inativar'
+      'Excluir sua conta?',
+      'A exclusão será bloqueada enquanto você for líder de alguma sala ou grupo, ou tiver tarefas atribuídas ao seu nome. Transfira as lideranças e reatribua as tarefas antes de continuar.\n\nSua conta será excluída e você não poderá mais entrar. Seus comentários continuam na sala como histórico. Isso não pode ser desfeito pelo aplicativo.',
+      'Excluir conta'
     );
     if (!confirmou) return;
 
@@ -186,7 +186,7 @@ export class PerfilPage implements OnInit {
         this.navController.navigateRoot('/login');
       },
       error: async erro => {
-        const mensagem = erro?.error?.message || erro?.error?.detail || 'Não foi possível inativar a conta.';
+        const mensagem = erro?.error?.message || erro?.error?.detail || 'Não foi possível excluir a conta.';
         if (erro?.status === 409) {
           await this.confirmacaoService.informar(
             'Conta ainda possui vínculos',

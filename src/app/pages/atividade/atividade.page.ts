@@ -41,6 +41,7 @@ import {
   timeOutline,
   checkmarkCircleOutline,
   trashOutline,
+  bookmarkOutline,
   addOutline,
   chatboxOutline,
   lockClosedOutline,
@@ -127,6 +128,7 @@ export class AtividadePage implements OnInit {
     this.usuario = this.usuarioService.buscarAutenticacao();
 
     addIcons({
+      bookmarkOutline,
       createOutline,
       calendarOutline,
       peopleOutline,

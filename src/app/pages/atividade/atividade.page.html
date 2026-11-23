@@ -101,9 +101,10 @@
 
     @if (atividade.estaNoCaderno) {
     <button class="remover-btn" (click)="removerDoCaderno()">
-      <ion-icon name="trash-outline"></ion-icon>
+      <ion-icon name="bookmark-outline"></ion-icon>
       Remover do caderno
     </button>
+    <p class="remover-dica">A atividade continua na sala. Só sai da sua lista.</p>
     } @else {
     <button class="adicionar-btn" (click)="adicionarNoCaderno()">
       <ion-icon name="add-outline"></ion-icon>

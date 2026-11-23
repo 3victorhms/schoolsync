@@ -2,10 +2,12 @@ import { estaOffline } from './conexao.util';
 
 const ESPERA_PARA_AVISAR_MS = 3000;
 const ESPERA_PARA_REFORCAR_MS = 15000;
+const ESPERA_PARA_TENTAR_DE_NOVO_MS = 20000;
 
 let pendentes = 0;
 let timerAviso: ReturnType<typeof setTimeout> | null = null;
 let timerReforco: ReturnType<typeof setTimeout> | null = null;
+let timerRetry: ReturnType<typeof setTimeout> | null = null;
 let banner: HTMLElement | null = null;
 
 function mostrarBanner(texto: string) {
@@ -27,6 +29,17 @@ function mostrarBanner(texto: string) {
   banner.querySelector('.servidor-lento-texto')!.textContent = texto;
 }
 
+function mostrarTentarDeNovo() {
+  mostrarBanner('Ainda conectando. Isso pode levar até 1 minuto.');
+  if (!banner || banner.querySelector('.servidor-lento-retry')) return;
+  const botao = document.createElement('button');
+  botao.type = 'button';
+  botao.className = 'servidor-lento-retry';
+  botao.textContent = 'Tentar de novo';
+  botao.addEventListener('click', () => window.location.reload());
+  banner.querySelector('.servidor-lento-spinner')?.replaceWith(botao);
+}
+
 function esconderBanner() {
   banner?.remove();
   banner = null;
@@ -41,9 +54,10 @@ export function requisicaoIniciada() {
     ESPERA_PARA_AVISAR_MS
   );
   timerReforco = setTimeout(
-    () => mostrarBanner('O servidor estava em repouso e está ligando. Isso pode levar até 1 minuto.'),
+    () => mostrarBanner('Acordando o SchoolSync… Na primeira vez do dia pode levar até 1 minuto.'),
     ESPERA_PARA_REFORCAR_MS
   );
+  timerRetry = setTimeout(mostrarTentarDeNovo, ESPERA_PARA_TENTAR_DE_NOVO_MS);
 }
 
 // chamado quando uma requisição à API termina (com sucesso, erro ou cancelada)
@@ -52,6 +66,7 @@ export function requisicaoTerminada() {
   if (pendentes > 0) return;
   if (timerAviso) clearTimeout(timerAviso);
   if (timerReforco) clearTimeout(timerReforco);
-  timerAviso = timerReforco = null;
+  if (timerRetry) clearTimeout(timerRetry);
+  timerAviso = timerReforco = timerRetry = null;
   esconderBanner();
 }

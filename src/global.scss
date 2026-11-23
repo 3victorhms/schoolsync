@@ -1225,7 +1225,8 @@ ion-segment-button,
 .servidor-lento {
   position: fixed;
   left: 50%;
-  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  top: auto;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 92px);
   transform: translateX(-50%);
   z-index: 10001;
   display: flex;
@@ -1284,6 +1285,18 @@ ion-segment-button,
   background: var(--app-danger);
 }
 
+.servidor-lento-retry {
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 99px;
+  padding: 6px 12px;
+  font: inherit;
+  font-weight: 700;
+  background: var(--app-accent-soft);
+  color: var(--app-accent);
+  cursor: pointer;
+}
+
 @keyframes servidor-lento-girar {
   to { transform: rotate(360deg); }
 }
@@ -1296,4 +1309,9 @@ ion-segment-button,
 @media (prefers-reduced-motion: reduce) {
   .servidor-lento { animation: none; }
   .servidor-lento-spinner { animation-duration: 2s; }
+}
+
+// o tab bar flutuante não pode cobrir o fim das listas
+app-salas ion-content, app-caderno ion-content, app-perfil ion-content {
+  --padding-bottom: calc(110px + env(safe-area-inset-bottom));
 }
